@@ -1,0 +1,73 @@
+$font-primary: 'Nunito', sans-serif;
+$font-secondary: 'Figtree', sans-serif;
+
+* {
+    margin: 0;
+    background-color: #ECEEFE;
+    font-family: $font-primary !important;
+}
+
+.fontNunito {
+    font-family: 'Nunito';
+}
+
+.fontFigtree {
+    font-family: 'Figtree';
+  }
+
+header {
+    padding: 80px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logoSection {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 15px;
+
+
+.logo {
+    width: 130px;
+    height: 130px;
+}
+
+
+h2 {
+    font-size: 32px;
+   font-weight: 700;
+   color: black;
+}
+
+}
+
+
+.newRegistration {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+
+    span {
+        color: black;
+        font-weight: 400;
+        font-size: 18px;
+    }
+}
+
+
+.newAccount {
+    color: #797EF3;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 100px;
+    border: solid 1px #ECEEFE;
+    font-family: $font-secondary !important;
+    &:hover {
+        border-color: #797EF3;
+    }
+}
+
