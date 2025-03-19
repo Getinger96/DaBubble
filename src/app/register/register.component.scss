@@ -1,29 +1,77 @@
-.register-container{
-    height: 100vh;
+.register-container {
+  height: 100vh;
+
+  justify-content: center;
+  display: flex;
+  align-items: center;
+
+
+  >.register-card {
+    >div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      >img {
+        position: absolute;
+        margin-right: 500px;
+      }
+    }
+  }
+
+
+}
+
+
+
+h1 {
+  font-family: 'Nunito';
+  font-weight: 700;
+  font-size: 46px;
+  color: rgba(68, 77, 242, 1);
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  >div {
+
     display: flex;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
-  >form{
-    display: flex;
-    justify-content: center;
-    align-items: center
+    border: 1px solid black;
+    border-radius: 100px;
+    width: 300px;
+    padding: 8px;
 
-   
-  };
+    ;
 
+    >div {
+      >input {
+        border: none;
+
+        &:hover {
+          outline: none !important;
+          border-width: 0px !important;
+          border: none !important;
+        }
+
+        &:focus {
+          outline: none !important;
+          border-width: 0px !important;
+          border: none !important;
+        }
+      }
+    }
+  }
 }
-mat-form-field{
-    display: flex;
-    flex-direction: column;
-}
 
-h1{
-    display: flex;
-    justify-content: center;
-}
-
-form{
-    display: flex;
-    flex-direction: column;
+.checkbox-container{
+  border: none !important;
 }

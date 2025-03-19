@@ -1,31 +1,38 @@
 <div class="register-container">
 
-    <h1>Konto erstellen</h1>
-    Mit deinem Namen un deiner E-Mail-Adresse hast du dein neues DaBubble-Konto
+    <div class="register-card">
+       
+        <div>
+            <img src="../../assets/img/13. Go back.png" alt="">
+            <h1>Konto erstellen</h1>
+        </div>
 
-    <form>
+        Mit deinem Namen un deiner E-Mail-Adresse hast du dein neues DaBubble-Konto
 
-        <mat-form-field>
-            <div class="form-field-content">
-                <mat-icon  fontIcon="person"></mat-icon>
-                <mat-label>Name und
-                   Nachname</mat-label>
+        <form>
+
+            <div>
+                <div><img src="../../assets/img/person_filled.png" alt=""></div>
+                <div><input placeholder="Name und Nachname" type="text"></div>
             </div>
-          
-            <input type="text" matInput placeholder="Max Mustemann">
-        </mat-form-field>
+            <div>
+                <div><img src="../../assets/img/mail (1).png" alt=""></div>
+                <div><input placeholder="beispielemail@email.com" type="email"></div>
+            </div>
+            <div>
+                <div><img src="../../assets/img/lock.png" alt=""></div>
+                <div><input placeholder="Passwort" type="password"></div>
+            </div>
 
-        <mat-form-field>
-            <mat-label>E-Mail-Adresse</mat-label>
-            <input type="email" matInput placeholder="beispielname@email.com">
-        </mat-form-field>
+            <div class="checkbox-container">
+                <input type="checkbox" name="" id="">
+                <span>Ich stimme der Datenschuterklärung zu</span>
+            </div>
 
-        <mat-form-field>
-            <mat-label>Passwort</mat-label>
-            <input type="password" matInput placeholder="Passwort">
-        </mat-form-field>
+        </form>
 
-    </form>
+    </div>
+
 
 
 
