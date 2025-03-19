@@ -1,0 +1,47 @@
+$font-primary: 'Nunito', sans-serif;
+$font-secondary: 'Figtree', sans-serif;
+
+* {
+    margin: 0;
+    background-color: #ECEEFE;
+    font-family: $font-primary !important;
+}
+
+.fontNunito {
+    font-family: 'Nunito';
+}
+
+.fontFigtree {
+    font-family: 'Figtree';
+  }
+
+header {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 768px) {
+        padding: 0px;     
+        justify-content: center;  
+}
+}
+
+.logoSection {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 15px;
+
+
+.logo {
+    width: 130px;
+    height: 130px;
+}
+
+
+h2 {
+    font-size: 32px;
+   font-weight: 700;
+   color: black;
+}
+
+}

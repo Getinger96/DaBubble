@@ -1,7 +1,7 @@
 $font-primary: 'Nunito', sans-serif;
 $font-secondary: 'Figtree', sans-serif;
 
-* {
+body {
     margin: 0;
     background-color: #ECEEFE;
     font-family: $font-primary !important;
@@ -15,32 +15,20 @@ $font-secondary: 'Figtree', sans-serif;
     font-family: 'Figtree';
   }
 
-header {
-    padding: 80px;
+  .headerContainer {
     display: flex;
-    justify-content: space-between;
-}
-
-.logoSection {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 15px;
-
-
-.logo {
-    width: 130px;
-    height: 130px;
+    justify-content: space-between;  
+    align-items: center;             
+    padding: 40px;           
+    
+    
+    @media (max-width: 720px) {    
+        justify-content: center;  
 }
 
 
-h2 {
-    font-size: 32px;
-   font-weight: 700;
-   color: black;
-}
+  }
 
-}
 
 
 .newRegistration {
@@ -55,6 +43,11 @@ h2 {
         font-weight: 400;
         font-size: 18px;
     }
+
+    @media (max-width: 720px) {    
+        display: none;
+}
+
 }
 
 
@@ -66,8 +59,88 @@ h2 {
     border-radius: 100px;
     border: solid 1px #ECEEFE;
     font-family: $font-secondary !important;
+    text-decoration: none;
     &:hover {
         border-color: #797EF3;
     }
 }
 
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+section {
+    width: 610px;
+    height: 650px;
+    min-height: 500px;
+    min-width: 300px;
+    max-width: 700px;
+    display: flex;
+    justify-content: center;
+    background-color: #FFFF;
+    border-radius: 30px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+
+
+    @media (max-width: 450px) {    
+        width: 350px;
+    height: 500px;
+}
+}
+
+
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap:10px;
+    margin-top: 40px;
+}
+
+.loginCard {
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+    display: flex;
+    padding: 60px 80px 20px 80px;
+
+    h1 {
+        color: #444DF2;
+        font-weight: 700;
+        font-size: 46px;
+        font-family: $font-primary;
+        margin-block-end: 40px;
+    }
+
+    .recommendWordAdress {
+        font-weight: 400;
+        font-size: 20px;
+        text-align: center;
+        line-height: 30px;
+    }
+}
+.loginForm {
+    width: 100%; 
+}
+
+.input-Fields {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+
+}
+
+mat-form-field {
+    width: 100% !important;
+    display: flex !important;
+}
+
+
+.full-width {
+    width: 100%;
+}
