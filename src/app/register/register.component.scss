@@ -1,0 +1,29 @@
+.register-container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  >form{
+    display: flex;
+    justify-content: center;
+    align-items: center
+
+   
+  };
+
+}
+mat-form-field{
+    display: flex;
+    flex-direction: column;
+}
+
+h1{
+    display: flex;
+    justify-content: center;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
