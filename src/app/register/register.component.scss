@@ -1,12 +1,26 @@
 .register-container {
   height: 100vh;
 
+  flex-direction: column;
   justify-content: center;
   display: flex;
   align-items: center;
 
+  >.Logo {
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    height: 70px;
+    width: 242.11px;
+  }
 
   >.register-card {
+    height: 669px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+
     >div {
       display: flex;
       align-items: center;
@@ -38,21 +52,40 @@ form {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
+  height: 316px;
+
+  >button{
+
+    background-color: rgb(61, 61, 247);
+    color: white;
+    padding: 16px;
+    border-radius: 100px;
+  }
+ 
+  
 
   >div {
 
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid black;
-    border-radius: 100px;
+    height: 50px;
     width: 300px;
     padding: 8px;
+    border: 1px solid transparent;
+    border-radius: 100px;
+    
 
-    ;
+    &:hover {
+      border: 1px solid black;
+      border-radius: 100px;
+    }
+
+    cursor: pointer;
 
     >div {
+     
       >input {
         border: none;
 
@@ -72,6 +105,12 @@ form {
   }
 }
 
-.checkbox-container{
+.checkbox-container {
   border: none !important;
 }
+
+.ng_border{
+  border: 1px solid black !important;
+  border-radius: 100px !important;
+}
+
