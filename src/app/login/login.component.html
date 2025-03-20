@@ -22,16 +22,16 @@
         <form class="loginForm">
 
             <div class="input-Fields">
-                <div (focusin)="onInputEmailClick()" class="custom-input" [ngClass]="{'borderPurple ': mailFieldIsActive}" (focusout)="onInputEmailBlur()">
-                    <mat-icon [ngStyle]="{'color': emailIconIsActive ? 'black': 'gray'}">mail</mat-icon>
+                <div (focusin)="setFocusEmail('email', true)" class="custom-input" [ngClass]="{'borderPurple ': isActiveEmail}" (focusout)="setFocusEmail('email', false)">
+                    <mat-icon [ngStyle]="{'color': isActiveEmail ? 'black': 'gray'}">mail</mat-icon>
                     <input type="email" placeholder="beispielname@email.com">
                 </div>
             </div>
     
         
                 <div class="input-Fields">
-                    <div [ngClass]="{'borderPurple ': mailFieldIsActive}"  class="custom-input">
-                        <mat-icon [ngStyle]="{'color': emailIconIsActive ? 'black': 'gray'}">lock</mat-icon>
+                    <div (focusin)="setFocusPassword('password', true)" [ngClass]="{'borderPurple ': isActivePassword}"  class="custom-input" (focusout)="setFocusPassword('password', false)">
+                        <mat-icon [ngStyle]="{'color': isActivePassword ? 'black': 'gray'}">lock</mat-icon>
                         <input type="password" placeholder="Passwort">
                     </div>
                 </div>

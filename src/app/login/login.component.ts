@@ -13,19 +13,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  mailFieldIsActive: boolean = false;
-  emailIconIsActive: boolean = false;
+  isActiveEmail: boolean = false;
+  isActivePassword: boolean = false;
 
 
+  setFocusEmail(field: string, isFocused: boolean) {
+    this.isActiveEmail = isFocused;
 
-  onInputEmailClick() {
-    this.mailFieldIsActive = true
-    this.emailIconIsActive =  true
   }
 
+  setFocusPassword(field: string, isFocused: boolean) {
+    this.isActivePassword = isFocused;
 
-  onInputEmailBlur() {
-    this.mailFieldIsActive = false
-    this.emailIconIsActive =  false
   }
+
 }
