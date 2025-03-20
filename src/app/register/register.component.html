@@ -1,15 +1,14 @@
+<app-header></app-header>
 <div class="register-container">
-    <img class="Logo" src="../../assets/img/logo with name.png">
-
-
+    
     <div class="register-card">
 
         <div>
-            <img src="../../assets/img/13. Go back.png" alt="">
+            <a routerLink=""><img src="../../assets/img/13. Go back.png" alt=""></a>
             <h1>Konto erstellen</h1>
         </div>
+        <span>Mit deinem Namen un deiner E-Mail-Adresse hast du dein neues DaBubble-Konto</span>
 
-        Mit deinem Namen un deiner E-Mail-Adresse hast du dein neues DaBubble-Konto
 
         <form>
 
@@ -31,10 +30,10 @@
                 <span>Ich stimme der Datenschuterklärung zu</span>
             </div>
 
-            <button mat-flat-button>Weiter</button>
-           
+            <button [disabled]="" mat-flat-button>Weiter</button>
+
         </form>
-      
+
     </div>
 
 
