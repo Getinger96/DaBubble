@@ -22,13 +22,19 @@
         <form class="loginForm">
 
             <div class="input-Fields">
-            <mat-form-field class="full-width">
-                <mat-icon matPrefix>mail</mat-icon>
-                <input type="email" matInput placeholder="beispielname&#64;email.com">
-            </mat-form-field>
+                <div (focusin)="onInputEmailClick()" class="custom-input" [ngClass]="{'borderPurple ': mailFieldIsActive}" (focusout)="onInputEmailBlur()">
+                    <mat-icon [ngStyle]="{'color': emailIconIsActive ? 'black': 'gray'}">mail</mat-icon>
+                    <input type="email" placeholder="beispielname@email.com">
+                </div>
+            </div>
     
-
-        </div>
+        
+                <div class="input-Fields">
+                    <div [ngClass]="{'borderPurple ': mailFieldIsActive}"  class="custom-input">
+                        <mat-icon [ngStyle]="{'color': emailIconIsActive ? 'black': 'gray'}">lock</mat-icon>
+                        <input type="password" placeholder="Passwort">
+                    </div>
+                </div>
 
         </form>
 

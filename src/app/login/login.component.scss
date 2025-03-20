@@ -106,7 +106,7 @@ section {
     align-items: center;
     padding: 32px;
     display: flex;
-    padding: 60px 80px 20px 80px;
+    padding: 60px 60px 20px 60px;
 
     h1 {
         color: #444DF2;
@@ -124,15 +124,44 @@ section {
     }
 }
 .loginForm {
-    width: 100%; 
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px
+
 }
 
-.input-Fields {
+.custom-input {
     display: flex;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 30px; 
+    padding: 10px;
+    width: 95%;
+    background-color :#ECEEFE;
+    border-radius: 30px;
+    height: 40px;
+}
 
+mat-icon {
+    height: 24px;
+    width: 24px;
+}
+
+
+.custom-input mat-icon {
+    margin-right: 15px;
+    color: gray;
+    margin-left: 20px;
+}
+
+.custom-input input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    background: transparent;
 }
 
 mat-form-field {
@@ -143,4 +172,8 @@ mat-form-field {
 
 .full-width {
     width: 100%;
+}
+
+.borderPurple {
+    border: 1px solid #535af1;
 }
