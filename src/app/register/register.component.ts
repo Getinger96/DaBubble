@@ -45,15 +45,9 @@ divfocusPasswort(field: string, isFocused: boolean){
 
 addUser(){
   
-  this.registerservice.addUser(this.setUserObject(this.user))
+  this.registerservice.addNewUser(this.registerservice.setUserObject(this.user))
 }
 
 
-setUserObject(obj:any,):User{
-  return {
-    name:obj.name,
-    email:obj.email,
-    passwort:obj.passwort
-  }
-}
+
 }

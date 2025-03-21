@@ -20,7 +20,7 @@ import { User } from '../interfaces/user.interface';
 
     }
 
-async addUser(item:User){
+async addNewUser(item:User){
   await addDoc(this.getUserRef(),item)
 }
 
@@ -28,6 +28,14 @@ async addUser(item:User){
 
 getUserRef(){
   return collection(this.firestore, 'Users')
+}
+
+setUserObject(obj:any,):User{
+  return {
+    name:obj.name,
+    email:obj.email,
+    passwort:obj.passwort
+  }
 }
 
   }
