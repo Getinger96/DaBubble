@@ -24,9 +24,7 @@ borderVisibleName:boolean=false;
 borderVisibleMail:boolean=false;
 borderVisiblepasswort:boolean=false;
 user:User = new User()
-name="";
-email="";
-passwort="";
+
 
 constructor(private registerservice: RegisterService){
 
@@ -46,11 +44,16 @@ divfocusPasswort(field: string, isFocused: boolean){
 }
 
 addUser(){
-  let user:User={
-    name:this.name,
-    email:this.email,
-    passwort:this.passwort,
+  
+  this.registerservice.addUser(this.setUserObject(this.user))
+}
+
+
+setUserObject(obj:any,):User{
+  return {
+    name:obj.name,
+    email:obj.email,
+    passwort:obj.passwort
   }
-  this.registerservice.addUser(user)
 }
 }

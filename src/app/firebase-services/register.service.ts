@@ -24,6 +24,8 @@ async addUser(item:User){
   await addDoc(this.getUserRef(),item)
 }
 
+
+
 getUserRef(){
   return collection(this.firestore, 'Users')
 }
