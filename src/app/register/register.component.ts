@@ -6,13 +6,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
+import { FormsModule } from '@angular/forms';
+import { User } from '../interfaces/user.interface';
+import { RegisterService } from '../firebase-services/register.service';
 
 
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatInputModule,CommonModule,MatCardModule,MatIconModule,MatButtonModule,RouterModule,HeaderComponent],
+  imports: [MatInputModule,CommonModule,MatCardModule,MatIconModule,MatButtonModule,RouterModule,HeaderComponent,FormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -20,6 +23,15 @@ export class RegisterComponent {
 borderVisibleName:boolean=false;
 borderVisibleMail:boolean=false;
 borderVisiblepasswort:boolean=false;
+user:User = new User()
+name="";
+email="";
+passwort="";
+
+constructor(private registerservice: RegisterService){
+
+}
+
 divfocusName(field: string, isFocused: boolean){
   this.borderVisibleName=isFocused
 }
@@ -31,5 +43,14 @@ divfocusmail(field: string, isFocused: boolean){
 
 divfocusPasswort(field: string, isFocused: boolean){
   this.borderVisiblepasswort=isFocused
+}
+
+addUser(){
+  let user:User={
+    name:this.name,
+    email:this.email,
+    passwort:this.passwort,
+  }
+  this.registerservice.addUser(user)
 }
 }

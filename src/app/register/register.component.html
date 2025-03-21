@@ -16,21 +16,21 @@
                 (focusout)="divfocusName('text',false)">
                 <div>
                     <mat-icon [ngStyle]="{'color':borderVisibleName ? 'black':'gray'}">person</mat-icon>
-                    <input placeholder="Name und Nachname" type="text">
+                    <input [(ngModel)]="user.name" name="first" placeholder="Name und Nachname" type="text">
                 </div>
             </div>
             <div class="input-containers" (focusin)="divfocusmail('email',true)" [ngClass]="{'borderPurple':borderVisibleMail}"
                 (focusout)="divfocusmail('email',false)">
                 <div>
                     <mat-icon [ngStyle]="{'color': borderVisibleMail ? 'black': 'gray'}">mail</mat-icon>
-                    <input placeholder="beispielemail@email.com" type="email">
+                    <input [(ngModel)]="user.email" name="email" placeholder="beispielemail@email.com" type="email">
                 </div>
             </div>
             <div class="input-containers" (focusin)="divfocusPasswort('password',true)" [ngClass]="{'borderPurple':borderVisiblepasswort}"
                 (focusout)="divfocusPasswort('password',false)">
                 <div>
                     <mat-icon [ngStyle]="{'color': borderVisiblepasswort ? 'black': 'gray'}">lock</mat-icon>
-                    <input placeholder="Passwort" type="password">
+                    <input [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort" type="password">
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
             </div>
 
             <div class="button-container">
-                <button [disabled]="" mat-flat-button>Weiter</button>
+                <button (click)="addUser()" [disabled]="" mat-flat-button>Weiter</button>
             </div>
 
 
