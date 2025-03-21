@@ -1,5 +1,5 @@
 .register-container {
-  
+
 
   flex-direction: column;
   justify-content: center;
@@ -26,6 +26,9 @@
       font-weight: 400;
       font-size: 20px;
       text-align: center;
+      margin-bottom: 30px;
+      width: 486px;
+      letter-spacing: 0%;
     }
 
     >div {
@@ -36,6 +39,11 @@
       >a {
         position: absolute;
         margin-right: 500px;
+
+        >img {
+          width: 40px;
+          height: 40px;
+        }
       }
     }
   }
@@ -61,40 +69,48 @@ form {
   align-items: center;
   gap: 30px;
   height: 316px;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: 'Nunito';
 
-  >button {
 
-    background-color: rgb(61, 61, 247);
-    color: white;
-    padding: 16px;
-    border-radius: 100px;
-  }
 
 
 
   >div {
 
     display: flex;
-    justify-content: space-around;
     align-items: center;
     height: 50px;
-    width: 300px;
-    padding: 8px;
-    border: 1px solid transparent;
+    width: 500px;
     border-radius: 100px;
+    background-color: white;
 
 
-    &:hover {
-      border: 1px solid black;
-      border-radius: 100px;
-    }
+
 
     cursor: pointer;
 
     >div {
+      display: flex;
+      align-items: center;
+      padding-top: 18px;
+      padding-right: 32px;
+      padding-bottom: 18px;
+      padding-left: 32px;
+      width: 100%;
+      gap: 10px;
 
       >input {
         border: none;
+        width: 100%;
+        background-color: transparent;
+
+        &::placeholder {
+          font-size: 18px;
+          font-weight: 500;
+          font-family: 'Nunito';
+        }
 
         &:hover {
           outline: none !important;
@@ -113,10 +129,22 @@ form {
 }
 
 .checkbox-container {
-  border: none !important;
+  gap: 8px !important;
 }
 
-.ng_border {
-  border: 1px solid black !important;
-  border-radius: 100px !important;
+.borderPurple {
+  border: 1px solid #535af1 !important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: end;
+
+  >button {
+
+    background-color: rgb(61, 61, 247);
+    color: white;
+    padding: 16px;
+    border-radius: 100px;
+  }
 }

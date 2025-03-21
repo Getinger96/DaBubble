@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div class="register-container">
-    
+
     <div class="register-card">
 
         <div>
@@ -12,17 +12,26 @@
 
         <form>
 
-            <div (click)="divfocusName()" [ngClass]="{'ng_border':borderVisibleName}">
-                <div><img src="../../assets/img/person_filled.png" alt=""></div>
-                <div><input placeholder="Name und Nachname" type="text"></div>
+            <div class="input-containers" (focusin)="divfocusName('text',true)" [ngClass]="{'borderPurple':borderVisibleName}"
+                (focusout)="divfocusName('text',false)">
+                <div>
+                    <mat-icon [ngStyle]="{'color':borderVisibleName ? 'black':'gray'}">person</mat-icon>
+                    <input placeholder="Name und Nachname" type="text">
+                </div>
             </div>
-            <div (click)="divfocusmail()" [ngClass]="{'ng_border':borderVisibleMail}">
-                <div><img src="../../assets/img/mail (1).png" alt=""></div>
-                <div><input placeholder="beispielemail@email.com" type="email"></div>
+            <div class="input-containers" (focusin)="divfocusmail('email',true)" [ngClass]="{'borderPurple':borderVisibleMail}"
+                (focusout)="divfocusmail('email',false)">
+                <div>
+                    <mat-icon [ngStyle]="{'color': borderVisibleMail ? 'black': 'gray'}">mail</mat-icon>
+                    <input placeholder="beispielemail@email.com" type="email">
+                </div>
             </div>
-            <div (click)="divfocusPasswort()" [ngClass]="{'ng_border':borderVisiblepasswort}">
-                <div><img src="../../assets/img/lock.png" alt=""></div>
-                <div><input placeholder="Passwort" type="password"></div>
+            <div class="input-containers" (focusin)="divfocusPasswort('password',true)" [ngClass]="{'borderPurple':borderVisiblepasswort}"
+                (focusout)="divfocusPasswort('password',false)">
+                <div>
+                    <mat-icon [ngStyle]="{'color': borderVisiblepasswort ? 'black': 'gray'}">lock</mat-icon>
+                    <input placeholder="Passwort" type="password">
+                </div>
             </div>
 
             <div class="checkbox-container">
@@ -30,7 +39,10 @@
                 <span>Ich stimme der Datenschuterklärung zu</span>
             </div>
 
-            <button [disabled]="" mat-flat-button>Weiter</button>
+            <div class="button-container">
+                <button [disabled]="" mat-flat-button>Weiter</button>
+            </div>
+
 
         </form>
 

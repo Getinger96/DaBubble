@@ -20,16 +20,16 @@ export class RegisterComponent {
 borderVisibleName:boolean=false;
 borderVisibleMail:boolean=false;
 borderVisiblepasswort:boolean=false;
-divfocusName(){
-  this.borderVisibleName=true
+divfocusName(field: string, isFocused: boolean){
+  this.borderVisibleName=isFocused
 }
 
-divfocusmail(){
-  this.borderVisibleMail=true
+divfocusmail(field: string, isFocused: boolean){
+  this.borderVisibleMail=isFocused
 }
 
 
-divfocusPasswort(){
-  this.borderVisiblepasswort=true
+divfocusPasswort(field: string, isFocused: boolean){
+  this.borderVisiblepasswort=isFocused
 }
 }
