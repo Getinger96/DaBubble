@@ -35,6 +35,11 @@ gap: 15px;
 .logo {
     width: 130px;
     height: 130px;
+
+    @media (max-width: 720px) {
+        width: 70px;
+        height: 70px;
+    }
 }
 
 
@@ -42,6 +47,10 @@ h2 {
     font-size: 32px;
    font-weight: 700;
    color: black;
+
+   @media (max-width: 720px) {
+font-size: 24px;
+}
 }
 
 }

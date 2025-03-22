@@ -24,6 +24,13 @@ body {
     
     @media (max-width: 720px) {    
         justify-content: center;  
+        padding: 25px;
+}
+
+
+@media (max-width: 450px) {    
+    justify-content: center;  
+    padding: 10px;
 }
 
 
@@ -74,10 +81,8 @@ main {
 
 section {
     width: 610px;
-    height: 650px;
+    height: 680px;
     min-height: 500px;
-    min-width: 300px;
-    max-width: 700px;
     display: flex;
     justify-content: center;
     background-color: #FFFF;
@@ -86,34 +91,56 @@ section {
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 
 
-    @media (max-width: 450px) {    
-        width: 350px;
-    height: 500px;
+    @media (max-width: 720px) {    
+        height: 600px;
 }
+
+@media (max-height: 700px) {
+    height: 540px;
+    width: 100%;
 }
 
 
+}
+
+.input-Fields {
+    width: 100%;
+}
 
 .links {
     display: flex;
     justify-content: center;
     gap:10px;
     margin-top: 40px;
+
+    
+    @media (max-width: 720px) {    
+  display: none;
+}
 }
 
 .loginCard {
     flex-direction: column;
     align-items: center;
-    padding: 32px;
     display: flex;
-    padding: 60px 60px 20px 60px;
+    padding: 60px 20px 20px 20px;
+
+    @media (max-width: 720px) {
+        padding: 30px 20px 20px 20px;
+        flex: 1;
+           }
 
     h1 {
         color: #444DF2;
         font-weight: 700;
         font-size: 46px;
         font-family: $font-primary;
-        margin-block-end: 40px;
+        margin-block-end: 20px;
+
+
+        @media (max-width: 720px) {
+            font-size: 24px;
+               }
     }
 
     .recommendWordAdress {
@@ -121,14 +148,33 @@ section {
         font-size: 20px;
         text-align: center;
         line-height: 30px;
+
+        @media (max-width: 720px) {
+            font-size: 16px;
+            line-height: 20px;
+            }
+
+
+            @media (max-height: 700px) {
+                display: none;
+            }
     }
 }
 .loginForm {
-    width: 100%;
+    width: 90%;
     margin-top: 40px;
     display: flex;
     flex-direction: column;
-    gap: 30px
+    gap: 30px;
+
+    @media (max-width: 720px) {
+        margin-top: 10px;
+        flex-grow: 1;
+    }
+
+    @media (max-height: 700px) {
+        margin-top: 0px;
+    }
 
 }
 
@@ -138,7 +184,7 @@ section {
     border: 1px solid #ccc;
     border-radius: 30px; 
     padding: 10px;
-    width: 95%;
+    width: 100%;
     background-color :#ECEEFE;
     border-radius: 30px;
     height: 40px;
@@ -176,4 +222,157 @@ mat-form-field {
 
 .borderPurple {
     border: 1px solid #535af1;
+}
+
+
+
+.forgottPassword  {
+    display: flex;
+    justify-content: center;
+
+
+    a {
+        text-decoration: none;
+        padding: 12px;
+        color: #797EF3;
+        font-weight: 400;
+        font-size: 18px;
+     &:hover {
+        background-color: #ECEEFE;
+        border-radius: 30px;
+        font-weight: 500;
+     }
+    }
+    
+
+}
+
+.line {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+hr {
+    height: 1px;
+    flex: 1;
+    background-color: #adb0d9;
+}
+
+
+.googleLogin {
+    height: 50px;
+    border-radius: 100px;
+    background-color: #ECEFEF;
+    border: 1px solid #ccc;
+
+    &:hover {
+        border: 1px solid #535af1;
+    }
+
+    >div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+
+        >a {
+            text-decoration: none;
+            color: #797EF3;
+            font-weight: 400;
+            font-size: 18px;
+
+            &:hover {
+                font-weight: 700;
+             }
+        }
+    }
+
+    
+}
+
+
+
+.loginButtons {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+
+    @media (max-width: 720px) {    
+        gap: 15px;
+}
+}
+
+
+.loginBtn {
+    border-radius: 25px;
+    padding-top: 15px;
+    padding-right: 25px;
+    padding-left: 25px;
+    padding-bottom: 15px;
+    border: none;
+    background-color: #444DF2;
+    color: white;
+}
+
+
+.guestLoginBtn {
+    border-radius: 25px;
+    padding-top: 15px;
+    padding-right: 25px;
+    padding-left: 25px;
+    padding-bottom: 15px;
+    border: solid 1px #444DF2;
+    color: #444DF2;
+
+
+    &:hover{
+        border: solid 1px #444DF2;
+        color: white;
+        background-color: #444DF2 ;
+    
+    }
+}
+
+
+
+
+
+
+.newRegistrationMobileView {
+    display: none;
+
+    @media (max-width: 720px) {    
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 15px;
+        gap: 10px;
+}
+
+    span {
+        color: black;
+        font-weight: 400;
+        font-size: 18px;
+    }
+
+
+}
+
+
+.newAccountMobile {
+    color: #797EF3;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 20px;
+    border-radius: 100px;
+    border: solid 1px #444DF2;
+    font-family: $font-secondary !important;
+    text-decoration: none;
+    &:hover {
+    font-weight: 500;
+    }
 }

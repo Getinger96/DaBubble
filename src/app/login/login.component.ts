@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   isActiveEmail: boolean = false;
   isActivePassword: boolean = false;
+  isHovered: boolean = false;
 
 
   setFocusEmail(field: string, isFocused: boolean) {
@@ -25,6 +26,15 @@ export class LoginComponent {
   setFocusPassword(field: string, isFocused: boolean) {
     this.isActivePassword = isFocused;
 
+  }
+
+  setFocusLoginWithGoogle(field: string, isFocused: boolean) {
+    this.isActivePassword = isFocused;
+
+  }
+
+  hoverBtn(state: boolean) {
+    this.isHovered = state;
   }
 
 }

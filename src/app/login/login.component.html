@@ -19,7 +19,7 @@
         <span class="recommendWordAdress">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
         
 
-        <form class="loginForm">
+        <form class="loginForm fontNunito" >
 
             <div class="input-Fields">
                 <div (focusin)="setFocusEmail('email', true)" class="custom-input" [ngClass]="{'borderPurple ': isActiveEmail}" (focusout)="setFocusEmail('email', false)">
@@ -36,6 +36,34 @@
                     </div>
                 </div>
 
+
+                <div class="forgottPassword">
+                <a   href="">Passwort vergessen ?</a>
+                 </div>
+
+
+                 <div class="line">
+
+                    <hr>
+                    <span>ODER</span>
+                    <hr>
+                 </div>
+
+
+                    <button  (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)" class="googleLogin fontNunito">
+                        <div>
+                        <img src="../../assets/img/Google (1).png" alt="">
+                        <a href="" [ngStyle]="{'font-weight': isHovered ? '700': '400'}"> Anmelden mit Google</a>
+                         </div>
+                    </button>
+
+
+                    <div class="loginButtons">
+                        <button class="loginBtn">Anmelden</button>
+                        <button class="guestLoginBtn">Gäste-Login</button>
+
+                    </div>
+
         </form>
 
     </div>
@@ -45,6 +73,14 @@
 
 </section>
 </main>
+
+
+<div class="newRegistrationMobileView">
+    <span > Neu bei DABubble ?  </span>
+    
+    <a   routerLink="/signUp" class="newAccountMobile">Konto erstellen</a>
+    
+    </div>
 
 
 <div class="links">
