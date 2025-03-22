@@ -27,6 +27,7 @@ export class RegisterService {
         addDoc(this.getUserRef(), {
           name: item.name,
           email: item.email,
+          
           uid: user.uid // Speichere auch die UID des Benutzers
         })
         .then(() => {
