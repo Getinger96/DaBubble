@@ -50,7 +50,7 @@
                  </div>
 
 
-                    <button  (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)" class="googleLogin fontNunito">
+                    <button  (click)="login($event)"  (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)" class="googleLogin fontNunito">
                         <div>
                         <img src="../../assets/img/Google (1).png" alt="">
                         <a href="" [ngStyle]="{'font-weight': isHovered ? '700': '400'}"> Anmelden mit Google</a>

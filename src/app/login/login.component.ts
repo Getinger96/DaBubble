@@ -5,6 +5,9 @@ import { HeaderComponent } from "../header/header.component";
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { User } from '../interfaces/user.interface';
+import { RegisterService } from '../firebase-services/register.service';
+import { GoogleAuthProvider } from "firebase/auth";
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -16,6 +19,9 @@ export class LoginComponent {
   isActiveEmail: boolean = false;
   isActivePassword: boolean = false;
   isHovered: boolean = false;
+
+
+  constructor(private registerservice: RegisterService) {}
 
 
   setFocusEmail(field: string, isFocused: boolean) {
@@ -37,4 +43,10 @@ export class LoginComponent {
     this.isHovered = state;
   }
 
+  async login(event: Event){
+     
+    this.registerservice.loginWithGoogle(event)
+    
+  }
+  
 }

@@ -42,11 +42,11 @@ divfocusmail(field: string, isFocused: boolean){
 divfocusPasswort(field: string, isFocused: boolean){
   this.borderVisiblepasswort=isFocused
 }
-
 addUser(){
   
   this.registerservice.addNewUser(this.registerservice.setUserObject(this.user))
 }
+
 
 
 
