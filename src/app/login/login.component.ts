@@ -19,9 +19,13 @@ export class LoginComponent {
   isActiveEmail: boolean = false;
   isActivePassword: boolean = false;
   isHovered: boolean = false;
+ 
+  constructor(private registerservice: RegisterService){
+
+  }
 
 
-  constructor(private registerservice: RegisterService) {}
+
 
 
   setFocusEmail(field: string, isFocused: boolean) {
