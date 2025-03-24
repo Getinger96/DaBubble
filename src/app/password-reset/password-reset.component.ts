@@ -9,55 +9,18 @@ import { HeaderComponent } from '../header/header.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../interfaces/user.interface';
 import { RegisterService } from '../firebase-services/register.service';
-
-
-
 @Component({
-  selector: 'app-register',
+  selector: 'app-password-reset',
   standalone: true,
   imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, HeaderComponent, FormsModule],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  templateUrl: './password-reset.component.html',
+  styleUrl: './password-reset.component.scss'
 })
-export class RegisterComponent {
-  borderVisibleName: boolean = false;
+export class PasswordResetComponent {
   borderVisibleMail: boolean = false;
-  borderVisiblepasswort: boolean = false;
   user: User = new User();
-  isChecked: boolean = false
-
-
-  constructor(private registerservice: RegisterService) {
-
-  }
-
-  divfocusName(field: string, isFocused: boolean) {
-    this.borderVisibleName = isFocused
-  }
 
   divfocusmail(field: string, isFocused: boolean) {
     this.borderVisibleMail = isFocused
   }
-
-
-  divfocusPasswort(field: string, isFocused: boolean) {
-    this.borderVisiblepasswort = isFocused
-  }
-  addUser(ngForm: NgForm) {
-
-    this.registerservice.addNewUser(this.registerservice.setUserObject(this.user))
-
-    ngForm.resetForm()
-    location.reload()
-
-
-  }
-
-
-
-
-
-
-
-
 }

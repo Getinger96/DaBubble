@@ -30,23 +30,25 @@
       width: 486px;
       letter-spacing: 0%;
     }
-
     >div {
       display: flex;
       align-items: center;
       justify-content: center;
-
+  
       >a {
         position: absolute;
         margin-right: 500px;
-
+  
         >img {
           width: 40px;
           height: 40px;
         }
       }
     }
+    
   }
+
+ 
 
 
 }
