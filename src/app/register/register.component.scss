@@ -130,6 +130,7 @@ form {
 
 .checkbox-container {
   gap: 8px !important;
+  background-color: transparent !important;
 }
 
 .borderPurple {
@@ -139,6 +140,7 @@ form {
 .button-container {
   display: flex;
   justify-content: end;
+  background-color: transparent !important;
 
   >button {
 
@@ -148,3 +150,71 @@ form {
     border-radius: 100px;
   }
 }
+
+
+
+@media(max-width:520px) {
+
+  h1 {
+    font-size: 40px;
+
+  }
+
+  .register-container {
+    >.register-card {
+      >span {
+        font-size: 18px;
+        width: 372px;
+      }
+
+      ;
+
+      >div {
+        >a {
+          margin-right: 380px;
+        }
+
+      }
+    }
+  }
+
+  form {
+    >div {
+      width: 372px;
+    }
+  }
+}
+
+
+@media(max-width: 400px) {
+
+  h1 {
+    font-size: 30px;
+
+  }
+  .register-container {
+    >.register-card {
+      >span {
+        font-size: 18px;
+        width: 305px;
+      }
+
+      ;
+
+      >div {
+        >a {
+          margin-right: 300px;
+        }
+
+      }
+    }
+  }
+
+  form {
+    font-size: 15px;
+    >div {
+      width: 305px;
+    }
+  }
+}
+
