@@ -10,37 +10,51 @@
         <span>Mit deinem Namen un deiner E-Mail-Adresse hast du dein neues DaBubble-Konto</span>
 
 
-        <form>
+        <form (ngSubmit)="addUser(contactForm)" #contactForm="ngForm">
 
-            <div class="input-containers" (focusin)="divfocusName('text',true)" [ngClass]="{'borderPurple':borderVisibleName}"
-                (focusout)="divfocusName('text',false)">
+            <div class="input-containers"    (focusin)="divfocusName('text',true)"
+                [ngClass]="{'borderPurple':borderVisibleName, 'empty-input-Name':!user.name && name.touched}" (focusout)="divfocusName('text',false)"  >
                 <div>
                     <mat-icon [ngStyle]="{'color':borderVisibleName ? 'black':'gray'}">person</mat-icon>
-                    <input [(ngModel)]="user.name" name="first" placeholder="Name und Nachname" type="text">
+                    <input [(ngModel)]="user.name" id="name" name="name" placeholder="Name und Nachname" type="text"
+                        #name="ngModel" required>
+
                 </div>
             </div>
-            <div class="input-containers" (focusin)="divfocusmail('email',true)" [ngClass]="{'borderPurple':borderVisibleMail}"
-                (focusout)="divfocusmail('email',false)">
+            <div class="validation-container">
+                <div *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen und Nachnamen
+                    ein</div>
+            </div>
+            <div class="input-containers" (focusin)="divfocusmail('email',true)"
+                [ngClass]="{'borderPurple':borderVisibleMail, 'empty-input-Name':!user.email && email.touched}" (focusout)="divfocusmail('email',false)">
                 <div>
                     <mat-icon [ngStyle]="{'color': borderVisibleMail ? 'black': 'gray'}">mail</mat-icon>
-                    <input [(ngModel)]="user.email" name="email" placeholder="beispielemail@email.com" type="email">
+                    <input [(ngModel)]="user.email" name="email" placeholder="beispielemail@email.com" type="email"
+                    #email="ngModel"   required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
                 </div>
             </div>
-            <div class="input-containers" (focusin)="divfocusPasswort('password',true)" [ngClass]="{'borderPurple':borderVisiblepasswort}"
-                (focusout)="divfocusPasswort('password',false)">
+            <div class="validation-container">
+                <div *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
+                    ein</div>
+            </div>
+            <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
+                [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}" (focusout)="divfocusPasswort('password',false)">
                 <div>
                     <mat-icon [ngStyle]="{'color': borderVisiblepasswort ? 'black': 'gray'}">lock</mat-icon>
-                    <input [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort" type="password">
+                    <input  #passwort="ngModel"  [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort" type="password" required>
                 </div>
+            </div>
+            <div class="validation-container">
+                <div *ngIf="passwort.touched && !user.passwort || user.passwort.length<6&& passwort.touched" class="validation-text">Passwort muss mindestens 6 zeichen lang sein</div>
             </div>
 
             <div class="checkbox-container">
-                <input type="checkbox" name="" id="">
+                <input type="checkbox" [(ngModel)]="isChecked" name="terms" id="">
                 <span>Ich stimme der Datenschuterklärung zu</span>
             </div>
 
             <div class="button-container">
-                <button (click)="addUser()" [disabled]="" mat-flat-button>Weiter</button>
+                <input [disabled]="!isChecked || !contactForm.valid" type="submit" value="Weiter">
             </div>
 
 

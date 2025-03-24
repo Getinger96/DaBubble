@@ -51,7 +51,9 @@
 
 }
 
-
+.borderRed {
+  border: 1px solid red !important;
+}
 
 h1 {
   font-family: 'Nunito';
@@ -62,19 +64,38 @@ h1 {
   justify-content: center;
 }
 
+.validation-container {
+ min-height: 0px;
+  /* Stelle sicher, dass immer ein wenig Platz reserviert wird, auch wenn keine Nachricht da ist */
+  visibility: hidden;
+  /* Nachricht bleibt unsichtbar, aber der Raum wird weiterhin reserviert */
+}
+
+.validation-text {
+  visibility: visible;  /* Wenn die Nachricht angezeigt wird, bleibt sie sichtbar */
+  color: red;
+  font-size: 16px;
+}
+
+
+
+
+
 form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 30px;
-  height: 316px;
+  height: 350px;
   font-size: 18px;
   font-weight: 500;
   font-family: 'Nunito';
 
 
-
+  
+ 
+  
 
 
   >div {
@@ -142,13 +163,31 @@ form {
   justify-content: end;
   background-color: transparent !important;
 
-  >button {
+  >input {
+    &:disabled {
+      background-color: transparent;
+      color: grey;
+      border: 1px solid grey;
+    }
 
     background-color: rgb(61, 61, 247);
     color: white;
     padding: 16px;
     border-radius: 100px;
+    border: 1px solid rgb(61, 61, 247);
+    cursor: pointer;
   }
+}
+
+
+
+.invalid-placeholder::placeholder {
+  color: red !important;
+}
+
+.empty-input-Name {
+  border: 2px solid red !important;
+  color: red !important;
 }
 
 
@@ -192,6 +231,7 @@ form {
     font-size: 30px;
 
   }
+
   .register-container {
     >.register-card {
       >span {
@@ -212,9 +252,9 @@ form {
 
   form {
     font-size: 15px;
+
     >div {
       width: 305px;
     }
   }
 }
-
