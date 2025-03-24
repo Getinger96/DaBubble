@@ -1,0 +1,147 @@
+$font-primary: 'Nunito', sans-serif;
+$font-secondary: 'Figtree', sans-serif;
+
+
+section {
+    background-color: #535af1 ;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+  align-items: center;
+  animation:   move-section-to-corner ease-in-out 600ms forwards 1.2s;
+}
+
+
+.intro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    animation:   move-to-corner ease-in-out 600ms forwards 1.2s;
+    .logo {
+        animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner ease-in-out 600ms forwards 1.2s;
+        width: 190px;
+        height: 190px;
+    }
+
+
+    .animation-slide-headline {
+        overflow: hidden;
+        animation: intro-animation ease-in-out 1.2s forwards , intro-animation-to-corner ease-in-out 600ms forwards 1.2s;
+
+
+    h1 {
+        font-size: 80px;
+        font-family: $font-primary;
+        font-weight: 700;
+        color: white;
+        animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner ease-in-out 600ms forwards 1.2s;
+        transform: translateX(-400px);
+        opacity: 0;
+        overflow: hidden;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+
+    }
+}
+   
+@keyframes move-section-to-corner {
+    from {
+        background-color: #535af1 ;
+        
+    }
+
+    to {
+        background-color: #ECEEFE;
+    }
+}
+
+
+@keyframes intro-animation {
+    from {
+        transform: translateX(0);
+        
+    }
+
+    to {
+        transform: translateX(-40px);
+    }
+}
+
+@keyframes intro-animation-to-corner {
+    from {
+        transform: translateX(-40px);
+        
+    }
+
+    to {
+        transform: translateX(-67px);
+    }
+}
+
+@keyframes logo-animation {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-80px);
+    }
+}
+
+@keyframes move-to-corner {
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(-31.5%, -39.5%);
+        margin: 20px;
+    }
+}
+
+
+@keyframes move-img-to-corner {
+    from {
+        width: 190px;
+        height: 190px;
+    }
+    to {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+
+@keyframes move-headline-to-corner {
+    from {
+        font-size: 80px;
+    }
+    to {
+        font-size: 32px;
+        color: black;
+    }
+}
+
+
+
+@keyframes headline-animation {
+    from {
+          transform: translateX(-400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+
+
+
