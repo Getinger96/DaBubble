@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 
 @Injectable({
@@ -126,4 +126,19 @@ loginWithGoogleAccountError(error: any) {
       passwort: obj.passwort
     };
   }
+sendEmailforPasswordreset(item: User){
+  sendPasswordResetEmail(this.auth,item.email)
+  .then(() => {
+    // Password reset email sent!
+    // ..
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
+
+}
+ 
+  
 }

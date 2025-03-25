@@ -34,8 +34,9 @@
                 </div>
             </div>
             <div class="validation-container">
-                <div *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
-                    ein</div>
+                <div *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</div>
+                    <div *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
+                        ein</div>
             </div>
             <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
                 [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}" (focusout)="divfocusPasswort('password',false)">
