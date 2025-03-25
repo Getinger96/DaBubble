@@ -17,7 +17,7 @@ import { RegisterService } from '../firebase-services/register.service';
   templateUrl: './password-reset-email.component.html',
   styleUrl: './password-reset-email.component.scss'
 })
-export class PasswordResetComponent {
+export class PasswordResetEmailComponent {
   borderVisibleMail: boolean = false;
   user: User = new User();
  
