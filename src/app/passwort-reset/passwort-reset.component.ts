@@ -9,27 +9,25 @@ import { HeaderComponent } from '../header/header.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../interfaces/user.interface';
 import { RegisterService } from '../firebase-services/register.service';
-
 @Component({
-  selector: 'app-password-reset',
+  selector: 'app-passwort-reset',
   standalone: true,
   imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, HeaderComponent, FormsModule],
-  templateUrl: './password-reset-email.component.html',
-  styleUrl: './password-reset-email.component.scss'
+  templateUrl: './passwort-reset.component.html',
+  styleUrl: './passwort-reset.component.scss'
 })
-export class PasswordResetEmailComponent {
-  borderVisibleMail: boolean = false;
-  user: User = new User();
+export class PasswortResetComponent {
+  borderVisiblepasswort: boolean = false;
+  borderVisiblepasswortNew: boolean= false;
+  newPasswort:string=''
+  confirmedPasswort:string=''
+  length: any='';
  
-constructor(private registerservice: RegisterService){
 
-}
-divfocusmail(field: string, isFocused: boolean) {
-  this.borderVisibleMail = isFocused
-}
-
-  sendemail(ngForm: NgForm){
-this.registerservice.sendEmailforPasswordreset(this.registerservice.setUserObject(this.user))
-
+  divfocusPasswort(field: string, isFocused: boolean) {
+    this.borderVisiblepasswort = isFocused
+  }
+  divfocusPasswortNew(field: string, isFocused: boolean) {
+    this.borderVisiblepasswortNew = isFocused
   }
 }

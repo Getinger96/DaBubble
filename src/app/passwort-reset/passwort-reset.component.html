@@ -1,0 +1,36 @@
+<div class="reset-container">
+
+
+    <div class="reset-card">
+
+        <div>
+            <a routerLink=""><img src="../../assets/img/13. Go back.png" alt=""></a>
+            <h1>Passwort zurücksetzten</h1>
+        </div>
+        <form   #contactForm="ngForm">
+            <div class="input-containers" (focusin)="divfocusPasswortNew('passwordNew',true)"
+                [ngClass]="{'borderPurple': borderVisiblepasswortNew, 'empty-input-Name':!newPasswort && passwortNew.touched}" (focusout)="divfocusPasswort('passwordNew',false)">
+                <div>
+                    <input  #passwortNew="ngModel"  [(ngModel)]="newPasswort" name="passwortNew" placeholder=" Neues Passwort" type="password" required>
+                </div>
+            </div>
+            <div class="validation-container">
+                <div *ngIf="passwortNew.touched && !newPasswort || !newPasswort.length && passwortNew.touched" class="validation-text">Passwort muss mindestens 6 zeichen lang sein</div>
+            </div>
+            <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
+            [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name': passwort.touched }" (focusout)="divfocusPasswort('password',false)">
+            <div>
+                <input  #passwort="ngModel"  [(ngModel)]="confirmedPasswort" name="passwort" placeholder=" Neues Kennwort bestätigen" type="password" required>
+            </div>
+        </div>
+        <div class="validation-container">
+            <div *ngIf="passwort.touched || newPasswort != confirmedPasswort" class="validation-text">Passwörter müssen übereinstimmen</div>
+        </div>
+
+            <div class="button-container">
+                <input  [disabled]="!contactForm.valid" type="submit" value="Passwort ändern" name="" id="">
+            </div>
+        </form>
+    </div>
+
+</div>

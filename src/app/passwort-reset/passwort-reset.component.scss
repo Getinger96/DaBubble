@@ -1,0 +1,175 @@
+.reset-container {
+    height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    
+        >.reset-card {
+            height: 469px;
+            width: 698px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+    
+            >div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+    
+                >a {
+                    position: absolute;
+                    margin-right: 600px;
+    
+                    >img {
+                        width: 40px;
+                        height: 40px;
+                    }
+                }
+            }
+    
+            >span {
+                font-family: 'Nunito';
+                font-weight: 400;
+                font-size: 20px;
+                text-align: center;
+                margin-bottom: 30px;
+    
+                letter-spacing: 0%;
+            }
+    
+    
+        }
+    
+    
+    
+    }
+    
+    .email-txt{
+        
+            font-family: 'Nunito';
+            font-weight: 400;
+            font-size: 20px;
+            text-align: center;
+        color:rgba(104, 104, 104, 1) ;
+        width: 486px;
+    }
+    
+    .button-container{
+        display: flex;
+        justify-content: end;
+        background-color: transparent !important;
+        >input{
+            padding-top: 12px;
+            padding-right: 25px;
+            padding-bottom: 12px;
+            padding-left: 25px;
+            gap: 10px;
+            font-family: 'Nunito';
+            font-weight: 700;
+            font-size: 18px;
+            border-radius: 100px;
+            background-color: rgb(61, 61, 247);
+            color: white;
+            border: 1px solid rgb(61, 61, 247);
+            &:disabled {
+                background-color: rgba(104, 104, 104, 1);
+                
+                border: 1px solid grey;
+              }
+        }
+    }
+    
+    .validation-container {
+        min-height: 0px;
+        /* Stelle sicher, dass immer ein wenig Platz reserviert wird, auch wenn keine Nachricht da ist */
+        visibility: hidden;
+        /* Nachricht bleibt unsichtbar, aber der Raum wird weiterhin reserviert */
+    }
+    
+    .validation-text {
+        visibility: visible;
+        /* Wenn die Nachricht angezeigt wird, bleibt sie sichtbar */
+        color: red;
+        font-size: 16px;
+    }
+    
+    h1 {
+        font-family: 'Nunito';
+        font-weight: 700;
+        font-size: 46px;
+        color: rgba(68, 77, 242, 1);
+        display: flex;
+        justify-content: center;
+    }
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        font-size: 18px;
+        font-weight: 500;
+        font-family: 'Nunito';
+    
+        >div {
+    
+            display: flex;
+            align-items: center;
+            height: 50px;
+            width: 500px;
+            border-radius: 100px;
+            background-color: white;
+    
+    
+    
+    
+            cursor: pointer;
+    
+            >div {
+                display: flex;
+                align-items: center;
+                padding-top: 18px;
+                padding-right: 32px;
+                padding-bottom: 18px;
+                padding-left: 32px;
+                width: 100%;
+                gap: 10px;
+    
+                >input {
+                    border: none;
+                    width: 100%;
+                    background-color: transparent;
+    
+                    &::placeholder {
+                        font-size: 18px;
+                        font-weight: 500;
+                        font-family: 'Nunito';
+                    }
+    
+                    &:hover {
+                        outline: none !important;
+                        border-width: 0px !important;
+                        border: none !important;
+                    }
+    
+                    &:focus {
+                        outline: none !important;
+                        border-width: 0px !important;
+                        border: none !important;
+                    }
+                }
+            }
+        }
+    }
+    
+    .borderPurple {
+        border: 1px solid #535af1 !important;
+      }
+    
+      .empty-input-Name {
+        border: 2px solid red !important;
+        color: red !important;
+      }
