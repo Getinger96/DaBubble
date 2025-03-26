@@ -3,16 +3,17 @@
 
     <div class="register-card">
 
+    
         <div>
             <a routerLink=""><img src="../../assets/img/13. Go back.png" alt=""></a>
             <h1>Konto erstellen</h1>
         </div>
-        <span>Mit deinem Namen un deiner E-Mail-Adresse hast du dein neues DaBubble-Konto</span>
+        <span class="recommendWordAdress">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DaBubble-Konto</span>
 
 
         <form (ngSubmit)="addUser(contactForm)" #contactForm="ngForm">
 
-            <div class="input-containers"    (focusin)="divfocusName('text',true)"
+            <div  class="input-containers"    (focusin)="divfocusName('text',true)"
                 [ngClass]="{'borderPurple':borderVisibleName, 'empty-input-Name':!user.name && name.touched}" (focusout)="divfocusName('text',false)"  >
                 <div>
                     <mat-icon [ngStyle]="{'color':borderVisibleName ? 'black':'gray'}">person</mat-icon>
@@ -21,10 +22,10 @@
 
                 </div>
             </div>
-            <div class="validation-container">
-                <div *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen und Nachnamen
-                    ein</div>
-            </div>
+   
+                <span *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen und Nachnamen
+                    ein</span>
+   
             <div class="input-containers" (focusin)="divfocusmail('email',true)"
                 [ngClass]="{'borderPurple':borderVisibleMail, 'empty-input-Name':!user.email && email.touched}" (focusout)="divfocusmail('email',false)">
                 <div>
@@ -33,11 +34,11 @@
                     #email="ngModel"   required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
                 </div>
             </div>
-            <div class="validation-container">
-                <div *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</div>
-                    <div *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
-                        ein</div>
-            </div>
+   
+                <span *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</span>
+                    <span *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
+                        ein</span>
+
             <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
                 [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}" (focusout)="divfocusPasswort('password',false)">
                 <div>
@@ -45,9 +46,9 @@
                     <input  #passwort="ngModel"  [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort" type="password" required>
                 </div>
             </div>
-            <div class="validation-container">
-                <div *ngIf="passwort.touched && !user.passwort || user.passwort.length<6&& passwort.touched" class="validation-text">Passwort muss mindestens 6 zeichen lang sein</div>
-            </div>
+
+                <span *ngIf="passwort.touched && !user.passwort || user.passwort.length<6&& passwort.touched" class="validation-text">Passwort muss mindestens 6 zeichen lang sein</span>
+      
 
             <div class="checkbox-container">
                 <input type="checkbox" [(ngModel)]="isChecked" name="terms" id="">

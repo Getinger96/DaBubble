@@ -5,6 +5,7 @@
   justify-content: center;
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 
   >.Logo {
     position: absolute;
@@ -12,23 +13,52 @@
     left: 35px;
     height: 70px;
     width: 242.11px;
-  }
+  } 
+
+
 
   >.register-card {
-    height: 669px;
+    height: 680px;   
+    width: 610px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 16px;
+    align-items: center;
+    padding: 80px;
+    background-color: #FFFF;
+    border-radius: 30px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    flex: 1;
 
-    >span {
+
+    @media (max-width: 720px) {    
+      height: 600px;
+      padding: 25px;
+      width: 100%;
+    
+
+} 
+
+@media (max-height: 700px) {
+  height: 540px;
+  width: 100%;
+}
+
+    .recommendWordAdress {
       font-family: 'Nunito';
       font-weight: 400;
       font-size: 20px;
       text-align: center;
-      margin-bottom: 30px;
-      width: 486px;
-      letter-spacing: 0%;
+      margin-bottom: 20px;
+      line-height: 30px;
+
+
+      @media (max-width: 700px) {
+        line-height: 20px;
+        font-size: 16px;
+        margin-bottom: 0px;
+        width: 105%;
+      }
     }
     >div {
       display: flex;
@@ -66,17 +96,24 @@ h1 {
   justify-content: center;
 }
 
-.validation-container {
- min-height: 0px;
-  /* Stelle sicher, dass immer ein wenig Platz reserviert wird, auch wenn keine Nachricht da ist */
-  visibility: hidden;
-  /* Nachricht bleibt unsichtbar, aber der Raum wird weiterhin reserviert */
-}
 
 .validation-text {
   visibility: visible;  /* Wenn die Nachricht angezeigt wird, bleibt sie sichtbar */
+  font-size: 14px;
+  width: 90%;
   color: red;
-  font-size: 16px;
+
+  
+  @media (max-width: 720px) {    
+    width: 100%;
+  
+
+} 
+
+
+  @media (max-width: 450px) {
+    font-size: 12px;
+  }
 }
 
 
@@ -88,42 +125,43 @@ form {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
-  height: 350px;
   font-size: 18px;
   font-weight: 500;
   font-family: 'Nunito';
-
-
-  
- 
+  width: 100%;
   
 
+  
 
-  >div {
+
+  .input-containers {
 
     display: flex;
     align-items: center;
-    height: 50px;
     width: 500px;
-    border-radius: 100px;
-    background-color: white;
-
-
-
-
+    border-radius: 30px;
+    background-color: #ECEEFE;
+    padding: 10px;
+    border: 1px solid #ccc;
     cursor: pointer;
+    margin-top: 30px;
 
+    @media (max-width: 700px) {
+      width: 100%;
+    }
+
+      @media (max-width: 450px) {
+    font-size: 12px;
+    margin-top: 15px;
+  }
+    
     >div {
       display: flex;
       align-items: center;
-      padding-top: 18px;
-      padding-right: 32px;
-      padding-bottom: 18px;
-      padding-left: 32px;
       width: 100%;
       gap: 10px;
-
+      height: 40px;
+      padding: 0px 0px 0px 20px;
       >input {
         border: none;
         width: 100%;
@@ -164,6 +202,7 @@ form {
   display: flex;
   justify-content: end;
   background-color: transparent !important;
+  width: 80%;
 
   >input {
     &:disabled {
@@ -183,6 +222,12 @@ form {
 
 
 
+.checkbox-container {
+  display: flex;
+  width: 100%;
+  margin-top: 30px;
+
+}
 .invalid-placeholder::placeholder {
   color: red !important;
 }
