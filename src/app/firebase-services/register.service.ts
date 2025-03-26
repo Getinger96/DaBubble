@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail } from "firebase/auth";
+import { getAuth,confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
+import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,18 @@ export class RegisterService {
   // Initialisiere Firebase Auth
   private auth = getAuth();
   private provider = new GoogleAuthProvider();
+  private current = this.auth.currentUser;
+  oobCode: string | null = null;
+  
 
-  constructor() {}
+  constructor( private route: ActivatedRoute,
+    private router: Router) {
+      this.route.queryParams.subscribe(params => {
+        this.oobCode = params['oobCode'];
+      });
+    }
 
-
+  
 
   async addNewUser(item: User) {
     try {
@@ -139,6 +149,26 @@ sendEmailforPasswordreset(item: User){
   });
 
 }
- 
+
+
+resetPassword(newPasswort: any,confirmedPasswort: any): void {
+  if (this.oobCode && newPasswort === confirmedPasswort) {
+    // Passwort nur zurücksetzen, wenn der oobCode vorhanden und die Passwörter übereinstimmen
+    const auth = getAuth();
+    confirmPasswordReset(auth, this.oobCode,newPasswort)
+      .then(() => {
+        alert('Ihr Passwort wurde erfolgreich zurückgesetzt!');
+        this.router.navigate(['/login']); // Weiterleitung zur Login-Seite
+      })
+      .catch((error) => {
+        // Fehlerbehandlung
+        alert(`Fehler: ${error.message}`);
+      });
+  } else {
+    alert('Die Passwörter stimmen nicht überein!');
+  }
+}
   
 }
+
+

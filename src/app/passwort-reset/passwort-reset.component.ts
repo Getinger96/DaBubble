@@ -4,11 +4,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../interfaces/user.interface';
 import { RegisterService } from '../firebase-services/register.service';
+import { getAuth, confirmPasswordReset } from 'firebase/auth';
+
 @Component({
   selector: 'app-passwort-reset',
   standalone: true,
@@ -22,12 +24,28 @@ export class PasswortResetComponent {
   newPasswort:string=''
   confirmedPasswort:string=''
   length: any='';
+  oobCode: string | null = null;
  
+
+  
+    constructor(private registerservice: RegisterService){
+
+    }
+    
+  
+ 
+  
 
   divfocusPasswort(field: string, isFocused: boolean) {
     this.borderVisiblepasswort = isFocused
   }
   divfocusPasswortNew(field: string, isFocused: boolean) {
     this.borderVisiblepasswortNew = isFocused
+  }
+
+
+  resetPassword(newPasswort: any,confirmedPasswort: any){
+    this.registerservice.resetPassword(newPasswort,confirmedPasswort)
+
   }
 }
