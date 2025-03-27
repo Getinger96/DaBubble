@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, updateDoc, setDoc } from '@angular/fire/firestore';
 import { getAuth,confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
@@ -17,7 +17,9 @@ export class RegisterService {
   private provider = new GoogleAuthProvider();
   private current = this.auth.currentUser;
   oobCode: string | null = null;
-  
+  id?: string;
+  name?: string;
+
 
   constructor( private route: ActivatedRoute,
     private router: Router) {
@@ -28,19 +30,28 @@ export class RegisterService {
 
   
 
-  async addNewUser(item: User) {
+  async addNewUser(item: User, event: Event) {
     try {
+      event.preventDefault();
       const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
       const user = userCredential.user;
+      this.name =  item.name;
       this.addInFirebase(item, user.uid);
       console.log("Benutzer erfolgreich registriert und in Firestore gespeichert");
+      this.router.navigate(['/chooseAvatar']);
     } catch (error) {
       console.error("Fehler bei der Registrierung oder beim Speichern in Firestore:", error);
     }
   }
 
   addInFirebase(item: User, id: string) {
-    return addDoc(this.getUserRef(), this.userJson(item, id));
+    return addDoc(this.getUserRef(), this.userJson(item, id)).then(docRef => {
+      this.id =  docRef.id;
+      console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
+      return docRef.id;  // Gibt die automatisch generierte ID zurück
+    }).catch(error => {
+      console.error("Fehler beim Hinzufügen des Benutzers:", error);
+    });
   }
 
 userJson(item: User, id:string) {
@@ -49,10 +60,26 @@ userJson(item: User, id:string) {
     email: item.email,
     passwort: item.passwort,
     uid:id,
+    avatar: null,
   };
 }
 
+async updateUserAvatar(avatar: number) {
+  try {
+    if (!this.id) {
+      throw new Error("Fehler: Benutzer-ID nicht gesetzt!");
+    }
 
+    const userRef = doc(this.firestore, "Users", this.id);
+
+    // Verwende setDoc, um sicherzustellen, dass das Dokument existiert oder erstellt wird
+    await updateDoc(userRef, { avatar: avatar });
+
+    console.log("Avatar erfolgreich aktualisiert");
+  } catch (error) {
+    console.error("Fehler beim Aktualisieren des Avatars:", error);
+  }
+}
 
 // Diese Funktion wird aufgerufen, wenn der Benutzer den Google-Login-Button klickt.
 // Der "event" Parameter enthält das Klick-Ereignis, das wir zunächst unterdrücken,

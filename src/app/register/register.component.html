@@ -11,7 +11,7 @@
         <span class="recommendWordAdress">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DaBubble-Konto</span>
 
 
-        <form (ngSubmit)="addUser(contactForm)" #contactForm="ngForm">
+        <form (ngSubmit)="addUser($event, contactForm)" #contactForm="ngForm">
 
             <div  class="input-containers"    (focusin)="divfocusName('text',true)"
                 [ngClass]="{'borderPurple':borderVisibleName, 'empty-input-Name':!user.name && name.touched}" (focusout)="divfocusName('text',false)"  >

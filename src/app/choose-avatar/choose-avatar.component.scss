@@ -1,0 +1,203 @@
+$font-primary: 'Nunito', sans-serif;
+$font-secondary: 'Figtree', sans-serif;
+
+body {
+    margin: 0;
+    background-color: #ECEEFE;
+    font-family: $font-primary !important;
+}
+
+.fontNunito {
+    font-family: 'Nunito';
+}
+
+.fontFigtree {
+    font-family: 'Figtree';
+  }
+
+
+  .headerContainer {
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;             
+    padding: 40px;           
+    
+    
+    @media (max-width: 720px) {    
+        justify-content: center;  
+        padding: 25px;
+}
+
+
+@media (max-width: 450px) {    
+    justify-content: center;  
+    padding: 10px;
+}
+
+  }
+
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+  section {
+    width: 610px;
+    height: 660px;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    background-color: #FFFF;
+    border-radius: 30px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+
+
+    @media (max-width: 720px) {    
+        height: 600px;
+}
+
+@media (max-height: 700px) {
+    height: 540px;
+    width: 100%;
+}
+
+
+}
+
+
+.choose-avatar-card {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    padding: 20px 20px 20px 20px;
+}
+
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap:10px;
+    margin-top: 40px;
+
+    
+    @media (max-width: 720px) {    
+  display: none;
+}
+}
+
+.imprintAndPrivacy {
+    color: #797EF3;
+    font-weight: 400;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 100px;
+    border: solid 1px #ECEEFE;
+    font-family: $font-secondary !important;
+    text-decoration: none;
+    &:hover {
+        border-color: #797EF3;
+    }
+}
+
+
+.headline {
+    display: flex;
+    padding: 20px 20px 20px 20px;
+
+    @media (max-width: 720px) {
+        padding: 20px 20px 20px 20px;
+        flex: 1;
+           }
+
+    h1 {
+        color: #444DF2;
+        font-weight: 700;
+        font-size: 46px;
+        font-family: $font-primary;
+        margin-block-end: 20px;
+
+
+        @media (max-width: 720px) {
+            font-size: 24px;
+               }
+    }
+
+
+}
+
+
+.avatar-Section {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+
+
+    img {
+        width: 168px;
+        height: 168px;
+        border-radius: 100%;
+    }
+
+    h2 {
+        color: black;
+        font-weight: 700;
+        font-size:32px;
+        font-family: $font-primary;
+        margin-block-end: 20px;
+    }
+}
+
+
+
+.choose-Avatar {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+
+    > span {
+        color: black;
+        font-weight: 400; // Korrektur: "40" ist kein gültiger Wert, sollte "400" sein
+        font-size: 20px;
+    }
+
+    > div {
+        display: flex;
+        margin-top: 30px;
+        gap: 10px;
+
+        img { // Hier fehlt die geschweifte Klammer im ursprünglichen Code
+            border-radius: 100%;
+            cursor: pointer;
+     
+            &:hover {
+                transform: scale(1.1); 
+                border: solid 1px #444DF2;
+                box-shadow: 0px 2px 8px rgba(68, 77, 242, 0.3);
+            }
+        }
+    }
+}
+
+
+.next-button {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+
+    button {
+        background-color: #444DF2;
+        border: none; 
+        border-radius: 25px;
+        color: white;
+        font-size: 18px;
+        padding: 15px 25px 15px 25px;
+    }
+}

@@ -43,12 +43,10 @@ export class RegisterComponent {
   divfocusPasswort(field: string, isFocused: boolean) {
     this.borderVisiblepasswort = isFocused
   }
-  addUser(ngForm: NgForm) {
+  addUser(event: Event, ngForm: NgForm) {
+    this.registerservice.addNewUser(this.registerservice.setUserObject(this.user), event)
 
-    this.registerservice.addNewUser(this.registerservice.setUserObject(this.user))
 
-    ngForm.resetForm()
-    location.reload()
 
 
   }
