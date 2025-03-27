@@ -12,6 +12,7 @@ import { RegisterService } from '../firebase-services/register.service';
 
 
 
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -24,7 +25,8 @@ export class RegisterComponent {
   borderVisibleMail: boolean = false;
   borderVisiblepasswort: boolean = false;
   user: User = new User();
-  isChecked: boolean = false
+  isChecked: boolean = false;
+  overlayvisible:boolean=false;
 
 
   constructor(private registerservice: RegisterService) {
@@ -43,8 +45,14 @@ export class RegisterComponent {
   divfocusPasswort(field: string, isFocused: boolean) {
     this.borderVisiblepasswort = isFocused
   }
-  addUser(event: Event, ngForm: NgForm) {
+    addUser(event: Event, ngForm: NgForm) {
+    
     this.registerservice.addNewUser(this.registerservice.setUserObject(this.user), event)
+
+    this.overlayvisible=true;
+    setTimeout(() => {
+     this.overlayvisible=false
+    }, 2000);
 
 
 

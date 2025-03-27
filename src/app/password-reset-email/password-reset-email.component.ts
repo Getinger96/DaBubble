@@ -20,6 +20,7 @@ import { RegisterService } from '../firebase-services/register.service';
 export class PasswordResetEmailComponent {
   borderVisibleMail: boolean = false;
   user: User = new User();
+  overlayvisible:boolean=false;
  
 constructor(private registerservice: RegisterService){
 
@@ -30,6 +31,10 @@ divfocusmail(field: string, isFocused: boolean) {
 
   sendemail(ngForm: NgForm){
 this.registerservice.sendEmailforPasswordreset(this.registerservice.setUserObject(this.user))
+this.overlayvisible=true;
+setTimeout(() => {
+ this.overlayvisible=false
+}, 2000);
 
   }
 }

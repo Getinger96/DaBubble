@@ -13,12 +13,12 @@
     left: 35px;
     height: 70px;
     width: 242.11px;
-  } 
+  }
 
 
 
   >.register-card {
-    height: 680px;   
+    height: 680px;
     width: 610px;
     display: flex;
     flex-direction: column;
@@ -31,18 +31,18 @@
     flex: 1;
 
 
-    @media (max-width: 720px) {    
+    @media (max-width: 720px) {
       height: 600px;
       padding: 25px;
       width: 100%;
-    
 
-} 
 
-@media (max-height: 700px) {
-  height: 540px;
-  width: 100%;
-}
+    }
+
+    @media (max-height: 700px) {
+      height: 540px;
+      width: 100%;
+    }
 
     .recommendWordAdress {
       font-family: 'Nunito';
@@ -60,25 +60,26 @@
         width: 105%;
       }
     }
+
     >div {
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       >a {
         position: absolute;
         margin-right: 500px;
-  
+
         >img {
           width: 40px;
           height: 40px;
         }
       }
     }
-    
+
   }
 
- 
+
 
 
 }
@@ -98,17 +99,18 @@ h1 {
 
 
 .validation-text {
-  visibility: visible;  /* Wenn die Nachricht angezeigt wird, bleibt sie sichtbar */
+  visibility: visible;
+  /* Wenn die Nachricht angezeigt wird, bleibt sie sichtbar */
   font-size: 14px;
   width: 90%;
   color: red;
 
-  
-  @media (max-width: 720px) {    
-    width: 100%;
-  
 
-} 
+  @media (max-width: 720px) {
+    width: 100%;
+
+
+  }
 
 
   @media (max-width: 450px) {
@@ -129,9 +131,9 @@ form {
   font-weight: 500;
   font-family: 'Nunito';
   width: 100%;
-  
 
-  
+
+
 
 
   .input-containers {
@@ -150,11 +152,11 @@ form {
       width: 100%;
     }
 
-      @media (max-width: 450px) {
-    font-size: 12px;
-    margin-top: 15px;
-  }
-    
+    @media (max-width: 450px) {
+      font-size: 12px;
+      margin-top: 15px;
+    }
+
     >div {
       display: flex;
       align-items: center;
@@ -162,6 +164,7 @@ form {
       gap: 10px;
       height: 40px;
       padding: 0px 0px 0px 20px;
+
       >input {
         border: none;
         width: 100%;
@@ -228,6 +231,7 @@ form {
   margin-top: 30px;
 
 }
+
 .invalid-placeholder::placeholder {
   color: red !important;
 }
@@ -235,6 +239,37 @@ form {
 .empty-input-Name {
   border: 2px solid red !important;
   color: red !important;
+}
+
+.overlay_register {
+  overflow: hidden;
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  display: none;
+
+  >div {
+    animation: slidein ease-in-out 1.2s forwards;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+@keyframes slidein {
+  from {
+    transform: translateX(500px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 

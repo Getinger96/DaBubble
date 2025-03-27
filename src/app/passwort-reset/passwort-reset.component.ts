@@ -25,6 +25,7 @@ export class PasswortResetComponent {
   confirmedPasswort:string=''
   length: any='';
   oobCode: string | null = null;
+  overlayvisible:boolean=false;
  
 
   
@@ -46,6 +47,10 @@ export class PasswortResetComponent {
 
   resetPassword(newPasswort: any,confirmedPasswort: any){
     this.registerservice.resetPassword(newPasswort,confirmedPasswort)
+    this.overlayvisible=true;
+    setTimeout(() => {
+     this.overlayvisible=false
+    }, 2000);
 
   }
 }
