@@ -16,7 +16,7 @@ export class ChooseAvatarComponent {
 avatarImgNumber : number = 1;
 
 
-constructor(private registerservice: RegisterService) {
+constructor(public registerservice: RegisterService) {
 
 }
 avatarSelection(imgNumber: number) {
