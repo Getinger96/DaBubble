@@ -5,6 +5,7 @@ import { IntroComponent } from './intro/intro.component';
 import { PasswordResetEmailComponent } from './password-reset-email/password-reset-email.component';
 import { PasswortResetComponent } from './passwort-reset/passwort-reset.component';
 import { ChooseAvatarComponent } from './choose-avatar/choose-avatar.component';
+import { MainContentComponent } from './main-content/main-content.component';
 
 export const routes: Routes = [
     
@@ -14,5 +15,6 @@ export const routes: Routes = [
     {path: 'signUp', component:RegisterComponent },
     {path: 'resetEmail', component:PasswordResetEmailComponent },
     {path: 'reset', component: PasswortResetComponent },
+    {path: 'main-content', component: MainContentComponent},
 ];
 

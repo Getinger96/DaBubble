@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DevspaceSidebarComponent } from './devspace-sidebar.component';
+import { MainContentComponent } from './main-content.component';
 
-describe('DevspaceSidebarComponent', () => {
-  let component: DevspaceSidebarComponent;
-  let fixture: ComponentFixture<DevspaceSidebarComponent>;
+describe('MainContentComponent', () => {
+  let component: MainContentComponent;
+  let fixture: ComponentFixture<MainContentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DevspaceSidebarComponent]
+      imports: [MainContentComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DevspaceSidebarComponent);
+    fixture = TestBed.createComponent(MainContentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
