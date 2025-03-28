@@ -5,10 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { HeaderComponent } from '../header/header.component';
+import { HeaderComponent } from '../../shared-components/header/header.component';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../interfaces/user.interface';
-import { RegisterService } from '../firebase-services/register.service';
+import { User } from '../../interfaces/user.interface';
+import { RegisterService } from '../../firebase-services/register.service';
 import { getAuth, confirmPasswordReset } from 'firebase/auth';
 
 @Component({

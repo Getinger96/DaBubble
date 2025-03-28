@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from "../header/header.component";
+import { HeaderComponent } from '../../shared-components/header/header.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { User } from '../interfaces/user.interface';
-import { RegisterService } from '../firebase-services/register.service';
+import { User } from '../../interfaces/user.interface';
+import { RegisterService } from '../../firebase-services/register.service';
 import { GoogleAuthProvider } from "firebase/auth";
 @Component({
   selector: 'app-login',
