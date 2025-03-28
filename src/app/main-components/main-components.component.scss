@@ -1,0 +1,17 @@
+.main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    >.main-head {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .body {
+        padding-top: 24px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+}

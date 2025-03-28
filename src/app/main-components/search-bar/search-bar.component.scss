@@ -1,0 +1,29 @@
+@import './../../../styles.scss';
+
+.search-bar {
+    width: 932px;
+    background-color: #FFFFFF;
+    border-radius: 42px;
+    padding: 17.5px 45px 17.5px 45px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    >input {
+        border: unset;
+        color: #686868;
+        font-weight: 400;
+        font-family: $font-primary;
+        font-size: 24px;
+        width: 100%;
+        padding-right: 6px;
+        &:focus-within {
+            outline: none;
+        }
+    }
+
+    >img {
+        width: 35px;
+        height: 35px;
+    }
+}

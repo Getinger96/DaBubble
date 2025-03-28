@@ -1,0 +1,30 @@
+@import './../../../styles.scss';
+
+.active-user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    >#user-name {
+        margin: 0;
+        font-family: $font-primary;
+        font-weight: 700;
+        font-size: 32px;
+        color: #000000;
+    }
+    >.avatar {
+        position: relative;
+        >.profile {
+            width: 70px;
+            height: 70px;
+        }
+        >.status {
+            position: absolute;
+            right: 0;
+            bottom: 10px;
+        }
+    }
+    >a {
+        margin: 0;
+    }
+}
