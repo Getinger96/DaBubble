@@ -45,6 +45,7 @@
     
     
     }
+  
     
     .email-txt{
         
@@ -173,3 +174,175 @@
         border: 2px solid red !important;
         color: red !important;
       }
+
+      .overlay_reset {
+        overflow: hidden;
+        height: 100vh;
+        width: 100%;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        display: none;
+    
+        >div {
+            animation: slidein ease-in-out 1.2s forwards;
+            display: flex;
+            align-items: center;
+        }
+    }
+    
+    .d-flex {
+        display: flex;
+    }
+    
+    @keyframes slidein {
+        from {
+            transform: translateX(500px);
+        }
+    
+        to {
+            transform: translateX(0);
+        }
+    }
+
+
+    @media(max-width:700px){
+
+        .reset-container {
+
+            >.reset-card {
+                width: 500px;
+                >div {
+                    >a {
+                     
+                        margin-right: 500px;
+                    }
+                }
+            }
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+    }
+
+
+    @media(max-width:520px) {
+
+        .reset-container {
+    
+    
+            >.reset-card {
+    
+                width: 400px;
+    
+                >div {
+    
+                    >a {
+                        position: absolute;
+                        margin-right: 400px;
+    
+    
+                    }
+                }
+            }
+        }
+    
+        h1 {
+            font-size: 40px;
+        }
+    
+        form {
+            >div {
+                width: 400px;
+    
+                >div {
+    
+                    >input {}
+                }
+            }
+        }
+    
+    
+        .button-container {
+    
+            justify-content: center;
+        }
+    
+        .email-txt {
+            width: 300px;
+        }
+    }
+    
+    
+    @media(max-width:420px) {
+    
+        .reset-container {
+    
+    
+            >.reset-card {
+    
+                width: 300px;
+    
+                >div {
+    
+                    >a {
+                        position: absolute;
+                        margin-right: 310px;
+    
+    
+                    }
+                }
+            }
+        }
+    
+        h1 {
+            font-size: 38px;
+        }
+    
+        form {
+            >div {
+                width: 300px;
+               
+                >div {
+                    padding-right: 24px;
+                    padding-left: 24px;
+                    >input {}
+                }
+            }
+        }
+    
+    
+        .button-container {
+    
+            justify-content: center;
+        }
+    
+        .email-txt {
+            width: 300px;
+        }
+    }
+    
+    @media(max-width:330px){
+        .reset-container {
+    
+    
+            >.reset-card {
+    
+    
+                >div {
+    
+                    >a {
+                        position: absolute;
+                        margin-right: 300px;
+    
+    
+                    }
+                }
+            }
+        }
+    
+    }
+    
