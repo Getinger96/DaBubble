@@ -1,0 +1,25 @@
+@import './../../../styles.scss';
+
+.toggle-menu {
+    background-color: #FFFFFF;
+    transform: rotate(-90deg);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 347px;
+    height: 60px;
+    box-shadow: 4px 4px 7px 0px #00000033;
+    border-bottom-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    >img {
+        transform: rotate(90deg);
+    }
+    >p {
+        color: #000000;
+        line-height: 120%;
+        font-family: $font-primary;
+        font-size: 20px;
+        font-weight: 500;
+    }
+}

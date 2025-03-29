@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { DirectMessageUserComponent } from './direct-message-user/direct-message-user.component';
+import { ToggleWebspaceMenuComponent } from '../toggle-webspace-menu/toggle-webspace-menu.component';
 
 @Component({
   selector: 'app-workspace-menu',
   standalone: true,
-  imports: [NgIf, DirectMessageUserComponent],
+  imports: [NgIf, DirectMessageUserComponent, ToggleWebspaceMenuComponent],
   templateUrl: './workspace-menu.component.html',
   styleUrl: './workspace-menu.component.scss'
 })
