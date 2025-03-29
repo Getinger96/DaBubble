@@ -36,7 +36,7 @@
         flex-direction: column;
         gap: 25px;
         max-width: 90%;
-        >.head {
+        >.head-channels {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -45,6 +45,9 @@
                 flex-direction: row;
                 align-items: center;
                 gap: 15px;
+                >.toggle-channel-menu {
+                    cursor: pointer;
+                }
                 >h4 {
                     margin: 0;
                     font-family: $font-primary;
@@ -55,7 +58,7 @@
             }
         }
         >.channels-menu {
-            .channel {
+            >.channel {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -70,6 +73,49 @@
                     color: #535AF1;
                 }
             }
+            >.add-channel {
+                padding-top: 24px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                margin: 0;
+                color: #000000;
+                font-family: $font-primary;
+                font-weight: 400;
+                font-size: 18px;
+                text-decoration: none;
+            }
+        }
+    }
+    >.direct-messages-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        >.head-direct-messages {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            >.toggle-direct-messages-menu {
+                cursor: pointer;
+            }
+            >.headline-direct-messages {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                >h4 {
+                    margin: 0;
+                    letter-spacing: 0%;
+                    color: #000000;
+                    font-weight: 700;
+                    font-family: $font-primary;
+                    font-size: 20px;
+                }
+            }
+        }
+        >.direct-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
         }
     }
 }

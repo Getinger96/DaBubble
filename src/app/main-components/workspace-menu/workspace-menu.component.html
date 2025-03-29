@@ -1,0 +1,44 @@
+<section class="channel-menu">
+    <div class="head">
+        <div>
+            <img src="assets/img/Workspace logo.svg" alt="channel-icon">
+            <h3>Devspace</h3>
+        </div>
+        <a href=""><img src="assets/img/edit_square.svg" alt="edit"></a>
+    </div>
+    <div class="channels">
+        <div class="head-channels">
+            <div class="head-left">
+                <img class="toggle-channel-menu" (click)="toggleChannels()" src="assets/img/arrow_drop_down.svg" alt="open-channels">
+                <img src="assets/img/workspaces.svg" alt="workspaces">
+                <h4>Channels</h4>
+            </div>
+            <a href=""><img src="assets/img/add.svg" alt="add"></a>
+        </div>
+        <nav *ngIf="openChannels" class="channels-menu">
+            <div class="channel">
+                <p># <span>Entwicklerteam</span></p>
+            </div>
+            <a class="add-channel" href=""><img src="assets/img/add_circle.svg" alt="add-channel">Channel hinzufügen</a>
+        </nav>
+    </div>
+    <div class="direct-messages-menu">
+        <div class="head-direct-messages">
+            <img class="toggle-direct-messages-menu" (click)="toggleDirectMessages()" src="assets/img/arrow_drop_down.svg" alt="open-direct-messages">
+            <div class="headline-direct-messages">
+                <img src="assets/img/account_circle.svg" alt="account-icon">
+                <h4>Direktnachrichten</h4>
+            </div>
+        </div>
+        <nav *ngIf="openDirectMessages" class="direct-messages">
+            <app-direct-message-user [username]="'Frederik Beck'" [ownAccount]="true" [avatar]="2" [status]="'Online'"></app-direct-message-user>
+            <app-direct-message-user [username]="'Sofia Müller'" [ownAccount]="false" [avatar]="6" [status]="'Offline'"></app-direct-message-user>
+            <app-direct-message-user [username]="'Noah Braun'" [ownAccount]="false" [avatar]="5" [status]="'Online'"></app-direct-message-user>
+            <app-direct-message-user [username]="'Elise Roth'" [ownAccount]="false" [avatar]="4" [status]="'Online'"></app-direct-message-user>
+            <app-direct-message-user [username]="'Elias Neumann'" [ownAccount]="false" [avatar]="7" [status]="'Offline'"></app-direct-message-user>
+            <app-direct-message-user [username]="'Steffen Hoffmann'" [ownAccount]="false" [avatar]="3" [status]="'Online'"></app-direct-message-user>
+        </nav>
+    </div>
+
+</section>
+
