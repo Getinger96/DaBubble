@@ -10,6 +10,7 @@ section {
     justify-content: center;
   align-items: center;
   animation:   move-section-to-corner ease-in-out 600ms forwards 1.2s;
+  overflow: hidden;
 }
 
 
@@ -20,10 +21,36 @@ section {
     width: 100%;
     height: 100%;
     animation:   move-to-corner ease-in-out 600ms forwards 1.2s;
+
+
+    
     .logo {
         animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner ease-in-out 600ms forwards 1.2s;
         width: 190px;
         height: 190px;
+
+
+        
+        @media (max-width: 1200px) {
+            width: 170px;
+            height: 170px;
+            }
+
+
+
+            @media (max-width: 720px) {
+                width: 130px;
+                height: 130px;
+                animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
+                }
+
+                @media (max-width: 500px) {
+                    width: 90px;
+                    height: 90px;
+                    animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
+                    }
+    
+        
     }
 
 
@@ -43,11 +70,86 @@ section {
         overflow: hidden;
         padding-top: 15px;
         padding-bottom: 15px;
+
+
+        @media (max-width: 1200px) {
+            font-size: 60px;
+            animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner-small ease-in-out 600ms forwards 1.2s;
+            }
+        
+            
+        
+        @media (max-width: 720px) {
+            font-size: 40px;
+            animation: headline-animation-mobile ease-in-out 1.2s forwards, move-headline-to-corner-mobile ease-in-out 600ms forwards 1.2s;
+            transform: translateX(-200px);
+            }
+
+            @media (max-width: 500px) {
+                font-size: 32px;
+                animation: headline-animation-mobile-small ease-in-out 1.2s forwards, move-headline-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
+                transform: translateX(-20px);
+                }
+        }
+        
+    }
+
     }
 
 
+    
+    @media (max-width: 1350px) {
+        .intro {
+            animation: move-to-corner-small ease-in-out 600ms forwards 1.2s;
+        }
+    
     }
-}
+        @media (max-width: 1200px) {
+            .intro {
+                    animation: move-to-corner-smaller ease-in-out 600ms forwards 1.2s;
+            }
+        }    
+    
+        @media (max-width: 1100px) {
+            .intro {
+                    animation: move-to-corner-compact ease-in-out 600ms forwards 1.2s;
+            }
+        }    
+    
+
+        @media (max-width: 900px) {
+            .intro {
+                    animation: move-to-corner-narrow ease-in-out 600ms forwards 1.2s;
+            }
+        }    
+
+
+        
+        @media (max-width: 800px) {
+            .intro {
+                    animation: move-to-corner-condensed ease-in-out 600ms forwards 1.2s;
+            }
+        }   
+
+
+        @media (max-width: 720px) {
+            .intro {
+                    animation: move-to-corner-mobile ease-in-out 600ms forwards 1.2s;
+            }
+        } 
+
+
+        @media (max-width: 720px) {
+            .intro {
+              margin-left: 100px;
+              animation: move-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
+            }
+        } 
+
+
+
+
+        
    
 @keyframes move-section-to-corner {
     from {
@@ -99,10 +201,98 @@ section {
         margin: 0px;
     }
     to {
-        transform: translate(-37%, -39.5%);
+        transform: translate(-38%, -40.5%);
+        margin: 20px;
+    }
+
+    
+
+}
+
+
+@keyframes move-to-corner-small {
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(-33%, -40.5%);
         margin: 20px;
     }
 }
+
+
+@keyframes move-to-corner-smaller {
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(-29%, -40.5%);
+        margin: 20px;
+    }
+}
+
+@keyframes move-to-corner-compact {
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(-27%, -40.5%);
+        margin: 20px;
+    }
+}
+
+@keyframes move-to-corner-narrow{
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(-23%, -40.5%);
+        margin: 20px;
+    }
+}
+
+
+@keyframes move-to-corner-condensed{
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(-18%, -40.5%);
+        margin: 20px;
+    }
+}
+
+@keyframes move-to-corner-mobile {
+    from {
+        transform: translate(0, 0);
+        margin: 0px;
+    }
+    to {
+        transform: translate(12%, -44%);
+        margin: 0px;
+    }
+}
+
+@keyframes move-to-corner-mobile-small {
+    from {
+        transform: translate(0, 0);
+        margin-left: 100px;
+    }
+    to {
+        transform: translate(22%, -44%);
+        margin: 0px;
+    }
+}
+
+
+
+
+
 
 
 @keyframes move-img-to-corner {
@@ -117,6 +307,45 @@ section {
 }
 
 
+
+@keyframes move-img-to-corner-mobile {
+    from {
+        width: 130px;
+        height: 130px;
+    }
+    to {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+
+
+@keyframes move-img-to-corner-mobile-small {
+    from {
+        width: 90px;
+        height: 90px;
+    }
+    to {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@keyframes move-headline-to-corner-small {
+    from {
+        font-size: 60px;
+    }
+    to {
+        font-size: 32px;
+        color: black;
+    }
+}
+
+
+
+
+
 @keyframes move-headline-to-corner {
     from {
         font-size: 80px;
@@ -126,6 +355,30 @@ section {
         color: black;
     }
 }
+
+
+@keyframes move-headline-to-corner-mobile {
+    from {
+        font-size: 40px;
+    }
+    to {
+        font-size: 24px;
+        color: black;
+    }
+}
+
+
+@keyframes move-headline-to-corner-mobile-small {
+    from {
+        font-size: 32px;
+    }
+    to {
+        font-size: 24px;
+        color: black;
+    }
+}
+
+
 
 
 
@@ -142,6 +395,30 @@ section {
 }
 
 
+@keyframes headline-animation-mobile {
+    from {
+          transform: translateX(-200px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+@keyframes headline-animation-mobile-small {
+    from {
+          transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 
 
 
