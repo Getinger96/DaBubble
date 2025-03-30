@@ -1,0 +1,114 @@
+.main-chat-wrapper{
+    width: 989px;
+    height: 87vh;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    margin-left: 20px;
+}
+
+.main-chat-header{
+    height: 96px;
+    box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+
+    .message-group{
+        display: flex;
+        justify-content: center;
+        align-items:center;
+        padding-left: 45px;
+        gap: 18px;
+
+        img{
+            width: 30px;
+            height: 30px;
+        }
+
+        .arrow_down{
+            width: 14px;
+            height: 8.19px;
+        }
+
+        .actual-group{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            span{
+                font-weight: 700;
+                font-size: 24px;
+            }
+        }
+    }
+
+    .actual-group-members{
+        display: flex;
+        align-items: center;
+        padding-right: 45px;
+        gap: 10px;
+
+        .members-avatar-group{
+            display: flex;
+
+            .avatar{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 2px solid white;
+                background-size: cover;
+                background-position: center;
+                margin-left: -12px;
+
+            }
+        }
+
+        img{
+            width: 40px;
+            height: 40px;
+        }
+
+        span{
+            font-size: 20px;
+            font-weight: 600;
+        }
+    }
+}
+
+.main-chat-feed{
+    height: calc(100% - 241px);
+}
+
+.main-chat-message{
+    height: 145px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    margin: -35px 38px 0 40px;
+    position: relative;
+
+    textarea{
+        border: none;
+        width: calc(100% - 40px);
+        padding: 20px 20px;
+        height: calc(100% - 100px);
+        background-color: transparent;
+        resize: none;
+        &:focus{
+            outline: none;
+        }
+    }
+    
+    .message-icons{
+        position: absolute;
+        width: calc(100% - 40px);
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        justify-content: space-between;
+
+        img{
+            width: 40px;
+            height: 40px;
+        }
+
+    }
+}
