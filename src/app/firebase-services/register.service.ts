@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, doc, updateDoc, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, updateDoc, setDoc,onSnapshot } from '@angular/fire/firestore';
 import { getAuth,confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword,onAuthStateChanged } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
@@ -19,6 +19,8 @@ export class RegisterService {
   oobCode: string | null = null;
   id?: string;
   name?: string;
+  unsubList;
+  allUsers: User[] = [];
 
 
   constructor( private route: ActivatedRoute,
@@ -26,8 +28,25 @@ export class RegisterService {
       this.route.queryParams.subscribe(params => {
         this.oobCode = params['oobCode'];
       });
+      
+      this.unsubList = this.subList();
+      
+    }
+    subList() {
+      return onSnapshot(this.getUserRef(), (user) => {
+        this.allUsers = [];
+        user.forEach(element => {
+          this.allUsers.push(this.setUserObject(element.data(),element.id))
+          console.log(element.data())
+        })
+        console.log(this.allUsers)
+      })
+  
     }
 
+    ngonDestroy() {
+      this.unsubList();
+    }
   
 
 
@@ -160,8 +179,9 @@ loginWithGoogleAccountError(error: any) {
   }
 
   // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
-  setUserObject(obj: any): User {
+  setUserObject(obj: any,id:string): User {
     return {
+      id:id,
       name: obj.name,
       email: obj.email,
       passwort: obj.passwort

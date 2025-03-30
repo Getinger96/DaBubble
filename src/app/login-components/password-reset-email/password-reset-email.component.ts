@@ -30,7 +30,7 @@ divfocusmail(field: string, isFocused: boolean) {
 }
 
   sendemail(ngForm: NgForm){
-this.registerservice.sendEmailforPasswordreset(this.registerservice.setUserObject(this.user))
+this.registerservice.sendEmailforPasswordreset(this.registerservice.setUserObject(this.user,this.user.id))
 this.overlayvisible=true;
 setTimeout(() => {
  this.overlayvisible=false

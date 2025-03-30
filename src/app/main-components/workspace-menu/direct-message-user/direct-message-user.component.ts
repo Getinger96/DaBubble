@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NgIf } from '@angular/common';
+import { User } from '../../../interfaces/user.interface';
 
 @Component({
   selector: 'app-direct-message-user',
@@ -14,5 +15,7 @@ export class DirectMessageUserComponent {
   @Input() ownAccount!:boolean;
   @Input() avatar!:number;
   @Input() status!:string;
+ 
+
 
 }
