@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { DirectMessageUserComponent } from './direct-message-user/direct-message-user.component';
+
 @Component({
   selector: 'app-workspace-menu',
   standalone: true,
@@ -12,6 +13,10 @@ export class WorkspaceMenuComponent {
 
   openChannels:boolean = true;
   openDirectMessages:boolean = true;
+ 
+
+
+  
 
   toggleChannels() {
     if(this.openChannels) {this.openChannels = false;} 

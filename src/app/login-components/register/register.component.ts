@@ -47,7 +47,7 @@ export class RegisterComponent {
   }
     addUser(event: Event, ngForm: NgForm) {
     
-    this.registerservice.addNewUser(this.registerservice.setUserObject(this.user), event)
+    this.registerservice.addNewUser(this.registerservice.setUserObject(this.user,this.user.id), event)
 
     this.overlayvisible=true;
     setTimeout(() => {

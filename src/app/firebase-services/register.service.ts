@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot  } from '@angular/fire/firestore';
-import { getAuth, fetchSignInMethodsForEmail,  confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth,  confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -84,6 +84,8 @@ export class RegisterService {
 
 
 
+
+
   async addNewUser(item: User, event: Event) {
     try {
       event.preventDefault();
@@ -148,6 +150,7 @@ async loginWithGoogle(event: Event) {
 
     // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
     this.loginWithGoogleAccountItWorks(result);
+    this.router.navigate(['/main-components']);
   } catch (error) {
     // Falls ein Fehler auftritt (z.B. Popup wird geschlossen oder ein Netzwerkfehler),
     // wird der Fehler hier verarbeitet.
@@ -175,6 +178,7 @@ loginWithGoogleAccountItWorks(result: any) {
     // - email: Die E-Mail-Adresse des Benutzers
     // - photoURL: Die URL zum Profilbild des Benutzers (sofern vorhanden)
     const user = result.user;
+    
 
     // Ausgabe des Access Tokens und der Benutzerinformationen in der Konsole,
     // um zu überprüfen, dass die Anmeldung erfolgreich war.
