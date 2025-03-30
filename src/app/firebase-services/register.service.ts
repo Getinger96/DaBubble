@@ -73,7 +73,7 @@ export class RegisterService {
     
         const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
         console.log('✅ Erfolgreich angemeldet:', userCredential.user);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/main-components']);
         
       } catch (error: any) {  
         console.error('❌ Fehler bei der Anmeldung:', error);
