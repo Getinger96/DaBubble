@@ -6,6 +6,9 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  margin-top: 20px;
+  margin-right: 24px;
+  margin-left: 24px;
 
   >.Logo {
     position: absolute;
@@ -336,7 +339,7 @@ form {
     font-size: 15px;
 
     >div {
-      width: 305px;
+      width: 250px;
     }
   }
 }
