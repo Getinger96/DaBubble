@@ -52,5 +52,9 @@ export class LoginComponent {
     this.registerservice.loginWithGoogle(event)
     
   }
+
+  async loginAccount(email: string, password: string, event: Event) {
+    this.registerservice.loginUser(email, password, event)
+  }
   
 }

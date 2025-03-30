@@ -19,12 +19,12 @@
         <span class="recommendWordAdress">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
         
 
-        <form class="loginForm fontNunito" >
+        <form class="loginForm fontNunito" (submit)="loginAccount(email.value,password.value, $event)">
 
             <div class="input-Fields">
                 <div (focusin)="setFocusEmail('email', true)" class="custom-input" [ngClass]="{'borderPurple ': isActiveEmail}" (focusout)="setFocusEmail('email', false)">
                     <mat-icon [ngStyle]="{'color': isActiveEmail ? 'black': 'gray'}">mail</mat-icon>
-                    <input type="email" placeholder="beispielname@email.com">
+                    <input #email type="email" placeholder="beispielname@email.com">
                 </div>
             </div>
     
@@ -32,7 +32,7 @@
                 <div class="input-Fields">
                     <div (focusin)="setFocusPassword('password', true)" [ngClass]="{'borderPurple ': isActivePassword}"  class="custom-input" (focusout)="setFocusPassword('password', false)">
                         <mat-icon [ngStyle]="{'color': isActivePassword ? 'black': 'gray'}">lock</mat-icon>
-                        <input type="password" placeholder="Passwort">
+                        <input #password type="password" placeholder="Passwort">
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
 
 
                     <div class="loginButtons">
-                        <button class="loginBtn">Anmelden</button>
+                        <button type="submit" class="loginBtn">Anmelden</button>
                         <button routerLink="/main-components" class="guestLoginBtn">Gäste-Login</button>
                         
 

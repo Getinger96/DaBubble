@@ -1,9 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, doc, updateDoc, setDoc } from '@angular/fire/firestore';
-import { getAuth,confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword } from "firebase/auth";
+import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot  } from '@angular/fire/firestore';
+import { getAuth, fetchSignInMethodsForEmail,  confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,8 @@ export class RegisterService {
   oobCode: string | null = null;
   id?: string;
   name?: string;
+  unsubList;
+  allUsers: User[] = [];
 
 
   constructor( private route: ActivatedRoute,
@@ -26,9 +30,59 @@ export class RegisterService {
       this.route.queryParams.subscribe(params => {
         this.oobCode = params['oobCode'];
       });
+
+      this.unsubList = this.subList();
     }
 
+    subList() {
+      return onSnapshot(this.getUserRef(), (user) => {
+        this.allUsers = [];
+        user.forEach(element => {
+          this.allUsers.push(this.setUserObject(element.data(),element.id))
+          console.log(element.data())
+        })
+        console.log(this.allUsers)
+      })
+    }
+
+    ngonDestroy() {
+      this.unsubList();
+    }
+
+
+    async checkIfUserExists(email: string): Promise<boolean> {
+      try {
+       let userQuery  = query(this.getUserRef(), where("email", "==", email))
+       const querySnapshot = await getDocs(userQuery);
+       return !querySnapshot.empty; 
+      } catch (error) {
+        console.error('Fehler beim Überprüfen des Benutzers:', error);
+        return false;
+      }
+    }
+    
+
+    async loginUser(email: string, password: string, event: Event) {
+      event.preventDefault();
+      try {
+        const userExists = await this.checkIfUserExists(email);
+        if (!userExists) {
+          console.error('❌ Benutzer existiert nicht.');
+          return;
+        }
+    
+        const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+        console.log('✅ Erfolgreich angemeldet:', userCredential.user);
+        this.router.navigate(['/dashboard']);
+        
+      } catch (error: any) {  
+        console.error('❌ Fehler bei der Anmeldung:', error);
   
+      }
+    }
+    
+
+
 
   async addNewUser(item: User, event: Event) {
     try {
@@ -76,6 +130,7 @@ async updateUserAvatar(avatar: number) {
     await updateDoc(userRef, { avatar: avatar });
 
     console.log("Avatar erfolgreich aktualisiert");
+    this.router.navigate(['/login']);
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Avatars:", error);
   }
@@ -156,13 +211,18 @@ loginWithGoogleAccountError(error: any) {
   }
 
   // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
-  setUserObject(obj: any): User {
+  setUserObject(obj: any,id:string): User {
     return {
+      id:id,
       name: obj.name,
       email: obj.email,
       passwort: obj.passwort
     };
   }
+
+
+
+
 sendEmailforPasswordreset(item: User){
   sendPasswordResetEmail(this.auth,item.email)
   .then(() => {
