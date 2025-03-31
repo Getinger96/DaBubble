@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot  } from '@angular/fire/firestore';
-import { getAuth,  confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth,  confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,6 +48,8 @@ export class RegisterService {
     ngonDestroy() {
       this.unsubList();
     }
+
+    
 
 
     async checkIfUserExists(email: string): Promise<boolean> {
@@ -115,8 +117,22 @@ userJson(item: User, id:string) {
     name: item.name,
     email: item.email,
     passwort: item.passwort,
-    uid:id,
+    id:id,
+    uid:item.uid,
     avatar: null,
+    status:item.status
+  };
+}
+// Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
+setUserObject(obj: any,id:string): User {
+  return {
+    uid:obj.uid,
+    id:id,
+    name: obj.name,
+    email: obj.email,
+    passwort: obj.passwort,
+    avatar: obj.avatar,
+    status:obj.status
   };
 }
 
@@ -214,15 +230,7 @@ loginWithGoogleAccountError(error: any) {
     return collection(this.firestore, 'Users');
   }
 
-  // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
-  setUserObject(obj: any,id:string): User {
-    return {
-      id:id,
-      name: obj.name,
-      email: obj.email,
-      passwort: obj.passwort
-    };
-  }
+  
 
 
 

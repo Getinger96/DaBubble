@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { NgIf,CommonModule } from '@angular/common';
 import { User } from '../../../interfaces/user.interface';
+import { RegisterService } from '../../../firebase-services/register.service';
 
 @Component({
   selector: 'app-direct-message-user',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf,CommonModule],
   templateUrl: './direct-message-user.component.html',
   styleUrl: './direct-message-user.component.scss'
 })
@@ -15,7 +16,13 @@ export class DirectMessageUserComponent {
   @Input() ownAccount!:boolean;
   @Input() avatar!:number;
   @Input() status!:string;
- 
+  allUsers: User[] = [];
+
+  constructor(private registerservice: RegisterService){
+    this.allUsers=this.registerservice.allUsers
+    
+
+  }
 
 
 }
