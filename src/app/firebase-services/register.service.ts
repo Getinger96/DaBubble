@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot  } from '@angular/fire/firestore';
-import { getAuth,  confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -77,10 +77,15 @@ export class RegisterService {
         console.log('✅ Erfolgreich angemeldet:', userCredential.user);
         this.loginIsValide = true;
         this.loginIsEmailValide = true;
+        onAuthStateChanged(this.auth, (user) => {
+          if (user) {
+            console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
         setTimeout(() => {
           this.router.navigate(['/main-components']);
         }, 3000);
         
+      }
+    });
       } catch (error: any) {  
         console.error('❌ Fehler bei der Anmeldung:', error);
         this.loginIsValide = false;
