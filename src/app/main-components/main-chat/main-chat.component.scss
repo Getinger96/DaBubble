@@ -1,6 +1,5 @@
 .main-chat-wrapper{
     width: 989px;
-    height: 87vh;
     background-color: #FFFFFF;
     border-radius: 30px;
     margin-left: 20px;
@@ -75,14 +74,20 @@
 }
 
 .main-chat-feed{
-    height: calc(100% - 241px);
+    height: calc(100% - 321px);
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.input-wrapper{
+padding: 38px 35px 40px 35px;
 }
 
 .main-chat-message{
     height: 145px;
     border-radius: 20px;
     border: 1px solid #ADB0D9;
-    margin: -35px 38px 0 40px;
     position: relative;
 
     textarea{
@@ -112,3 +117,132 @@
 
     }
 }
+.message-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 20px;
+
+    .message-date-part{
+        position: relative;
+        height: 35px;
+        display: flex;
+        align-items: center;
+    
+        .date-row{
+            height: 1px;
+            background-color: #ADB0D9;
+            width: 100%;
+        }
+    
+        .message-date{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 5px 15px;
+            border: 1px solid #ADB0D9;
+            border-radius: 30px;
+            background-color: white;
+            
+        }
+    }
+
+    .message{
+        width: 100%;
+        display: flex;
+        padding-top: 10px;
+        
+
+        img{
+            width: 70px;
+            height: 70px;
+            padding: 10px 30px 0 45px;
+        }
+        span{
+            font-family: "Nunito";
+        }
+
+        .message-details{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .message-over{
+                height: 25px;
+                display: flex;
+                gap:20px;
+    
+                .message-name{
+                    font-weight: 700;
+                    font-size: 18px;
+                }
+        
+                .message-time{
+                    font-size: 14px;
+                    color: #686868;
+                }
+            }
+    
+    
+    
+            .message-text{
+                padding: 15px;
+                font-size: 18px;
+                background-color: #ECEEFE;
+                border-top-right-radius: 30px;
+                border-bottom-right-radius: 30px;
+                border-bottom-left-radius: 30px;
+                max-width: 698px;
+            }
+    
+            .message-under{
+    
+                .message-answered{
+                    height: 25px;
+                    display: flex;
+
+                    .message-answers{
+                        font-size: 18px;
+                        color: #535AF1;
+                        padding-right: 20px;
+                    }
+            
+                    .message-last-answer{
+                        color: #686868;
+                        font-size: 14px;
+                    }
+                }
+               
+                .message-not-answered{
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+
+                    img{
+                        width: 24px;
+                        height: 24px;
+                        padding: 0;
+                    }
+
+                    .reaction{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 10px;
+                        padding: 5px 10px;
+                        border: 1px solid #ADB0D9;
+                        border-radius: 20px;
+                    }
+                }
+
+
+            }
+        }
+
+        
+
+
+    }
+}
+
