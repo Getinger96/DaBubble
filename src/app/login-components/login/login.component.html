@@ -24,21 +24,27 @@
             <div class="input-Fields">
                 <div (focusin)="setFocusEmail('email', true)" class="custom-input" [ngClass]="{'borderPurple ': isActiveEmail}" (focusout)="setFocusEmail('email', false)">
                     <mat-icon [ngStyle]="{'color': isActiveEmail ? 'black': 'gray'}">mail</mat-icon>
-                    <input #email type="email" placeholder="beispielname@email.com">
+                    <input (blur)="inputFieldEmailIsEmpty()" #email type="email" placeholder="beispielname@email.com">
                 </div>
+                <span *ngIf="!loginEmailIsCorrect"  class="incorrect-input">*Die E-Mail Adresse ist leider ungültig</span>
+                <span *ngIf="!emailFielIsEmpty" class="incorrect-input">*Geben Sie eine E-Mail ein </span>
             </div>
-    
         
                 <div class="input-Fields">
                     <div (focusin)="setFocusPassword('password', true)" [ngClass]="{'borderPurple ': isActivePassword}"  class="custom-input" (focusout)="setFocusPassword('password', false)">
                         <mat-icon [ngStyle]="{'color': isActivePassword ? 'black': 'gray'}">lock</mat-icon>
-                        <input #password type="password" placeholder="Passwort">
+                        <input [(ngModel)]="user.passwort" (blur)="inputFieldPasswordIsEmpty()" #password type="password" placeholder="Passwort" required="">
                     </div>
-                </div>
+                    <span  *ngIf="!loginEmailAndPasswordAreCorrect"  class="incorrect-input" >*Falsches Passwort oder E-Mail..Bitte noch einmal versuchen</span>
+                    <span *ngIf="!passwordFieldIsEmpty" class="incorrect-input">*Geben Sie ein Passwort ein </span>
+                    <span *ngIf="!passWordLengthIsCorrect" class="incorrect-input">*Passwort muss mindestens 6 zeichen lang sein </span>
 
+                </div>
+               
 
                 <div class="forgottPassword">
                 <a   href="resetEmail">Passwort vergessen ?</a>
+
                  </div>
 
 
@@ -50,7 +56,7 @@
                  </div>
 
 
-                    <button  (click)="login($event)"  (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)" class="googleLogin fontNunito">
+                    <button [ngClass]="{'buttonErrorDesign': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" (click)="login($event)"  (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)" class="googleLogin fontNunito">
                         <div>
                         <img src="../../assets/img/Google (1).png" alt="">
                         <a href="" [ngStyle]="{'font-weight': isHovered ? '700': '400'}"> Anmelden mit Google</a>
@@ -59,8 +65,8 @@
 
 
                     <div class="loginButtons">
-                        <button type="submit" class="loginBtn">Anmelden</button>
-                        <button routerLink="/main-components" class="guestLoginBtn">Gäste-Login</button>
+                        <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" type="submit" class="loginBtn">Anmelden</button>
+                        <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" routerLink="/main-components" class="guestLoginBtn">Gäste-Login</button>
                         
 
 

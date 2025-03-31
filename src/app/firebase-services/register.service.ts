@@ -23,7 +23,8 @@ export class RegisterService {
   name?: string;
   unsubList;
   allUsers: User[] = [];
-
+  loginIsValide: boolean = true
+  loginIsEmailValide: boolean = true
 
   constructor( private route: ActivatedRoute,
     private router: Router) {
@@ -39,7 +40,7 @@ export class RegisterService {
         this.allUsers = [];
         user.forEach(element => {
           this.allUsers.push(this.setUserObject(element.data(),element.id))
-          console.log(element.data())
+          console.log('Daten in Firebase', element.data(), element.id)
         })
         console.log(this.allUsers)
       })
@@ -68,15 +69,21 @@ export class RegisterService {
         const userExists = await this.checkIfUserExists(email);
         if (!userExists) {
           console.error('❌ Benutzer existiert nicht.');
+          this.loginIsEmailValide = false;
           return;
         }
     
         const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
         console.log('✅ Erfolgreich angemeldet:', userCredential.user);
-        this.router.navigate(['/main-components']);
+        this.loginIsValide = true;
+        this.loginIsEmailValide = true;
+        setTimeout(() => {
+          this.router.navigate(['/main-components']);
+        }, 3000);
         
       } catch (error: any) {  
         console.error('❌ Fehler bei der Anmeldung:', error);
+        this.loginIsValide = false;
   
       }
     }
@@ -209,7 +216,7 @@ loginWithGoogleAccountError(error: any) {
 }
 
 
-  // Funktion, um die Referenz auf die Firestore-Sammlung 'Users' zu bekommen
+  // Funktion, um die Referenz auf die Firestore-Sammlung 'Users' zu bekommensetUserObject
   getUserRef() {
     return collection(this.firestore, 'Users');
   }
@@ -220,7 +227,8 @@ loginWithGoogleAccountError(error: any) {
       id:id,
       name: obj.name,
       email: obj.email,
-      passwort: obj.passwort
+      passwort: obj.passwort,
+      avatar : obj.avatar
     };
   }
 
