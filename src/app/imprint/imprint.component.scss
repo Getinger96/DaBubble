@@ -1,0 +1,57 @@
+@import './../../styles.scss';
+
+.imprint {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    >.content {
+        background-color: #FFFFFF;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+        width: 670px;
+        height: 470px;
+        padding: 48px 56px 48px 56px;
+        >img {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+        >.head {
+            >h3 {
+                font-family: $font-primary;
+                color: #444DF2;
+                font-weight: 700;
+                font-size: 46px;
+                line-height: 120%;
+            }
+            >p {
+                font-family: $font-primary;
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 120%;
+                color: #000000;
+            }
+        }
+        >.contact {
+            >h4 {
+                font-family: $font-primary;
+                color: #444DF2;
+                font-weight: 700;
+                font-size: 32px;
+                line-height: 120%;
+            }
+            >p {
+                font-family: $font-primary;
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 120%;
+                color: #000000;
+            }
+        }
+
+    }
+}
