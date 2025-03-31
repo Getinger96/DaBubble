@@ -135,7 +135,7 @@ section {
     flex-direction: column;
     align-items: center;
     display: flex;
-    padding: 60px 20px 20px 20px;
+    padding: 35px 20px 20px 20px;
 
     @media (max-width: 720px) {
         padding: 30px 20px 20px 20px;
@@ -192,11 +192,15 @@ section {
     @media (max-width: 720px) {
         margin-top: 10px;
         flex-grow: 1;
+        gap: 20px;
+    }
+
+    @media (max-width: 450px) {
     }
 
     @media (max-height: 700px) {
         margin-top: 0px;
-        gap: 20px;
+        gap: 15px;
     }
 
 }
@@ -215,6 +219,11 @@ section {
         gap: 5px;
         width: 95%;
         }
+
+        @media (max-height: 700px) {
+            height: 30px;
+            padding: 5px;
+            }
 }
 
 mat-icon {
@@ -260,7 +269,10 @@ mat-form-field {
     border: 1px solid #535af1;
 }
 
-
+.incorrect-input {
+    font-size: 14px;
+    color: red;
+}
 
 .forgottPassword  {
     display: flex;
@@ -283,6 +295,10 @@ mat-form-field {
 
 }
 
+
+.buttonErrorDesign {
+    height: 40px !important;
+}
 .line {
     display: flex;
     justify-content: center;
@@ -355,6 +371,16 @@ hr {
     cursor: pointer;
 
 
+
+
+}
+
+.buttonloginErrorText {
+    border-radius: 25px !important;
+    padding-top: 10px !important;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+    padding-bottom: 10px !important;
 }
 
 
@@ -368,8 +394,7 @@ hr {
     color: #444DF2;
     cursor: pointer;
     
-
-    
+ 
 
 
     &:hover{
