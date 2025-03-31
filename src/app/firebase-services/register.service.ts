@@ -67,6 +67,7 @@ export class RegisterService {
 
     async loginUser(email: string, password: string, event: Event) {
       event.preventDefault();
+     
       try {
         const userExists = await this.checkIfUserExists(email);
         if (!userExists) {
@@ -79,9 +80,14 @@ export class RegisterService {
         console.log('✅ Erfolgreich angemeldet:', userCredential.user);
         this.loginIsValide = true;
         this.loginIsEmailValide = true;
-        onAuthStateChanged(this.auth, (user) => {
+       
+      onAuthStateChanged(this.auth, (user) => {
+       
           if (user) {
             console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
+            this.updateStatusByUid(user.uid, 'Online')
+           
+            
         setTimeout(() => {
           this.router.navigate(['/main-components']);
         }, 3000);
@@ -94,11 +100,22 @@ export class RegisterService {
   
       }
     }
-    
 
+    updateStatusByUid(uid: string, newStatus: string): void {
+      // Suche nach dem User mit der entsprechenden UID
+      const user = this.allUsers.find(user => user.uid === uid);
+  
+      if (user) {
+        // Wenn der User gefunden wird, den Status ändern
+        user.status = newStatus;
+        console.log('Status aktualisiert:', user);
+      } else {
+        console.log('Kein User mit dieser UID gefunden');
+      }
+    }
+  
 
-
-
+   
 
   async addNewUser(item: User, event: Event) {
     try {
@@ -132,7 +149,7 @@ userJson(item: User, id:string) {
     id:id,
     uid:item.uid,
     avatar: null,
-    status:item.status
+    status:'Offline'
   };
 }
 // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
@@ -241,17 +258,9 @@ loginWithGoogleAccountError(error: any) {
   getUserRef() {
     return collection(this.firestore, 'Users');
   }
+  
 
-  // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
-  setUserObject(obj: any,id:string): User {
-    return {
-      id:id,
-      name: obj.name,
-      email: obj.email,
-      passwort: obj.passwort,
-      avatar : obj.avatar
-    };
-  }
+  
 
 
 

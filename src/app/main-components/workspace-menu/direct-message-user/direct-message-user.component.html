@@ -2,7 +2,7 @@
 <div *ngFor="let user of allUsers" class="user">
     <div class="profile">
         <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
-        <img class="status" src="assets/img/{{ status }}.svg" alt="status">
+        <img class="status" src="assets/img/{{user.status}}.svg" alt="status">
     </div>
     <p class="name">{{ user.name }}<span *ngIf="ownAccount"> (Du)</span></p>
 </div>

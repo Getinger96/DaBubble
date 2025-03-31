@@ -15,7 +15,7 @@ export class User {
         this.email=obj?obj.email:''
         this.passwort=obj?obj.passwort:''
         this.avatar=obj?obj.avatar:''
-        this.status=obj?obj.status:''
+        this.status=obj?obj.status:'Offline'
     }
     
 }
