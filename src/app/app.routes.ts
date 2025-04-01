@@ -7,16 +7,18 @@ import { PasswortResetComponent } from './login-components/passwort-reset/passwo
 import { ChooseAvatarComponent } from './login-components/choose-avatar/choose-avatar.component';
 import { MainComponentsComponent } from './main-components/main-components.component';
 import { ImprintComponent } from './imprint/imprint.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 export const routes: Routes = [
     
-    { path: 'chooseAvatar', component: ChooseAvatarComponent},
+    { path: 'chooseAvatar', component: ChooseAvatarComponent },
     { path: '', component: IntroComponent },
-    {path: 'login', component:LoginComponent },
-    {path: 'signUp', component:RegisterComponent },
-    {path: 'resetEmail', component:PasswordResetEmailComponent },
-    {path: 'reset', component: PasswortResetComponent },
-    {path: 'main-components', component: MainComponentsComponent},
-    {path: 'imprint', component: ImprintComponent},
+    { path: 'login', component:LoginComponent },
+    { path: 'signUp', component:RegisterComponent },
+    { path: 'resetEmail', component:PasswordResetEmailComponent },
+    { path: 'reset', component: PasswortResetComponent },
+    { path: 'main-components', component: MainComponentsComponent },
+    { path: 'imprint', component: ImprintComponent },
+    { path: 'privacy', component: PrivacyComponent },
 ];
 

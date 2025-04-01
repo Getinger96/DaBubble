@@ -1,0 +1,44 @@
+@import './../../styles.scss';
+
+.privacy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 56px 48px 56px;
+    >.content {
+        background-color: #FFFFFF;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+        padding: 48px 56px 48px 56px;
+        max-width: 1440px;
+        >img {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+        >header >.headline {
+            font-family: $font-primary;
+            color: #444DF2;
+            font-weight: 700;
+            font-size: 46px;
+            line-height: 120%;
+        }
+        >main > div > .subheadline {
+            font-family: $font-primary;
+            color: #444DF2;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 120%;
+        }
+        >main > div > .text, .list {
+            font-family: $font-primary;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 120%;
+            color: #000000;
+        }
+    }
+}
