@@ -58,6 +58,7 @@ export class RegisterService {
        let userQuery  = query(this.getUserRef(), where("email", "==", email))
        const querySnapshot = await getDocs(userQuery);
        return !querySnapshot.empty; 
+       
       } catch (error) {
         console.error('Fehler beim Überprüfen des Benutzers:', error);
         return false;
@@ -75,11 +76,10 @@ export class RegisterService {
           this.loginIsEmailValide = false;
           return;
         }
-    
+        this.loginIsEmailValide = true;
         const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
         console.log('✅ Erfolgreich angemeldet:', userCredential.user);
         this.loginIsValide = true;
-        this.loginIsEmailValide = true;
        
       onAuthStateChanged(this.auth, (user) => {
        

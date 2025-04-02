@@ -1,4 +1,12 @@
 
+
+<div [ngClass]="{'d-flex':overlayvisible}"  class="overlay_register">
+    <div>
+     <img src="../../assets/img/05B-Overlay Three.png" alt="">
+    </div>
+</div>
+
+
 <header class="headerContainer">
     <app-header></app-header>
         <div class="newRegistration">
@@ -35,10 +43,11 @@
                         <mat-icon [ngStyle]="{'color': isActivePassword ? 'black': 'gray'}">lock</mat-icon>
                         <input [(ngModel)]="user.passwort" (blur)="inputFieldPasswordIsEmpty()" #password type="password" placeholder="Passwort" required="">
                     </div>
+                    <div class="errorText">
                     <span  *ngIf="!loginEmailAndPasswordAreCorrect"  class="incorrect-input" >*Falsches Passwort oder E-Mail..Bitte noch einmal versuchen</span>
                     <span *ngIf="!passwordFieldIsEmpty" class="incorrect-input">*Geben Sie ein Passwort ein </span>
                     <span *ngIf="!passWordLengthIsCorrect" class="incorrect-input">*Passwort muss mindestens 6 zeichen lang sein </span>
-
+                    </div>    
                 </div>
                
 
@@ -65,8 +74,8 @@
 
 
                     <div class="loginButtons">
-                        <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" type="submit" class="loginBtn">Anmelden</button>
-                        <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" routerLink="/main-components" class="guestLoginBtn">Gäste-Login</button>
+                        <button  [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" type="submit" class="loginBtn">Anmelden</button>
+                        <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }"  class="guestLoginBtn" (click)="guestLogin($event)">Gäste-Login</button>
                         
 
 
