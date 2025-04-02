@@ -14,7 +14,7 @@ import { getAuth, confirmPasswordReset } from 'firebase/auth';
 @Component({
   selector: 'app-passwort-reset',
   standalone: true,
-  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, FormsModule],
+  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, FormsModule,HeaderComponent],
   templateUrl: './passwort-reset.component.html',
   styleUrl: './passwort-reset.component.scss'
 })

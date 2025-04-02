@@ -13,7 +13,7 @@ import { RegisterService } from '../../firebase-services/register.service';
 @Component({
   selector: 'app-password-reset',
   standalone: true,
-  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, FormsModule],
+  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, FormsModule,HeaderComponent],
   templateUrl: './password-reset-email.component.html',
   styleUrl: './password-reset-email.component.scss'
 })
