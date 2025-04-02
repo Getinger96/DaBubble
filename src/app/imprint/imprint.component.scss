@@ -5,53 +5,78 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    >.content {
+    >.box {
         background-color: #FFFFFF;
         border-radius: 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 32px;
-        width: 670px;
-        height: 470px;
-        padding: 48px 56px 48px 56px;
-        >img {
-            cursor: pointer;
-            width: 24px;
-            height: 24px;
+        >.content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 32px;
+            padding: 48px 56px 48px 56px;
+            >img {
+                cursor: pointer;
+                width: 24px;
+                height: 24px;
+            }
+            >.head {
+                >h3 {
+                    margin-bottom: 12px;
+                    font-family: $font-primary;
+                    color: #444DF2;
+                    font-weight: 700;
+                    font-size: 46px;
+                    line-height: 120%;
+                }
+                >p {
+                    font-family: $font-primary;
+                    font-weight: 400;
+                    font-size: 20px;
+                    line-height: 120%;
+                    color: #000000;
+                }
+            }
+            >.contact {
+                >h4 {
+                    margin-bottom: 12px;
+                    font-family: $font-primary;
+                    color: #444DF2;
+                    font-weight: 700;
+                    font-size: 32px;
+                    line-height: 120%;
+                }
+                >p {
+                    font-family: $font-primary;
+                    font-weight: 400;
+                    font-size: 20px;
+                    line-height: 120%;
+                    color: #000000;
+                }
+            }
         }
-        >.head {
-            >h3 {
-                font-family: $font-primary;
-                color: #444DF2;
-                font-weight: 700;
-                font-size: 46px;
-                line-height: 120%;
-            }
-            >p {
-                font-family: $font-primary;
-                font-weight: 400;
-                font-size: 20px;
-                line-height: 120%;
-                color: #000000;
-            }
-        }
-        >.contact {
-            >h4 {
-                font-family: $font-primary;
-                color: #444DF2;
-                font-weight: 700;
-                font-size: 32px;
-                line-height: 120%;
-            }
-            >p {
-                font-family: $font-primary;
-                font-weight: 400;
-                font-size: 20px;
-                line-height: 120%;
-                color: #000000;
-            }
-        }
+    }
+}
 
+@media (max-width: 768px) {
+    .imprint > .box {
+        margin: 24px;
+        .content {
+            .head {
+                h3 {
+                    font-size: 32px;
+                }
+                p {
+                    font-size: 14px;
+                }
+            }
+            .contact {
+                h4 {
+                    font-size: 20px;
+                }
+                p {
+                    font-size: 14px;
+                }
+            }
+        }
     }
 }

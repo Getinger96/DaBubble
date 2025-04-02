@@ -1,13 +1,15 @@
 * {
-    margin: 0;
+  margin: 0;
 }
 
 $font-primary: 'Nunito', sans-serif;
 $font-secondary : 'Figtree', sans-serif;
 
 body {
-    background-color: #ECEEFE;
-    font-family: $font-primary;
+  background-color: #ECEEFE;
+  font-family: $font-primary;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
 }
 
 .default-background {
@@ -22,7 +24,10 @@ body {
     font-family: $font-secondary;
 }
 
-
+h1, h2, h3, h4, h5, h6, p, span {
+  margin: 0;
+  padding: 0;
+}
 
 
 

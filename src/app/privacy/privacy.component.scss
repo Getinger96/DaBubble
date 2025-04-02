@@ -5,40 +5,85 @@
     justify-content: center;
     align-items: center;
     padding: 48px 56px 48px 56px;
-    >.content {
+    >.box {
         background-color: #FFFFFF;
         border-radius: 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 32px;
-        padding: 48px 56px 48px 56px;
-        max-width: 1440px;
-        >img {
-            cursor: pointer;
-            width: 24px;
-            height: 24px;
+        >.content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 32px;
+            padding: 48px 56px 48px 56px;
+            >main {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            >img {
+                cursor: pointer;
+                width: 24px;
+                height: 24px;
+            }
+            >header >.headline {
+                font-family: $font-primary;
+                color: #444DF2;
+                font-weight: 700;
+                font-size: 46px;
+                line-height: 120%;
+            }
+            >main > div > .subheadline {
+                margin-bottom: 12px;
+                font-family: $font-primary;
+                color: #444DF2;
+                font-weight: 700;
+                font-size: 32px;
+                line-height: 120%;
+            }
+            >main > div > .text, .list {
+                font-family: $font-primary;
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 120%;
+                color: #000000;
+            }
+            >footer {
+                font-family: $font-primary;
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 120%;
+                color: #000000;
+            }
         }
-        >header >.headline {
-            font-family: $font-primary;
-            color: #444DF2;
-            font-weight: 700;
-            font-size: 46px;
-            line-height: 120%;
+    }
+}
+
+@media (max-width: 768px) {
+    .privacy > .box {
+        padding: 0;
+        margin: 24px;
+        .content {
+            padding: 24px 28px 24px 28px;
+            header > .headline {
+                font-size: 32px;
+            }
+            main > div > .subheadline {
+                font-size: 20px;
+            }
+            main > div > .text, .list {
+                font-size: 14px;
+            }
+            footer {
+                font-size: 14px;
+            }
         }
-        >main > div > .subheadline {
-            font-family: $font-primary;
-            color: #444DF2;
-            font-weight: 700;
-            font-size: 32px;
-            line-height: 120%;
-        }
-        >main > div > .text, .list {
-            font-family: $font-primary;
-            font-weight: 400;
-            font-size: 20px;
-            line-height: 120%;
-            color: #000000;
+    }
+}
+
+@media (max-width: 400px) {
+    .privacy > .box >.content {
+        padding: 24px 12px 24px 12px;
+        header > .headline {
+            font-size: 26px;
         }
     }
 }
