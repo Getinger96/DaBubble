@@ -11,11 +11,10 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent , MainChatComponent, ThreadComponent, HeaderComponent, NgIf, ToggleWebspaceMenuComponent],
+  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent , MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })
 export class MainComponentsComponent {
-
 
 }
