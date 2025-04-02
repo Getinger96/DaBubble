@@ -54,16 +54,18 @@ body {
     border-radius: 30px;
     box-sizing: border-box;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    margin-left: 24px;
+    margin-right: 24px;
 
 
     @media (max-width: 720px) {    
         height: 580px;
-        width: 100%;
 }
 
 @media (max-height: 700px) {
     height: 540px;
     width: 100%;
+    min-height:460px;
 }
 
 
@@ -197,9 +199,6 @@ body {
     overflow-wrap: break-word;
 
 
-    @media (max-width: 720px) {
-        max-width: 315px;
-           }
 
 
            @media (max-height: 720px) {
