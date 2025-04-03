@@ -260,6 +260,38 @@ mat-form-field {
     display: flex !important;
 }
 
+.overlay_register {
+    overflow: hidden;
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    display: none;
+  
+    >div {
+      animation: slidein ease-in-out 1.2s forwards;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+
+  @keyframes slidein {
+    from {
+      transform: translateX(500px);
+    }
+  
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  
+  .d-flex {
+    display: flex;
+  }
 
 .full-width {
     width: 100%;
@@ -267,6 +299,11 @@ mat-form-field {
 
 .borderPurple {
     border: 1px solid #535af1;
+}
+
+.errorText {
+    display: flex;
+    flex-direction: column;
 }
 
 .incorrect-input {
@@ -285,6 +322,9 @@ mat-form-field {
         color: #797EF3;
         font-weight: 400;
         font-size: 18px;
+        
+ 
+
      &:hover {
         background-color: #ECEEFE;
         border-radius: 30px;
