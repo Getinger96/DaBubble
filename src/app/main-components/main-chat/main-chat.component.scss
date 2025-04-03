@@ -117,6 +117,8 @@ padding: 38px 35px 40px 35px;
 
     }
 }
+
+
 .message-wrapper{
     display: flex;
     flex-direction: column;
@@ -239,10 +241,32 @@ padding: 38px 35px 40px 35px;
 
             }
         }
+    }
 
-        
+    .reverse{
+            flex-direction: row-reverse;
 
+            .message-text{
+                border-top-right-radius: 0 !important;
+                border-top-left-radius: 30px;
+                
+            }
+            .message-over{
+                flex-direction: row-reverse;
+            }
 
+            .message-not-answered{
+                flex-direction: row-reverse;
+            }
+
+            .message-answered{
+                flex-direction: row-reverse;
+
+                .message-answers{
+                    padding-right: unset;
+                    padding-left: 20px;
+                }
+            }
     }
 }
 

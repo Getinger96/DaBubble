@@ -1,0 +1,106 @@
+.thread-wrapper{
+    width: 485px;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    margin-left: 20px;
+
+    .thread-header{
+        height: 96px;
+        box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .thread-group{
+            display: flex;
+            justify-content: center;
+            align-items:center;
+            padding-left: 45px;
+            gap: 5px;
+    
+            img{
+                width: 16px;
+                height: 16px;
+            }
+    
+            span{
+                font-weight: 700;
+                font-size: 24px;
+            }
+
+            .thread-actual-group{
+                font-size: 14px;
+                font-weight: 400;
+                color: #797EF3;
+            }
+        
+        }
+
+        .close{
+            width: 40px;
+            height: 40px;
+            padding-right: 40px;
+        }
+    }
+
+
+    .thread-input-wrapper{
+        padding: 38px 35px 40px 35px;
+        }
+
+        .thread-input{
+            height: 145px;
+            border-radius: 20px;
+            border: 1px solid #ADB0D9;
+            position: relative;
+        
+            textarea{
+                border: none;
+                width: calc(100% - 40px);
+                padding: 20px 20px;
+                height: calc(100% - 100px);
+                background-color: transparent;
+                resize: none;
+                &:focus{
+                    outline: none;
+                }
+            }
+            
+            .thread-input-icons{
+                position: absolute;
+                width: calc(100% - 40px);
+                bottom: 20px;
+                left: 20px;
+                display: flex;
+                justify-content: space-between;
+        
+                img{
+                    width: 40px;
+                    height: 40px;
+                }
+        
+            }
+        }
+
+        .thread-message{
+            .thread-number-of-answers{
+                display: flex;
+                align-items: center;
+                height: 25px;
+                padding-left: 33px;
+                padding-right: 33px;
+
+                span{
+                    width: 30%;
+                    font-size: 18px;
+                    color: #ADB0D9;
+                    padding-right: 20px;
+                }
+                .line{
+                    width: 70%;
+                    height: 1px;
+                    background-color: #ADB0D9;
+                }
+            }
+        }
+}
