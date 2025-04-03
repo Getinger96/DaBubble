@@ -23,8 +23,10 @@ export class RegisterService {
   name?: string;
   unsubList;
   allUsers: User[] = [];
+  actualUser: User[]=[];
   loginIsValide: boolean = true
   loginIsEmailValide: boolean = true
+  
 
   constructor( private route: ActivatedRoute,
     private router: Router) {
@@ -86,7 +88,7 @@ export class RegisterService {
           if (user) {
             console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
             this.updateStatusByUid(user.uid, 'Online')
-           
+           this.getActualUser(user.uid)
             
         setTimeout(() => {
           this.router.navigate(['/main-components']);
@@ -100,6 +102,21 @@ export class RegisterService {
   
       }
     }
+
+getActualUser(uid:string){
+  const user = this.allUsers.find(user => user.uid === uid);
+  this.actualUser=[]
+  if (user) {
+    // Wenn der User gefunden wird, den Status ändern
+    this.actualUser.push(user)
+  } else {
+    console.log('Kein User mit dieser UID gefunden');
+  }
+}
+  
+  
+
+
 
     updateStatusByUid(uid: string, newStatus: string): void {
       // Suche nach dem User mit der entsprechenden UID
@@ -192,7 +209,7 @@ async loginWithGoogle(event: Event) {
     // Öffnet ein Google-Popup-Fenster zur Authentifizierung.
     // signInWithPopup erwartet das Firebase Auth-Objekt (this.auth) und den Google-Provider (this.provider).
     const result = await signInWithPopup(this.auth, this.provider);
-
+    
     // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
     this.loginWithGoogleAccountItWorks(result);
     this.router.navigate(['/main-components']);

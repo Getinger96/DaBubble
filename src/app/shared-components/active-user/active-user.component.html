@@ -1,8 +1,17 @@
-<div class="active-user">
-    <p id="user-name">Frederik Beck</p>
+<div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog">
+    <a href="">Profil</a>
+    <a href="">Logout</a>
+
+</div>
+
+
+<div *ngFor="let user of actualUser" class="active-user">
+    <p id="user-name">{{user.name}}</p>
     <div class="avatar">
-        <img class="profile" src="assets/img/avatar_2.png" alt="avatar">
+        <img class="profile"src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
         <img class="status" src="assets/img/Online.svg" alt="activity">
     </div>
-    <a href=""><img src="assets/img/keyboard_arrow_down.svg" alt="open-profile"></a>
+    
+    <img (click)="openoverlay()"src="assets/img/keyboard_arrow_down.svg" alt="open-profile">
+    
 </div>

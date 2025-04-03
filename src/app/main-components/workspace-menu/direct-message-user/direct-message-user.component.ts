@@ -17,6 +17,7 @@ export class DirectMessageUserComponent {
   @Input() avatar!:number;
   @Input() status!:string;
   allUsers: User[] = [];
+  actualUser:User[]= []
 
   constructor(private registerservice: RegisterService){
     this.allUsers=this.registerservice.allUsers
