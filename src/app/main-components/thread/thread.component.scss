@@ -43,6 +43,12 @@
         }
     }
 
+    .thread-answers{
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
 
     .thread-input-wrapper{
         padding: 38px 35px 40px 35px;
