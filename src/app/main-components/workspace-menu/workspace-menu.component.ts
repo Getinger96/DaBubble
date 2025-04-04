@@ -13,10 +13,6 @@ export class WorkspaceMenuComponent {
 
   openChannels:boolean = true;
   openDirectMessages:boolean = true;
- 
-
-
-  
 
   toggleChannels() {
     if(this.openChannels) {this.openChannels = false;} 

@@ -20,9 +20,9 @@ export class DirectMessageUserComponent {
   actualUser:User[]= []
 
   constructor(private registerservice: RegisterService){
-    this.allUsers=this.registerservice.allUsers
-    
-
+    setTimeout(() => {
+      this.allUsers = this.registerservice.allUsers
+    }, 250);
   }
 
 
