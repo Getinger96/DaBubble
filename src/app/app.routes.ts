@@ -12,8 +12,8 @@ import { PrivacyComponent } from './privacy/privacy.component';
 export const routes: Routes = [
     
     { path: 'chooseAvatar', component: ChooseAvatarComponent },
-    { path: '', component: IntroComponent },
-    { path: 'login', component:LoginComponent },
+    { path: 'intro', component: IntroComponent },
+    { path: '', component:LoginComponent },
     { path: 'signUp', component:RegisterComponent },
     { path: 'resetEmail', component:PasswordResetEmailComponent },
     { path: 'reset', component: PasswortResetComponent },

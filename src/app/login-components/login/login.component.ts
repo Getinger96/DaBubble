@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit,AfterViewInit, ChangeDetectorRef, NgZone   } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../shared-components/header/header.component';
@@ -10,14 +10,16 @@ import { RegisterService } from '../../firebase-services/register.service';
 import { GoogleAuthProvider } from "firebase/auth";
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IntroComponent } from '../intro/intro.component';
+import { HeaderLogoComponent } from '../header-logo/header-logo.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatButtonModule, RouterModule, HeaderComponent,MatInputModule,MatIconModule, CommonModule, FormsModule],
+  imports: [MatButtonModule, RouterModule, HeaderComponent,MatInputModule,MatIconModule, CommonModule, FormsModule, IntroComponent, HeaderLogoComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit  {
   isActiveEmail: boolean = false;
   isActivePassword: boolean = false;
   isHovered: boolean = false;
@@ -30,8 +32,39 @@ export class LoginComponent {
   loginEmailAndPasswordAreCorrect : boolean = true;
   passWordLengthIsCorrect: boolean = true
   overlayvisible: boolean = false;
-  constructor(private registerservice: RegisterService, private router: Router){
+  introView: boolean = true;
+  logoView: boolean =  false;
+  constructor(private registerservice: RegisterService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone){
 
+  }
+
+
+
+  ngAfterViewInit(): void {
+    // Überprüfen, ob die Animation schon abgeschlossen ist
+    const animationCompleted = localStorage.getItem('introAnimationCompleted');
+
+    // Wenn die Animation noch nicht abgeschlossen ist, zeige sie an
+    if (!animationCompleted) {
+      setTimeout(() => {
+        // Animation beenden, nach 2 Sekunden
+        this.introView = false;
+        this.logoView = true;
+
+        // Zustand der Animation speichern, damit sie beim nächsten Besuch nicht mehr angezeigt wird
+        localStorage.setItem('introAnimationCompleted', 'true');
+        this.cdRef.detectChanges();
+      }, 2000); // Warten für 2 Sekunden
+    } else {
+      this.ngZone.run(() => {
+        this.introView = false;
+        this.logoView = true;
+
+        // Manuelle Benachrichtigung von Angular zur Änderung
+        this.cdRef.detectChanges();
+
+      });
+    }
   }
 
 

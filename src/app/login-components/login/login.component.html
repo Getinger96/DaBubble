@@ -8,7 +8,14 @@
 
 
 <header class="headerContainer">
-    <app-header></app-header>
+    <div>
+    <app-intro *ngIf="introView" class="introCard"></app-intro>
+    </div>
+
+    <div>
+    <app-header-logo *ngIf="logoView" class="introCard"></app-header-logo>
+    </div>
+
         <div class="newRegistration">
             <span > Neu bei DABubble ?  </span>
             

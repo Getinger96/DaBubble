@@ -17,7 +17,6 @@ export class IntroComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this.router.navigate(['/login']);
     }, 1900);
   }
 

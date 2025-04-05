@@ -2,15 +2,19 @@ $font-primary: 'Nunito', sans-serif;
 $font-secondary: 'Figtree', sans-serif;
 
 
+body {
+    margin: 0;
+}
+
 section {
     background-color: #535af1 ;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
-    justify-content: center;
-  align-items: center;
   animation:   move-section-to-corner ease-in-out 600ms forwards 1.2s;
   overflow: hidden;
+  position: fixed;
+  z-index: 100;
 }
 
 
@@ -18,11 +22,21 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
-    animation:   move-to-corner ease-in-out 600ms forwards 1.2s;
+    animation:  move-to-corner ease-in-out 600ms forwards 1.0s;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
 
+         
+    @media (max-width: 720px) {
+        animation:  move-to-corner-small ease-in-out 600ms forwards 1.0s;
+        }
+
+        @media (max-height: 700px) {
+            animation:  move-to-corner-mobile ease-in-out 600ms forwards 1.0s;
+            }
     
     .logo {
         animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner ease-in-out 600ms forwards 1.2s;
@@ -47,7 +61,7 @@ section {
                 @media (max-width: 500px) {
                     width: 90px;
                     height: 90px;
-                    animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
+                    animation: logo-animation-small ease-in-out 1.2s forwards, move-img-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
                     }
     
         
@@ -74,21 +88,21 @@ section {
 
         @media (max-width: 1200px) {
             font-size: 60px;
-            animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner-small ease-in-out 600ms forwards 1.2s;
+        
             }
         
             
         
         @media (max-width: 720px) {
             font-size: 40px;
-            animation: headline-animation-mobile ease-in-out 1.2s forwards, move-headline-to-corner-mobile ease-in-out 600ms forwards 1.2s;
             transform: translateX(-200px);
             }
 
             @media (max-width: 500px) {
                 font-size: 32px;
-                animation: headline-animation-mobile-small ease-in-out 1.2s forwards, move-headline-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
                 transform: translateX(-20px);
+                margin-left: 0px;
+                animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner-small ease-in-out 600ms forwards 1.2s;
                 }
         }
         
@@ -98,54 +112,7 @@ section {
 
 
     
-    @media (max-width: 1350px) {
-        .intro {
-            animation: move-to-corner-small ease-in-out 600ms forwards 1.2s;
-        }
-    
-    }
-        @media (max-width: 1200px) {
-            .intro {
-                    animation: move-to-corner-smaller ease-in-out 600ms forwards 1.2s;
-            }
-        }    
-    
-        @media (max-width: 1100px) {
-            .intro {
-                    animation: move-to-corner-compact ease-in-out 600ms forwards 1.2s;
-            }
-        }    
-    
-
-        @media (max-width: 900px) {
-            .intro {
-                    animation: move-to-corner-narrow ease-in-out 600ms forwards 1.2s;
-            }
-        }    
-
-
-        
-        @media (max-width: 800px) {
-            .intro {
-                    animation: move-to-corner-condensed ease-in-out 600ms forwards 1.2s;
-            }
-        }   
-
-
-        @media (max-width: 720px) {
-            .intro {
-                    animation: move-to-corner-mobile ease-in-out 600ms forwards 1.2s;
-            }
-        } 
-
-
-        @media (max-width: 720px) {
-            .intro {
-              margin-left: 100px;
-              animation: move-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
-            }
-        } 
-
+ 
 
 
 
@@ -154,11 +121,13 @@ section {
 @keyframes move-section-to-corner {
     from {
         background-color: #535af1 ;
-        
     }
 
     to {
         background-color: #ECEEFE;
+        z-index: 0;
+        display: block;
+
     }
 }
 
@@ -195,103 +164,58 @@ section {
     }
 }
 
+
+@keyframes logo-animation-small {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50px);
+    }
+}
+
 @keyframes move-to-corner {
     from {
-        transform: translate(0, 0);
-        margin: 0px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
     to {
-        transform: translate(-38%, -41.5%);
-        margin: 20px;
+        top: 80px;  
+        left: 250px;
+        z-index: 100;
     }
-
-    
-
 }
 
 
 @keyframes move-to-corner-small {
     from {
-        transform: translate(0, 0);
-        margin: 0px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      to {
+        top: 30px;
+        left: 60%;
+        transform: translateX(-50%);
+      }
     }
-    to {
-        transform: translate(-33%, -40.5%);
-        margin: 20px;
-    }
-}
 
 
-@keyframes move-to-corner-smaller {
-    from {
-        transform: translate(0, 0);
-        margin: 0px;
-    }
-    to {
-        transform: translate(-29%, -40.5%);
-        margin: 20px;
-    }
-}
-
-@keyframes move-to-corner-compact {
-    from {
-        transform: translate(0, 0);
-        margin: 0px;
-    }
-    to {
-        transform: translate(-27%, -40.5%);
-        margin: 20px;
-    }
-}
-
-@keyframes move-to-corner-narrow{
-    from {
-        transform: translate(0, 0);
-        margin: 0px;
-    }
-    to {
-        transform: translate(-23%, -40.5%);
-        margin: 20px;
-    }
-}
-
-
-@keyframes move-to-corner-condensed{
-    from {
-        transform: translate(0, 0);
-        margin: 0px;
-    }
-    to {
-        transform: translate(-18%, -40.5%);
-        margin: 20px;
-    }
-}
-
-@keyframes move-to-corner-mobile {
-    from {
-        transform: translate(0, 0);
-        margin: 0px;
-    }
-    to {
-        transform: translate(12%, -44%);
-        margin: 0px;
-    }
-}
-
-@keyframes move-to-corner-mobile-small {
-    from {
-        transform: translate(0, 0);
-        margin-left: 100px;
-    }
-    to {
-        transform: translate(16%, -44%);
-        margin: 0px;
-    }
-}
-
-
-
-
+    @keyframes move-to-corner-mobile {
+        from {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+          to {
+            top: 30px;
+            left: 70%;
+            transform: translateX(-60%);
+          }
+        }
+    
 
 
 
@@ -339,6 +263,7 @@ section {
     to {
         font-size: 32px;
         color: black;
+        margin-left: 30px;
     }
 }
 
@@ -368,16 +293,6 @@ section {
 }
 
 
-@keyframes move-headline-to-corner-mobile-small {
-    from {
-        font-size: 32px;
-    }
-    to {
-        font-size: 24px;
-        color: black;
-    }
-}
-
 
 
 
@@ -394,31 +309,6 @@ section {
     }
 }
 
-
-@keyframes headline-animation-mobile {
-    from {
-          transform: translateX(-200px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-
-@keyframes headline-animation-mobile-small {
-    from {
-          transform: translateX(-20px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
 
 
 

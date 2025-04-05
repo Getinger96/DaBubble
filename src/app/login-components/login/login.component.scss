@@ -16,22 +16,68 @@ body {
     font-family: 'Figtree';
   }
 
+
+
+  .introContainer {
+
+    @media (max-width: 720px) {    
+    position: absolute;
+    top: 0;
+    left: 160px;
+    right: 0;
+    bottom: 0;
+
+    }
+  }
+
+  .introCard {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom:0;
+    animation:  none-animation ease-in-out 600ms forwards 1.2s;
+    z-index: 10;
+
+
+
+
+
+  }
+
+  @keyframes none-animation {
+    from {
+        z-index: 10;
+    }
+    to {
+        z-index: -99;
+    }
+}
+
+    
+
   .headerContainer {
     display: flex;
     justify-content: space-between;  
     align-items: center;             
     padding: 30px 20px 0px 20px;
-    
+
     
     @media (max-width: 720px) {    
-        justify-content: center;  
-        padding: 25px;
+        padding: 60px;
+        position: relative;
 }
 
 
 @media (max-width: 450px) {    
     justify-content: center;  
-    padding: 10px;
+    padding: 95px 20px 20px 0px;
 }
 
 
@@ -45,6 +91,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 30px;
+    z-index: 1;
 
     span {
         color: black;
@@ -100,11 +147,11 @@ section {
 }
 
 @media (max-height: 700px) {
-    height: 460px;
+    height: 440px;
     width: 100%;
     margin-left: 15px;
     margin-right: 15px;
-    min-height: 460px;    
+    min-height: 440px;
 }
 
 @media (max-width: 450px) {
