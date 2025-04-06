@@ -7,6 +7,8 @@ import { ThreadComponent } from '../main-components/thread/thread.component';
 import { HeaderComponent } from '../shared-components/header/header.component';
 import { ToggleWebspaceMenuComponent } from './toggle-webspace-menu/toggle-webspace-menu.component';
 import { NgIf } from '@angular/common';
+import { RegisterService } from '../firebase-services/register.service';
+import { User } from '../interfaces/user.interface';
 
 @Component({
   selector: 'app-main-components',
@@ -16,5 +18,8 @@ import { NgIf } from '@angular/common';
   styleUrl: './main-components.component.scss'
 })
 export class MainComponentsComponent {
+  
+
+ 
 
 }

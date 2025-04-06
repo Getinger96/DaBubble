@@ -27,17 +27,19 @@ export class RegisterService {
   loginIsValide: boolean = true
   loginIsEmailValide: boolean = true
   
+  
 
   constructor( private route: ActivatedRoute,
     private router: Router) {
+      this.unsubList = this.subList();
       this.route.queryParams.subscribe(params => {
         this.oobCode = params['oobCode'];
       });
 
-      this.unsubList = this.subList();
+     
     }
 
-    subList() {
+     subList() {
       return onSnapshot(this.getUserRef(), (user) => {
         this.allUsers = [];
         user.forEach(element => {
@@ -45,10 +47,11 @@ export class RegisterService {
           console.log('Daten in Firebase', element.data(), element.id)
         })
         console.log(this.allUsers)
+        
       })
     }
 
-    ngonDestroy() {
+     ngonDestroy() {
       this.unsubList();
     }
 

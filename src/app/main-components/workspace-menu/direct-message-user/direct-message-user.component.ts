@@ -16,14 +16,17 @@ export class DirectMessageUserComponent {
   @Input() ownAccount!:boolean;
   @Input() avatar!:number;
   @Input() status!:string;
-  allUsers: User[] = [];
-  actualUser:User[]= []
+  allUsers: User[] = this.registerservice.allUsers
+  actualUser:User[]= this.registerservice.actualUser
 
   constructor(private registerservice: RegisterService){
-    setTimeout(() => {
-      this.allUsers = this.registerservice.allUsers
-    }, 250);
+  
   }
+
+
+
+  
+  
 
 
 }
