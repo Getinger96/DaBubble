@@ -41,29 +41,22 @@ export class LoginComponent implements AfterViewInit  {
 
 
   ngAfterViewInit(): void {
-    // Überprüfen, ob die Animation schon abgeschlossen ist
-    const animationCompleted = localStorage.getItem('introAnimationCompleted');
+    let animationCompleted = localStorage.getItem('introAnimationCompleted');
 
-    // Wenn die Animation noch nicht abgeschlossen ist, zeige sie an
     if (!animationCompleted) {
       setTimeout(() => {
-        // Animation beenden, nach 2 Sekunden
         this.introView = false;
         this.logoView = true;
-
-        // Zustand der Animation speichern, damit sie beim nächsten Besuch nicht mehr angezeigt wird
         localStorage.setItem('introAnimationCompleted', 'true');
-        this.cdRef.detectChanges();
-      }, 2000); // Warten für 2 Sekunden
+      }, 2000); 
     } else {
-      this.ngZone.run(() => {
         this.introView = false;
         this.logoView = true;
+        this.cdRef.detectChanges()// Sag Angular: Prüf das nochmal im DOM
 
-        // Manuelle Benachrichtigung von Angular zur Änderung
-        this.cdRef.detectChanges();
 
-      });
+
+      
     }
   }
 
