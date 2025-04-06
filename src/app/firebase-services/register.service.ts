@@ -1,10 +1,10 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject,  } from '@angular/core';
 import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot  } from '@angular/fire/firestore';
 import { getAuth, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom , BehaviorSubject} from 'rxjs';
 
 
 @Injectable({
@@ -26,7 +26,8 @@ export class RegisterService {
   actualUser: User[]=[];
   loginIsValide: boolean = true
   loginIsEmailValide: boolean = true
-  
+  private allUsersSubject = new BehaviorSubject<User[]>([]); 
+  allUsers$ = this.allUsersSubject.asObservable();
 
   constructor( private route: ActivatedRoute,
     private router: Router) {
@@ -39,12 +40,14 @@ export class RegisterService {
 
     subList() {
       return onSnapshot(this.getUserRef(), (user) => {
-        this.allUsers = [];
+        let usersArray: User[] = [];
         user.forEach(element => {
-          this.allUsers.push(this.setUserObject(element.data(),element.id))
+         usersArray.push(this.setUserObject(element.data(),element.id))
           console.log('Daten in Firebase', element.data(), element.id)
         })
-        console.log(this.allUsers)
+        this.allUsers = usersArray;
+        this.allUsersSubject.next(this.allUsers); 
+        console.log(this.allUsers);
       })
     }
 
