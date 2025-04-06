@@ -11,12 +11,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './active-user.component.scss'
 })
 export class ActiveUserComponent {
- actualUser:User[]= []
+  actualUser:User[]= []
  overlayvisible:boolean=false;
 
   constructor(private registerservice: RegisterService){
+   
     this.actualUser=this.registerservice.actualUser
-    
 
   }
 openoverlay(){

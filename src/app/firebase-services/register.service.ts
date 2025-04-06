@@ -31,14 +31,15 @@ export class RegisterService {
 
   constructor( private route: ActivatedRoute,
     private router: Router) {
+      this.unsubList = this.subList();
       this.route.queryParams.subscribe(params => {
         this.oobCode = params['oobCode'];
       });
 
-      this.unsubList = this.subList();
+     
     }
 
-    subList() {
+     subList() {
       return onSnapshot(this.getUserRef(), (user) => {
         let usersArray: User[] = [];
         user.forEach(element => {
@@ -51,7 +52,7 @@ export class RegisterService {
       })
     }
 
-    ngonDestroy() {
+     ngonDestroy() {
       this.unsubList();
     }
 
@@ -117,30 +118,31 @@ getActualUser(uid:string){
   }
 }
   
+
   
 
 
 
-async updateStatusByUid(uid: string, newStatus: string): Promise<void> {
-  // Suche nach dem User mit der entsprechenden UID
-  const user = this.allUsers.find(user => user.uid === uid);
+    async updateStatusByUid(uid: string, newStatus: string): Promise<void> {
+      // Suche nach dem User mit der entsprechenden UID
+      const user = this.allUsers.find(user => user.uid === uid);
+  
+      if (user) {
+        // Wenn der User gefunden wird, den Status ändern
+        user.status = newStatus;
+        let docRef=this.getSingleDocRef(user.id)
+        await updateDoc(docRef, { status:user.status });
+        console.log('Status aktualisiert:', user);
+      } else {
+        console.log('Kein User mit dieser UID gefunden');
+      }
+    }
 
-  if (user) {
-    // Wenn der User gefunden wird, den Status ändern
-    user.status = newStatus;
-    let docRef=this.getSingleDocRef(user.id)
-    await updateDoc(docRef, { status:user.status });
-    console.log('Status aktualisiert:', user);
-  } else {
-    console.log('Kein User mit dieser UID gefunden');
-  }
-}
-
-getSingleDocRef( docID: string) {
-  return doc(collection(this.firestore, 'Users'), docID);
-
-}
-
+    getSingleDocRef( docID: string) {
+      return doc(collection(this.firestore, 'Users'), docID);
+  
+    }
+  
 
    
 
