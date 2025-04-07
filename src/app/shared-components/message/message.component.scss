@@ -34,8 +34,103 @@
     width: 100%;
     display: flex;
     padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+
+    
+    &:hover{
+
+        background-color: #ECEFFF;
+
+        .reaction-popup{
+            display: flex;
+        }
+        
+        &:not(.reverse){
+           
+    
+            .message-text{
+                background-color: white !important;
+            }
+        }
+
+        &.reverse{
+            .reaction-popup{
+                left: 43px;
+                right: unset;
+            }
+        }
+
+     
+    }
     
 
+    .reaction-popup{
+        position: absolute;
+        right: 43px;
+        top: -18px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: auto;
+        padding-left: 20px;
+        padding-right: 20px;
+        border: 1px solid #ADB0D9;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        border-bottom-left-radius: 25px;
+        background-color: white;
+
+        img{
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 20px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            &:hover {
+                background-color: #ECEEFE;
+            }
+        }
+    }
+
+    .edit-message{
+        z-index: 1;
+        cursor: pointer;
+        position: absolute;
+        left: 270px;
+        width: auto;
+        border: 1px solid #ADB0D9;
+        border-bottom-right-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-left-radius: 30px;
+        background-color: white;
+        padding: 10px 20px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        span{
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 24px;
+            font-weight: 600;
+            background-color: white;
+
+            &:hover{
+                background-color: #ECEEFE;
+                color: #535AF1;
+                font-weight: 700;
+            }
+
+
+        }
+        
+    }
+    
+ 
     img{
         width: 70px;
         height: 70px;
@@ -103,8 +198,8 @@
                 gap: 10px;
 
                 img{
-                    width: 24px;
-                    height: 24px;
+                    width: 34px;
+                    height: 34px;
                     padding: 0;
                 }
 
@@ -154,8 +249,21 @@
     margin-right: unset !important;
     color:white;
     align-self: end;
+
+    &:hover{
+        
+        .reaction-popup{
+            display: flex;
+        }
+    }
 }
 
 .add-reaction{
     cursor: pointer;
+    border-radius: 20px;
+    background-color: white;
+
+    &:hover{
+        background-color:#ECEFFF;
+    }
 }

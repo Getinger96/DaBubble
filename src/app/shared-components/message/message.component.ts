@@ -19,4 +19,24 @@ export class MessageComponent {
 @Input() isInThread: boolean | undefined = false;
 @Input() isAnswered: boolean | undefined = false;
 
+showEditMessage(){
+  let editMessagePopup = document.getElementById('editMessagePopup');
+  if (editMessagePopup) {
+    editMessagePopup.style.display = 'flex';
+  } else {
+    console.error('Element with id "editMessagePopup" not found.');
+  }
 }
+
+hideEditMessage(){
+  let editMessagePopup = document.getElementById('editMessagePopup');
+  if (editMessagePopup) {
+    editMessagePopup.style.display = 'hide';
+  } else {
+    console.error('Element with id "editMessagePopup" not found.');
+  }
+}
+}
+
+
+
