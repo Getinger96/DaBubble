@@ -7,13 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 export class LoadingService {
   private loadingSubject = new BehaviorSubject<boolean>(false); 
   loading$ = this.loadingSubject.asObservable();
-
+  loadingStatus!: boolean
 
   constructor() { }
 
 
-  setLoading(loading: boolean): void {
-    this.loadingSubject.next(loading);
+  setLoading(loading: boolean) {
+   return this.loadingStatus = loading;
   }
 
   getLoadingStatus(): boolean {

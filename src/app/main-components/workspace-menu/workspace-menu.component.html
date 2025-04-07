@@ -31,7 +31,7 @@
             </div>
         </div>
         <nav *ngIf="openDirectMessages" class="direct-messages">
-            <app-direct-message-user></app-direct-message-user>
+            <app-direct-message-user [userArray]="userArray"></app-direct-message-user>
          
         </nav>
     </div>
