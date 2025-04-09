@@ -28,7 +28,7 @@ export class RegisterService {
   loginIsEmailValide: boolean = true
   private allUsersSubject = new BehaviorSubject<User[]>([]); 
   allUsers$ = this.allUsersSubject.asObservable();
-
+  
   constructor( private route: ActivatedRoute,
     private router: Router) {
       this.unsubList = this.subList();
@@ -91,8 +91,10 @@ export class RegisterService {
        
           if (user) {
             console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
+           
             this.updateStatusByUid(user.uid, 'Online')
            this.getActualUser(user.uid)
+           
             
         setTimeout(() => {
           this.router.navigate(['/main-components']);
@@ -112,11 +114,18 @@ getActualUser(uid:string){
   this.actualUser=[]
   if (user) {
     // Wenn der User gefunden wird, den Status ändern
+  
     this.actualUser.push(user)
+    
   } else {
     console.log('Kein User mit dieser UID gefunden');
   }
+
 }
+
+
+
+
   
 
   
