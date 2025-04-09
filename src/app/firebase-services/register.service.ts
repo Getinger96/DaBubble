@@ -2,10 +2,10 @@ import { Injectable, inject,  } from '@angular/core';
 import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot  } from '@angular/fire/firestore';
 import { getAuth, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider,sendPasswordResetEmail,reauthenticateWithCredential,updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom , BehaviorSubject} from 'rxjs';
-
+import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,17 +27,51 @@ export class RegisterService {
   loginIsValide: boolean = true
   loginIsEmailValide: boolean = true
   private allUsersSubject = new BehaviorSubject<User[]>([]); 
+  private actualUserSubject = new BehaviorSubject<User[]>([])
   allUsers$ = this.allUsersSubject.asObservable();
-  
+  acutalUser$ = this.actualUserSubject.asObservable();
+
   constructor( private route: ActivatedRoute,
     private router: Router) {
       this.unsubList = this.subList();
+      this.saveAcualUser();
       this.route.queryParams.subscribe(params => {
         this.oobCode = params['oobCode'];
       });
 
      
     }
+
+
+    saveAcualUser() {
+      // 1. onAuthStateChanged ist eine Firebase-Methode, die den Authentifizierungsstatus des Benutzers überwacht.
+      //    Sie wird immer ausgelöst, wenn sich der Benutzerstatus ändert (z. B. Login oder Logout).
+      onAuthStateChanged(this.auth, (user) => {
+        
+        if (user) {
+          // 2. Wenn der Benutzer eingeloggt ist (d. h. "user" ist nicht null), 
+          //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
+          this.allUsers$
+            .pipe(
+              // 3. Der "filter" Operator sorgt dafür, dass die Funktion nur dann weiter ausgeführt wird,
+              //    wenn die Liste der Benutzer nicht leer ist (d. h. es gibt mindestens einen Benutzer in allUsers$).
+              filter(users => users.length > 0)  // Warten, bis mindestens ein Benutzer geladen wurde
+            )
+            .subscribe(users => {
+              // 4. Wenn mindestens ein Benutzer geladen ist, rufe die Methode "getActualUser" auf,
+              //    um den aktuell angemeldeten Benutzer basierend auf seiner UID zu finden.
+              this.getActualUser(user.uid);  
+            });
+        } else {
+          // 5. Wenn kein Benutzer eingeloggt ist (d. h. "user" ist null),
+          //    stelle sicher, dass das "actualUserSubject" auf ein leeres Array gesetzt wird,
+          //    um anzugeben, dass kein Benutzer aktuell eingeloggt ist.
+          this.actualUserSubject.next([]);  
+        }
+      });
+    }
+    
+    
 
      subList() {
       return onSnapshot(this.getUserRef(), (user) => {
@@ -56,7 +90,6 @@ export class RegisterService {
       this.unsubList();
     }
 
-    
 
 
     async checkIfUserExists(email: string): Promise<boolean> {
@@ -116,6 +149,9 @@ getActualUser(uid:string){
     // Wenn der User gefunden wird, den Status ändern
   
     this.actualUser.push(user)
+    this.actualUserSubject.next(this.actualUser);    
+    console.log('akutler User, USer ', this.actualUserSubject, this.actualUser );
+    
     
   } else {
     console.log('Kein User mit dieser UID gefunden');
