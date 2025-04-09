@@ -17,6 +17,7 @@
         >.head {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             >p {
                 font-family: $font-primary;
                 font-weight: 700;

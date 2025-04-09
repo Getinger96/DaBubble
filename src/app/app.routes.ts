@@ -9,6 +9,7 @@ import { MainComponentsComponent } from './main-components/main-components.compo
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { UserCardMenuComponent } from './main-components/user-card-menu/user-card-menu.component';
+import { EditUserComponent } from './main-components/edit-user/edit-user.component';
 
 export const routes: Routes = [
     
@@ -22,6 +23,7 @@ export const routes: Routes = [
     { path: 'imprint', component: ImprintComponent },
     { path: 'privacy', component: PrivacyComponent },
 
-    {path: 'user-card', component: UserCardMenuComponent},
+    { path: 'user-card', component: UserCardMenuComponent },
+    { path: 'user-edit', component: EditUserComponent },
 ];
 
