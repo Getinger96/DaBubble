@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
 import { CommonModule } from '@angular/common';
@@ -31,5 +31,22 @@ ngOnInit(): void {
       console.log('aktueller User:', this.actualUser);
     }
   });
+}
+
+
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent) {
+  const overlay = document.querySelector('.profile-dialog');
+  const target = event.target as HTMLElement;
+
+  // Wenn der Klick außerhalb des Overlays war, schließe das Overlay
+  if (overlay && !overlay.contains(target) && !target.closest('.active-user')) {
+    this.overlayvisible = false;
+  }
+}
+
+// Verhindern, dass das Overlay beim Klicken darauf schließt
+onOverlayClick(event: MouseEvent) {
+  event.stopPropagation(); // Verhindert das Schließen des Overlays, wenn du darauf klickst
 }
 }
