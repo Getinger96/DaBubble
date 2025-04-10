@@ -63,8 +63,12 @@
         font-family: $font-primary;
         font-weight: 700;
         font-size: 18px;
+        cursor: pointer;
 
+    }
 
+    >div {
+        cursor: pointer;
     }
 
 }
