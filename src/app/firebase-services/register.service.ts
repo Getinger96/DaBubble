@@ -134,6 +134,7 @@ export class RegisterService {
         }, 3000);
         
       }
+      
     });
       } catch (error: any) {  
         console.error('❌ Fehler bei der Anmeldung:', error);

@@ -3,6 +3,7 @@ import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-active-user',
   standalone: true,
@@ -15,8 +16,10 @@ export class ActiveUserComponent implements OnInit {
   loadingStatus: boolean = false;
  overlayvisible:boolean=false;
  private actualUserSubscription!: Subscription;
+ 
 
-  constructor(private registerservice: RegisterService){
+  constructor(private registerservice: RegisterService,private route: ActivatedRoute,
+      private router: Router){
    
 
   }
@@ -55,5 +58,12 @@ ngOnInit(): void {
 closeOverlay() {
   this.overlayvisible = false;
   document.body.style.overflow = 'auto';
+}
+logOut(){
+let actual = this.actualUser[0].uid
+this.registerservice.updateStatusByUid(actual,'Offline')
+setTimeout(() => {
+  this.router.navigate(['']);
+}, 3000);
 }
 }
