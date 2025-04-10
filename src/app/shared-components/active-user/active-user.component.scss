@@ -5,6 +5,8 @@
     flex-direction: row;
     align-items: center;
     gap: 20px;
+    cursor: pointer;
+
     >#user-name {
         margin: 0;
         font-family: $font-primary;
@@ -12,31 +14,38 @@
         font-size: 32px;
         color: #000000;
     }
+
     >.avatar {
         position: relative;
+
         >.profile {
             width: 70px;
             height: 70px;
         }
+
         >.status {
             position: absolute;
             right: 0;
             bottom: 10px;
         }
     }
+
     >a {
         margin: 0;
     }
 }
 
-.profile-dialog{
+.profile-dialog {
     position: absolute;
     display: flex;
     flex-direction: column;
     width: 150px;
     height: 150px;
     background-color: aliceblue;
-    border-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
     box-sizing: border-box;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
     flex: 1;
@@ -45,19 +54,35 @@
     gap: 18px;
     opacity: 0;
     margin-top: 75px;
+    z-index: 1001;
+    align-items: center;
 
-    >a{
+    >a {
         text-decoration: none;
         color: #000000;
         font-family: $font-primary;
         font-weight: 700;
         font-size: 18px;
 
-    
+
     }
 
 }
 
-.opacity{
+.overlay-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Grau, halbtransparent */
+    z-index: 1000;
+    overflow-y: hidden;
+
+}
+
+.opacity {
     opacity: 1;
+    transition: opacity 0.3s ease-in-out;
 }

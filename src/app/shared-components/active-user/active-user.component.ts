@@ -22,6 +22,7 @@ export class ActiveUserComponent implements OnInit {
   }
 openoverlay(){
   this.overlayvisible=true
+  document.body.style.overflow = 'hidden'; 
 }
 
 ngOnInit(): void {
@@ -34,19 +35,25 @@ ngOnInit(): void {
 }
 
 
-@HostListener('document:click', ['$event'])
-onClickOutside(event: MouseEvent) {
-  const overlay = document.querySelector('.profile-dialog');
-  const target = event.target as HTMLElement;
+// @HostListener('document:click', ['$event'])
+// onClickOutside(event: MouseEvent) {
+//   const overlay = document.querySelector('.profile-dialog');
+//   const target = event.target as HTMLElement;
 
-  // Wenn der Klick außerhalb des Overlays war, schließe das Overlay
-  if (overlay && !overlay.contains(target) && !target.closest('.active-user')) {
-    this.overlayvisible = false;
-  }
-}
+//   // Wenn der Klick außerhalb des Overlays war, schließe das Overlay
+//   if (overlay && !overlay.contains(target) && !target.closest('.active-user')) {
+//     this.overlayvisible = false;
+//   }
+// }
 
-// Verhindern, dass das Overlay beim Klicken darauf schließt
-onOverlayClick(event: MouseEvent) {
-  event.stopPropagation(); // Verhindert das Schließen des Overlays, wenn du darauf klickst
+// // Verhindern, dass das Overlay beim Klicken darauf schließt
+// onOverlayClick(event: MouseEvent) {
+//   event.stopPropagation(); // Verhindert das Schließen des Overlays, wenn du darauf klickst
+// }
+
+
+closeOverlay() {
+  this.overlayvisible = false;
+  document.body.style.overflow = 'auto';
 }
 }
