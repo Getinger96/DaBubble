@@ -34,7 +34,7 @@ export class RegisterService {
   constructor( private route: ActivatedRoute,
     private router: Router) {
       this.unsubList = this.subList();
-      this.saveAcualUser();
+      this.saveActualUser();
       this.route.queryParams.subscribe(params => {
         this.oobCode = params['oobCode'];
       });
@@ -43,35 +43,44 @@ export class RegisterService {
     }
 
 
-    saveAcualUser() {
-      // 1. onAuthStateChanged ist eine Firebase-Methode, die den Authentifizierungsstatus des Benutzers überwacht.
-      //    Sie wird immer ausgelöst, wenn sich der Benutzerstatus ändert (z. B. Login oder Logout).
-      onAuthStateChanged(this.auth, (user) => {
-        
-        if (user) {
-          // 2. Wenn der Benutzer eingeloggt ist (d. h. "user" ist nicht null), 
+    async saveActualUser() {
+      try {
+        // 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
+        let currentUser = await this.getCurrentUser();
+        if (currentUser) {
+          // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null), 
           //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
           this.allUsers$
             .pipe(
-              // 3. Der "filter" Operator sorgt dafür, dass die Funktion nur dann weiter ausgeführt wird,
-              //    wenn die Liste der Benutzer nicht leer ist (d. h. es gibt mindestens einen Benutzer in allUsers$).
-              filter(users => users.length > 0)  // Warten, bis mindestens ein Benutzer geladen wurde
+              filter(users => users.length > 0)  // Warte, bis mindestens ein Benutzer geladen wurde
             )
             .subscribe(users => {
-              // 4. Wenn mindestens ein Benutzer geladen ist, rufe die Methode "getActualUser" auf,
-              //    um den aktuell angemeldeten Benutzer basierend auf seiner UID zu finden.
-              this.getActualUser(user.uid);  
+              // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
+              console.log('Alle Benutzer:', users);
+              this.getActualUser(currentUser.uid);  // Hier kannst du eine Methode aufrufen, um den aktiven Benutzer zu finden
             });
         } else {
-          // 5. Wenn kein Benutzer eingeloggt ist (d. h. "user" ist null),
-          //    stelle sicher, dass das "actualUserSubject" auf ein leeres Array gesetzt wird,
-          //    um anzugeben, dass kein Benutzer aktuell eingeloggt ist.
+          // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
           this.actualUserSubject.next([]);  
+          console.log('Kein Benutzer eingeloggt', this.actualUserSubject);
         }
-      });
+      } catch (error) {
+        console.error("Fehler beim Abrufen des Benutzers:", error);
+      }
     }
     
+    // Methode, die den aktuellen Benutzer zurückgibt
+    getCurrentUser(): Promise<any> {
+      return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(this.auth, (user) => {
+          unsubscribe(); // Entfernt den Listener, sobald wir die Info haben
+          resolve(user);  // Gibt den Benutzer zurück
+        }, reject); // Fehlerbehandlung, falls etwas schiefgeht
+      })
     
+    }
+
+
 
      subList() {
       return onSnapshot(this.getUserRef(), (user) => {
@@ -252,14 +261,14 @@ async updateUserAvatar(avatar: number) {
     await updateDoc(userRef, { avatar: avatar });
 
     console.log("Avatar erfolgreich aktualisiert");
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   } catch (error) {
     console.error("Fehler beim Aktualisieren des Avatars:", error);
   }
 }
 
 // Diese Funktion wird aufgerufen, wenn der Benutzer den Google-Login-Button klickt.
-// Der "event" Parameter enthält das Klick-Ereignis, das wir zunächst unterdrücken,
+// Der "event" Parameter enthält das Klick-Ereignis, das wir zunächst unterdrücken,          
 // um zu verhindern, dass z. B. ein Formular abgeschickt wird.
 async loginWithGoogle(event: Event) { 
   event.preventDefault();  // Verhindert das Standardverhalten (z.B. Seiten-Neuladen bei Formularen)
@@ -271,6 +280,7 @@ async loginWithGoogle(event: Event) {
     // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
     this.loginWithGoogleAccountItWorks(result);
     this.router.navigate(['/main-components']);
+                                                                                                                                                                  
   } catch (error) {
     // Falls ein Fehler auftritt (z.B. Popup wird geschlossen oder ein Netzwerkfehler),
     // wird der Fehler hier verarbeitet.
@@ -298,6 +308,7 @@ loginWithGoogleAccountItWorks(result: any) {
     // - email: Die E-Mail-Adresse des Benutzers
     // - photoURL: Die URL zum Profilbild des Benutzers (sofern vorhanden)
     const user = result.user;
+    this.userWithGoogleMail(user)
     
 
     // Ausgabe des Access Tokens und der Benutzerinformationen in der Konsole,
@@ -310,6 +321,77 @@ loginWithGoogleAccountItWorks(result: any) {
     console.error('Kein gültiges Anmelde-Token erhalten.');
   }
 }
+
+
+
+
+
+userJsonGoogleMail(item: User, id:string) {
+  return {
+    name: item.name,
+    email: item.email,
+    passwort: item.passwort,
+    id:id,
+    uid:item.uid,
+    avatar: 1,
+    status:'Online'
+  };
+}
+
+async userWithGoogleMail(user: any) {
+  console.log('🔍 userWithGoogleMail aufgerufen mit:', user);
+
+  // Wichtig: Nutze "user.email", nicht "user.mail", sonst ist es immer undefined!
+  const userEmail = user.email;
+  const userExists = await this.checkIfUserExists(user.email);
+  
+  console.log('📬 E-Mail zum Prüfen:', userEmail);
+  console.log('✅ Benutzer existiert bereits?', userExists);
+
+  if (!userExists) {
+    console.log('➕ Benutzer existiert NICHT – wird neu erstellt.');
+
+    let newUser = this.newUserWithGoogleMail(user);
+    console.log('📦 Neuer User zum Speichern:', newUser);
+
+    this.addInFirebaseGoogleMailUser(newUser, user.uid); 
+    console.log('🚀 addInFirebaseGoogleMailUser wurde aufgerufen mit:', newUser, user.uid);
+  } else {
+    this.getActualUser(user.uid);  
+    console.log('🛑 Benutzer existiert bereits – kein neuer Eintrag.', userExists);
+  }
+}
+
+
+
+
+
+addInFirebaseGoogleMailUser(item: User, id: string) {
+  return addDoc(this.getUserRef(), this.userJsonGoogleMail(item, id)).then(docRef => {
+    this.id =  docRef.id;
+    console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
+    return docRef.id;  // Gibt die automatisch generierte ID zurück
+  }).catch(error => {
+    console.error("Fehler beim Hinzufügen des Benutzers:", error);
+  });
+}
+
+
+newUserWithGoogleMail(user: any) {
+  return {
+    uid: user.uid,
+    id: '',
+    name: user.displayName || 'Unbekannt',
+    email: user.email || '',
+    passwort: '',
+    avatar: 0,
+    status:'Online'
+
+  };
+
+
+}
+
 
 // Diese Funktion verarbeitet Fehler, die während des Google-Logins auftreten.
 loginWithGoogleAccountError(error: any) {
