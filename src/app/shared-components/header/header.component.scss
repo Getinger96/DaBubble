@@ -19,9 +19,14 @@ header {
     display: flex;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @media (max-width: 720px) {
         padding: 0px;     
         justify-content: center;  
+}
+
+
+@media (max-width: 450px)  {
+    margin-bottom: 60px;
 }
 }
 
@@ -49,7 +54,8 @@ h2 {
    color: black;
 
    @media (max-width: 720px) {
-font-size: 24px;
+    padding-bottom: 10px;
+
 }
 }
 

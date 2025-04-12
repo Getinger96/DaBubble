@@ -1,10 +1,11 @@
 $font-primary: 'Nunito', sans-serif;
 $font-secondary: 'Figtree', sans-serif;
 
-body {
+body, html {
     margin: 0;
     background-color: #ECEEFE;
     font-family: $font-primary !important;
+    overflow: hidden;
 }
 
 .fontNunito {
@@ -15,24 +16,27 @@ body {
     font-family: 'Figtree';
   }
 
-
   .headerContainer {
     display: flex;
     justify-content: space-between;  
     align-items: center;             
-    padding: 40px;           
-    
+    padding: 30px 20px 0px 20px;
+    height: 100px;
+  
     
     @media (max-width: 720px) {    
-        justify-content: center;  
-        padding: 25px;
-}
-
-
-@media (max-width: 450px) {    
+        padding: 60px;
+        height: 0;
+        justify-content: center;
+  }
+  
+  
+  @media (max-width: 450px) {    
     justify-content: center;  
-    padding: 10px;
-}
+    padding: 95px 20px 20px 0px;
+  }
+  
+
 
   }
 

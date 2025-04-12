@@ -10,11 +10,12 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
 import { getAuth, confirmPasswordReset } from 'firebase/auth';
+import { HeaderLogoComponent } from "../header-logo/header-logo.component";
 
 @Component({
   selector: 'app-passwort-reset',
   standalone: true,
-  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, FormsModule,HeaderComponent],
+  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, FormsModule, HeaderComponent, HeaderLogoComponent],
   templateUrl: './passwort-reset.component.html',
   styleUrl: './passwort-reset.component.scss'
 })

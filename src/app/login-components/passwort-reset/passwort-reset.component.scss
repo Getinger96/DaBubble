@@ -1,3 +1,37 @@
+
+
+
+
+
+body {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .headerContainer {
+    display: flex;
+    justify-content: space-between;  
+    align-items: center;             
+    padding: 30px 20px 0px 20px;
+    height: 100px;
+  
+    
+    @media (max-width: 720px) {    
+        padding: 60px;
+        height: 0;
+        justify-content: center;  
+  }
+  
+  
+  @media (max-width: 450px) {    
+    padding: 95px 20px 20px 0px;
+  }
+  }
+
+
+
+
+
 .reset-container {
     
     flex-direction: column;
@@ -99,6 +133,10 @@
     /* Stelle sicher, dass immer ein wenig Platz reserviert wird, auch wenn keine Nachricht da ist */
     visibility: hidden;
     /* Nachricht bleibt unsichtbar, aber der Raum wird weiterhin reserviert */
+
+    @media (max-width: 450px) {    
+        height: 40px;
+      }
 }
 
 .validation-text {
@@ -122,21 +160,24 @@ form {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     font-size: 18px;
     font-weight: 500;
     font-family: 'Nunito';
 
-    >div {
+     form div {
 
         display: flex;
         align-items: center;
-        height: 50px;
+        height: 40px;
         width: 500px;
         border-radius: 100px;
         background-color: white;
 
-
+        @media (max-width: 450px) {    
+            height: 40px;
+          }
+      
 
 
         cursor: pointer;
@@ -178,6 +219,12 @@ form {
     }
 }
 
+
+.validation-container {
+    @media (max-width: 450px) {    
+        height: 40px;
+      }
+}
 .borderPurple {
     border: 1px solid #535af1 !important;
 }

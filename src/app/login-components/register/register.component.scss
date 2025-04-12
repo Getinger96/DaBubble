@@ -1,3 +1,30 @@
+
+
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;             
+  padding: 30px 20px 0px 20px;
+  height: 100px;
+
+  
+  @media (max-width: 720px) {    
+      padding: 60px;
+      height: 0;
+      justify-content: center;  
+}
+
+
+@media (max-width: 450px) {    
+  padding: 95px 20px 20px 0px;
+}
+}
+
 .register-container {
 
 

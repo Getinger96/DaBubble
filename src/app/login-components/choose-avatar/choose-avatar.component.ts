@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
 import { GoogleAuthProvider } from "firebase/auth";
+import { HeaderLogoComponent } from "../header-logo/header-logo.component";
 @Component({
   selector: 'app-choose-avatar',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, HeaderLogoComponent],
   templateUrl: './choose-avatar.component.html',
   styleUrl: './choose-avatar.component.scss'
 })

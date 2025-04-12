@@ -9,6 +9,7 @@ import { HeaderComponent } from '../../shared-components/header/header.component
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
+import { HeaderLogoComponent } from "../header-logo/header-logo.component";
 
 
 
@@ -16,7 +17,7 @@ import { RegisterService } from '../../firebase-services/register.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, HeaderComponent, FormsModule],
+  imports: [MatInputModule, CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterModule, HeaderComponent, FormsModule, HeaderLogoComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
