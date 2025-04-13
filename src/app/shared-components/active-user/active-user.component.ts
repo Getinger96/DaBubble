@@ -38,21 +38,7 @@ ngOnInit(): void {
 }
 
 
-// @HostListener('document:click', ['$event'])
-// onClickOutside(event: MouseEvent) {
-//   const overlay = document.querySelector('.profile-dialog');
-//   const target = event.target as HTMLElement;
 
-//   // Wenn der Klick außerhalb des Overlays war, schließe das Overlay
-//   if (overlay && !overlay.contains(target) && !target.closest('.active-user')) {
-//     this.overlayvisible = false;
-//   }
-// }
-
-// // Verhindern, dass das Overlay beim Klicken darauf schließt
-// onOverlayClick(event: MouseEvent) {
-//   event.stopPropagation(); // Verhindert das Schließen des Overlays, wenn du darauf klickst
-// }
 
 
 closeOverlay() {
@@ -62,8 +48,9 @@ closeOverlay() {
 logOut(){
 let actual = this.actualUser[0].uid
 this.registerservice.updateStatusByUid(actual,'Offline')
+document.body.style.overflow = 'auto';
 setTimeout(() => {
   this.router.navigate(['']);
-}, 3000);
+}, 1000);
 }
 }

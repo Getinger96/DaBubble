@@ -1,3 +1,44 @@
+<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()">
+    <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog" (click)="onDialogClick($event)">
+
+        <div class="dialog-Headline">
+            <span>Channel erstellen</span>
+            <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+
+        </div>
+        <div class="dialog-info">
+            <span>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie Themenbezogen sein #marketing zum
+                Beispiel</span>
+        </div>
+        <div class="dialog-name">
+            <span>Channel-Name</span>
+            <div class="input-channel-name-container">
+                <img src="../../../assets/img/tag-grey.png" alt="">
+                <input type="text" placeholder=" z.B Kooperationsprojekte">
+            </div>
+        </div>
+        <div class="dialog-description">
+            <span>Beschreibung
+                <span>(optional)</span>
+            </span>
+            <div class="input-channel-description-container">
+                <input type="text" name="" id="" placeholder="Dein Text hier">
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div class="button">
+                <span>Erstellen</span>
+            </div>
+            
+        </div>
+
+
+    </div>
+</div>
+
+
+
 <section class="channel-menu">
     <div class="head">
         <div>
@@ -9,7 +50,8 @@
     <div class="channels">
         <div class="head-channels">
             <div class="head-left">
-                <img class="toggle-channel-menu" (click)="toggleChannels()" src="assets/img/arrow_drop_down.svg" alt="open-channels">
+                <img class="toggle-channel-menu" (click)="toggleChannels()" src="assets/img/arrow_drop_down.svg"
+                    alt="open-channels">
                 <img src="assets/img/workspaces.svg" alt="workspaces">
                 <h4>Channels</h4>
             </div>
@@ -19,12 +61,14 @@
             <div class="channel">
                 <p># <span>Entwicklerteam</span></p>
             </div>
-            <a class="add-channel" href=""><img src="assets/img/add_circle.svg" alt="add-channel">Channel hinzufügen</a>
+            <div (click)="openOverlay()" class="add-channel"><img src="assets/img/add_circle.svg"
+                    alt="add-channel">Channel hinzufügen</div>
         </nav>
     </div>
     <div class="direct-messages-menu">
         <div class="head-direct-messages">
-            <img class="toggle-direct-messages-menu" (click)="toggleDirectMessages()" src="assets/img/arrow_drop_down.svg" alt="open-direct-messages">
+            <img class="toggle-direct-messages-menu" (click)="toggleDirectMessages()"
+                src="assets/img/arrow_drop_down.svg" alt="open-direct-messages">
             <div class="headline-direct-messages">
                 <img src="assets/img/account_circle.svg" alt="account-icon">
                 <h4>Direktnachrichten</h4>
@@ -32,7 +76,7 @@
         </div>
         <nav *ngIf="openDirectMessages" class="direct-messages">
             <app-direct-message-user [userArray]="userArray"></app-direct-message-user>
-         
+
         </nav>
     </div>
 </section>
