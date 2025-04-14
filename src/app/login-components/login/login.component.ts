@@ -7,6 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
+import { AuthService } from '../../firebase-services/auth.service';
 import { GoogleAuthProvider } from "firebase/auth";
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -34,7 +35,8 @@ export class LoginComponent implements AfterViewInit  {
   overlayvisible: boolean = false;
   introView: boolean = true;
   logoView: boolean =  false;
-  constructor(private registerservice: RegisterService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone){
+  constructor(private registerservice: RegisterService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
+    private authSerive: AuthService){
 
   }
 
@@ -101,7 +103,7 @@ export class LoginComponent implements AfterViewInit  {
 
   async login(event: Event){
      
-    this.registerservice.loginWithGoogle(event)
+    this.authSerive.loginWithGoogle(event)
     
   }
   async loginAccount(email: string, password: string, event: Event){
