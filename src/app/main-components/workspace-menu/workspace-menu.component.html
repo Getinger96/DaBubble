@@ -1,40 +1,89 @@
 <div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()">
-    <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog" (click)="onDialogClick($event)">
 
-        <div class="dialog-Headline">
-            <span>Channel erstellen</span>
-            <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+    <form (ngSubmit)="addChannel($event, channelForm)" #channelForm="ngForm">
+        <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog" (click)="onDialogClick($event)">
 
-        </div>
-        <div class="dialog-info">
-            <span>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie Themenbezogen sein #marketing zum
-                Beispiel</span>
-        </div>
-        <div class="dialog-name">
-            <span>Channel-Name</span>
-            <div class="input-channel-name-container">
-                <img src="../../../assets/img/tag-grey.png" alt="">
-                <input type="text" placeholder=" z.B Kooperationsprojekte">
+            <div class="dialog-Headline">
+                <span>Channel erstellen</span>
+                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+
             </div>
-        </div>
-        <div class="dialog-description">
-            <span>Beschreibung
-                <span>(optional)</span>
-            </span>
-            <div class="input-channel-description-container">
-                <input type="text" name="" id="" placeholder="Dein Text hier">
+            <div class="dialog-info">
+                <span>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie Themenbezogen sein #marketing
+                    zum
+                    Beispiel</span>
             </div>
-        </div>
-
-        <div class="button-container">
-            <div class="button">
-                <span>Erstellen</span>
+            <div class="dialog-name">
+                <span>Channel-Name</span>
+                <div class="input-channel-name-container">
+                    <img src="../../../assets/img/tag-grey.png" alt="">
+                    <input [(ngModel)]=" channel.name" type="text" name="name" placeholder=" z.B Kooperationsprojekte"
+                        #name="ngModel" required>
+                </div>
             </div>
-            
+            <div class="dialog-description">
+                <span>Beschreibung
+                    <span>(optional)</span>
+                </span>
+                <div class="input-channel-description-container">
+                    <input [(ngModel)]="channel.description" type="text" name="description" id=""
+                        placeholder="Dein Text hier" #description="ngModel" required>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <input [disabled]="" type="submit" value="Erstellen">
+                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+
+            </div>
+
+
+
         </div>
+    </form>
+
+</div>
+
+<div *ngIf="overlay2Visible" class="overlay-bg" (click)="closeOverlay()">
+
+    <form #channelForm="ngForm">
+        <div [ngClass]="{'opacity':overlay2Visible}" class="profile-dialog" (click)="onDialogClick($event)">
+
+            <div class="dialog-Headline">
+                <span> Leute hinzufügen</span>
+            </div>
+            <div>
+                <label class="custom-checkbox">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+
+                </label>
+                <span> Alle Mitglieder von hinzufügen</span>
+            </div>
 
 
-    </div>
+            <div>
+                <label class="custom-checkbox">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+
+                </label>
+                <span>Bestimmte Leute hinzufügen </span>
+                <div>
+                    <input type="text" placeholder="Name eingeben">
+                </div>
+            </div>
+
+            <div class="button-container">
+                <input [disabled]="" type="submit" value="Erstellen">
+
+            </div>
+
+
+
+        </div>
+    </form>
+
 </div>
 
 
