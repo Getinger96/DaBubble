@@ -400,9 +400,28 @@ channelJson(item:Channel,creator:string){
       console.log('🚀 addInFirebaseGoogleMailUser wurde aufgerufen mit:', newUser, user.uid);
     } else {
       this.getActualUser(user.uid);
+      this.setStatusOnline(user.uid, 'Online')
       console.log('🛑 Benutzer existiert bereits – kein neuer Eintrag.', userExists);
     }
   }
+
+  async setStatusOnline(uid: string, newStatus: string) {
+    const user = this.allUsers.find(user => user.uid === uid);
+  
+    if (user) {
+      if (user.status !== newStatus) {
+        user.status = newStatus;
+        let docRef = this.getSingleDocRef(user.id);
+        await updateDoc(docRef, { status: user.status });
+        console.log('✅ Status aktualisiert:', user);
+      } else {
+        console.log('ℹ️ Status ist bereits aktuell – keine Änderung nötig.');
+      }
+    } else {
+      console.log('❌ Kein User mit dieser UID gefunden:', uid);
+    }
+  }
+  
 
 
 
