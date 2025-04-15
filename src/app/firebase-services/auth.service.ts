@@ -117,7 +117,8 @@ export class AuthService {
       }
     
       async setStatusOnline(uid: string, newStatus: string) {
-        const user = this.allUsers.find(user => user.uid === uid);
+        const user = this.registerservice.allUsers.find(user => user.uid === uid);
+      console.log('user', user );
       
         if (user) {
           if (user.status !== newStatus) {
