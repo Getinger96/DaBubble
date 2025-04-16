@@ -1,3 +1,5 @@
+
+
 @import './../../../styles.scss';
 
 .channel-menu {
@@ -160,7 +162,7 @@
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
     flex: 1;
     padding: 40px;
-    justify-content: center;
+    justify-content: space-around;
     gap: 18px;
     opacity: 0;
     font-family: $font-primary;
@@ -281,47 +283,10 @@
 
 
 
-.custom-checkbox {
-    position: relative;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-  }
 
-  .custom-checkbox input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
+ .chooseMembers-checkbox{
+    display: flex;
+    flex-direction: column;
+ }
 
-  .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 16px;
-    width: 16px;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-  }
-
-  /* Innerer blauer Punkt */
-  .custom-checkbox input:checked + .checkmark::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 8px;
-    height: 8px;
-    background: #007BFF;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  /* Optional: Hover-Effekt */
-  .custom-checkbox:hover .checkmark {
-    border-color: #888;
-  }
+ 

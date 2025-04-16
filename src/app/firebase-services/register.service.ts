@@ -37,7 +37,7 @@ export class RegisterService {
   constructor(private route: ActivatedRoute,
     private router: Router) {
     this.unsubList = this.subList();
-    this.unsubChannel=this.subChannelList()
+    this.unsubChannel = this.subChannelList()
     this.saveActualUser();
     this.route.queryParams.subscribe(params => {
       this.oobCode = params['oobCode'];
@@ -103,11 +103,11 @@ export class RegisterService {
     return onSnapshot(this.getChannelRef(), (channel) => {
       let channelssArray: Channel[] = [];
       channel.forEach(element => {
-        channelssArray.push(this.setChannelObject(element.data()))
+        channelssArray.push(this.setChannelObject(element.data(),element.id))
         console.log('Daten in Firebase', element.data())
       })
-      this.allChannels=channelssArray
-console.log(this.allChannels)
+      this.allChannels = channelssArray
+      console.log(this.allChannels)
 
     })
   }
@@ -243,19 +243,20 @@ console.log(this.allChannels)
     });
   }
 
-addChannel(item:Channel,event:Event){
-  return addDoc(this.getChannelRef(), this.channelJson(item,this.actualUser[0].name))
-}
-
-channelJson(item:Channel,creator:string){
-  return{
-    name: item.name,
-    members: [],
-    creator: creator,
-    description: item.description
-
+  addChannel(item: Channel, event: Event) {
+    return addDoc(this.getChannelRef(), this.channelJson(item, this.actualUser[0].name))
   }
-}
+
+  channelJson(item: Channel, creator: string) {
+    return {
+      id:item.id,
+      name: item.name,
+      members: [],
+      creator: creator,
+      description: item.description
+
+    }
+  }
 
   userJson(item: User, id: string) {
     return {
@@ -281,11 +282,11 @@ channelJson(item:Channel,creator:string){
     };
   }
 
-  setChannelObject(obj: any): Channel {
+  setChannelObject(obj: any,id:string): Channel {
     return {
-
+      id:id,
       name: obj.name,
-      members: [],
+      members: obj.members,
       creator: obj.creator,
       description: obj.description
     };
@@ -309,7 +310,7 @@ channelJson(item:Channel,creator:string){
     }
   }
 
- 
+
 
   // Funktion, um die Referenz auf die Firestore-Sammlung 'Users' zu bekommensetUserObject
   getUserRef() {
@@ -357,6 +358,15 @@ channelJson(item:Channel,creator:string){
     } else {
       alert('Die Passwörter stimmen nicht überein!');
     }
+  }
+
+
+  async addMembersToChannel(channelId: string, members: string[]) {
+    const channelDocRef = doc(this.firestore, 'Channels', channelId);
+    await updateDoc(channelDocRef, {
+      members: members
+    });
+    console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
   }
 
 }

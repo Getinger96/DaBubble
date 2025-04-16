@@ -1,18 +1,20 @@
 export class Channel {
-name:string;
-description:string;
-members:[];
-creator:string;
+    id: string;
+    name: string;
+    description: string;
+    members:string;
+    creator: string;
 
 
-constructor(obj?: any){
-this.name=obj?obj.name:''
-this.description=obj?obj.description:''
-this.members=obj?obj.members:''
-this.creator=obj?obj.creator:''
+    constructor(obj?: any) {
+         this.id = obj ? obj.id : ''
+        this.name = obj ? obj.name : ''
+        this.description = obj ? obj.description : ''
+        this.members = obj ? obj.members : ''
+        this.creator = obj ? obj.creator : ''
 
-}
+    }
 
-    
+
 
 }

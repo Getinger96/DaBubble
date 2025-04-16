@@ -46,37 +46,35 @@
 
 <div *ngIf="overlay2Visible" class="overlay-bg" (click)="closeOverlay()">
 
-    <form #channelForm="ngForm">
+    <form (ngSubmit)="addMembers()" #channelForm="ngForm">
         <div [ngClass]="{'opacity':overlay2Visible}" class="profile-dialog" (click)="onDialogClick($event)">
 
             <div class="dialog-Headline">
                 <span> Leute hinzufügen</span>
+                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
             </div>
-            <div>
-                <label class="custom-checkbox">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-
-                </label>
-                <span> Alle Mitglieder von hinzufügen</span>
+            <div class="allMembers-checkbox">
+                <mat-radio-group [(ngModel)]="selectedOption" name="radioroup">
+                    <div>
+                        <mat-radio-button class="example-margin" value="all">Alle Mitglieder Hinzufügen </mat-radio-button>
+                    </div>
+                    <div>
+                        <mat-radio-button class="example-margin" value="some">Bestimmte Leute hinzufügen </mat-radio-button>
+                        <div *ngIf="selectedOption === 'some'"   class="input-channel-name-container">
+                            <input [(ngModel)]=" channel.members" type="text" name="name" placeholder="Namen eingeben"
+                                #name="ngModel" required>
+                        </div>
+                    </div>
+                    
+                    
+                  </mat-radio-group>
             </div>
 
 
-            <div>
-                <label class="custom-checkbox">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-
-                </label>
-                <span>Bestimmte Leute hinzufügen </span>
-                <div>
-                    <input type="text" placeholder="Name eingeben">
-                </div>
-            </div>
+           
 
             <div class="button-container">
                 <input [disabled]="" type="submit" value="Erstellen">
-
             </div>
 
 
