@@ -33,7 +33,7 @@
 
             <div class="button-container">
                 <input [disabled]="" type="submit" value="Erstellen">
-                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+              
 
             </div>
 
@@ -56,22 +56,46 @@
             <div class="allMembers-checkbox">
                 <mat-radio-group [(ngModel)]="selectedOption" name="radioroup">
                     <div>
-                        <mat-radio-button class="example-margin" value="all">Alle Mitglieder Hinzufügen </mat-radio-button>
+                        <mat-radio-button class="example-margin" value="all">Alle Mitglieder Hinzufügen
+                        </mat-radio-button>
                     </div>
                     <div>
-                        <mat-radio-button class="example-margin" value="some">Bestimmte Leute hinzufügen </mat-radio-button>
-                        <div *ngIf="selectedOption === 'some'"   class="input-channel-name-container">
-                            <input [(ngModel)]=" channel.members" type="text" name="name" placeholder="Namen eingeben"
-                                #name="ngModel" required>
+                        <mat-radio-button class="example-margin" value="some">Bestimmte Leute hinzufügen
+                        </mat-radio-button>
+                        <div *ngIf="selectedOption === 'some'" class="input-channel-name-container">
+                           
+                            <input [(ngModel)]="searchTerm" (input)="filterUsers()" type="text" name="name"
+                                placeholder="Namen eingeben" #name="ngModel" required>
+                                <div class="selected-tags">
+                                    <span *ngFor="let user of selectedUsers" class="tag">
+                                        <div class="profile">
+                                            <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
+                                        </div>
+                                        <p class="name">{{ user.name }} <span class="remove"
+                                                (click)="removeUser(user)">×</span></p>
+        
+                                    </span>
+                                </div>
                         </div>
+                       
                     </div>
-                    
-                    
-                  </mat-radio-group>
+
+
+                </mat-radio-group>
+                <div class="userList-Container">
+                    <div *ngFor="let user of filteredUsers" class="user" (click)="selectUser(user)">
+                        <div class="profile">
+                            <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
+                        </div>
+                        <p class="name">{{ user.name }}</p>
+
+                    </div>
+                </div>
+
             </div>
 
 
-           
+
 
             <div class="button-container">
                 <input [disabled]="" type="submit" value="Erstellen">
