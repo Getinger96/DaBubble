@@ -32,6 +32,7 @@ export class AuthService {
     
           // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
           this.loginWithGoogleAccountItWorks(result);
+          this.registerservice.saveActualUser();
           this.router.navigate(['/main-components']);
     
         } catch (error) {
@@ -84,7 +85,7 @@ export class AuthService {
           name: item.name,
           email: item.email,
           passwort: item.passwort,
-          id: id,
+          id: '',
           uid: item.uid,
           avatar: 1,
           status: 'Online'
@@ -108,6 +109,7 @@ export class AuthService {
           console.log('📦 Neuer User zum Speichern:', newUser);
     
           this.addInFirebaseGoogleMailUser(newUser, user.uid);
+          this.registerservice.getActualUser(user.uid);
           console.log('🚀 addInFirebaseGoogleMailUser wurde aufgerufen mit:', newUser, user.uid);
         } else {
           this.registerservice.getActualUser(user.uid);
@@ -140,9 +142,10 @@ export class AuthService {
     
     
       addInFirebaseGoogleMailUser(item: User, id: string) {
-        return addDoc(this.registerservice.getUserRef(), this.userJsonGoogleMail(item, id)).then(docRef => {
+        return addDoc(this.registerservice.getUserRef(), this.userJsonGoogleMail(item, id)).then( async docRef => {
           this.id = docRef.id;
           console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
+          await updateDoc(docRef, { id: docRef.id });
           return docRef.id;  // Gibt die automatisch generierte ID zurück
         }).catch(error => {
           console.error("Fehler beim Hinzufügen des Benutzers:", error);

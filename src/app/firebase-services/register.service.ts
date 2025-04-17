@@ -154,7 +154,7 @@ export class RegisterService {
 
           this.updateStatusByUid(user.uid, 'Online')
           this.getActualUser(user.uid)
-
+          this.saveActualUser();
 
           setTimeout(() => {
             this.router.navigate(['/main-components']);
@@ -164,7 +164,7 @@ export class RegisterService {
 
       });
     } catch (error: any) {
-      console.error('❌ Fehler bei der Anmeldung:', error);
+      console.error('❌ Fehler bei der Anmeldung:', error, error.message);
       this.loginIsValide = false;
 
     }
@@ -233,11 +233,14 @@ export class RegisterService {
     }
   }
 
-  addInFirebase(item: User, id: string) {
-    return addDoc(this.getUserRef(), this.userJson(item, id)).then(docRef => {
+  async addInFirebase(item: User, uid: string) {
+    return addDoc(this.getUserRef(), this.userJson(item, uid)).then( async docRef => {
       this.id = docRef.id;
+      console.log('item.uid', item.uid);
+      
       console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
-      return docRef.id;  // Gibt die automatisch generierte ID zurück
+      await updateDoc(docRef, { id: docRef.id });
+      return docRef.id;  
     }).catch(error => {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });
@@ -258,13 +261,13 @@ export class RegisterService {
     }
   }
 
-  userJson(item: User, id: string) {
+  userJson(item: User, uid: string) {
     return {
       name: item.name,
       email: item.email,
       passwort: item.passwort,
-      id: id,
-      uid: item.uid,
+      id: '',
+      uid: uid,
       avatar: null,
       status: 'Offline'
     };
