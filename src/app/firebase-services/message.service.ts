@@ -50,8 +50,9 @@ export class MessageService {
           const isOwn = messageData['id'] === actualUserID;
           const message = this.setMessageObject(messageData, element.id);
           message.isOwn = isOwn;
-
-          allMessages.push(this.setMessageObject(element.data(), element.id));
+          
+          allMessages.push(message);
+          console.log(allMessages)
         });
         
         allMessages.sort((a, b) => {
@@ -66,9 +67,9 @@ export class MessageService {
       });
     }
 
-    //Funktioniert noch nicht!
     getActualUser(){
-      return this.registerService?.actualUser[0]?.id || '';
+      return this.registerService?.actualUser[0]?.id;
+      
     }
 
 
