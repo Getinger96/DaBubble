@@ -11,6 +11,7 @@ import { LoadingService } from '../services/loading.service';
 import { Subscription } from 'rxjs';
 import { RegisterService } from '../firebase-services/register.service';
 import { User } from '../interfaces/user.interface';
+import { MessageService } from '../firebase-services/message.service';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { User } from '../interfaces/user.interface';
   imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent , MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
-})
+})  
 export class MainComponentsComponent implements OnInit {
   loadingStatus: boolean = false;
   allUsers: User[] = [];

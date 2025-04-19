@@ -184,6 +184,7 @@
                     font-size: 18px;
                     color: #535AF1;
                     padding-right: 20px;
+                    cursor: pointer;
                 }
         
                 .message-last-answer{
@@ -247,6 +248,7 @@
 .own-message{
     background-color:#797EF3 !important; 
     margin-right: unset !important;
+    margin-left: 40px;
     color:white;
     align-self: end;
 

@@ -17,33 +17,28 @@
         </div>
     </div>
     <div class="main-chat-feed">
-        <app-message
-        [date]="'Dienstag, 14 Januar'"
-        [avatarSrc]="'assets/img/avatar_5.png'"
-        [name]="'Noah Braun'"
-        [time]="'14:25'"
-        [message]="'Welche Version is aktuell von Angular?'"
-        [isAnswered]="true">
-        </app-message>
-        <app-message
-        [date]="'Heute'"
-        [avatarSrc]="'assets/img/avatar_2.png'"
-        [name]="'Frederik Beck'"
-        [time]="'15:06'"
-        [message]="'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque blandit odio efficitur lectus vestibulum, quis accumsan ante vulputate. Quisque tristique iaculis erat, eu faucibus lacus iaculis ac.'"
-        [isOwn]="true"
-        >
+        <app-message *ngFor="let message of allMessages"
+        [date]="message.sendAt"
+        [avatarSrc]="message.avatar"
+        [name]="message.name"
+        [time]="message.sendAtTime"
+        [messageText]="message.messageText"
+        [reaction]="message.reaction"
+        [isOwn]="message.isOwn"
+        [isAnswered]="message.isAnswered"
+        [isThread]="message.isThread"
+        [isInThread]="message.isInThread">
         </app-message>
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">
-        <textarea type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+        <textarea [(ngModel)]="message.messageText" type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
         <div class="message-icons">
             <div>
             <img src="assets/img/emoji.png" alt="">
             <img src="assets/img/at.png" alt="">
             </div>
-            <img src="assets/img/send.png" alt="">
+            <img (click)="addMessage()" src="assets/img/send.png" alt="">
         </div>
         </div>
     </div>

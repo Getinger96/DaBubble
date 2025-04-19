@@ -8,27 +8,27 @@
     <div class="thread-feed">
         <div class="thread-message">
          <app-message
-            [avatarSrc]= "'assets/img/avatar_5.png'"
+            [avatarSrc]= "5"
             [name]= "'Noah Braun'"
             [time]="'14:25'"
-            [message]="'Welche Version ist aktuell von Angular?'"
+            [messageText]="'Welche Version ist aktuell von Angular?'"
             [isInThread]="true">
          </app-message>
             <div class="thread-number-of-answers"><span class="fontNunito">2 Antworten</span><div class="line"></div></div>
         </div>
         <div class="thread-answers">
             <app-message
-            [avatarSrc]="'assets/img/avatar_6.png'"
+            [avatarSrc]="6"
             [name]="'Sofia Müller'"
             [time]="'14:30'"
-            [message]="'Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiss Frederik, ob es wahr ist.'"
+            [messageText]="'Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiss Frederik, ob es wahr ist.'"
             [isThread]="true"
         ></app-message>
         <app-message
-            [avatarSrc]="'assets/img/avatar_2.png'"
+            [avatarSrc]="2"
             [name]="'Frederik Beck'"
             [time]="'15:06'"
-            [message]="'Ja das ist es.'"
+            [messageText]="'Ja das ist es.'"
             [isThread]="true"
             [isOwn]="true"
     ></app-message>

@@ -7,6 +7,7 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
+    height: calc(100% - 64px);
 
     >.head {
         display: flex;
@@ -110,6 +111,8 @@
         display: flex;
         flex-direction: column;
         gap: 25px;
+        overflow-x: hidden;
+        overflow-y: scroll;
 
         >.head-direct-messages {
             display: flex;

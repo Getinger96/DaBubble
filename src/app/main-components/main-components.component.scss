@@ -3,6 +3,7 @@
     flex-direction: column;
     padding: 24px;
     position: relative;
+    height: calc(100vh - 130px);
 
     >.main-head {
         display: flex;
@@ -14,7 +15,27 @@
         padding-top: 24px;
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: start;
+        justify-content: center;
+        gap: 20px;
+        height: 80vh;
+
+      app-workspace-menu{
+        height: 100%;
+        width: 20%;
+        max-width: 366px;
+      }
+
+      app-main-chat{
+        height: 100%;
+        width: 52%;
+      }
+
+      app-thread{
+        height: 100%;
+        width: 26%;
+        max-width: 485px;
+      }
     }
     >app-toggle-webspace-menu {
         position: absolute;

@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MessageService } from '../../firebase-services/message.service';
+import { Message } from '../../interfaces/message.interface';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-message',
@@ -9,11 +12,12 @@ import { Component, Input } from '@angular/core';
   styleUrl: './message.component.scss'
 })
 export class MessageComponent {
-@Input() date!: string;
-@Input() avatarSrc!: string;
+@Input() date!: Date | string;
+@Input() avatarSrc!: number;
 @Input() name!: string;
-@Input() time!: string;
-@Input() message!: string;
+@Input() time!: Date | string;
+@Input() messageText!: string;
+@Input() reaction!: number;
 @Input() isOwn: boolean | undefined = false;
 @Input() isThread: boolean | undefined = false;
 @Input() isInThread: boolean | undefined = false;
@@ -36,6 +40,9 @@ hideEditMessage(){
     console.error('Element with id "editMessagePopup" not found.');
   }
 }
+
+constructor(private messageService: MessageService){}
+
 }
 
 
