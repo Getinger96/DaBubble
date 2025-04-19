@@ -35,9 +35,10 @@ export class LoginComponent implements AfterViewInit  {
   overlayvisible: boolean = false;
   introView: boolean = true;
   logoView: boolean =  false;
-  constructor(private registerservice: RegisterService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
-    private authSerive: AuthService){
+  constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
+    ){
 
+      
   }
 
 
@@ -103,8 +104,7 @@ export class LoginComponent implements AfterViewInit  {
 
   async login(event: Event){
      
-    this.authSerive.loginWithGoogle(event)
-    
+    this.authService.loginWithGoogle(event)
   }
   async loginAccount(email: string, password: string, event: Event){
     if (!this.inputFieldEmailIsEmpty()) { return;}
