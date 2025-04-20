@@ -24,22 +24,36 @@
         height: 100%;
         width: 20%;
         max-width: 366px;
+        transition: width 0.3s ease;
       }
 
       app-main-chat{
         height: 100%;
         width: 52%;
+        transition: width 0.3s ease;
+        flex-grow: 1;
       }
 
       app-thread{
         height: 100%;
         width: 26%;
         max-width: 485px;
+        transition: width 0.3s ease;
       }
     }
     >app-toggle-webspace-menu {
         position: absolute;
         bottom: 170px;
         left: -155px;
+    }
+
+    app-workspace-menu.closed {
+      width: 0 !important;
+      overflow: hidden;
+    }
+    
+    app-thread.closed {
+      width: 0 !important;
+      overflow: hidden;
     }
 }

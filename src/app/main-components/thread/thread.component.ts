@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { CommonModule } from '@angular/common';
+import { MainComponentsComponent } from '../main-components.component';
 
 @Component({
   selector: 'app-thread',
@@ -11,4 +12,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ThreadComponent {
 
+  mainComponents = MainComponentsComponent;
+
+  closeThreads(){
+    this.mainComponents.toggleThreads();
+  }
 }

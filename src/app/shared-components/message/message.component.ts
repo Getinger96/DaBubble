@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
+import { MainComponentsComponent } from '../../main-components/main-components.component';
 
 @Component({
   selector: 'app-message',
@@ -23,6 +24,8 @@ export class MessageComponent {
 @Input() isInThread: boolean | undefined = false;
 @Input() isAnswered: boolean | undefined = false;
 
+mainComponents = MainComponentsComponent;
+
 showEditMessage(){
   let editMessagePopup = document.getElementById('editMessagePopup');
   if (editMessagePopup) {
@@ -40,6 +43,10 @@ hideEditMessage(){
     console.error('Element with id "editMessagePopup" not found.');
   }
 }
+
+  openThreads(){
+    this.mainComponents.toggleThreads();
+  }
 
 constructor(private messageService: MessageService){}
 

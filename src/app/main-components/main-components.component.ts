@@ -27,7 +27,10 @@ export class MainComponentsComponent implements OnInit {
   private loadingSubscription!: Subscription;
   private usersSubscription!: Subscription;
 
-
+  
+  
+ 
+  
   constructor(private loadingService: LoadingService, private registerservice: RegisterService  ) {}
 
   ngOnInit(): void {
@@ -40,6 +43,22 @@ export class MainComponentsComponent implements OnInit {
       }
     });
   }
+
+  static toggleThreads():void {
+    const threads = document.querySelector('app-thread');
+    if (threads) {
+      threads.classList.toggle('closed');
+    }
+  }
+
+  static toggleWorkspace():void {
+    const workspace = document.querySelector('app-workspace-menu');
+    if (workspace) {
+      workspace.classList.toggle('closed');
+    }
+  }
+
+ 
 
 
 

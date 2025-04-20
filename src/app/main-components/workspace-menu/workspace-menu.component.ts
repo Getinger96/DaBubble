@@ -12,7 +12,6 @@ import { Subscription } from 'rxjs';
 
 
 
-
 @Component({
   selector: 'app-workspace-menu',
   standalone: true,
@@ -85,11 +84,13 @@ export class WorkspaceMenuComponent {
 
   openOverlay() {
     this.overlayvisible = true
+    
   }
 
   closeOverlay() {
     this.overlayvisible = false
     this.overlay2Visible = false
+    
   }
 
   onDialogClick(event: MouseEvent) {
@@ -143,5 +144,7 @@ export class WorkspaceMenuComponent {
   addSpecificMembersToChannel(channelId: string, members: string[]) {
     this.registerservice.addMembersToChannel(channelId, members);
   }
+
+  
 
 }
