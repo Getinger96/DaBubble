@@ -3,11 +3,11 @@ import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule  } from '@angular/router';
 @Component({
   selector: 'app-active-user',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule ],
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss'
 })
@@ -15,6 +15,7 @@ export class ActiveUserComponent implements OnInit {
   actualUser:User[]= []
   loadingStatus: boolean = false;
  overlayvisible:boolean=false;
+ userId?: string
  private actualUserSubscription!: Subscription;
  
 
@@ -32,6 +33,7 @@ ngOnInit(): void {
   this.actualUserSubscription = this.registerservice.acutalUser$.subscribe(actualUser => {
     if (actualUser.length > 0) {
       this.actualUser = actualUser
+      this.userId = actualUser[0].id
       console.log('aktueller User:', this.actualUser);
     }
   });

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { RegisterService } from '../../firebase-services/register.service';
@@ -11,7 +11,7 @@ import { User } from '../../interfaces/user.interface';
   templateUrl: './user-card-menu.component.html',
   styleUrl: './user-card-menu.component.scss'
 })
-export class UserCardMenuComponent {
+export class UserCardMenuComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, public registerService: RegisterService) { }
 
