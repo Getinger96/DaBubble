@@ -36,7 +36,9 @@ export class AuthService {
           // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
           this.loginWithGoogleAccountItWorks(result)
           this.mainservice.saveActualUser();
-          this.router.navigate(['/main-components']);
+          setTimeout(() => {
+            this.router.navigate(['/main-components']);
+          }, 3000);
           
         } catch (error) {
           // Falls ein Fehler auftritt (z.B. Popup wird geschlossen oder ein Netzwerkfehler),

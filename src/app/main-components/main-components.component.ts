@@ -37,7 +37,7 @@ export class MainComponentsComponent implements OnInit {
   ngOnInit(): void {
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
-        this.allUsers = users;
+        this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
         this.loadingStatus = this.loadingService.setLoading(true);
         console.log('Benutzer in der Komponente:', this.allUsers);
         console.log('laden:', this.loadingStatus);

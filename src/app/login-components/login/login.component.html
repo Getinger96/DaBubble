@@ -48,7 +48,7 @@
                 <div class="input-Fields">
                     <div (focusin)="setFocusPassword('password', true)" [ngClass]="{'borderPurple ': isActivePassword}"  class="custom-input" (focusout)="setFocusPassword('password', false)">
                         <mat-icon [ngStyle]="{'color': isActivePassword ? 'black': 'gray'}">lock</mat-icon>
-                        <input [(ngModel)]="user.passwort" name="password" (blur)="inputFieldPasswordIsEmpty()" #password type="password" placeholder="Passwort" required="">
+                        <input  name="password" (blur)="inputFieldPasswordIsEmpty()" #password type="password" placeholder="Passwort" required="">
                     </div>
                     <div class="errorText">
                     <span  *ngIf="!loginEmailAndPasswordAreCorrect"  class="incorrect-input" >*Falsches Passwort oder E-Mail..Bitte noch einmal versuchen</span>

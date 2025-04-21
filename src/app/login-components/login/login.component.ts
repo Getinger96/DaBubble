@@ -34,7 +34,7 @@ export class LoginComponent implements AfterViewInit  {
   loginEmailIsCorrect : boolean = true;
   loginEmailAndPasswordAreCorrect : boolean = true;
   passWordLengthIsCorrect: boolean = true
-  overlayvisible: boolean = false;
+  overlayvisible: boolean = this.loginservice.overlayvisible
   introView: boolean = true;
   logoView: boolean =  false;
   constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
@@ -75,13 +75,14 @@ export class LoginComponent implements AfterViewInit  {
   }
 
 
-  guestLogin(event: Event) {
-    event.preventDefault()
-    this.overlayvisible=true;
-    setTimeout(() => {
-     this.overlayvisible=false
-     this.router.navigate(['/main-components']);
-    }, 2000)
+ async guestLogin(event: Event) {
+    event.preventDefault();
+    this.user.passwort = 'Gast123'
+    this.user.email = 'guest@gmail.com'
+    this.passwordInput.nativeElement.value = '';
+    await this.loginservice.loginUser(this.user.email, this.user.passwort, event);
+
+    this.showAnimationLogin();
 
 }
 
@@ -106,7 +107,9 @@ export class LoginComponent implements AfterViewInit  {
 
   async login(event: Event){
      
-    this.authService.loginWithGoogle(event)
+   await this.authService.loginWithGoogle(event)
+
+    this.showAnimationLogin();
   }
   async loginAccount(email: string, password: string, event: Event){
     if (!this.inputFieldEmailIsEmpty()) { return;}

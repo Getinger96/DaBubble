@@ -47,7 +47,7 @@ export class WorkspaceMenuComponent {
   ngOnInit(): void {
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
-        this.allUsers = users;
+        this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
 
         console.log('Benutzer in der Komponente:', this.allUsers);
       }

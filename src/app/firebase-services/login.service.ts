@@ -16,6 +16,7 @@ firestore: Firestore = inject(Firestore);
 loginIsEmailValide: boolean = true
 private auth = getAuth();
 loginIsValide: boolean = true
+overlayvisible: boolean = false
 allUsers: User[] = [];
 
 
@@ -34,6 +35,7 @@ allUsers: User[] = [];
         return;
       }
       this.loginIsEmailValide = true;
+      this.overlayvisible = true;
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       console.log('✅ Erfolgreich angemeldet:', userCredential.user);
       this.loginIsValide = true;
@@ -48,6 +50,7 @@ allUsers: User[] = [];
           this.mainservice.saveActualUser();
 
           setTimeout(() => {
+            this.overlayvisible = false;
             this.router.navigate(['/main-components']);
           }, 3000);
 
