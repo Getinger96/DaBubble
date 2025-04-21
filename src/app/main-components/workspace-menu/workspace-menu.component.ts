@@ -9,6 +9,8 @@ import { RegisterService } from '../../firebase-services/register.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
+import { ChannelService } from '../../firebase-services/channel.service';
+import { MainComponentService } from '../../firebase-services/main-component.service';
 
 
 
@@ -34,21 +36,28 @@ export class WorkspaceMenuComponent {
   private usersSubscription!: Subscription;
   filteredUsers = [...this.allUsers];
   selectedUsers: any[] = [];
+  channels: Channel[] = [];
 
 
-  constructor(private registerservice: RegisterService) {
+  constructor(private registerservice: RegisterService, private channelservice: ChannelService,private mainservice:MainComponentService) {
 
   }
 
 
   ngOnInit(): void {
-    this.usersSubscription = this.registerservice.allUsers$.subscribe(users => {
+    this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users;
 
         console.log('Benutzer in der Komponente:', this.allUsers);
       }
     });
+    this.channelservice.channels$.subscribe(channels => {
+      this.channels = channels;
+      console.log('Channels in Component:', this.channels);
+    });
+
+
   }
 
 
@@ -84,13 +93,13 @@ export class WorkspaceMenuComponent {
 
   openOverlay() {
     this.overlayvisible = true
-    
+
   }
 
   closeOverlay() {
     this.overlayvisible = false
     this.overlay2Visible = false
-    
+
   }
 
   onDialogClick(event: MouseEvent) {
@@ -100,9 +109,9 @@ export class WorkspaceMenuComponent {
   addChannel(event: Event, ngForm: NgForm) {
     event.preventDefault();
 
-    const channelObj = this.registerservice.setChannelObject(this.channel, this.channel.id);
+    const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
 
-    this.registerservice.addChannel(channelObj, event).then((docRef) => {
+    this.channelservice.addChannel(channelObj, event).then((docRef) => {
       // ✅ docRef enthält die ID des neuen Channels
       this.createdChannelId = docRef.id;
       this.createdChannelData = channelObj;
@@ -138,13 +147,13 @@ export class WorkspaceMenuComponent {
 
   addAllMembersToChannel(channelId: string) {
     const allUsers = this.allUsers.map(user => user.name); // oder user.uid, je nachdem
-    this.registerservice.addMembersToChannel(channelId, allUsers);
+    this.channelservice.addMembersToChannel(channelId, allUsers);
   }
 
   addSpecificMembersToChannel(channelId: string, members: string[]) {
-    this.registerservice.addMembersToChannel(channelId, members);
+    this.channelservice.addMembersToChannel(channelId, members);
   }
 
-  
+
 
 }

@@ -5,6 +5,8 @@ import { Firestore, addDoc, updateDoc, query, where, getDoc } from '@angular/fir
 import { User } from '../interfaces/user.interface'
 import { getDocs } from 'firebase/firestore';
 import { RegisterService } from '../firebase-services/register.service';
+import { MainComponentService } from './main-component.service';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class AuthService {
   constructor( 
     
     private router: Router,
-    private firestore: Firestore, private registerservice: RegisterService) { }
+    private firestore: Firestore, private registerservice: RegisterService,private mainservice:MainComponentService,private loginservice:LoginService) { }
 
 
 
@@ -33,7 +35,7 @@ export class AuthService {
           const result = await signInWithPopup(this.auth, this.provider);
           // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
           this.loginWithGoogleAccountItWorks(result)
-          this.registerservice.saveActualUser();
+          this.mainservice.saveActualUser();
           this.router.navigate(['/main-components']);
           
         } catch (error) {
@@ -132,7 +134,7 @@ export class AuthService {
     
         // Wichtig: Nutze "user.email", nicht "user.mail", sonst ist es immer undefined!
         const userEmail = user.email;
-        const userExists = await this.registerservice.checkIfUserExists(user.email);
+        const userExists = await this.loginservice.checkIfUserExists(user.email);
         console.log('📬 E-Mail zum Prüfen:', userEmail);
         console.log('✅ Benutzer existiert bereits?', userExists);
         
@@ -143,12 +145,12 @@ export class AuthService {
           console.log('📦 Neuer User zum Speichern:', newUser);
     
           this.addInFirebaseGoogleMailUser(newUser, user.uid);
-          this.registerservice.getActualUser(user.uid);
+          this.mainservice.getActualUser(user.uid);
           console.log('🚀 addInFirebaseGoogleMailUser wurde aufgerufen mit:', newUser, user.uid);
 
           } else {
     
-          this.registerservice.getActualUser(user.uid);
+          this.mainservice.getActualUser(user.uid);
           this.setStatusOnline(user.uid, 'Online')
           console.log('🛑 Benutzer existiert bereits – kein neuer Eintrag.', userExists);
         }
@@ -161,7 +163,7 @@ export class AuthService {
 
     
       async setStatusOnline(uid: string, newStatus: string) {
-        const user = this.registerservice.allUsers.find(user => user.uid === uid);
+        const user = this.mainservice.allUsers.find(user => user.uid === uid);
       console.log('user', user );
       
         if (user) {

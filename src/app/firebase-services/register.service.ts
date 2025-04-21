@@ -23,24 +23,11 @@ export class RegisterService {
   id?: string;
   uid?: string;
   name?: string;
-  unsubList;
-  unsubChannel;
-  allUsers: User[] = [];
-  actualUser: User[] = [];
-  allChannels: Channel[] = [];
-  loginIsValide: boolean = true
-  loginIsEmailValide: boolean = true
   userEmailExist?: boolean = false
-  private allUsersSubject = new BehaviorSubject<User[]>([]);
-  private actualUserSubject = new BehaviorSubject<User[]>([])
-  allUsers$ = this.allUsersSubject.asObservable();
-  acutalUser$ = this.actualUserSubject.asObservable();
-
+  
   constructor(private route: ActivatedRoute,
     private router: Router) {
-    this.unsubList = this.subList();
-    this.unsubChannel = this.subChannelList()
-    this.saveActualUser();
+
     this.route.queryParams.subscribe(params => {
       this.oobCode = params['oobCode'];
     });
@@ -49,170 +36,7 @@ export class RegisterService {
   }
 
 
-  async saveActualUser() {
-    try {
-      // 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
-      let currentUser = await this.getCurrentUser();
-      if (currentUser) {
-        // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null), 
-        //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
-        this.allUsers$
-          .pipe(
-            filter(users => users.length > 0)  // Warte, bis mindestens ein Benutzer geladen wurde
-          )
-          .subscribe(users => {
-            // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
-            console.log('Alle Benutzer:', users);
-            this.getActualUser(currentUser.uid);  // Hier kannst du eine Methode aufrufen, um den aktiven Benutzer zu finden
-          });
-      } else {
-        // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
-        this.actualUserSubject.next([]);
-        console.log('Kein Benutzer eingeloggt', this.actualUserSubject);
-      }
-    } catch (error) {
-      console.error("Fehler beim Abrufen des Benutzers:", error);
-    }
-  }
-
-  // Methode, die den aktuellen Benutzer zurückgibt
-  getCurrentUser(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
-        unsubscribe(); // Entfernt den Listener, sobald wir die Info haben
-        resolve(user);  // Gibt den Benutzer zurück
-      }, reject); // Fehlerbehandlung, falls etwas schiefgeht
-    })
-
-  }
-
-
-
-  subList() {
-    return onSnapshot(this.getUserRef(), (user) => {
-      let usersArray: User[] = [];
-      user.forEach(element => {
-        usersArray.push(this.setUserObject(element.data(), element.id))
-        console.log('Daten in Firebase', element.data(), element.id)
-      })
-      this.allUsers = usersArray;
-      this.allUsersSubject.next(this.allUsers);
-      console.log(this.allUsers);
-    })
-  }
-
-  subChannelList() {
-    return onSnapshot(this.getChannelRef(), (channel) => {
-      let channelssArray: Channel[] = [];
-      channel.forEach(element => {
-        channelssArray.push(this.setChannelObject(element.data(),element.id))
-        console.log('Daten in Firebase', element.data())
-      })
-      this.allChannels = channelssArray
-      console.log(this.allChannels)
-
-    })
-  }
-
-  ngonDestroy() {
-    this.unsubList();
-    this.unsubChannel();
-  }
-
-
-
-  async checkIfUserExists(email: string): Promise<boolean> {
-    try {
-      let userQuery = query(this.getUserRef(), where("email", "==", email))
-      const querySnapshot = await getDocs(userQuery);
-      return !querySnapshot.empty;
-
-    } catch (error) {
-      console.error('Fehler beim Überprüfen des Benutzers:', error);
-      return false;
-    }
-  }
-
-
-  async loginUser(email: string, password: string, event: Event) {
-    event.preventDefault();
-
-    try {
-      const userExists = await this.checkIfUserExists(email);
-      if (!userExists) {
-        console.error('❌ Benutzer existiert nicht.');
-        this.loginIsEmailValide = false;
-        return;
-      }
-      this.loginIsEmailValide = true;
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      console.log('✅ Erfolgreich angemeldet:', userCredential.user);
-      this.loginIsValide = true;
-
-      onAuthStateChanged(this.auth, (user) => {
-
-        if (user) {
-          console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
-
-          this.updateStatusByUid(user.uid, 'Online')
-          this.getActualUser(user.uid)
-          this.saveActualUser();
-
-          setTimeout(() => {
-            this.router.navigate(['/main-components']);
-          }, 3000);
-
-        }
-
-      });
-    } catch (error: any) {
-      console.error('❌ Fehler bei der Anmeldung:', error, error.message);
-      this.loginIsValide = false;
-
-    }
-  }
-
-  getActualUser(uid: string) {
-    const user = this.allUsers.find(user => user.uid === uid);
-    this.actualUser = []
-    if (user) {
-      // Wenn der User gefunden wird, den Status ändern
-
-      this.actualUser.push(user)
-      this.actualUserSubject.next(this.actualUser);
-      console.log('akutler User, USer ', this.actualUserSubject, this.actualUser);
-
-
-    } else {
-      console.log('Kein User mit dieser UID gefunden');
-    }
-
-  }
-
-
-
-
-
-
-
-
-
-
-  async updateStatusByUid(uid: string, newStatus: string): Promise<void> {
-    // Suche nach dem User mit der entsprechenden UID
-    const user = this.allUsers.find(user => user.uid === uid);
-
-    if (user) {
-      // Wenn der User gefunden wird, den Status ändern
-      user.status = newStatus;
-      let docRef = this.getSingleDocRef(user.id)
-      await updateDoc(docRef, { status: user.status });
-      console.log('Status aktualisiert:', user);
-    } else {
-      console.log('Kein User mit dieser UID gefunden');
-    }
-  }
-
+ 
   getSingleDocRef(docID: string) {
     return doc(collection(this.firestore, 'Users'), docID);
 
@@ -220,23 +44,23 @@ export class RegisterService {
 
   async deleteUserFirebase() {
     const currentUser = this.auth.currentUser;
-    let userId=   this.id
+    let userId = this.id
     if (userId) {
       const docRef = this.getSingleDocRef(userId)
       if (currentUser) {
-        await deleteUser(currentUser); 
+        await deleteUser(currentUser);
         await deleteDoc(docRef);
         console.log("Benutzer erfolgreich gelöscht.", currentUser, docRef);
       }
     }
 
-    
+
   }
-  
 
 
 
-async  checkIfUserExistsBeforeRegistration(item: User) {
+
+  async checkIfUserExistsBeforeRegistration(item: User) {
     try {
       let userQuery = query(this.getUserRef(), where("email", "==", item.email))
       const querySnapshot = await getDocs(userQuery);
@@ -244,7 +68,7 @@ async  checkIfUserExistsBeforeRegistration(item: User) {
         this.userEmailExist = true
         return false
       }
-      this.userEmailExist = false; 
+      this.userEmailExist = false;
       return true
     } catch (error) {
       console.error('Fehler beim Überprüfen des Benutzers:', error);
@@ -254,9 +78,9 @@ async  checkIfUserExistsBeforeRegistration(item: User) {
 
 
 
-  
 
-  async addNewUser(item: User, event: Event)  {
+
+  async addNewUser(item: User, event: Event) {
     try {
       event.preventDefault();
       if (!await this.checkIfUserExistsBeforeRegistration(item)) {
@@ -276,33 +100,22 @@ async  checkIfUserExistsBeforeRegistration(item: User) {
   }
 
   async addInFirebase(item: User, uid: string) {
-    return addDoc(this.getUserRef(), this.userJson(item, uid)).then( async docRef => {
+    return addDoc(this.getUserRef(), this.userJson(item, uid)).then(async docRef => {
       this.id = docRef.id;
       this.uid = uid;
       console.log('item.uid', item.uid);
-      
+
       console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
       await updateDoc(docRef, { id: docRef.id });
-      return docRef.id;  
+      return docRef.id;
     }).catch(error => {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });
   }
 
-  addChannel(item: Channel, event: Event) {
-    return addDoc(this.getChannelRef(), this.channelJson(item, this.actualUser[0].name))
-  }
 
-  channelJson(item: Channel, creator: string) {
-    return {
-      id:item.id,
-      name: item.name,
-      members: [],
-      creator: creator,
-      description: item.description
 
-    }
-  }
+
 
   userJson(item: User, uid: string) {
     return {
@@ -328,15 +141,7 @@ async  checkIfUserExistsBeforeRegistration(item: User) {
     };
   }
 
-  setChannelObject(obj: any,id:string): Channel {
-    return {
-      id:id,
-      name: obj.name,
-      members: obj.members,
-      creator: obj.creator,
-      description: obj.description
-    };
-  }
+
 
   async updateUserAvatar(avatar: number) {
     try {
@@ -363,9 +168,7 @@ async  checkIfUserExistsBeforeRegistration(item: User) {
     return collection(this.firestore, 'Users');
   }
 
-  getChannelRef() {
-    return collection(this.firestore, 'Channels');
-  }
+
 
 
 
@@ -407,13 +210,7 @@ async  checkIfUserExistsBeforeRegistration(item: User) {
   }
 
 
-  async addMembersToChannel(channelId: string, members: string[]) {
-    const channelDocRef = doc(this.firestore, 'Channels', channelId);
-    await updateDoc(channelDocRef, {
-      members: members
-    });
-    console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
-  }
+
 
 }
 

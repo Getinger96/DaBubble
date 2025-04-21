@@ -129,8 +129,8 @@
             <a href=""><img src="assets/img/add.svg" alt="add"></a>
         </div>
         <nav *ngIf="openChannels" class="channels-menu">
-            <div class="channel">
-                <p># <span>Entwicklerteam</span></p>
+            <div *ngFor="let channel of channels" class="channel">
+                <p># <span>{{channel.name}}</span></p>
             </div>
             <div (click)="openOverlay()" class="add-channel"><img src="assets/img/add_circle.svg"
                     alt="add-channel">Channel hinzufügen</div>

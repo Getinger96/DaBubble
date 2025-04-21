@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RegisterService } from '../../firebase-services/register.service';
 import { Subscription } from 'rxjs';
 import { User } from '../../interfaces/user.interface';
+import { MainComponentService } from '../../firebase-services/main-component.service';
 @Component({
   selector: 'app-user-card-menu',
   standalone: true,
@@ -13,7 +14,7 @@ import { User } from '../../interfaces/user.interface';
 })
 export class UserCardMenuComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, public registerService: RegisterService) { }
+  constructor(private route: ActivatedRoute, public registerService: RegisterService,private mainservice:MainComponentService) { }
 
   avatar?:number;
   name?:string;
@@ -25,7 +26,7 @@ export class UserCardMenuComponent implements OnInit {
 
   ngOnInit() {
     // 1. Benutzer aus dem Service holen
-    this.usersSubscription = this.registerService.allUsers$.subscribe(users => {
+    this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       this.actualUser = users;
       console.log('Benutzer in der Komponente:', this.actualUser);
     });

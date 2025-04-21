@@ -4,6 +4,7 @@ import { Message } from '../interfaces/message.interface';
 import { BehaviorSubject } from 'rxjs';
 import { onSnapshot } from '@angular/fire/firestore';
 import { RegisterService } from './register.service';
+import { MainComponentService } from './main-component.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class MessageService {
   allMessages$ = this.allMessagesSubject.asObservable();
   unsubList;
 
-  constructor(private registerService: RegisterService) {
+  constructor(private registerService: RegisterService,private mainservice:MainComponentService) {
     this.unsubList = this.subList();
    }
 
@@ -68,7 +69,7 @@ export class MessageService {
     }
 
     getActualUser(){
-      return this.registerService?.actualUser[0]?.id;
+      return this.mainservice?.actualUser[0]?.id;
       
     }
 

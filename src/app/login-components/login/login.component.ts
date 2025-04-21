@@ -13,6 +13,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IntroComponent } from '../intro/intro.component';
 import { HeaderLogoComponent } from '../header-logo/header-logo.component';
+import { MainComponentService } from '../../firebase-services/main-component.service';
+import { LoginService } from '../../firebase-services/login.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -36,7 +38,7 @@ export class LoginComponent implements AfterViewInit  {
   introView: boolean = true;
   logoView: boolean =  false;
   constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
-    ){
+    private mainservice:MainComponentService,private loginservice:LoginService){
 
       
   }
@@ -109,7 +111,7 @@ export class LoginComponent implements AfterViewInit  {
   async loginAccount(email: string, password: string, event: Event){
     if (!this.inputFieldEmailIsEmpty()) { return;}
     if (this.checkTheInputFields()) {return;}
-      await this.registerservice.loginUser(email, password, event);
+      await this.loginservice.loginUser(email, password, event);
       
       if (!this.checkEmail()) {return;}
       if (!this.checkpasswordInput()) {return;}
@@ -140,7 +142,7 @@ export class LoginComponent implements AfterViewInit  {
   }
   
   checkEmail() {
-    if (this.registerservice.loginIsEmailValide) {
+    if (this.loginservice.loginIsEmailValide) {
       this.loginEmailIsCorrect = true;
       return true;
     } else {
@@ -150,7 +152,7 @@ export class LoginComponent implements AfterViewInit  {
   }
   
   checkEmailAndPassword() {
-    if (this.registerservice.loginIsValide) {
+    if (this.loginservice.loginIsValide) {
       this.loginEmailAndPasswordAreCorrect = true;
       return true;
     } else {

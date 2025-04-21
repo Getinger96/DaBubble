@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { RegisterService } from '../../firebase-services/register.service';
 import { User } from '../../interfaces/user.interface';
+import { MainComponentService } from '../../firebase-services/main-component.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -49,7 +50,7 @@ export class MainChatComponent {
   };
   static actualUser: any;
 
-  constructor(private messageService: MessageService, private registerService: RegisterService) {}
+  constructor(private messageService: MessageService, private registerService: RegisterService,private mainservice:MainComponentService) {}
 
   ngOnInit(): void {
     this.loadActualUser();
@@ -63,7 +64,7 @@ export class MainChatComponent {
   }
 
   loadActualUser(){
-    this.actualUserSubscription = this.registerService.acutalUser$.subscribe(actualUser => {
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
         console.log('aktueller User:', this.actualUser);

@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { RegisterService } from '../firebase-services/register.service';
 import { User } from '../interfaces/user.interface';
 import { MessageService } from '../firebase-services/message.service';
+import { MainComponentService } from '../firebase-services/main-component.service';
 
 
 @Component({
@@ -31,10 +32,10 @@ export class MainComponentsComponent implements OnInit {
   
  
   
-  constructor(private loadingService: LoadingService, private registerservice: RegisterService  ) {}
+  constructor(private loadingService: LoadingService, private registerservice: RegisterService,private mainservice:MainComponentService  ) {}
 
   ngOnInit(): void {
-    this.usersSubscription = this.registerservice.allUsers$.subscribe(users => {
+    this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users;
         this.loadingStatus = this.loadingService.setLoading(true);
