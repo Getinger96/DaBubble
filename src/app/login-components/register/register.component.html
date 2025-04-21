@@ -45,7 +45,7 @@
                 <span *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</span>
                     <span *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
                         ein</span>
-
+                <span *ngIf="userAlreadyExist" class="validation-text"> Diese E-Mail ist vergeben. Gib bitte eine andere an. </span>        
             <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
                 [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}" (focusout)="divfocusPasswort('password',false)">
                 <div>

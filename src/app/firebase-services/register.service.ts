@@ -1,6 +1,6 @@
 import { Injectable, inject, } from '@angular/core';
-import { Firestore, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot } from '@angular/fire/firestore';
-import { getAuth, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider, sendPasswordResetEmail, reauthenticateWithCredential, updatePassword, signInWithEmailAndPassword } from "firebase/auth";
+import { Firestore, deleteDoc, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot } from '@angular/fire/firestore';
+import { getAuth, deleteUser, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider, sendPasswordResetEmail, reauthenticateWithCredential, updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { Channel } from '../interfaces/channel.interface';
 import { Observable, pipe } from 'rxjs';
@@ -21,6 +21,7 @@ export class RegisterService {
   private current = this.auth.currentUser;
   oobCode: string | null = null;
   id?: string;
+  uid?: string;
   name?: string;
   unsubList;
   unsubChannel;
@@ -29,6 +30,7 @@ export class RegisterService {
   allChannels: Channel[] = [];
   loginIsValide: boolean = true
   loginIsEmailValide: boolean = true
+  userEmailExist?: boolean = false
   private allUsersSubject = new BehaviorSubject<User[]>([]);
   private actualUserSubject = new BehaviorSubject<User[]>([])
   allUsers$ = this.allUsersSubject.asObservable();
@@ -216,26 +218,67 @@ export class RegisterService {
 
   }
 
+  async deleteUserFirebase() {
+    const currentUser = this.auth.currentUser;
+    let userId=   this.id
+    if (userId) {
+      const docRef = this.getSingleDocRef(userId)
+      if (currentUser) {
+        await deleteUser(currentUser); 
+        await deleteDoc(docRef);
+        console.log("Benutzer erfolgreich gelöscht.", currentUser, docRef);
+      }
+    }
+
+    
+  }
+  
 
 
 
-  async addNewUser(item: User, event: Event) {
+async  checkIfUserExistsBeforeRegistration(item: User) {
+    try {
+      let userQuery = query(this.getUserRef(), where("email", "==", item.email))
+      const querySnapshot = await getDocs(userQuery);
+      if (!querySnapshot.empty) {
+        this.userEmailExist = true
+        return false
+      }
+      this.userEmailExist = false; 
+      return true
+    } catch (error) {
+      console.error('Fehler beim Überprüfen des Benutzers:', error);
+      return false;
+    }
+  }
+
+
+
+  
+
+  async addNewUser(item: User, event: Event)  {
     try {
       event.preventDefault();
+      if (!await this.checkIfUserExistsBeforeRegistration(item)) {
+        return false;
+      }
       const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
       const user = userCredential.user;
       this.name = item.name;
       this.addInFirebase(item, user.uid);
       console.log("Benutzer erfolgreich registriert und in Firestore gespeichert");
       this.router.navigate(['/chooseAvatar']);
+      return true
     } catch (error) {
       console.error("Fehler bei der Registrierung oder beim Speichern in Firestore:", error);
+      return false;
     }
   }
 
   async addInFirebase(item: User, uid: string) {
     return addDoc(this.getUserRef(), this.userJson(item, uid)).then( async docRef => {
       this.id = docRef.id;
+      this.uid = uid;
       console.log('item.uid', item.uid);
       
       console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID

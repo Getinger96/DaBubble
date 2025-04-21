@@ -28,7 +28,7 @@ export class RegisterComponent {
   user: User = new User();
   isChecked: boolean = false;
   overlayvisible:boolean=false;
-
+  userAlreadyExist?: boolean = this.registerservice.userEmailExist
 
   constructor(private registerservice: RegisterService) {
 
@@ -46,20 +46,33 @@ export class RegisterComponent {
   divfocusPasswort(field: string, isFocused: boolean) {
     this.borderVisiblepasswort = isFocused
   }
-    addUser(event: Event, ngForm: NgForm) {
+
+
+
+
+  async addUser(event: Event, ngForm: NgForm): Promise<void> {
+    try {
+      const success = await this.registerservice.addNewUser(
+        this.registerservice.setUserObject(this.user, this.user.id),
+        event
+      );
+      
+      
+      this.userAlreadyExist = this.registerservice.userEmailExist
+
+      if (success) {
+        this.overlayvisible = true;
+        setTimeout(() => {
+          this.overlayvisible = false;
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Fehler beim Hinzufügen des Benutzers:", error);
+    }
+    console.log('userAlreadyExist', this.userAlreadyExist);
     
-    this.registerservice.addNewUser(this.registerservice.setUserObject(this.user,this.user.id), event)
-
-    this.overlayvisible=true;
-    setTimeout(() => {
-     this.overlayvisible=false
-    }, 2000);
-
-
-
-
   }
-
+  
 
 
 
