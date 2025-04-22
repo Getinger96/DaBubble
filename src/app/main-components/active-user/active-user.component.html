@@ -1,9 +1,9 @@
 
-<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()"></div>
+<div *ngIf="overlayvisible" class="overlay-bg"></div>
 
 <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog">
     <a (click)="overlayUserCardActive = true">Profil</a>
-    <div (click)="logOut()" >Logout</div>
+    <div (click)="logOut()">Logout</div>
 </div>
 
 
@@ -13,7 +13,7 @@
         <img class="profile"src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
         <img class="status" src="assets/img/Online.svg" alt="activity">
     </div>
-    
     <img src="assets/img/keyboard_arrow_down.svg" alt="open-profile">
-    
 </div>
+
+<app-user-card-menu [overlayUserCardActive]="overlayUserCardActive" [userId]="userId"></app-user-card-menu>

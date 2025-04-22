@@ -2,13 +2,13 @@
     <div class="content">
         <div class="head">
             <p>Profil</p>
-            <img src="assets/img/close.png" alt="close">
+            <img (click)="overlayUserCardActive = false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
-            <img src="assets/img/avatar_2_square.png" alt="avatar">
+            <img [src]="'assets/img/avatar_' + avatar + '_square.png'" alt="avatar">
         </div>
         <div class="name">
-            <p>Frederik Beck</p>
+            <p>{{ name }}</p>
             <a routerLink="/user-edit">Bearbeiten</a>
         </div>
         <div class="status">
@@ -20,7 +20,7 @@
                 <img src="assets/img/mail.svg" alt="mail-icon">
                 <p>E-Mail-Adresse</p>
             </div>
-            <a href="mailto:">fred.beck&#64;email.com</a>
+            <a href="mailto:">{{ email }}</a>
         </div>
     </div>
 </section>

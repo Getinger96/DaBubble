@@ -6,13 +6,13 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule  } from '@angular/router';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
-import { EditUserComponent } from './edit-user/edit-user.component';
+import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component';
 
 
 @Component({
   selector: 'app-active-user',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, UserCardMenuComponent],
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss'
 })
@@ -21,7 +21,7 @@ export class ActiveUserComponent implements OnInit {
   actualUser:User[]= []
   loadingStatus: boolean = false;
   overlayvisible:boolean=false;
-  userId?: string
+  @Output() userId?: string
   private actualUserSubscription!: Subscription;
   @Output() overlayUserCardActive: boolean = false;
  
@@ -29,10 +29,10 @@ export class ActiveUserComponent implements OnInit {
     private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
   }
 
-openOverlay(){
-  this.overlayvisible=true
-  document.body.style.overflow = 'hidden'; 
-}
+  openOverlay(){
+    this.overlayvisible=true
+    document.body.style.overflow = 'hidden'; 
+  }
 
 ngOnInit(): void {
   this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
