@@ -13,12 +13,13 @@ import { RegisterService } from '../firebase-services/register.service';
 import { User } from '../interfaces/user.interface';
 import { MessageService } from '../firebase-services/message.service';
 import { MainComponentService } from '../firebase-services/main-component.service';
+import { UserCardMenuComponent } from "./user-card-menu/user-card-menu.component";
 
 
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent , MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule],
+  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, UserCardMenuComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })  
@@ -28,10 +29,6 @@ export class MainComponentsComponent implements OnInit {
   private loadingSubscription!: Subscription;
   private usersSubscription!: Subscription;
 
-  
-  
- 
-  
   constructor(private loadingService: LoadingService, private registerservice: RegisterService,private mainservice:MainComponentService  ) {}
 
   ngOnInit(): void {

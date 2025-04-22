@@ -1,27 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { RegisterService } from '../../firebase-services/register.service';
 import { Subscription } from 'rxjs';
 import { User } from '../../interfaces/user.interface';
 import { MainComponentService } from '../../firebase-services/main-component.service';
+import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-user-card-menu',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgClass],
   templateUrl: './user-card-menu.component.html',
   styleUrl: './user-card-menu.component.scss'
 })
 export class UserCardMenuComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, public registerService: RegisterService,private mainservice:MainComponentService) { }
-
   avatar?:number;
   name?:string;
   email?:string;
   private usersSubscription!: Subscription;
   actualUser: User[] = [];
   userId?: string;
+  @Input() overlayUserCardActive:boolean = false;
 
 
   ngOnInit() {
@@ -46,6 +47,7 @@ export class UserCardMenuComponent implements OnInit {
         }
       }
     });
+
   }
 
 

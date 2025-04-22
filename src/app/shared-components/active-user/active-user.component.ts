@@ -16,17 +16,17 @@ import { LoginService } from '../../firebase-services/login.service';
 export class ActiveUserComponent implements OnInit {
   actualUser:User[]= []
   loadingStatus: boolean = false;
- overlayvisible:boolean=false;
- userId?: string
- private actualUserSubscription!: Subscription;
+  overlayvisible:boolean=false;
+  userId?: string
+  private actualUserSubscription!: Subscription;
+  overlayUserCardActive:boolean = false;
+
  
+constructor(private registerservice: RegisterService,private route: ActivatedRoute,
+  private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
+}
 
-  constructor(private registerservice: RegisterService,private route: ActivatedRoute,
-      private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
-   
-
-  }
-openoverlay(){
+openOverlay(){
   this.overlayvisible=true
   document.body.style.overflow = 'hidden'; 
 }
@@ -36,14 +36,9 @@ ngOnInit(): void {
     if (actualUser.length > 0) {
       this.actualUser = actualUser
       this.userId = actualUser[0].id
-      console.log('aktueller User:', this.actualUser);
     }
   });
 }
-
-
-
-
 
 closeOverlay() {
   this.overlayvisible = false;
@@ -57,4 +52,9 @@ setTimeout(() => {
   this.router.navigate(['']);
 }, 1000);
 }
+
+  openOverlayUserCard() {
+    this.overlayUserCardActive = true;
+  }
+
 }

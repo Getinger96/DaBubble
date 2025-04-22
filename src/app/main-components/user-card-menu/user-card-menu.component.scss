@@ -1,6 +1,10 @@
 @import './../../../styles.scss';
 
 .user-card {
+    position: absolute;
+    z-index: 15;
+    right: 0;
+    top: 130px;
     background-color: #FFFFFF;
     border-radius: 30px;
     border-top-right-radius: 0px;
@@ -96,4 +100,12 @@
             }
         }
     }
+}
+
+.active {
+    display: flex;
+}
+
+.not-active {
+    display: none;
 }
