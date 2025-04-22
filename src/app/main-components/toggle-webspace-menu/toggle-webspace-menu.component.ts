@@ -1,11 +1,11 @@
 import { Component, Output } from '@angular/core';
-import { NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { MainComponentsComponent } from '../main-components.component';
 
 @Component({
   selector: 'app-toggle-webspace-menu',
   standalone: true,
-  imports: [NgIf, NgStyle],
+  imports: [NgIf, NgClass],
   templateUrl: './toggle-webspace-menu.component.html',
   styleUrl: './toggle-webspace-menu.component.scss'
 })

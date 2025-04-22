@@ -20,10 +20,13 @@
         }
         >.show-menu-icon path,
         .show-menu-icon rect {
-            color: #535AF1;
+            stroke: #535AF1;
         }
     }
     >.show-menu-icon {
+        transform: rotate(-90deg);
+    }
+    .open-show-menu-icon {
         transform: rotate(90deg);
     }
     >p {
