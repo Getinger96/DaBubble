@@ -2,7 +2,7 @@
 <div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()"></div>
 
 <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog">
-    <a routerLink="/user-card/:{{ userId }}">Profil</a>
+    <a (click)="overlayUserCardActive = true">Profil</a>
     <div (click)="logOut()" >Logout</div>
 </div>
 

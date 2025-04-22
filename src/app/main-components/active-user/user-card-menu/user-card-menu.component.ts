@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { RegisterService } from '../../firebase-services/register.service';
+import { RegisterService } from '../../../firebase-services/register.service';
 import { Subscription } from 'rxjs';
-import { User } from '../../interfaces/user.interface';
-import { MainComponentService } from '../../firebase-services/main-component.service';
+import { User } from '../../../interfaces/user.interface';
+import { MainComponentService } from '../../../firebase-services/main-component.service';
 import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-user-card-menu',
@@ -13,6 +13,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './user-card-menu.component.html',
   styleUrl: './user-card-menu.component.scss'
 })
+
 export class UserCardMenuComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, public registerService: RegisterService,private mainservice:MainComponentService) { }
@@ -47,8 +48,10 @@ export class UserCardMenuComponent implements OnInit {
         }
       }
     });
+    setInterval(() => {
+      console.log(this.overlayUserCardActive)
+    }, 2000);
 
   }
-
 
 }

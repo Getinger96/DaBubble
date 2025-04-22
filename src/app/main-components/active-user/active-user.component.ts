@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Output } from '@angular/core';
 import { User } from '../../interfaces/user.interface';
 import { RegisterService } from '../../firebase-services/register.service';
 import { CommonModule } from '@angular/common';
@@ -6,27 +6,30 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule  } from '@angular/router';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
+import { EditUserComponent } from './edit-user/edit-user.component';
+
+
 @Component({
   selector: 'app-active-user',
   standalone: true,
-  imports: [CommonModule, RouterModule ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss'
 })
+
 export class ActiveUserComponent implements OnInit {
   actualUser:User[]= []
   loadingStatus: boolean = false;
- overlayvisible:boolean=false;
- userId?: string
- private actualUserSubscription!: Subscription;
+  overlayvisible:boolean=false;
+  userId?: string
+  private actualUserSubscription!: Subscription;
+  @Output() overlayUserCardActive: boolean = false;
  
-
   constructor(private registerservice: RegisterService,private route: ActivatedRoute,
-      private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
-   
-
+    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
   }
-openoverlay(){
+
+openOverlay(){
   this.overlayvisible=true
   document.body.style.overflow = 'hidden'; 
 }
@@ -40,16 +43,18 @@ ngOnInit(): void {
   });
 }
 
-closeOverlay() {
-  this.overlayvisible = false;
-  document.body.style.overflow = 'auto';
-}
-logOut(){
-let actual = this.actualUser[0].uid
-this.loginservice.updateStatusByUid(actual,'Offline')
-document.body.style.overflow = 'auto';
-setTimeout(() => {
-  this.router.navigate(['']);
-}, 1000);
-}
+  closeOverlay() {
+    this.overlayvisible = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  logOut(){
+    let actual = this.actualUser[0].uid
+    this.loginservice.updateStatusByUid(actual,'Offline')
+    document.body.style.overflow = 'auto';
+    setTimeout(() => {
+      this.router.navigate(['']);
+      }, 1000);
+  }
+
 }

@@ -8,8 +8,8 @@ import { ChooseAvatarComponent } from './login-components/choose-avatar/choose-a
 import { MainComponentsComponent } from './main-components/main-components.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyComponent } from './privacy/privacy.component';
-import { UserCardMenuComponent } from './main-components/user-card-menu/user-card-menu.component';
-import { EditUserComponent } from './main-components/edit-user/edit-user.component';
+import { UserCardMenuComponent } from './main-components/active-user/user-card-menu/user-card-menu.component';
+import { EditUserComponent } from './main-components/active-user/edit-user/edit-user.component';
 
 export const routes: Routes = [
     
@@ -22,7 +22,5 @@ export const routes: Routes = [
     { path: 'main-components', component: MainComponentsComponent },
     { path: 'imprint', component: ImprintComponent },
     { path: 'privacy', component: PrivacyComponent },
-
-    { path: 'user-edit', component: EditUserComponent },
 ];
 
