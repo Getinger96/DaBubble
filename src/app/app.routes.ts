@@ -23,7 +23,6 @@ export const routes: Routes = [
     { path: 'imprint', component: ImprintComponent },
     { path: 'privacy', component: PrivacyComponent },
 
-    { path: 'user-card/:id', component: UserCardMenuComponent },
     { path: 'user-edit', component: EditUserComponent },
 ];
 

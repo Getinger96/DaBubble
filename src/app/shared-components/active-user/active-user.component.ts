@@ -16,15 +16,13 @@ import { LoginService } from '../../firebase-services/login.service';
 export class ActiveUserComponent implements OnInit {
   actualUser:User[]= []
   loadingStatus: boolean = false;
- overlayvisible:boolean=false;
- userId?: string
- private actualUserSubscription!: Subscription;
+  overlayvisible:boolean=false;
+  userId?: string
+  private actualUserSubscription!: Subscription;
  
 
   constructor(private registerservice: RegisterService,private route: ActivatedRoute,
       private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
-   
-
   }
 openoverlay(){
   this.overlayvisible=true
@@ -41,10 +39,6 @@ ngOnInit(): void {
   });
 }
 
-
-
-
-
 closeOverlay() {
   this.overlayvisible = false;
   document.body.style.overflow = 'auto';
@@ -57,4 +51,5 @@ setTimeout(() => {
   this.router.navigate(['']);
 }, 1000);
 }
+
 }
