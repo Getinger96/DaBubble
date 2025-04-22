@@ -69,23 +69,33 @@
         }
 
         >.channels-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            padding: 4px 20px 4px 20px;
             >.channel {
+                width: 100%;
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
                 align-items: center;
-                border-radius: 20px;
-                padding: 4px 20px 4px 20px;
-                background-color: #ECEEFE;
-
+                cursor: pointer;
                 >p {
+                    text-align: center;
                     margin: 0;
                     font-family: $font-primary;
                     font-size: 18px;
                     font-weight: 700;
-                    color: #535AF1;
+                    color: #000000;
+                    padding: 4px 20px 4px 20px;
+                    &:hover {
+                        color: #535AF1;
+                        background-color: #ECEEFE;
+                        border-radius: 20px;
+                    }
                 }
             }
-
             >.add-channel {
                 padding-top: 24px;
                 display: flex;
