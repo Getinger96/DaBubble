@@ -72,6 +72,9 @@ allUsers: User[] = [];
       try {
         let userQuery = query(this.getUserRef(), where("email", "==", email))
         const querySnapshot = await getDocs(userQuery);
+        const snapshot = await getDocs(this.getUserRef());
+
+        
         return !querySnapshot.empty;
   
       } catch (error) {

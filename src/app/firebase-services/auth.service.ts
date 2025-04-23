@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { getAuth, Auth, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
-import { Firestore, addDoc, updateDoc, query, where, getDoc } from '@angular/fire/firestore';
+import { getAuth, Auth, signInWithPopup, GoogleAuthProvider, linkWithCredential, fetchSignInMethodsForEmail } from '@angular/fire/auth';
+import { Firestore, addDoc, updateDoc, query, where, getDoc,  } from '@angular/fire/firestore';
 import { User } from '../interfaces/user.interface'
 import { getDocs } from 'firebase/firestore';
 import { RegisterService } from '../firebase-services/register.service';
@@ -33,21 +33,34 @@ export class AuthService {
           // signInWithPopup erwartet das Firebase Auth-Objekt (this.auth) und den Google-Provider (this.provider).
  
           const result = await signInWithPopup(this.auth, this.provider);
-          // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
-          this.loginWithGoogleAccountItWorks(result)
-          this.mainservice.saveActualUser();
-          setTimeout(() => {
-            this.router.navigate(['/main-components']);
-          }, 3000);
+          const user = result.user;
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const userExists = await this.checkIfEmailIsAlreadyUsed();
+          const currentUser = this.auth.currentUser;
+        
+          if (!userExists) {
+            this.loginWithGoogleAccountItWorks(result)
+            this.mainservice.saveActualUser();
+            setTimeout(() => {
+              this.router.navigate(['/main-components']);
+            }, 3000);
           
+          } else {
+            if (currentUser && credential) {
+              
+          
+            await linkWithCredential(currentUser, credential);
+            }
+        }
         } catch (error) {
-          // Falls ein Fehler auftritt (z.B. Popup wird geschlossen oder ein Netzwerkfehler),
-          // wird der Fehler hier verarbeitet.
           this.loginWithGoogleAccountError(error);
         }
         return true;
     }
     
+
+
+
     async loginWithGoogleAccountItWorks(result: any) {
       // Extrahiert aus dem "result" das Credential-Objekt,
       // das wichtige Authentifizierungsdaten enthält.
@@ -92,25 +105,7 @@ export class AuthService {
           let userQuery = query(this.registerservice.getUserRef(), where("email", "==", userEmail));
           const querySnapshot = await getDocs(userQuery);
           
-          if (!querySnapshot.empty) {
-            const docSnap = querySnapshot.docs[0];
-            const userData: User = docSnap.data() as User;
-      
-            // Wenn der avatar-Wert zwischen 2 und 5 liegt, setze userExist auf true und breche die Funktion ab
-            if (userData.avatar >= 2 && userData.avatar <= 6) {
-              this.userExist = true;
-              console.log(' this.userExist',  this.userExist);
-              
-              return false;
-            } else {
-              console.log('Benutzer existiert mit Avatar 1, Weiterverarbeitung möglich.');
-              return true;
-            }
-            
-          } else {
-            console.log('Kein Benutzer gefunden mit dieser E-Mail-Adresse.');
-            return true;
-          }
+        return !querySnapshot.empty;
         } catch (error) {
           console.error('Fehler beim Überprüfen des Benutzers:', error);
           return false;
