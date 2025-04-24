@@ -5,6 +5,7 @@ import { MainComponentService } from '../../../firebase-services/main-component.
 import { LoginService } from '../../../firebase-services/login.service';
 import { Subscription } from 'rxjs';
 import { User } from '../../../interfaces/user.interface';
+import { AuthService } from '../../../firebase-services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class UserCardService {
   private usersSubscription!: Subscription;
   overlayUserCardActive: boolean = false;
   overlayEditUserActive: boolean = false;
-  userId?:string
+  userId?:string;
   avatar?:number;
   name?:string;
   email?:string;
@@ -21,13 +22,11 @@ export class UserCardService {
 
   constructor(
     private registerservice: RegisterService,
-    private route: ActivatedRoute,
-    private router: Router,
     private mainservice:MainComponentService,
-    private loginservice:LoginService) {
-      this.mainservice.subList();
+    private authservice:AuthService) {
       this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
         this.actualUser = users;
+        this.userId = this.actualUser[0].id
       });
       
       if (this.userId && this.actualUser.length > 0) {
