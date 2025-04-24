@@ -6,7 +6,6 @@
     align-items: center;
     gap: 20px;
     cursor: pointer;
-
     >#user-name {
         margin: 0;
         font-family: $font-primary;
@@ -14,7 +13,6 @@
         font-size: 32px;
         color: #000000;
     }
-
     >.avatar {
         position: relative;
         >.profile {
@@ -36,10 +34,9 @@
 
 .profile-dialog {
     position: absolute;
+    right: 10px;
     display: flex;
     flex-direction: column;
-    width: 150px;
-    height: 150px;
     background-color: aliceblue;
     border-top-left-radius: 30px;
     border-top-right-radius: 0px;
@@ -60,14 +57,16 @@
         text-decoration: none;
         color: #000000;
         font-family: $font-primary;
-        font-weight: 700;
-        font-size: 18px;
+        font-weight: 600;
+        font-size: 24px;
         cursor: pointer;
-
-    }
-
-    >div {
-        cursor: pointer;
+        padding: 10px 45px 10px 45px;
+        border-radius: 100px;
+        &:hover {
+            background-color: #ECEEFE;
+            color: #535AF1;
+            font-weight: 700;
+        }
     }
 
 }
@@ -81,7 +80,6 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
     overflow-y: hidden;
-
 }
 
 .opacity {

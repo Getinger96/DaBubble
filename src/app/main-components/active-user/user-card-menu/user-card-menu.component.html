@@ -1,15 +1,15 @@
-<section [ngClass]="overlayUserCardActive ? 'active' : 'not-active'" class="user-card">
+<section [ngClass]="usercardservice.overlayUserCardActive ? 'active' : 'not-active'" class="user-card">
     <div class="content">
         <div class="head">
             <p>Profil</p>
-            <img src="assets/img/close.png" alt="close">
+            <img (click)="usercardservice.overlayUserCardActive = false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
-            <img src="assets/img/avatar_2_square.png" alt="avatar">
+            <img [src]="'assets/img/avatar_' + avatar + '_square.png'" alt="avatar">
         </div>
         <div class="name">
-            <p>Frederik Beck</p>
-            <a routerLink="/user-edit">Bearbeiten</a>
+            <p>{{ name }}</p>
+            <a (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditUserActive = true;">Bearbeiten</a>
         </div>
         <div class="status">
             <img src="assets/img/Online.svg" alt="status-circle">
@@ -20,7 +20,7 @@
                 <img src="assets/img/mail.svg" alt="mail-icon">
                 <p>E-Mail-Adresse</p>
             </div>
-            <a href="mailto:">fred.beck&#64;email.com</a>
+            <a href="mailto:">{{ email }}</a>
         </div>
     </div>
 </section>

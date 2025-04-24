@@ -2,9 +2,9 @@
 
 .user-card {
     position: absolute;
-    z-index: 15;
+    z-index: 1050;
     right: 0;
-    top: 130px;
+    top: 120px;
     background-color: #FFFFFF;
     border-radius: 30px;
     border-top-right-radius: 0px;
@@ -51,10 +51,14 @@
                 font-size: 32px;
             }
             >a {
+                cursor: pointer;
                 font-family: $font-primary;
                 font-weight: 600;
                 font-size: 18px;
                 color: #535AF1;
+                &:hover {
+                    font-weight: 700;
+                }
             }
         }
         >.status {

@@ -6,33 +6,37 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule  } from '@angular/router';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
+import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component';
+import { UserCardService } from './services/user-card.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
 
 
 @Component({
   selector: 'app-active-user',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, UserCardMenuComponent, EditUserComponent],
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss'
 })
 
 export class ActiveUserComponent implements OnInit {
+  avatar?:number;
+  name?:string;
+  email?:string;
   actualUser:User[]= []
   loadingStatus: boolean = false;
   overlayvisible:boolean=false;
-  userId?: string
+  @Output() userId?: string
   private actualUserSubscription!: Subscription;
-  @Output() overlayUserCardActive: boolean = false;
  
   constructor(private registerservice: RegisterService,private route: ActivatedRoute,
-    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
+    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService, public usercardservice: UserCardService){
   }
 
-openOverlay(){
-  this.overlayvisible=true
-  document.body.style.overflow = 'hidden'; 
-}
+  openOverlay(){
+    this.overlayvisible=true
+    document.body.style.overflow = 'hidden'; 
+  }
 
 ngOnInit(): void {
   this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
