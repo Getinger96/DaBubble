@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { getAuth, Auth, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { getAuth, Auth, signInWithPopup, GoogleAuthProvider, linkWithPopup } from '@angular/fire/auth';
 import { Firestore, addDoc, updateDoc, query, where, getDoc } from '@angular/fire/firestore';
 import { User } from '../interfaces/user.interface'
 import { getDocs } from 'firebase/firestore';
@@ -34,6 +34,17 @@ export class AuthService {
  
           const result = await signInWithPopup(this.auth, this.provider);
           // Erfolgreiche Anmeldung: Übergibt das Ergebnis zur weiteren Verarbeitung
+          if (this.auth.currentUser) {
+            linkWithPopup(this.auth.currentUser, this.provider).then((result) => {
+              const credential = GoogleAuthProvider.credentialFromResult(result);
+              const user = result.user;
+              // ...
+            }).catch((error) => {
+              // Handle Errors here.
+            });
+          } else {
+            console.error("Kein aktueller Benutzer angemeldet.");
+          }
           this.loginWithGoogleAccountItWorks(result)
           this.mainservice.saveActualUser();
           setTimeout(() => {

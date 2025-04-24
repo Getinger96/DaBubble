@@ -146,11 +146,15 @@ export class WorkspaceMenuComponent {
   }
 
   addAllMembersToChannel(channelId: string) {
-    const allUsers = this.allUsers.map(user => user.name); // oder user.uid, je nachdem
+    const allUsers = this.allUsers.map(user => ({
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar
+    }));
     this.channelservice.addMembersToChannel(channelId, allUsers);
   }
 
-  addSpecificMembersToChannel(channelId: string, members: string[]) {
+  addSpecificMembersToChannel(channelId: string, members: { id: string, name: string, avatar: number }[]) {
     this.channelservice.addMembersToChannel(channelId, members);
   }
 

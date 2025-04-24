@@ -78,7 +78,7 @@ export class ChannelService {
         }
     }
 
-    async addMembersToChannel(channelId: string, members: string[]) {
+    async addMembersToChannel(channelId: string, members: { id: string, name: string, avatar: number }[]) {
         const channelDocRef = doc(this.firestore, 'Channels', channelId);
         await updateDoc(channelDocRef, {
           members: members

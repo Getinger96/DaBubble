@@ -64,6 +64,7 @@ export class RegisterService {
     try {
       let userQuery = query(this.getUserRef(), where("email", "==", item.email))
       const querySnapshot = await getDocs(userQuery);
+     
       if (!querySnapshot.empty) {
         this.userEmailExist = true
         return false
@@ -83,10 +84,11 @@ export class RegisterService {
   async addNewUser(item: User, event: Event) {
     try {
       event.preventDefault();
+     
+      const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
       if (!await this.checkIfUserExistsBeforeRegistration(item)) {
         return false;
       }
-      const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
       const user = userCredential.user;
       this.name = item.name;
       this.addInFirebase(item, user.uid);
