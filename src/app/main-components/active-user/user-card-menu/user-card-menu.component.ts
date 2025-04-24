@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { User } from '../../../interfaces/user.interface';
 import { MainComponentService } from '../../../firebase-services/main-component.service';
 import { NgClass } from '@angular/common';
+import { UserCardService } from '../services/user-card.service';
+
 @Component({
   selector: 'app-user-card-menu',
   standalone: true,
@@ -16,14 +18,13 @@ import { NgClass } from '@angular/common';
 
 export class UserCardMenuComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, public registerService: RegisterService,private mainservice:MainComponentService) { }
+  constructor(private route: ActivatedRoute, public registerService: RegisterService,private mainservice:MainComponentService, public usercardservice: UserCardService) { }
   avatar?:number;
   name?:string;
   email?:string;
   private usersSubscription!: Subscription;
   actualUser: User[] = [];
   @Input() userId?:string
-  @Input() overlayUserCardActive:boolean = false;
 
 
   ngOnInit() {

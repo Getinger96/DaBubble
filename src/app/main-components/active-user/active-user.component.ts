@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterModule  } from '@angular/router';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
 import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component';
+import { UserCardService } from './services/user-card.service';
 
 
 @Component({
@@ -18,15 +19,17 @@ import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component
 })
 
 export class ActiveUserComponent implements OnInit {
+  avatar?:number;
+  name?:string;
+  email?:string;
   actualUser:User[]= []
   loadingStatus: boolean = false;
   overlayvisible:boolean=false;
   @Output() userId?: string
   private actualUserSubscription!: Subscription;
-  @Output() overlayUserCardActive: boolean = false;
  
   constructor(private registerservice: RegisterService,private route: ActivatedRoute,
-    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService){
+    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService, public usercardservice: UserCardService){
   }
 
   openOverlay(){

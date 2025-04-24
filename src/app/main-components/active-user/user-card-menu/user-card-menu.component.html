@@ -1,8 +1,8 @@
-<section [ngClass]="overlayUserCardActive ? 'active' : 'not-active'" class="user-card">
+<section [ngClass]="usercardservice.overlayUserCardActive ? 'active' : 'not-active'" class="user-card">
     <div class="content">
         <div class="head">
             <p>Profil</p>
-            <img (click)="overlayUserCardActive = false;" src="assets/img/close.png" alt="close">
+            <img (click)="usercardservice.overlayUserCardActive= false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
             <img [src]="'assets/img/avatar_' + avatar + '_square.png'" alt="avatar">
