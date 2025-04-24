@@ -2,14 +2,14 @@
     <div class="content">
         <div class="head">
             <p>Profil</p>
-            <img (click)="usercardservice.overlayUserCardActive= false;" src="assets/img/close.png" alt="close">
+            <img (click)="usercardservice.overlayUserCardActive = false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
             <img [src]="'assets/img/avatar_' + avatar + '_square.png'" alt="avatar">
         </div>
         <div class="name">
             <p>{{ name }}</p>
-            <a routerLink="/user-edit">Bearbeiten</a>
+            <a (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditUserActive = true;">Bearbeiten</a>
         </div>
         <div class="status">
             <img src="assets/img/Online.svg" alt="status-circle">

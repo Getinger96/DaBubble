@@ -3,7 +3,7 @@
 
 <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog">
     <a (click)="usercardservice.overlayUserCardActive= true">Profil</a>
-    <div (click)="logOut()">Logout</div>
+    <a (click)="logOut()">Logout</a>
 </div>
 
 
@@ -17,3 +17,4 @@
 </div>
 
 <app-user-card-menu></app-user-card-menu>
+<app-edit-user></app-edit-user>

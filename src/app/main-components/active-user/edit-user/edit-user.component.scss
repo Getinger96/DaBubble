@@ -4,6 +4,10 @@
     background-color: #FFFFFF;
     border-radius: 30px;
     border-top-right-radius: 0px;
+    position: absolute;
+    z-index: 1050;
+    right: 0;
+    top: 120px;
     width: 400px;
     height: 500px;
     padding: 45px 40px 45px 40px;
@@ -107,4 +111,12 @@
             }
         }
     }
+}
+
+.active {
+    display: flex;
+}
+
+.not-active {
+    display: none;
 }

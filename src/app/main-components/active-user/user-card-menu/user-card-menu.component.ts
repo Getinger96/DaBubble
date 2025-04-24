@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { RegisterService } from '../../../firebase-services/register.service';
 import { Subscription } from 'rxjs';
@@ -11,7 +10,7 @@ import { UserCardService } from '../services/user-card.service';
 @Component({
   selector: 'app-user-card-menu',
   standalone: true,
-  imports: [RouterLink, NgClass],
+  imports: [NgClass],
   templateUrl: './user-card-menu.component.html',
   styleUrl: './user-card-menu.component.scss'
 })
@@ -38,6 +37,7 @@ export class UserCardMenuComponent implements OnInit {
         this.name = user.name;
         this.email = user.email;
         this.avatar = user.avatar;
+        console.log(this.name, this.email, this.avatar)
       }
     }
   }

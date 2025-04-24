@@ -8,12 +8,13 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 import { LoginService } from '../../firebase-services/login.service';
 import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component';
 import { UserCardService } from './services/user-card.service';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 
 @Component({
   selector: 'app-active-user',
   standalone: true,
-  imports: [CommonModule, RouterModule, UserCardMenuComponent],
+  imports: [CommonModule, RouterModule, UserCardMenuComponent, EditUserComponent],
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss'
 })

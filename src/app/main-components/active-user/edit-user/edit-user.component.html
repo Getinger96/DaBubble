@@ -1,8 +1,8 @@
-<section class="user-card">
+<section [ngClass]="usercardservice.overlayEditUserActive ? 'active' : 'not-active'" class="user-card">
     <div class="content">
         <div class="head">
             <p>Dein Profil bearbeiten</p>
-            <img src="assets/img/close.png" alt="close">
+            <img (click)="usercardservice.overlayEditUserActive = false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
             <img src="assets/img/avatar_2_square.png" alt="avatar">
@@ -15,8 +15,8 @@
             <input type="text" placeholder="Frederik Beck">
         </div>
         <div class="button-container">
-            <button routerLink="/user-card" class="cancel">Abbrechen</button>
-            <button class="save">Speichern</button>
+            <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.overlayUserCardActive = true;"class="cancel">Abbrechen</button>
+            <button (click)="usercardservice.overlayEditUserActive = false;" class="save">Speichern</button>
         </div>
     </div>
 </section>
