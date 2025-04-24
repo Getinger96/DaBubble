@@ -51,10 +51,14 @@
                 font-size: 32px;
             }
             >a {
+                cursor: pointer;
                 font-family: $font-primary;
                 font-weight: 600;
                 font-size: 18px;
                 color: #535AF1;
+                &:hover {
+                    font-weight: 700;
+                }
             }
         }
         >.status {

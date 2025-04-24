@@ -104,10 +104,18 @@
             >.cancel {
                 color: #444DF2;
                 border: 1px solid #797EF3;
+                &:hover {
+                    color: #FFFFFF;
+                    background-color: #444DF2;
+                }
             }
             >.save {
                 color: #FFFFFF;
                 background-color: #444DF2;
+                &:hover {
+                    color: #FFFFFF;
+                    background-color: #797EF3;
+                }
             }
         }
     }
