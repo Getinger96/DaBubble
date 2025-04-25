@@ -26,6 +26,7 @@ export class ActiveUserComponent implements OnInit {
   actualUser:User[]= []
   loadingStatus: boolean = false;
   overlayvisible:boolean=false;
+  showUserCard:boolean=false;
   @Output() userId?: string
   private actualUserSubscription!: Subscription;
  
@@ -43,9 +44,17 @@ ngOnInit(): void {
     if (actualUser.length > 0) {
       this.actualUser = actualUser
       this.userId = actualUser[0].id
+      console.log('actualUser[0]', actualUser[0]);
+      
     }
   });
 }
+
+
+showUserCardMenu() {
+  this.showUserCard = true;
+}
+
 
   closeOverlay() {
     this.overlayvisible = false;

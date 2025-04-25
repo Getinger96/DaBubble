@@ -33,25 +33,16 @@ export class AuthService {
           // signInWithPopup erwartet das Firebase Auth-Objekt (this.auth) und den Google-Provider (this.provider).
  
           const result = await signInWithPopup(this.auth, this.provider);
-          const user = result.user;
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const userExists = await this.checkIfEmailIsAlreadyUsed();
-          const currentUser = this.auth.currentUser;
         
-          if (!userExists) {
+        
+
             this.loginWithGoogleAccountItWorks(result)
             this.mainservice.saveActualUser();
             setTimeout(() => {
               this.router.navigate(['/main-components']);
             }, 3000);
           
-          } else {
-            if (currentUser && credential) {
-              
-          
-            await linkWithCredential(currentUser, credential);
-            }
-        }
+   
         } catch (error) {
           this.loginWithGoogleAccountError(error);
         }

@@ -33,7 +33,7 @@ export class MainComponentsComponent implements OnInit {
   overlayUserCardActive:boolean = false;
   constructor(private loadingService: LoadingService, private registerservice: RegisterService,private mainservice:MainComponentService  ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { // lädt alle user !!!
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');

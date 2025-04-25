@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegisterService } from '../../../firebase-services/register.service';
 import { Subscription } from 'rxjs';
@@ -21,24 +21,31 @@ export class UserCardMenuComponent implements OnInit {
   avatar?:number;
   name?:string;
   email?:string;
-  private usersSubscription!: Subscription;
+  id? : string // automatische generierte id von Firebase
+  private actualUserSubscription!: Subscription;
   actualUser: User[] = [];
   @Input() userId?:string
-
+  @Input() actualUserUserCard: User[] = [];
+  @Input() showUserCard?: boolean;
+  @Output() closeCard = new EventEmitter<boolean>();
 
   ngOnInit() {
-    this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
-      this.actualUser = users;
-    });
 
-    if (this.userId && this.actualUser.length > 0) {
-      const user = this.actualUser.find(u => u.id === this.userId);
-      if (user) {
-        this.name = user.name;
-        this.email = user.email;
-        this.avatar = user.avatar;
-        console.log(this.name, this.email, this.avatar)
-      }
-    }
+        console.log('actualUserUserCard', this.actualUserUserCard);
+  if (this.actualUserUserCard.length > 0) {
+    const user = this.actualUserUserCard[0];
+    this.avatar = user.avatar;  
+    this.name = user.name;     
+    this.email = user.email;   
+    this.id = user.id;   
   }
+    
+  }
+  close(event: Event) {
+    if (event) {
+      this.closeCard.emit(false);
+    }
+ 
+  }
+
 }
