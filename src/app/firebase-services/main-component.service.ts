@@ -28,7 +28,7 @@ export class MainComponentService {
         private router: Router) {
         this.unsubList = this.subList();
 
-        this.saveActualUser();
+        
 
 
 

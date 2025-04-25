@@ -1,5 +1,5 @@
 
-<div *ngIf="overlayvisible" class="overlay-bg"></div>
+<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()"></div>
 
 <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog">
     <a (click)="usercardservice.overlayUserCardActive= true">Profil</a>

@@ -192,7 +192,7 @@ export class AuthService {
           name: user.displayName || 'Unbekannt',
           email: user.email || '',
           passwort: '',
-          avatar: 0,
+          avatar: 1,
           status: 'Online'
     
         };

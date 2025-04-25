@@ -33,7 +33,7 @@
 
             <div class="button-container">
                 <input [disabled]="" type="submit" value="Erstellen">
-              
+
 
             </div>
 
@@ -63,21 +63,27 @@
                         <mat-radio-button class="example-margin" value="some">Bestimmte Leute hinzufügen
                         </mat-radio-button>
                         <div *ngIf="selectedOption === 'some'" class="input-channel-name-container">
-                           
+
                             <input [(ngModel)]="searchTerm" (input)="filterUsers()" type="text" name="name"
                                 placeholder="Namen eingeben" #name="ngModel" required>
-                                <div class="selected-tags">
-                                    <span *ngFor="let user of selectedUsers" class="tag">
-                                        <div class="profile">
-                                            <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
-                                        </div>
-                                        <p class="name">{{ user.name }} <span class="remove"
-                                                (click)="removeUser(user)">×</span></p>
-        
-                                    </span>
-                                </div>
+                            <div class="selected-tags">
+
+
+                                <span *ngFor="let user of selectedUsers.slice(0,3)" class="tag">
+                                    <div class="profile">
+                                        <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
+                                    </div>
+                                    <p class="name">{{ user.name }} <span class="remove"
+                                            (click)="removeUser(user)">×</span></p>
+
+
+                                </span>
+                                <span *ngIf="selectedUsers.length > 3" class="tag plus-more">
+                                    +{{ selectedUsers.length - 3 }}
+                                </span>
+                            </div>
                         </div>
-                       
+
                     </div>
 
 
@@ -126,7 +132,7 @@
                 <img src="assets/img/workspaces.svg" alt="workspaces">
                 <h4>Channels</h4>
             </div>
-            <a href=""><img src="assets/img/add.svg" alt="add"></a>
+            <div (click)="openOverlay()"><img src="assets/img/add.svg" alt="add"></div>
         </div>
         <nav *ngIf="openChannels" class="channels-menu">
             <div *ngFor="let channel of channels" class="channel">
