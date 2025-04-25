@@ -137,7 +137,11 @@ export class WorkspaceMenuComponent {
     if (this.selectedOption === 'all') {
       this.addAllMembersToChannel(this.createdChannelId!);
     } else if (this.selectedOption === 'some') {
-      const members = this.selectedUsers.map(user => user.name); // oder user.id, je nach Backend-Anforderung
+      const members = this.selectedUsers.map(user => ({
+        id: user.id,
+        name: user.name,
+        avatar: user.avatar
+      }));; // oder user.id, je nach Backend-Anforderung
       this.addSpecificMembersToChannel(this.createdChannelId!, members);
     }
 
