@@ -1,0 +1,36 @@
+.action-box {
+    position: relative;
+    border-radius: 25px;
+    border-bottom-right-radius: 0px;
+    border: 1px solid #ADB0D9;
+    background-color: #FFFFFF;
+    padding: 3px 15px 3px 15px;
+    width: 200px;
+    height: 46px;
+    >.icon-box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px;
+        >svg {
+            border-radius: 20px;
+            &:hover {
+                background-color: #ECEEFE;
+            }
+        }
+        >.path-color {
+            &:hover {
+                fill: #535AF1;
+                rect, path {
+                    fill: #535AF1;
+                }
+            }
+        }
+    }
+    >app-edit-message-hover-box {
+        display: none;
+        position: absolute;
+        right: -250px;
+    }
+}
