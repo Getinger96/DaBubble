@@ -1,5 +1,7 @@
 * {
   margin: 0;
+  scrollbar-width: thin; 
+  scrollbar-color: #444DF2 #f1f1f1;
 }
 
 $font-primary: 'Nunito', sans-serif;
@@ -28,7 +30,34 @@ h1, h2, h3, h4, h5, h6, p, span {
   margin: 0;
   padding: 0;
 }
+::ng-deep .another-dialog-position .mdc-dialog__container {
+  position: absolute;
+  top: 25%;
+  right: 8%;
+  width: 500px;
+  height: 550px;
+}
 
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #444DF2;
+  border-radius: 4px;
+  border: 2px solid #f1f1f1; 
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #3037c9;
+}
 
 
 /* nunito-200 - latin */

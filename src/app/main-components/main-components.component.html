@@ -6,7 +6,7 @@
     </div>
     <div class="body">
         <app-workspace-menu [userArray]="allUsers"></app-workspace-menu>
-        <app-channel-chat *ngIf="showChanelSection"></app-channel-chat>
+        <app-channel-chat [allUsersChannel]="allUsers" *ngIf="showChanelSection"></app-channel-chat>
         <app-main-chat *ngIf="!showChanelSection"></app-main-chat>
         <app-thread *ngIf="!showChanelSection"></app-thread>
     </div>
