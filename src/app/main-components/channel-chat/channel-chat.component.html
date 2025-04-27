@@ -1,0 +1,34 @@
+<div class="main-chat-wrapper">
+    <div class="main-chat-header">
+        <div class="message-group">
+            <div class="actual-group">
+                <img src="assets/img/tag.png" alt=""><span class="fontNunito">{{currentChannelName}}</span>
+            </div>
+            <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
+        </div>
+        <div class="actual-group-members">
+            <div class="members-avatar-group">
+                <div class="avatar" style="background-image: url('assets/img/avatar_2_square.png');"></div>
+                <div class="avatar" style="background-image: url('assets/img/avatar_3_square.png');"></div>
+                <div class="avatar" style="background-image: url('assets/img/avatar_4_square.png');"></div>
+            </div> 
+            <button type="button" mat-button class="fontNunito"  (click)="openDialog()">3</button>
+            <img src="assets/img/add_members.png" alt="">
+        </div>
+    </div>
+    <div class="main-chat-feed">
+
+    </div>
+    <div class="input-wrapper">
+        <div class="main-chat-message">
+        <textarea  type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+        <div class="message-icons">
+            <div>
+            <img src="assets/img/emoji.png" alt="">
+            <img src="assets/img/at.png" alt="">
+            </div>
+            <img  src="assets/img/send.png" alt="">
+        </div>
+        </div>
+    </div>
+</div>

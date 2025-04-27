@@ -20,6 +20,8 @@ export class ChannelService {
     actualUser: User[] = [];
     private channelsSubject = new BehaviorSubject<Channel[]>([]);
     public channels$ = this.channelsSubject.asObservable();
+    private channelNameSubject = new BehaviorSubject<string>('');  
+    currentChannelName$ = this.channelNameSubject.asObservable();
 
 
     constructor(private route: ActivatedRoute, private registerservice: RegisterService,private mainservice:MainComponentService) {
@@ -44,6 +46,11 @@ export class ChannelService {
 
         })
     }
+
+
+    setChannelName(name: string): void {
+        this.channelNameSubject.next(name);
+      }
 
     ngonDestroy() {
 
