@@ -20,11 +20,7 @@ export class AuthService {
   constructor( 
     
     private router: Router,
-    private firestore: Firestore, private registerservice: RegisterService,private mainservice:MainComponentService,private loginservice:LoginService) { }
-
-
-
-
+    private firestore: Firestore, private registerservice: RegisterService, private mainservice:MainComponentService, private loginservice:LoginService) { }
 
     async loginWithGoogle(event: Event) {
         event.preventDefault();  // Verhindert das Standardverhalten (z.B. Seiten-Neuladen bei Formularen)
@@ -33,13 +29,13 @@ export class AuthService {
           // signInWithPopup erwartet das Firebase Auth-Objekt (this.auth) und den Google-Provider (this.provider).
  
           const result = await signInWithPopup(this.auth, this.provider);
-        
-        
-
             this.loginWithGoogleAccountItWorks(result)
             this.mainservice.saveActualUser();
+            this.mainservice.acutalUser$.subscribe(user => {
+              this.id = user[0].id;
+            });
             setTimeout(() => {
-              this.router.navigate(['/main-components']);
+              this.router.navigate(['/main-components/' + this.id]);
             }, 3000);
           
    
