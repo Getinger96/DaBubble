@@ -28,6 +28,8 @@ export class ChannelService {
     private channelCreatorSubject = new BehaviorSubject<string>('');
     currentChannelCreator$ = this.channelCreatorSubject.asObservable();
     private channelIdSubject = new BehaviorSubject<string>('');
+    private channelMemberSubject = new BehaviorSubject<[]>([]);
+    channelMember$ = this.channelMemberSubject.asObservable();
     currentChannelId$ = this.channelIdSubject.asObservable()
 
 
@@ -61,6 +63,12 @@ export class ChannelService {
 
     setChannelDescription(description: string): void {
         this.channelDescriptionSubject.next(description)
+    }
+
+    setChannelMember(members: []): void {
+        this.channelMemberSubject.next(members)
+        console.log('this.channelMemberSubject', this.channelMemberSubject);
+        
     }
 
     setChannelcreator(creator: string): void {

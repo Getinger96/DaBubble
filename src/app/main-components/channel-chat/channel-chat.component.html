@@ -55,13 +55,17 @@
             <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
         </div>
         <div class="actual-group-members">
-            <div class="members-avatar-group">
-                <div class="avatar" style="background-image: url('assets/img/avatar_2_square.png');"></div>
-                <div class="avatar" style="background-image: url('assets/img/avatar_3_square.png');"></div>
-                <div class="avatar" style="background-image: url('assets/img/avatar_4_square.png');"></div>
-            </div>
-            <button type="button" mat-button class="fontNunito" (click)="openDialog()">3</button>
-            <img src="assets/img/add_members.png" alt="">
+            <div class="members-avatar-group" *ngFor="let member of members.slice(0,3)">
+                <div class="avatar" style="background-image: url('assets/img/avatar_{{member.avatar}}_square.png');"></div>
+               
+            </div> <button mat-icon-button type="button" (click)="openDialog()">
+            <span *ngIf="members.length > 3" class="fontNunito"> +{{ members.length - 3 }}</span> </button>
+
+
+
+            <button mat-icon-button type="button" (click)="openDialogMembers()">
+                <img src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
+              </button>
         </div>
     </div>
     <div class="main-chat-feed">

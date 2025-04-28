@@ -5,12 +5,13 @@
         <div class="userList-Container">
             <div class="headline">
             <h1>Mitglieder</h1>
-            <img class="closeIcon" src="assets/img/close.png" alt="">
+            <img class="closeIcon" src="assets/img/close.png" alt="" (click)="closeDialog()">
             </div>
             <div class="users">
                 <div class="profile" *ngFor="let user of data.allUsersChannel">
                     <div class="avatarImages">
                     <img  class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
+                    <img class="status" src="assets/img/{{user.status}}.svg " alt="status">
                     </div>
                     <div class="username">
                 <p class="name"> {{ user.name }}</p>

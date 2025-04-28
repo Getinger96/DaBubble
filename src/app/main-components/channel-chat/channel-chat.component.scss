@@ -59,7 +59,7 @@
                 border: 2px solid white;
                 background-size: cover;
                 background-position: center;
-                margin-left: -12px;
+                margin-left: -20px;
 
             }
         }
@@ -338,3 +338,15 @@ app-show-user {
     width: 500px;
     height: 550px;
   }
+
+
+.mat-mdc-icon-button.mat-mdc-button-base {
+    display: flex;
+    align-items: center;
+    }
+
+
+    ::ng-deep mat-card {
+        border-radius: 20px; 
+        overflow: hidden; 
+      }

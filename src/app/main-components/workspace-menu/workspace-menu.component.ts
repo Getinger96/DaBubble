@@ -135,12 +135,13 @@ export class WorkspaceMenuComponent {
   }
 
 
-  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string) {
+  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: []) {
     this.mainHelperService.openChannelSection(isOpen);
     this.channelservice.setChannelName(name);
     this.channelservice.setChannelDescription(description);
     this.channelservice.setChannelcreator(creator);
     this.channelservice.setChannelId(id)
+    this.channelservice.setChannelMember(members);
   }
 
   addMembers() {
@@ -150,7 +151,8 @@ export class WorkspaceMenuComponent {
       const members = this.selectedUsers.map(user => ({
         id: user.id,
         name: user.name,
-        avatar: user.avatar
+        avatar: user.avatar,
+        status: user.status
       }));; // oder user.id, je nach Backend-Anforderung
       this.addSpecificMembersToChannel(this.createdChannelId!, members);
     }

@@ -1,0 +1,32 @@
+<div class="allUser">
+
+    <mat-card appearance="outlined">
+        <mat-card-content>
+            <div class="userList-Container">
+                <div class="headline">
+                <h1>Benutzer hinzufügen</h1>
+                <img class="closeIcon" src="assets/img/close.png" alt="" (click)="closeDialog()">
+                </div>
+                <div class="channelHeadline">
+                    <span></span>
+                </div>
+                <div class="users">
+                    <div class="profile" *ngFor="let member of data.members">
+                        <div class="avatarImages">
+                        <img  class="avatar" src="assets/img/avatar_{{member.avatar}}.png" alt="avatar">
+                        <img class="status" src="assets/img/{{member.status}}.svg " alt="status">
+                        </div>
+                        <div class="username">
+                    <p class="name"> {{ member.name }}</p>
+                    </div>
+                    </div>
+                    <div class="add_members">
+                        <img src="assets/img/add_members.png" alt="">
+                        <span>Mitglieder hinzufügen</span>
+    
+                    </div>  
+                </div>
+            </div>
+        </mat-card-content>
+      </mat-card>
+    </div>

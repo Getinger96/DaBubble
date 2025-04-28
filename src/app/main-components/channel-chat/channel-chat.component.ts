@@ -3,13 +3,14 @@ import { ChannelService } from '../../firebase-services/channel.service';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ShowUserComponent } from './show-user/show-user.component';
+import { AddUserComponent } from './add-user/add-user.component';
 import { MatIconModule } from '@angular/material/icon';
 import { HostListener } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { Channel } from '../../interfaces/channel.interface';
 import { User } from '../../interfaces/user.interface';
-
+import { Member } from '../../interfaces/member.interface';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class ChannelChatComponent implements OnInit {
   currentChannelDescription: string = '';
   currentChannelCreator: string = '';
   currentChannelID: string = '';
+  members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   readonly dialog = inject(MatDialog);
   overlayeditChannel: boolean = false;
@@ -38,6 +40,8 @@ export class ChannelChatComponent implements OnInit {
   ngOnInit(): void {
     this.channelService.currentChannelName$.subscribe(name => {
       this.currentChannelName = name;
+      console.log( this.currentChannelName);
+      
     });
     this.channelService.currentChannelDescription$.subscribe(description => {
       this.currentChannelDescription = description;
@@ -48,7 +52,18 @@ export class ChannelChatComponent implements OnInit {
     this.channelService.currentChannelId$.subscribe(id => {
       this.currentChannelID = id;
     });
+    this.loadMembers()
   }
+
+
+  loadMembers() {
+    this.channelService.channelMember$.subscribe(members => {
+      this.members = members;
+      console.log('this.members', this.members);
+      
+    });
+  }
+
 
   startEditName() {
     this.editName = true
@@ -69,6 +84,17 @@ export class ChannelChatComponent implements OnInit {
   openDialog() {
     this.dialog.open(ShowUserComponent, {
       data: { allUsersChannel: this.allUsersChannel },
+      panelClass: 'another-dialog-position'
+    });
+  }
+
+  openDialogMembers() {
+    this.dialog.open(AddUserComponent, {
+      data: { 
+        allUsersChannel: this.allUsersChannel,
+        members: this.members,
+        currentChannelID: this.currentChannelID
+      },
       panelClass: 'another-dialog-position'
     });
   }
