@@ -5,8 +5,7 @@
 
             <div class="dialog-Headline">
                 <span>#{{currentChannelName}}</span>
-                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
-
+                <img src="assets/img/close.png" alt="" (click)="closeOverlay()">
             </div>
             <div class="dialog-name">
                 <div class="channel-name-Container">
@@ -15,51 +14,32 @@
                     <span *ngIf="editName"class="edit-span" (click)="saveName()" >Speichern</span>
                 </div>
                 <span *ngIf="!editName" class="current-Name">#{{currentChannelName}}</span>
-
-
                 <div *ngIf="editName" class="input-channel-name-container">
-                    <img src="../../../assets/img/tag-grey.png" alt="">
+                    <img src="assets/img/tag-grey.png" alt="">
                     <input [(ngModel)]=" currentChannelName" type="text" name="name"
                         placeholder=" z.B Kooperationsprojekte" #name="ngModel" required>
                 </div>
             </div>
             <div class="dialog-description">
-
                 <div class="channel-description-Container">
                     <span>Beschreibung</span>
                     <span *ngIf="!editDescription" class="edit-span" (click)="startEditDescription()">Bearbeiten</span>
                     <span *ngIf="editDescription"class="edit-span" (click)="saveDescription()" >Speichern</span>
-
-                    
                 </div>
                 <span *ngIf="!editDescription" class="current-Description">{{currentChannelDescription}}</span>
                 <div *ngIf="editDescription" class="input-channel-description-container">
                     <input [(ngModel)]="currentChannelDescription" type="text" name="description" id=""
                         placeholder="Dein Text hier" #description="ngModel" required>
                 </div>
-
                 <div class="creator-container">
                     <span>Erstellt von</span>
                     <span class="current-Creator">{{currentChannelCreator}}</span>
                 </div>
-
-
-
-
-              
             </div>
-
             <div class="button-container">
                 <button (click)="deleteChannel()" class="delete-Button">Channel Löschen</button>
                 <input [disabled]="" type="submit" value="Erstellen">
-
-               
-
-
             </div>
-
-
-
         </div>
     </form>
 

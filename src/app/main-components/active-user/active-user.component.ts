@@ -58,6 +58,8 @@ showUserCardMenu() {
   closeOverlay() {
     this.overlayvisible = false;
     document.body.style.overflow = 'auto';
+    this.usercardservice.overlayUserCardActive = false;
+    this.usercardservice.overlayEditUserActive = false;
   }
 
   logOut(){
