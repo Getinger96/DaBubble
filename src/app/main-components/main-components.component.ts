@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SearchBarComponent } from '../main-components/search-bar/search-bar.component';
 import { ActiveUserComponent } from './active-user/active-user.component';
 import { WorkspaceMenuComponent } from './workspace-menu/workspace-menu.component';
@@ -15,14 +15,12 @@ import { RegisterService } from '../firebase-services/register.service';
 import { User } from '../interfaces/user.interface';
 import { MessageService } from '../firebase-services/message.service';
 import { MainComponentService } from '../firebase-services/main-component.service';
-import { UserCardMenuComponent } from "./active-user/user-card-menu/user-card-menu.component";
-import { EditUserComponent } from './active-user/edit-user/edit-user.component';
 import { Router, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, UserCardMenuComponent, EditUserComponent, ChannelChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })  
@@ -36,7 +34,8 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   private routerSubscription!: Subscription;
   overlayUserCardActive:boolean = false;
   showChanelSection: boolean = false
-  constructor(private loadingService: LoadingService, private registerservice: RegisterService,private mainservice:MainComponentService, private mainhelperService: MainHelperService,private router: Router  ) {}
+  constructor(private loadingService: LoadingService, private registerservice: RegisterService, private mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
+  }
 
   ngOnInit(): void { // lädt alle user !!!
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {

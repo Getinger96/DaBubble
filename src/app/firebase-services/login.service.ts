@@ -4,11 +4,11 @@ import { collection, doc, Firestore, getDocs, query, updateDoc, where } from '@a
 import { MainComponentService } from './main-component.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../interfaces/user.interface';
+import { RegisterService } from './register.service';
 
 @Injectable({
     providedIn: 'root'
   })
-
 
 
 export class LoginService{
@@ -20,9 +20,9 @@ overlayvisible: boolean = false
 allUsers: User[] = [];
 
 
- constructor(private route: ActivatedRoute,private mainservice:MainComponentService,private router: Router) {
+ constructor(private route: ActivatedRoute, private mainservice:MainComponentService, private router: Router) {
       
-    }
+  }
 
  async loginUser(email: string, password: string, event: Event) {
     event.preventDefault();
@@ -48,10 +48,14 @@ allUsers: User[] = [];
           this.updateStatusByUid(user.uid, 'Online')
           this.mainservice.getActualUser(user.uid)
           this.mainservice.saveActualUser();
+          let id:string;
+          this.mainservice.acutalUser$.subscribe(user => {
+            id = user[0].id;
+          });
 
           setTimeout(() => {
             this.overlayvisible = false;
-            this.router.navigate(['/main-components']);
+            this.router.navigate(['/main-components/' + id]);
           }, 3000);
 
         }
