@@ -30,7 +30,7 @@ export class ActiveUserComponent implements OnInit {
   private actualUserSubscription!: Subscription;
  
   constructor(
-    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService, public usercardservice: UserCardService){
+    private router: Router, private mainservice:MainComponentService, private loginservice:LoginService, public usercardservice: UserCardService){
   }
 
   openOverlay(){

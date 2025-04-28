@@ -5,10 +5,10 @@
             <img (click)="usercardservice.overlayUserCardActive = false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
-            <img [src]="'assets/img/avatar_' + avatar + '_square.png'" alt="avatar">
+            <img [src]="'assets/img/avatar_' + usercardservice.avatar + '_square.png'" alt="avatar">
         </div>
         <div class="name">
-            <p>{{ name }}</p>
+            <p>{{ usercardservice.name }}</p>
             <a (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditUserActive = true;">Bearbeiten</a>
         </div>
         <div class="status">
@@ -20,7 +20,7 @@
                 <img src="assets/img/mail.svg" alt="mail-icon">
                 <p>E-Mail-Adresse</p>
             </div>
-            <a href="mailto:">{{ email }}</a>
+            <a href="mailto:">{{ usercardservice.email }}</a>
         </div>
     </div>
 </section>

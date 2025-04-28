@@ -57,7 +57,6 @@ allUsers: User[] = [];
             this.overlayvisible = false;
             this.router.navigate(['/main-components/' + id]);
           }, 3000);
-
         }
 
       });

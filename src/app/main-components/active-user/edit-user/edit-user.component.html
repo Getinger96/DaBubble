@@ -12,11 +12,11 @@
                 <img src="assets/img/account_circle.svg" alt="profil-icon">
                 <p>Vollständiger Name</p>
             </div>
-            <input type="text" placeholder="Frederik Beck">
+            <input type="text" #nameInput [placeholder]="usercardservice.name">
         </div>
         <div class="button-container">
             <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.overlayUserCardActive = true;"class="cancel">Abbrechen</button>
-            <button (click)="usercardservice.overlayEditUserActive = false;" class="save">Speichern</button>
+            <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.saveName(nameInput.value)" class="save">Speichern</button>
         </div>
     </div>
 </section>
