@@ -1,9 +1,9 @@
 import { Component, OnInit, inject, Input } from '@angular/core';
 import { ChannelService } from '../../firebase-services/channel.service';
-import {MatDialog,MatDialogActions,MatDialogClose,MatDialogContent,MatDialogTitle,} from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ShowUserComponent } from './show-user/show-user.component';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { HostListener } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
@@ -15,24 +15,24 @@ import { User } from '../../interfaces/user.interface';
 @Component({
   selector: 'app-channel-chat',
   standalone: true,
-  imports: [MatButtonModule,MatIconModule,NgIf,CommonModule,FormsModule ],
+  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule],
   templateUrl: './channel-chat.component.html',
   styleUrl: './channel-chat.component.scss'
 })
 export class ChannelChatComponent implements OnInit {
   currentChannelName: string = '';
-  currentChannelDescription:string='';
-  currentChannelCreator:string='';
-  currentChannelID:string='';
+  currentChannelDescription: string = '';
+  currentChannelCreator: string = '';
+  currentChannelID: string = '';
   @Input() allUsersChannel: User[] = [];
   readonly dialog = inject(MatDialog);
-  overlayeditChannel:boolean= false;
-   editName:boolean=false
-   editDescription:boolean=false
+  overlayeditChannel: boolean = false;
+  editName: boolean = false
+  editDescription: boolean = false
 
 
 
-  constructor(private channelService: ChannelService, ) {}
+  constructor(private channelService: ChannelService,) { }
 
 
   ngOnInit(): void {
@@ -50,20 +50,20 @@ export class ChannelChatComponent implements OnInit {
     });
   }
 
-  startEditName(){
-    this.editName=true
+  startEditName() {
+    this.editName = true
   }
 
-  saveName(){
-    this.editName=false
+  saveName() {
+    this.editName = false
   }
 
-  startEditDescription(){
-    this.editDescription=true
+  startEditDescription() {
+    this.editDescription = true
   }
 
-  saveDescription(){
-    this.editDescription=false
+  saveDescription() {
+    this.editDescription = false
   }
 
   openDialog() {
@@ -73,24 +73,31 @@ export class ChannelChatComponent implements OnInit {
     });
   }
 
-  closeOverlay(){
-    this.overlayeditChannel=false;
+  closeOverlay() {
+    this.overlayeditChannel = false;
   }
 
-  openoverlay(){
-    this.overlayeditChannel=true;
+  openoverlay() {
+    this.overlayeditChannel = true;
   }
 
   onDialogClick(event: MouseEvent) {
     event.stopPropagation();
   }
 
-  updateChannel(event: Event, ngForm: NgForm,id:string){
+  updateChannel(event: Event, ngForm: NgForm,id:string) {
 
-this.channelService.updateChannel(this.currentChannelID,this.currentChannelName,this.currentChannelDescription)
+    this.channelService.updateChannel(this.currentChannelID, this.currentChannelName, this.currentChannelDescription)
 
-this.closeOverlay()
+    this.closeOverlay()
+  }
+
+  deleteChannel(){
+    this.channelService.deleteChannel(this.currentChannelID)
+    this.closeOverlay()
   }
 }
+
+
 
 

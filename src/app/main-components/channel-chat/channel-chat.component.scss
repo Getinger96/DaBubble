@@ -127,6 +127,16 @@ button {
     position: relative;
 }
 
+.delete-Button{
+    background-color: #535AF1;
+    border: 1px solid #535AF1;
+    color: white;
+    padding: 8px;
+    border-radius: 30px;
+    font-size: 18px;
+
+}
+
 
 .profile-dialog {
 
@@ -216,7 +226,7 @@ button {
 
 .button-container {
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
 
     >input {
         background-color: #535AF1;

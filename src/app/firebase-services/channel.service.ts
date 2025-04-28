@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference,deleteDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
 import { BehaviorSubject } from 'rxjs';
@@ -94,6 +94,11 @@ export class ChannelService {
             description: description
         });
         console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
+    }
+
+    async deleteChannel(channelId:string){
+        const channelDocRef=doc(this.firestore,'Channels',channelId);
+        await deleteDoc(channelDocRef)
     }
 
 
