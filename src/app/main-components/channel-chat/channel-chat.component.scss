@@ -1,4 +1,4 @@
-
+@import './../../../styles.scss';
 
 .main-chat-wrapper{
     width: 100%;
@@ -127,6 +127,187 @@ button {
     position: relative;
 }
 
+
+.profile-dialog {
+
+    display: flex;
+    flex-direction: column;
+    width: 872px;
+    height: 539px;
+    background-color: aliceblue;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    flex: 1;
+    padding: 40px;
+    justify-content: space-around;
+    gap: 18px;
+    opacity: 0;
+    font-family: $font-primary;
+    font-weight: 700;
+    font-size: 18px;
+    z-index: 1001;
+
+
+
+
+}
+
+
+.overlay-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Grau, halbtransparent */
+    z-index: 1000;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.opacity {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+
+.input-channel-name-container {
+
+    width: 100%;
+    padding: 8px;
+    border-radius: 30px;
+    border: 1px solid #535AF1;
+    display: flex;
+
+    >input {
+        width: 100%;
+        border: none;
+        &:focus{
+            outline: none;
+        }
+    }
+}
+
+.input-channel-description-container {
+
+    width: 100%;
+    padding: 8px;
+    border-radius: 30px;
+    border: 1px solid #535AF1;
+
+    >input {
+        width: 100%;
+        border: none;
+        &:focus{
+            outline: none;
+        }
+    }
+}
+
+.button-container {
+    display: flex;
+    justify-content: end;
+
+    >input {
+        background-color: #535AF1;
+        border: 1px solid #535AF1;
+        color: white;
+        padding: 8px;
+        border-radius: 30px;
+        font-size: 18px;
+
+      
+    }
+}
+
+.dialog-Headline {
+    display: flex;
+    justify-content: space-between;
+
+    >span {
+        font-weight: 700;
+        font-size: 24px;
+    }
+
+    >img {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.dialog-name {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #535AF1;
+    border-radius: 30px;
+    padding: 16px;
+}
+
+
+
+
+.dialog-description {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #535AF1;
+    border-radius: 30px;
+    padding: 16px;
+
+   
+}
+
+.channel-name-Container{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.channel-description-Container{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.edit-span{
+    color: #535AF1;
+    cursor: pointer;
+}
+
+.current-Name{
+    font-weight: 300;
+}
+
+.current-Description{
+    font-weight: 300;
+}
+
+.current-Creator{
+
+    font-size: 24px;
+    font-weight: 700;
+    color: #535AF1;
+}
+
+.creator-container{
+margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px
+    ;
+}
 
 app-show-user {
     position: absolute;
