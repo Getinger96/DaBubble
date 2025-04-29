@@ -38,21 +38,21 @@ export class ActiveUserComponent implements OnInit {
     document.body.style.overflow = 'hidden'; 
   }
 
-ngOnInit(): void {
-  this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-    if (actualUser.length > 0) {
-      this.actualUser = actualUser
-      this.userId = actualUser[0].id
-      console.log('actualUser[0]', actualUser[0]);
-      
-    }
-  });
-}
+  ngOnInit(): void {
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser
+        this.userId = actualUser[0].id
+        console.log('actualUser[0]', actualUser[0]);
+        
+      }
+    });
+  }
 
 
-showUserCardMenu() {
-  this.showUserCard = true;
-}
+  showUserCardMenu() {
+    this.showUserCard = true;
+  }
 
 
   closeOverlay() {

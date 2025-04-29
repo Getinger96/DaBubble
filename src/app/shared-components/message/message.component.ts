@@ -13,44 +13,47 @@ import { MainComponentsComponent } from '../../main-components/main-components.c
   styleUrl: './message.component.scss'
 })
 export class MessageComponent {
-@Input() date!: Date | string;
-@Input() avatarSrc!: number;
-@Input() name!: string;
-@Input() time!: Date | string;
-@Input() messageText!: string;
-@Input() reaction!: number;
-@Input() isOwn: boolean | undefined = false;
-@Input() isThread: boolean | undefined = false;
-@Input() isInThread: boolean | undefined = false;
-@Input() isAnswered: boolean | undefined = false;
+  @Input() date!: Date | string;
+  @Input() avatarSrc!: number;
+  @Input() name!: string;
+  @Input() time!: Date | string;
+  @Input() messageText!: string;
+  @Input() reaction!: number;
+  @Input() isOwn: boolean | undefined = false;
+  @Input() isThread: boolean | undefined = false;
+  @Input() isInThread: boolean | undefined = false;
+  @Input() isAnswered: boolean | undefined = false;
+  id?:string = this.messageService.id;
 
-mainComponents = MainComponentsComponent;
+  mainComponents = MainComponentsComponent;
 
-showEditMessage(){
-  let editMessagePopup = document.getElementById('editMessagePopup');
-  if (editMessagePopup) {
-    editMessagePopup.style.display = 'flex';
-  } else {
-    console.error('Element with id "editMessagePopup" not found.');
+  constructor(private messageService: MessageService){}
+
+  showEditMessage(){
+    let editMessagePopup = document.getElementById('editMessagePopup');
+    if (editMessagePopup) {
+      editMessagePopup.style.display = 'flex';
+    } else {
+      console.error('Element with id "editMessagePopup" not found.');
+    }
   }
-}
 
-hideEditMessage(){
-  let editMessagePopup = document.getElementById('editMessagePopup');
-  if (editMessagePopup) {
-    editMessagePopup.style.display = 'hide';
-  } else {
-    console.error('Element with id "editMessagePopup" not found.');
+  hideEditMessage(){
+    let editMessagePopup = document.getElementById('editMessagePopup');
+    if (editMessagePopup) {
+      editMessagePopup.style.display = 'hide';
+    } else {
+      console.error('Element with id "editMessagePopup" not found.');
+    }
   }
-}
 
   openThreads(){
     this.mainComponents.toggleThreads();
   }
 
-constructor(private messageService: MessageService){}
+  addNewReaction(reaction:string) {
+    console.log(this.id, reaction, this.messageService.allMessages);
+  }
 
 }
-
-
 
