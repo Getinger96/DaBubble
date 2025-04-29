@@ -38,29 +38,44 @@ export class ChannelChatComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.channelService.currentChannelName$.subscribe(name => {
-      this.currentChannelName = name;
-      console.log( this.currentChannelName);
-      
-    });
-    this.channelService.currentChannelDescription$.subscribe(description => {
-      this.currentChannelDescription = description;
-    });
-    this.channelService.currentChannelCreator$.subscribe(creator => {
-      this.currentChannelCreator = creator;
-    });
-    this.channelService.currentChannelId$.subscribe(id => {
-      this.currentChannelID = id;
-    });
+    this.loadName()
+    this.loadDescription()
+    this.loadChannelId()
+    this.loadCurrentCrator()
     this.loadMembers()
   }
 
+  loadChannelId() {
+    this.channelService.currentChannelId$.subscribe(id => {
+      this.currentChannelID = id;
+    });
+  }
+
+  loadCurrentCrator() {
+    this.channelService.currentChannelCreator$.subscribe(creator => {
+      this.currentChannelCreator = creator;
+    });
+  }
+
+  loadName() {
+    this.channelService.currentChannelName$.subscribe(name => {
+      this.currentChannelName = name;
+      console.log(this.currentChannelName);
+
+    });
+  }
+
+  loadDescription() {
+    this.channelService.currentChannelDescription$.subscribe(description => {
+      this.currentChannelDescription = description;
+    });
+  }
 
   loadMembers() {
     this.channelService.channelMember$.subscribe(members => {
       this.members = members;
       console.log('this.members', this.members);
-      
+
     });
   }
 
@@ -90,7 +105,7 @@ export class ChannelChatComponent implements OnInit {
 
   openDialogMembers() {
     this.dialog.open(AddUserComponent, {
-      data: { 
+      data: {
         allUsersChannel: this.allUsersChannel,
         members: this.members,
         currentChannelID: this.currentChannelID
@@ -111,14 +126,14 @@ export class ChannelChatComponent implements OnInit {
     event.stopPropagation();
   }
 
-  updateChannel(event: Event, ngForm: NgForm,id:string) {
+  updateChannel(event: Event, ngForm: NgForm, id: string) {
 
     this.channelService.updateChannel(this.currentChannelID, this.currentChannelName, this.currentChannelDescription)
 
     this.closeOverlay()
   }
 
-  deleteChannel(){
+  deleteChannel() {
     this.channelService.deleteChannel(this.currentChannelID)
     this.closeOverlay()
   }

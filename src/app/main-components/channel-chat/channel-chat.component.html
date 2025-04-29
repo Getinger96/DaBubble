@@ -11,7 +11,7 @@
                 <div class="channel-name-Container">
                     <span>Channel-Name</span>
                     <span *ngIf="!editName" class="edit-span" (click)="startEditName()">Bearbeiten</span>
-                    <span *ngIf="editName"class="edit-span" (click)="saveName()" >Speichern</span>
+                    <span *ngIf="editName" class="edit-span" (click)="saveName()">Speichern</span>
                 </div>
                 <span *ngIf="!editName" class="current-Name">#{{currentChannelName}}</span>
                 <div *ngIf="editName" class="input-channel-name-container">
@@ -24,7 +24,7 @@
                 <div class="channel-description-Container">
                     <span>Beschreibung</span>
                     <span *ngIf="!editDescription" class="edit-span" (click)="startEditDescription()">Bearbeiten</span>
-                    <span *ngIf="editDescription"class="edit-span" (click)="saveDescription()" >Speichern</span>
+                    <span *ngIf="editDescription" class="edit-span" (click)="saveDescription()">Speichern</span>
                 </div>
                 <span *ngIf="!editDescription" class="current-Description">{{currentChannelDescription}}</span>
                 <div *ngIf="editDescription" class="input-channel-description-container">
@@ -56,19 +56,34 @@
         </div>
         <div class="actual-group-members">
             <div class="members-avatar-group" *ngFor="let member of members.slice(0,3)">
-                <div class="avatar" style="background-image: url('assets/img/avatar_{{member.avatar}}_square.png');"></div>
-               
+                <div class="avatar" style="background-image: url('assets/img/avatar_{{member.avatar}}_square.png');">
+                </div>
+
             </div> <button mat-icon-button type="button" (click)="openDialog()">
-            <span *ngIf="members.length > 3" class="fontNunito"> +{{ members.length - 3 }}</span> </button>
+                <span *ngIf="members.length > 3" class="fontNunito"> +{{ members.length - 3 }}</span> </button>
 
 
 
             <button mat-icon-button type="button" (click)="openDialogMembers()">
                 <img src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
-              </button>
+            </button>
         </div>
     </div>
     <div class="main-chat-feed">
+        <div class="channel-info">
+            <div>
+                <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
+            </div>
+            <div class="channel-Info-container">
+                <span class="creator-header">{{currentChannelCreator}}</span>
+                <span class="welcome-span">Willkomen in eurem privaten Channel!</span>
+                <div class="member-container"><span class="member-span" *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
+                <span>{{currentChannelDescription}}</span>
+                
+
+            </div>
+
+        </div>
 
     </div>
     <div class="input-wrapper">
