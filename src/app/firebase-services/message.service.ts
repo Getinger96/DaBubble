@@ -18,7 +18,7 @@ export class MessageService {
   allMessages$ = this.allMessagesSubject.asObservable();
   unsubList;
 
-  constructor(private registerService: RegisterService, private mainservice:MainComponentService) {
+  constructor(private registerService: RegisterService, private mainservice: MainComponentService) {
     this.unsubList = this.subList();
    }
 
@@ -38,7 +38,7 @@ export class MessageService {
       isOwn: obj.isOwn,
       isAnswered: obj.isAnswered,
       isThread: obj.isThread,
-      isInThread: obj.isInThread
+      isInThread: obj.isInThread,
     };
   }
 
@@ -77,6 +77,7 @@ export class MessageService {
       const docRef = await addDoc(this.getMessageRef(), this.messageJson(item, id));
       this.id = docRef.id;
       console.log("Message gespeichert mit ID:", docRef.id); // Automatisch generierte ID
+      item.id = docRef.id;
       return docRef.id;
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Messages:", error);

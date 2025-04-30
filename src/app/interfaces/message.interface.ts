@@ -28,7 +28,6 @@ export class Message {
         this.isAnswered = obj?obj.isAnswered:false
         this.isThread = obj?obj.isThread:false
         this.isInThread = obj?obj.isInThread:false
-
     }
     
 }

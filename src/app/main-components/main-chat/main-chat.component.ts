@@ -45,11 +45,11 @@ export class MainChatComponent {
     isOwn: false,
     isThread: false,
     isInThread: false,
-    isAnswered: false
+    isAnswered: false,
   };
   static actualUser: any;
 
-  constructor(private messageService: MessageService, private registerService: RegisterService, private mainservice:MainComponentService) {
+  constructor(private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService) {
 
   }
 
@@ -92,7 +92,6 @@ export class MainChatComponent {
       this.messageService.setMessageObject(this.message, this.message.id),
       this.message.id
     );
-
     this.message.messageText = '';
   }
   

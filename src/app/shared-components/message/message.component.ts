@@ -23,7 +23,6 @@ export class MessageComponent {
   @Input() isThread: boolean | undefined = false;
   @Input() isInThread: boolean | undefined = false;
   @Input() isAnswered: boolean | undefined = false;
-  id?:string = this.messageService.id;
 
   mainComponents = MainComponentsComponent;
 
@@ -52,7 +51,7 @@ export class MessageComponent {
   }
 
   addNewReaction(reaction:string) {
-    console.log(this.id, reaction, this.messageService.allMessages);
+    console.log(reaction);
   }
 
 }
