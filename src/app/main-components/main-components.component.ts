@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { RegisterService } from '../firebase-services/register.service';
 import { User } from '../interfaces/user.interface';
 import { MessageService } from '../firebase-services/message.service';
+import { Message } from '../interfaces/message.interface';
 import { MainComponentService } from '../firebase-services/main-component.service';
 import { UserCardMenuComponent } from "./active-user/user-card-menu/user-card-menu.component";
 import { EditUserComponent } from './active-user/edit-user/edit-user.component';
@@ -31,6 +32,9 @@ export class MainComponentsComponent implements OnInit {
   private loadingSubscription!: Subscription;
   private usersSubscription!: Subscription;
   overlayUserCardActive:boolean = false;
+  selectedThreadMessage: Message | null = null;
+  showThreadWindow = false;
+
   constructor(private loadingService: LoadingService, private registerservice: RegisterService,private mainservice:MainComponentService  ) {}
 
   ngOnInit(): void { // lädt alle user !!!
@@ -42,6 +46,16 @@ export class MainComponentsComponent implements OnInit {
         console.log('laden:', this.loadingStatus);
       }
     });
+  }
+
+  openThreadForMessage(message: Message):void {
+    this.selectedThreadMessage = message;
+    this.showThreadWindow = true;
+  }
+
+  closeThreadView(): void {
+    this.showThreadWindow = false;
+    this.selectedThreadMessage = null;
   }
 
   static toggleThreads():void {

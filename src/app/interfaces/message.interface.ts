@@ -13,6 +13,9 @@ export class Message {
     isAnswered: boolean;
     isThread: boolean;
     isInThread: boolean;
+    threadTo: string;
+    threadCount: number;
+    
 
 
     constructor(obj?:any) {
@@ -28,6 +31,8 @@ export class Message {
         this.isAnswered = obj?obj.isAnswered:false
         this.isThread = obj?obj.isThread:false
         this.isInThread = obj?obj.isInThread:false
+        this.threadTo = obj?obj.threadTo:''
+        this.threadCount = obj?obj.threadCount:''
 
     }
     

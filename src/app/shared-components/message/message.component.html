@@ -8,7 +8,7 @@
             <img src="assets/img/check_40.png" alt="">
             <img src="assets/img/like.png" alt="">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="">
-            <img class="change-color" src="assets/img/edit.png" alt="" (click)="openThreads()">
+            <img class="change-color" src="assets/img/edit.png" alt="" (click)="onReplyClick()">
             <img (click)="showEditMessage()" *ngIf="isOwn"src="assets/img/dots.png" alt=""></div>
             <div id="editMessagePopup" *ngIf="isOwn" [ngStyle]="isOwn && isThread ? {'left': '135px'} : {}" class="edit-message"><span (click)="hideEditMessage()">Nachricht bearbeiten</span></div>
         <div *ngIf="isThread || isInThread" class="reaction-popup ">

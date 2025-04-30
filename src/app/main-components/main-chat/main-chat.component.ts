@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { Subscription } from 'rxjs';
-import { DatePipe } from '@angular/common';
 import { RegisterService } from '../../firebase-services/register.service';
 import { User } from '../../interfaces/user.interface';
 import { MainComponentService } from '../../firebase-services/main-component.service';
@@ -46,7 +45,9 @@ export class MainChatComponent {
     isOwn: false,
     isThread: false,
     isInThread: false,
-    isAnswered: false
+    isAnswered: false,
+    threadTo: '',
+    threadCount: 0,
   };
   static actualUser: any;
 
@@ -96,6 +97,7 @@ export class MainChatComponent {
 
     this.message.messageText = '';
   }
+  
   
 }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
@@ -13,6 +13,7 @@ import { MainComponentsComponent } from '../../main-components/main-components.c
   styleUrl: './message.component.scss'
 })
 export class MessageComponent {
+@Input() messageData: Message | undefined;
 @Input() date!: Date | string;
 @Input() avatarSrc!: number;
 @Input() name!: string;
@@ -23,6 +24,16 @@ export class MessageComponent {
 @Input() isThread: boolean | undefined = false;
 @Input() isInThread: boolean | undefined = false;
 @Input() isAnswered: boolean | undefined = false;
+@Input() threadCount: number = 0;
+
+  
+  
+onReplyClick(): void {
+  if (this.messageData) {
+    this.messageService.openThread(this.messageData);
+  }
+  
+}
 
 mainComponents = MainComponentsComponent;
 
@@ -43,10 +54,6 @@ hideEditMessage(){
     console.error('Element with id "editMessagePopup" not found.');
   }
 }
-
-  openThreads(){
-    this.mainComponents.toggleThreads();
-  }
 
 constructor(private messageService: MessageService){}
 

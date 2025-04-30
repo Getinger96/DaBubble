@@ -7,7 +7,10 @@
     <div class="body">
         <app-workspace-menu [userArray]="allUsers"></app-workspace-menu>
         <app-main-chat></app-main-chat>
-        <app-thread></app-thread>
+        <app-thread
+        *ngIf="showThreadWindow"
+        [parentMessage]="selectedThreadMessage"
+        (closeThread)="closeThreadView()"></app-thread>
     </div>
     <app-toggle-webspace-menu></app-toggle-webspace-menu>
 </section>

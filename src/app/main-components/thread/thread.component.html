@@ -5,44 +5,46 @@
         </div>
         <img class="close" src="assets/img/close.png" alt="close" (click)="closeThreads()">
     </div>
-    <div class="thread-feed">
+    <div class="thread-feed" *ngIf="parentMessage">
         <div class="thread-message">
          <app-message
-            [avatarSrc]= "5"
-            [name]= "'Noah Braun'"
-            [time]="'14:25'"
-            [messageText]="'Welche Version ist aktuell von Angular?'"
+            [avatarSrc]="parentMessage.avatar"
+            [name]="parentMessage.name"
+            [time]="parentMessage.sendAtTime"
+            [messageText]="parentMessage.messageText"
             [isInThread]="true">
          </app-message>
-            <div class="thread-number-of-answers"><span class="fontNunito">2 Antworten</span><div class="line"></div></div>
+            <div class="thread-number-of-answers"><span class="fontNunito">{{ threadAnswers.length }} Antworten</span><div class="line"></div></div>
         </div>
         <div class="thread-answers">
-            <app-message
-            [avatarSrc]="6"
-            [name]="'Sofia Müller'"
-            [time]="'14:30'"
-            [messageText]="'Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiss Frederik, ob es wahr ist.'"
+             <app-message *ngFor="let answer of threadAnswers"
+            [avatarSrc]="answer.avatar"
+            [name]="answer.name"
+            [time]="answer.sendAtTime"
+            [messageText]="answer.messageText"
             [isThread]="true"
+            [isOwn]="answer.isOwn"
         ></app-message>
-        <app-message
+        <!--<app-message
             [avatarSrc]="2"
             [name]="'Frederik Beck'"
             [time]="'15:06'"
             [messageText]="'Ja das ist es.'"
             [isThread]="true"
             [isOwn]="true"
-    ></app-message>
+        ></app-message>
+        -->
         </div>
     </div>
     <div class="thread-input-wrapper">
         <div class="thread-input">
-            <textarea type="text" class="fontNunito" placeholder="Antworten" wrap="soft"></textarea>
+            <textarea type="text" class="fontNunito" placeholder="Antworten" wrap="soft" [(ngModel)]="newThreadText"></textarea>
             <div class="thread-input-icons">
                 <div>
                     <img src="assets/img/emoji.png" alt="emoji">
                     <img src="assets/img/at.png" alt="at">
                 </div>
-                    <img src="assets/img/send.png" alt="send">
+                    <img src="assets/img/send.png" alt="send" (click)="sendReply()">
             </div>
         </div>
     </div>
