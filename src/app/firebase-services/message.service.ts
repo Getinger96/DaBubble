@@ -17,6 +17,7 @@ import { MainComponentService } from './main-component.service';
   providedIn: 'root',
 })
 export class MessageService {
+
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   id?: string;
@@ -47,6 +48,7 @@ export class MessageService {
 
   setMessageObject(obj: any, id: string): Message {
     return {
+      messageId: id,
       id: obj.id,
       name: obj.name,
       avatar: obj.avatar,
@@ -75,6 +77,7 @@ export class MessageService {
         
         allMessages.push(message);
         console.log(allMessages)
+        console.log(message.messageId)
       });
       
       allMessages.sort((a, b) => {
@@ -86,6 +89,11 @@ export class MessageService {
       
       this.allMessages = allMessages;
       this.allMessagesSubject.next(this.allMessages);
+
+      const selectedMessage = this.selectedThreadMessageSubject.value;
+      if (selectedMessage) {
+        this.updateThreadAnswers(selectedMessage.id);
+      }
     });
   }
 
@@ -93,13 +101,17 @@ export class MessageService {
     return this.mainservice?.actualUser[0]?.id;
   }
 
-  async addMessageInFirebase(item: Message, id: string) {
+  async addMessageInFirebase(item: Message) {
     try {
-      const docRef = await addDoc(this.getMessageRef(), this.messageJson(item, id));
-      this.id = docRef.id;
+      const userID = this.getActualUser();
+      const docRef = await addDoc(this.getMessageRef(), this.messageJson(item,userID));
+      const messageId = docRef.id;
       console.log("Message gespeichert mit ID:", docRef.id); // Automatisch generierte ID
-      item.id = docRef.id;
-      return docRef.id;
+
+      await updateDoc(docRef, { messageId });
+   
+     
+      return messageId;
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Messages:", error);
       return null; // Ensure all code paths return a value
@@ -111,6 +123,7 @@ export class MessageService {
       name: item.name,
       avatar: item.avatar,
       messageText: item.messageText,
+      messageId: item.messageId || '',
       id: id,
       sendAt: item.sendAt,
       sendAtTime: item.sendAtTime,
@@ -135,6 +148,10 @@ export class MessageService {
     this.selectedThreadMessageSubject.next(null);
   }
 
+  getThreadAnswers(id: string): Message[] {
+    return this.allMessages.filter((msg) => msg.threadTo === id);
+  }
+
 
   updateThreadAnswers(threadTo: string) {
     const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
@@ -150,7 +167,7 @@ export class MessageService {
   async addThreadAnswer(messageText: string, threadToId: string) {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
-
+    
     let months = [
       'Januar',
       'Februar',
@@ -180,6 +197,7 @@ export class MessageService {
     let dayNumber = d.getDate();
     let minutes = d.getMinutes();
     let hours = d.getHours();
+    
 
     const threadAnswer: Message = {
       name: user.name,
@@ -192,17 +210,20 @@ export class MessageService {
       isThread: true,
       isInThread: false,
       threadTo: threadToId,
-      id: '',
+      id: userId,
+      messageId: '',
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
     };
 
-    const answerId = await this.addMessageInFirebase(threadAnswer, userId);
+    const answerId = await this.addMessageInFirebase(threadAnswer);
+    if (answerId){
+      threadAnswer.messageId = answerId;
+      console.log('Thread created with', answerId);
+    }
 
     await this.updateMessageThreadCount(threadToId);
-
-    return answerId;
   }
 
   async updateMessageThreadCount(messageId: string) {

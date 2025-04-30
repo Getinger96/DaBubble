@@ -60,6 +60,7 @@ onReplyClick(): void {
   openThreads(){
     this.mainComponents.toggleThreads();
   }
+  
   addNewReaction(reaction:string) {
     console.log(reaction);
   }

@@ -10,7 +10,8 @@
         <app-main-chat *ngIf="!showChanelSection"></app-main-chat>
         <app-thread *ngIf="!showChanelSection" 
         [parentMessage]="selectedThreadMessage"
-        (closeThread)="closeThreadView()"></app-thread>
+        (closeThread)="closeThreadView()"
+        (openThread)="selectedThreadMessage && openThreadForMessage(selectedThreadMessage)"></app-thread>
     </div>
     <app-toggle-webspace-menu></app-toggle-webspace-menu>
 </section>

@@ -58,11 +58,13 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   openThreadForMessage(message: Message):void {
     this.selectedThreadMessage = message;
     this.showThreadWindow = true;
+    MainComponentsComponent.toggleThreads();
   }
 
   closeThreadView(): void {
     this.showThreadWindow = false;
     this.selectedThreadMessage = null;
+    MainComponentsComponent.toggleThreads();
   }
 
   static toggleThreads():void {

@@ -34,6 +34,7 @@ export class MainChatComponent {
   
   message: Message = {
     id: '',
+    messageId:'',
     name: '',
     avatar: 0,
     messageText: '',
@@ -83,16 +84,18 @@ export class MainChatComponent {
     }
   }
 
-  addMessage() {
+  async addMessage() {
     this.message.id = this.actualUser[0]?.id || '';
     this.message.name = this.actualUser[0]?.name || '';
     this.message.avatar = this.actualUser[0]?.avatar || 1;
     this.message.isOwn = true;
+
+    const messageId = await this.messageService.addMessageInFirebase(this.message);
+    if (messageId){
+      this.message.messageId = messageId;
+      console.log('Message created with ID', messageId)
+    }
     
-    this.messageService.addMessageInFirebase(
-      this.messageService.setMessageObject(this.message, this.message.id),
-      this.message.id
-    );
     this.message.messageText = '';
   }
   
