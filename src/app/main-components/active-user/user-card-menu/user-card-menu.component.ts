@@ -30,16 +30,13 @@ export class UserCardMenuComponent implements OnInit {
   @Output() closeCard = new EventEmitter<boolean>();
 
   ngOnInit() {
-
-        console.log('actualUserUserCard', this.actualUserUserCard);
-  if (this.actualUserUserCard.length > 0) {
-    const user = this.actualUserUserCard[0];
-    this.avatar = user.avatar;  
-    this.name = user.name;     
-    this.email = user.email;   
-    this.id = user.id;   
-  }
-    
+    if (this.actualUserUserCard.length > 0) {
+      const user = this.actualUserUserCard[0];
+      this.avatar = user.avatar;  
+      this.name = user.name;     
+      this.email = user.email;   
+      this.id = user.id;   
+    }
   }
   close(event: Event) {
     if (event) {

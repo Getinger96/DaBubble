@@ -22,16 +22,9 @@ export class MainComponentService {
      acutalUser$ = this.actualUserSubject.asObservable();
       private auth = getAuth();
 
-
-
     constructor(private route: ActivatedRoute,
-        private router: Router) {
-        this.unsubList = this.subList();
-
-        this.saveActualUser();
-
-
-
+      private router: Router) {
+      this.unsubList = this.subList();
     }
 
 

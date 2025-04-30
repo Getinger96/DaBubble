@@ -1,0 +1,101 @@
+<div *ngIf="overlayeditChannel" class="overlay-bg" (click)="closeOverlay()">
+
+    <form (ngSubmit)="updateChannel($event, channelForm,currentChannelID)" #channelForm="ngForm">
+        <div [ngClass]="{'opacity': overlayeditChannel}" class="profile-dialog" (click)="onDialogClick($event)">
+
+            <div class="dialog-Headline">
+                <span>#{{currentChannelName}}</span>
+                <img src="assets/img/close.png" alt="" (click)="closeOverlay()">
+            </div>
+            <div class="dialog-name">
+                <div class="channel-name-Container">
+                    <span>Channel-Name</span>
+                    <span *ngIf="!editName" class="edit-span" (click)="startEditName()">Bearbeiten</span>
+                    <span *ngIf="editName" class="edit-span" (click)="saveName()">Speichern</span>
+                </div>
+                <span *ngIf="!editName" class="current-Name">#{{currentChannelName}}</span>
+                <div *ngIf="editName" class="input-channel-name-container">
+                    <img src="assets/img/tag-grey.png" alt="">
+                    <input [(ngModel)]=" currentChannelName" type="text" name="name"
+                        placeholder=" z.B Kooperationsprojekte" #name="ngModel" required>
+                </div>
+            </div>
+            <div class="dialog-description">
+                <div class="channel-description-Container">
+                    <span>Beschreibung</span>
+                    <span *ngIf="!editDescription" class="edit-span" (click)="startEditDescription()">Bearbeiten</span>
+                    <span *ngIf="editDescription" class="edit-span" (click)="saveDescription()">Speichern</span>
+                </div>
+                <span *ngIf="!editDescription" class="current-Description">{{currentChannelDescription}}</span>
+                <div *ngIf="editDescription" class="input-channel-description-container">
+                    <input [(ngModel)]="currentChannelDescription" type="text" name="description" id=""
+                        placeholder="Dein Text hier" #description="ngModel" required>
+                </div>
+                <div class="creator-container">
+                    <span>Erstellt von</span>
+                    <span class="current-Creator">{{currentChannelCreator}}</span>
+                </div>
+            </div>
+            <div class="button-container">
+                <button (click)="deleteChannel()" class="delete-Button">Channel Löschen</button>
+                <input [disabled]="" type="submit" value="Erstellen">
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<div class="main-chat-wrapper">
+    <div class="main-chat-header">
+        <div (click)="openoverlay()" class="message-group">
+            <div class="actual-group">
+                <img src="assets/img/tag.png" alt=""><span class="fontNunito">{{currentChannelName}}</span>
+            </div>
+            <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
+        </div>
+        <div class="actual-group-members">
+            <div class="members-avatar-group" *ngFor="let member of members.slice(0,3)">
+                <div class="avatar" style="background-image: url('assets/img/avatar_{{member.avatar}}_square.png');">
+                </div>
+
+            </div> <button mat-icon-button type="button" (click)="openDialog()">
+                <span *ngIf="members.length > 3" class="fontNunito"> +{{ members.length - 3 }}</span> </button>
+
+
+
+            <button mat-icon-button type="button" (click)="openDialogMembers()">
+                <img src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
+            </button>
+        </div>
+    </div>
+    <div class="main-chat-feed">
+        <div class="channel-info">
+            <div>
+                <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
+            </div>
+            <div class="channel-Info-container">
+                <span class="creator-header">{{currentChannelCreator}}</span>
+                <span class="welcome-span">Willkomen in eurem privaten Channel!</span>
+                <div class="member-container"><span class="member-span" *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
+                <span>{{currentChannelDescription}}</span>
+                
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="input-wrapper">
+        <div class="main-chat-message">
+            <textarea type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+            <div class="message-icons">
+                <div>
+                    <img src="assets/img/emoji.png" alt="">
+                    <img src="assets/img/at.png" alt="">
+                </div>
+                <img src="assets/img/send.png" alt="">
+            </div>
+        </div>
+    </div>
+</div>

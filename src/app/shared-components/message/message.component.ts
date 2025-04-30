@@ -35,29 +35,34 @@ onReplyClick(): void {
   
 }
 
-mainComponents = MainComponentsComponent;
+  mainComponents = MainComponentsComponent;
 
-showEditMessage(){
-  let editMessagePopup = document.getElementById('editMessagePopup');
-  if (editMessagePopup) {
-    editMessagePopup.style.display = 'flex';
-  } else {
-    console.error('Element with id "editMessagePopup" not found.');
+  constructor(private messageService: MessageService){}
+
+  showEditMessage(){
+    let editMessagePopup = document.getElementById('editMessagePopup');
+    if (editMessagePopup) {
+      editMessagePopup.style.display = 'flex';
+    } else {
+      console.error('Element with id "editMessagePopup" not found.');
+    }
   }
-}
 
-hideEditMessage(){
-  let editMessagePopup = document.getElementById('editMessagePopup');
-  if (editMessagePopup) {
-    editMessagePopup.style.display = 'hide';
-  } else {
-    console.error('Element with id "editMessagePopup" not found.');
+  hideEditMessage(){
+    let editMessagePopup = document.getElementById('editMessagePopup');
+    if (editMessagePopup) {
+      editMessagePopup.style.display = 'hide';
+    } else {
+      console.error('Element with id "editMessagePopup" not found.');
+    }
   }
+
+  openThreads(){
+    this.mainComponents.toggleThreads();
+  }
+  addNewReaction(reaction:string) {
+    console.log(reaction);
+  }
+
 }
-
-constructor(private messageService: MessageService){}
-
-}
-
-
 

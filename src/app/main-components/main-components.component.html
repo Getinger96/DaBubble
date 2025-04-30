@@ -6,9 +6,9 @@
     </div>
     <div class="body">
         <app-workspace-menu [userArray]="allUsers"></app-workspace-menu>
-        <app-main-chat></app-main-chat>
-        <app-thread
-        *ngIf="showThreadWindow"
+        <app-channel-chat [allUsersChannel]="allUsers" *ngIf="showChanelSection"></app-channel-chat>
+        <app-main-chat *ngIf="!showChanelSection"></app-main-chat>
+        <app-thread *ngIf="!showChanelSection" 
         [parentMessage]="selectedThreadMessage"
         (closeThread)="closeThreadView()"></app-thread>
     </div>

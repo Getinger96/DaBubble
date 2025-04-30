@@ -1,0 +1,395 @@
+@import './../../../styles.scss';
+
+.main-chat-wrapper {
+    width: 100%;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    height: 100%;
+
+}
+
+.main-chat-header {
+    height: 96px;
+    box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+
+    .message-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 45px;
+        gap: 18px;
+
+        img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .arrow_down {
+            width: 14px;
+            height: 8.19px;
+        }
+
+        .actual-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            span {
+                font-weight: 700;
+                font-size: 24px;
+            }
+        }
+    }
+
+    .actual-group-members {
+        display: flex;
+        align-items: center;
+        padding-right: 45px;
+        gap: 10px;
+
+        .members-avatar-group {
+            display: flex;
+
+            .avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 2px solid white;
+                background-size: cover;
+                background-position: center;
+                margin-left: -20px;
+
+            }
+        }
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+
+        span {
+            font-size: 20px;
+            font-weight: 600;
+        }
+    }
+}
+
+.main-chat-feed {
+    height: calc(100% - 321px);
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.input-wrapper {
+    padding: 38px 35px 40px 35px;
+}
+
+.main-chat-message {
+    height: 145px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    position: relative;
+
+    textarea {
+        border: none;
+        width: calc(100% - 40px);
+        padding: 20px 20px;
+        height: calc(100% - 100px);
+        background-color: transparent;
+        resize: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .message-icons {
+        position: absolute;
+        width: calc(100% - 40px);
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        justify-content: space-between;
+
+        img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+    }
+}
+
+button {
+    position: relative;
+}
+
+.delete-Button {
+    background-color: #535AF1;
+    border: 1px solid #535AF1;
+    color: white;
+    padding: 8px;
+    border-radius: 30px;
+    font-size: 18px;
+
+}
+
+
+.profile-dialog {
+
+    display: flex;
+    flex-direction: column;
+    width: 872px;
+    height: 539px;
+    background-color: aliceblue;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    flex: 1;
+    padding: 40px;
+    justify-content: space-around;
+    gap: 18px;
+    opacity: 0;
+    font-family: $font-primary;
+    font-weight: 700;
+    font-size: 18px;
+    z-index: 1001;
+
+
+
+
+}
+
+
+.overlay-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Grau, halbtransparent */
+    z-index: 1000;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.opacity {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+
+.input-channel-name-container {
+
+    width: 100%;
+    padding: 8px;
+    border-radius: 30px;
+    border: 1px solid #535AF1;
+    display: flex;
+
+    >input {
+        width: 100%;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.input-channel-description-container {
+
+    width: 100%;
+    padding: 8px;
+    border-radius: 30px;
+    border: 1px solid #535AF1;
+
+    >input {
+        width: 100%;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+
+    >input {
+        background-color: #535AF1;
+        border: 1px solid #535AF1;
+        color: white;
+        padding: 8px;
+        border-radius: 30px;
+        font-size: 18px;
+
+
+    }
+}
+
+.dialog-Headline {
+    display: flex;
+    justify-content: space-between;
+
+    >span {
+        font-weight: 700;
+        font-size: 24px;
+    }
+
+    >img {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.dialog-name {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #535AF1;
+    border-radius: 30px;
+    padding: 16px;
+}
+
+
+
+
+.dialog-description {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #535AF1;
+    border-radius: 30px;
+    padding: 16px;
+
+
+}
+
+.channel-name-Container {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.channel-description-Container {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.edit-span {
+    color: #535AF1;
+    cursor: pointer;
+}
+
+.current-Name {
+    font-weight: 300;
+}
+
+.current-Description {
+    font-weight: 300;
+}
+
+.current-Creator {
+
+    font-size: 24px;
+    font-weight: 700;
+    color: #535AF1;
+}
+
+.creator-container {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+app-show-user {
+    position: absolute;
+    top: 100px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+
+.mdc-dialog__container {
+    position: absolute;
+    right: 8%;
+    top: 25%;
+    width: 500px;
+    height: 550px;
+}
+
+
+.mat-mdc-icon-button.mat-mdc-button-base {
+    display: flex;
+    align-items: center;
+}
+
+
+::ng-deep mat-card {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.channel-info {
+    background-color: rgb(227 218 188);
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+   
+
+
+}
+
+.channel-Info-Img {
+    width: 100px;
+    height: 100px;
+}
+
+.channel-Info-container{
+    display: flex;
+    flex-direction: column;
+    gap: 16px
+}
+
+.creator-header{
+
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.welcome-span{
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.member-container{
+    display: flex;
+    gap: 8px;
+}
+
+.member-span{
+    color: #535AF1;
+}

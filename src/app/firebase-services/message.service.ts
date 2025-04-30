@@ -37,10 +37,7 @@ export class MessageService {
 
   unsubList;
 
-  constructor(
-    private registerService: RegisterService,
-    private mainservice: MainComponentService
-  ) {
+  constructor(private registerService: RegisterService, private mainservice: MainComponentService) {
     this.unsubList = this.subList();
   }
 
@@ -70,47 +67,41 @@ export class MessageService {
     return onSnapshot(this.getMessageRef(), (snapshot) => {
       let allMessages: Message[] = [];
       const actualUserID = this.getActualUser();
-      snapshot.forEach((element) => {
+      snapshot.forEach(element => {
         const messageData = element.data();
         const isOwn = messageData['id'] === actualUserID;
         const message = this.setMessageObject(messageData, element.id);
         message.isOwn = isOwn;
-
+        
         allMessages.push(message);
+        console.log(allMessages)
       });
-
+      
       allMessages.sort((a, b) => {
         if (a.timestamp && b.timestamp) {
           return a.timestamp - b.timestamp;
         }
         return 0;
       });
-
+      
       this.allMessages = allMessages;
       this.allMessagesSubject.next(this.allMessages);
-
-      const selectedMessage = this.selectedThreadMessageSubject.value;
-      if (selectedMessage) {
-        this.updateThreadAnswers(selectedMessage.id);
-      }
     });
   }
 
-  getActualUser() {
+  getActualUser(){
     return this.mainservice?.actualUser[0]?.id;
   }
 
   async addMessageInFirebase(item: Message, id: string) {
     try {
-      const docRef = await addDoc(
-        this.getMessageRef(),
-        this.messageJson(item, id)
-      );
+      const docRef = await addDoc(this.getMessageRef(), this.messageJson(item, id));
       this.id = docRef.id;
-      console.log('Message gespeichert mit ID:', docRef.id); // Automatisch generierte ID
+      console.log("Message gespeichert mit ID:", docRef.id); // Automatisch generierte ID
+      item.id = docRef.id;
       return docRef.id;
     } catch (error) {
-      console.error('Fehler beim Hinzufügen des Messages:', error);
+      console.error("Fehler beim Hinzufügen des Messages:", error);
       return null; // Ensure all code paths return a value
     }
   }
@@ -131,7 +122,6 @@ export class MessageService {
       threadCount: item.threadCount || 0,
     };
   }
-
 
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
@@ -156,7 +146,6 @@ export class MessageService {
     });
     this.threadAnswersSubject.next(replies);
   }
-
 
   async addThreadAnswer(messageText: string, threadToId: string) {
     const userId = this.getActualUser();
@@ -232,5 +221,4 @@ export class MessageService {
     } catch (error) {
       console.error("Error updating thread count:", error);
     }
-  }
-}
+  }}

@@ -1,0 +1,87 @@
+
+.allUser {
+    position: relative;
+}
+
+
+.allUser mat-card {
+    position: relative;
+  }
+
+  .mdc-dialog__container {
+    position: absolute;
+    right: 8%;
+    top: 25%;
+    width: 500px;
+    height: 550px;
+  }
+
+
+  .users {
+    display: flex;
+    flex-direction: column;
+   gap: 2px;
+   padding: 0px 15px;
+
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0;
+  }
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    &:hover {
+        background-color: #ebebeb; 
+        cursor: pointer;
+    }
+  }
+
+  .avatar {
+    height: 50px;
+    width: auto;
+    object-fit: cover;
+  }
+
+  .add_members {
+      display: flex;
+      align-items: center;
+      padding: 10px 70px;
+      justify-content: center;
+      gap: 20px;
+
+  }
+
+  .headline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .closeIcon {
+    margin-bottom: 50px;
+  }
+
+
+  .avatarImages {
+    position: relative;
+  }
+
+  .status {
+    z-index: 2;
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+    width: 14px;
+    height: 14px;
+  }
+
+  ::ng-deep mat-card {
+    border-radius: 20px; 
+    overflow: hidden; 
+  }

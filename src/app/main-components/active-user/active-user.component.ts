@@ -1,9 +1,8 @@
 import { Component, HostListener, OnInit, Output } from '@angular/core';
 import { User } from '../../interfaces/user.interface';
-import { RegisterService } from '../../firebase-services/register.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router, RouterModule  } from '@angular/router';
+import { Router, RouterModule  } from '@angular/router';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
 import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component';
@@ -23,15 +22,15 @@ export class ActiveUserComponent implements OnInit {
   avatar?:number;
   name?:string;
   email?:string;
-  actualUser:User[]= []
+  actualUser:User[]= [];
   loadingStatus: boolean = false;
   overlayvisible:boolean=false;
   showUserCard:boolean=false;
-  @Output() userId?: string
+  @Output() userId?: string;
   private actualUserSubscription!: Subscription;
  
-  constructor(private registerservice: RegisterService,private route: ActivatedRoute,
-    private router: Router,private mainservice:MainComponentService,private loginservice:LoginService, public usercardservice: UserCardService){
+  constructor(
+    private router: Router, private mainservice:MainComponentService, private loginservice:LoginService, public usercardservice: UserCardService){
   }
 
   openOverlay(){
@@ -39,26 +38,28 @@ export class ActiveUserComponent implements OnInit {
     document.body.style.overflow = 'hidden'; 
   }
 
-ngOnInit(): void {
-  this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-    if (actualUser.length > 0) {
-      this.actualUser = actualUser
-      this.userId = actualUser[0].id
-      console.log('actualUser[0]', actualUser[0]);
-      
-    }
-  });
-}
+  ngOnInit(): void {
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser
+        this.userId = actualUser[0].id
+        console.log('actualUser[0]', actualUser[0]);
+        
+      }
+    });
+  }
 
 
-showUserCardMenu() {
-  this.showUserCard = true;
-}
+  showUserCardMenu() {
+    this.showUserCard = true;
+  }
 
 
   closeOverlay() {
     this.overlayvisible = false;
     document.body.style.overflow = 'auto';
+    this.usercardservice.overlayUserCardActive = false;
+    this.usercardservice.overlayEditUserActive = false;
   }
 
   logOut(){

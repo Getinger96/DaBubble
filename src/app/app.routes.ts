@@ -8,7 +8,7 @@ import { ChooseAvatarComponent } from './login-components/choose-avatar/choose-a
 import { MainComponentsComponent } from './main-components/main-components.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyComponent } from './privacy/privacy.component';
-import { MessageActionBoxComponent } from './shared-components/message/message-action-box/message-action-box.component';
+import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
     
@@ -18,10 +18,12 @@ export const routes: Routes = [
     { path: 'signUp', component:RegisterComponent },
     { path: 'resetEmail', component:PasswordResetEmailComponent },
     { path: 'reset', component: PasswortResetComponent },
-    { path: 'main-components', component: MainComponentsComponent },
+    {
+        path: 'main-components/:id',
+        canActivate: [authGuard],
+        loadComponent: () => import('./../../src/app/main-components/main-components.component').then(m => m.MainComponentsComponent)
+    },
     { path: 'imprint', component: ImprintComponent },
     { path: 'privacy', component: PrivacyComponent },
-
-    { path: 'message-box', component: MessageActionBoxComponent }
 ];
 

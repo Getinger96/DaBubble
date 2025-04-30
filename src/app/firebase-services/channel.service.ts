@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference,deleteDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
 import { BehaviorSubject } from 'rxjs';
@@ -16,19 +16,30 @@ import { MainComponentService } from './main-component.service';
 export class ChannelService {
     firestore: Firestore = inject(Firestore);
     unsubChannel;
+    id?: string;
     allChannels: Channel[] = [];
     actualUser: User[] = [];
     private channelsSubject = new BehaviorSubject<Channel[]>([]);
     public channels$ = this.channelsSubject.asObservable();
+    private channelNameSubject = new BehaviorSubject<string>('');
+    currentChannelName$ = this.channelNameSubject.asObservable();
+    private channelDescriptionSubject = new BehaviorSubject<string>('');
+    currentChannelDescription$ = this.channelDescriptionSubject.asObservable();
+    private channelCreatorSubject = new BehaviorSubject<string>('');
+    currentChannelCreator$ = this.channelCreatorSubject.asObservable();
+    private channelIdSubject = new BehaviorSubject<string>('');
+    private channelMemberSubject = new BehaviorSubject<[]>([]);
+    channelMember$ = this.channelMemberSubject.asObservable();
+    currentChannelId$ = this.channelIdSubject.asObservable()
 
 
-    constructor(private route: ActivatedRoute, private registerservice: RegisterService,private mainservice:MainComponentService) {
+    constructor(private route: ActivatedRoute, private registerservice: RegisterService, private mainservice: MainComponentService) {
         this.unsubChannel = this.subChannelList()
         this.mainservice.saveActualUser()
         this.mainservice.acutalUser$.subscribe(actualuser => {
             this.actualUser = actualuser;
-            
-          });
+
+        });
     }
 
     subChannelList() {
@@ -45,14 +56,60 @@ export class ChannelService {
         })
     }
 
+
+    setChannelName(name: string): void {
+        this.channelNameSubject.next(name);
+    }
+
+    setChannelDescription(description: string): void {
+        this.channelDescriptionSubject.next(description)
+    }
+
+    setChannelMember(members: []): void {
+        this.channelMemberSubject.next(members)
+        console.log('this.channelMemberSubject', this.channelMemberSubject);
+        
+    }
+
+    setChannelcreator(creator: string): void {
+        this.channelCreatorSubject.next(creator)
+    }
+
+    setChannelId(id: string): void {
+        this.channelIdSubject.next(id)
+    }
+
     ngonDestroy() {
 
         this.unsubChannel();
     }
 
-    addChannel(item: Channel, event: Event) {
-        return addDoc(this.getChannelRef(), this.channelJson(item, this.actualUser[0].name))
+    async addChannel(item: Channel) {
+        return addDoc(this.getChannelRef(), this.channelJson(item, this.actualUser[0].name)).then(async docref => {
+            this.id = docref.id
+
+            await updateDoc(docref, { id: docref.id });
+            return docref;
+        })
     }
+
+
+    async updateChannel(channelId: string, name: string, description: string) {
+        const channelDocRef = doc(this.firestore, 'Channels', channelId);
+
+        await updateDoc(channelDocRef, {
+            name: name,
+            description: description
+        });
+        console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
+    }
+
+    async deleteChannel(channelId:string){
+        const channelDocRef=doc(this.firestore,'Channels',channelId);
+        await deleteDoc(channelDocRef)
+    }
+
+
     setChannelObject(obj: any, id: string): Channel {
         return {
             id: id,
@@ -81,9 +138,9 @@ export class ChannelService {
     async addMembersToChannel(channelId: string, members: { id: string, name: string, avatar: number }[]) {
         const channelDocRef = doc(this.firestore, 'Channels', channelId);
         await updateDoc(channelDocRef, {
-          members: members
+            members: members
         });
         console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
-      }
-    
+    }
+
 }

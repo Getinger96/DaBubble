@@ -1,7 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit,AfterViewInit, ChangeDetectorRef, NgZone   } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from '../../shared-components/header/header.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -18,7 +17,7 @@ import { LoginService } from '../../firebase-services/login.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatButtonModule, RouterModule, HeaderComponent,MatInputModule,MatIconModule, CommonModule, FormsModule, IntroComponent, HeaderLogoComponent],
+  imports: [MatButtonModule, RouterModule, MatInputModule,MatIconModule, CommonModule, FormsModule, IntroComponent, HeaderLogoComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -39,11 +38,7 @@ export class LoginComponent implements AfterViewInit  {
   logoView: boolean =  false;
   constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
     private mainservice:MainComponentService,private loginservice:LoginService){
-
-      
   }
-
-
 
   ngAfterViewInit(): void {
     let animationCompleted = localStorage.getItem('introAnimationCompleted');
@@ -58,13 +53,8 @@ export class LoginComponent implements AfterViewInit  {
         this.introView = false;
         this.logoView = true;
         this.cdRef.detectChanges()// Sag Angular: Prüf das nochmal im DOM
-
-
-
-      
     }
   }
-
 
   showAnimationLogin() {
     this.overlayvisible=true;
@@ -81,24 +71,19 @@ export class LoginComponent implements AfterViewInit  {
     this.user.email = 'guest@gmail.com'
     this.passwordInput.nativeElement.value = '';
     await this.loginservice.loginUser(this.user.email, this.user.passwort, event);
-
     this.showAnimationLogin();
-
 }
 
   setFocusEmail(field: string, isFocused: boolean) {
     this.isActiveEmail = isFocused;
-
   }
 
   setFocusPassword(field: string, isFocused: boolean) {
     this.isActivePassword = isFocused;
-
   }
 
   setFocusLoginWithGoogle(field: string, isFocused: boolean) {
     this.isActivePassword = isFocused;
-
   }
 
   hoverBtn(state: boolean) {
@@ -106,20 +91,17 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   async login(event: Event){
-     
-   await this.authService.loginWithGoogle(event)
-
+    await this.authService.loginWithGoogle(event)
     this.showAnimationLogin();
   }
+
   async loginAccount(email: string, password: string, event: Event){
     if (!this.inputFieldEmailIsEmpty()) { return;}
     if (this.checkTheInputFields()) {return;}
       await this.loginservice.loginUser(email, password, event);
-      
       if (!this.checkEmail()) {return;}
       if (!this.checkpasswordInput()) {return;}
       if (!this.checkEmailAndPassword()) {return;}
-
       this.showAnimationLogin();
   }
 

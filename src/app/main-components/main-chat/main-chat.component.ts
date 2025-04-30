@@ -31,7 +31,6 @@ export class MainChatComponent {
   dayNumber = this.d.getDate();
   minutes = this.d.getMinutes();
   hours = this.d.getHours();
- 
   
   message: Message = {
     id: '',
@@ -51,7 +50,9 @@ export class MainChatComponent {
   };
   static actualUser: any;
 
-  constructor(private messageService: MessageService, private registerService: RegisterService,private mainservice:MainComponentService) {}
+  constructor(private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService) {
+
+  }
 
   ngOnInit(): void {
     this.loadActualUser();
@@ -82,8 +83,6 @@ export class MainChatComponent {
     }
   }
 
-
-
   addMessage() {
     this.message.id = this.actualUser[0]?.id || '';
     this.message.name = this.actualUser[0]?.name || '';
@@ -94,12 +93,8 @@ export class MainChatComponent {
       this.messageService.setMessageObject(this.message, this.message.id),
       this.message.id
     );
-
     this.message.messageText = '';
   }
   
   
 }
-
-
-

@@ -11,7 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
-
+import { MainHelperService } from '../../services/main-helper.service';
 
 
 @Component({
@@ -31,7 +31,7 @@ export class WorkspaceMenuComponent {
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];
-  createdChannelId: string | null = null;
+  createdChannelId: any;
   createdChannelData: any = null;
   private usersSubscription!: Subscription;
   filteredUsers = [...this.allUsers];
@@ -39,7 +39,10 @@ export class WorkspaceMenuComponent {
   channels: Channel[] = [];
 
 
-  constructor(private registerservice: RegisterService, private channelservice: ChannelService,private mainservice:MainComponentService) {
+
+  constructor(private registerservice: RegisterService, private channelservice: ChannelService,private mainservice:MainComponentService,
+    private mainHelperService: MainHelperService
+  ) {
 
   }
 
@@ -111,10 +114,9 @@ export class WorkspaceMenuComponent {
 
     const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
 
-    this.channelservice.addChannel(channelObj, event).then((docRef) => {
+    this.channelservice.addChannel(channelObj).then((docRef) => {
       // ✅ docRef enthält die ID des neuen Channels
-      this.createdChannelId = docRef.id;
-      this.createdChannelData = channelObj;
+     this.createdChannelId=docRef.id;
 
       console.log('🎉 Channel erstellt mit ID:', this.createdChannelId);
 
@@ -133,6 +135,15 @@ export class WorkspaceMenuComponent {
   }
 
 
+  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: []) {
+    this.mainHelperService.openChannelSection(isOpen);
+    this.channelservice.setChannelName(name);
+    this.channelservice.setChannelDescription(description);
+    this.channelservice.setChannelcreator(creator);
+    this.channelservice.setChannelId(id)
+    this.channelservice.setChannelMember(members);
+  }
+
   addMembers() {
     if (this.selectedOption === 'all') {
       this.addAllMembersToChannel(this.createdChannelId!);
@@ -140,7 +151,8 @@ export class WorkspaceMenuComponent {
       const members = this.selectedUsers.map(user => ({
         id: user.id,
         name: user.name,
-        avatar: user.avatar
+        avatar: user.avatar,
+        status: user.status
       }));; // oder user.id, je nach Backend-Anforderung
       this.addSpecificMembersToChannel(this.createdChannelId!, members);
     }
