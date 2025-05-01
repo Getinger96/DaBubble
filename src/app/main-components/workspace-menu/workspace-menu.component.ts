@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { MainHelperService } from '../../services/main-helper.service';
-
+import { Member } from '../../interfaces/member.interface';
 
 @Component({
   selector: 'app-workspace-menu',
@@ -135,7 +135,7 @@ export class WorkspaceMenuComponent {
   }
 
 
-  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: []) {
+  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: Member[]) {
     this.mainHelperService.openChannelSection(isOpen);
     this.channelservice.setChannelName(name);
     this.channelservice.setChannelDescription(description);
@@ -165,7 +165,8 @@ export class WorkspaceMenuComponent {
     const allUsers = this.allUsers.map(user => ({
       id: user.id,
       name: user.name,
-      avatar: user.avatar
+      avatar: user.avatar,
+      status: user.status
     }));
     this.channelservice.addMembersToChannel(channelId, allUsers);
   }

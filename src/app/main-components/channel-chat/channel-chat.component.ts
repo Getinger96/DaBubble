@@ -108,7 +108,8 @@ export class ChannelChatComponent implements OnInit {
       data: {
         allUsersChannel: this.allUsersChannel,
         members: this.members,
-        currentChannelID: this.currentChannelID
+        currentChannelID: this.currentChannelID, 
+        currentChannelName: this.currentChannelName
       },
       panelClass: 'another-dialog-position'
     });
