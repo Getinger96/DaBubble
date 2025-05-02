@@ -155,20 +155,23 @@ export class ChannelService {
 
 
     
-   async updateNewMembersInFirebase(user:any, currentChannelID:string) {
+    async updateNewMembersInFirebase(user:any, currentChannelID:string) {
         const channel = this.allChannels.find(allChannels => allChannels.id === currentChannelID);
         console.log('channel', channel, user);
 
         if (channel) {
         const newUser = this.filterUser(user);
+        const alreadyMember  = channel?.members.some(members => members.id === newUser.id )
+        if (!alreadyMember) {
         channel?.members.push(newUser)
         const channelDocRef = doc(this.firestore, 'Channels', currentChannelID);
         await updateDoc(channelDocRef, {
             members: channel.members
           });
         }
-    }
 
+    }
+    }
 
     filterUser(user: Member) {
         return {

@@ -27,12 +27,19 @@ export class AddUserComponent {
 
 
   addNewUser(user: any) {
+    console.log('user.id',user.id);
+    console.log('this.data.allUsersChannel', this.data.allUsersChannel);
+    
     const index = this.data.allUsersChannel.findIndex(u => u.id === user.id);
     if (index !== -1) {
       this.data.allUsersChannel.splice(index, 1);
+      console.log();
+      
     }
-
+    console.log('this.data.allUsersChannel', this.data.allUsersChannel);
     this.data.members.push(user)
+    console.log('this.data.members', this.data.members);
+    console.log('this.data.members', this.data.members);
     this.channelService.updateNewMembersInFirebase(user, this.data.currentChannelID)
   }
 }
