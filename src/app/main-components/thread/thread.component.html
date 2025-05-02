@@ -5,13 +5,13 @@
         </div>
         <img class="close" src="assets/img/close.png" alt="close" (click)="closeThreads()">
     </div>
-    <div class="thread-feed" *ngIf="parentMessage">
+    <div class="thread-feed" *ngIf="message">
         <div class="thread-message">
          <app-message
-            [avatarSrc]="parentMessage.avatar"
-            [name]="parentMessage.name"
-            [time]="parentMessage.sendAtTime"
-            [messageText]="parentMessage.messageText"
+            [avatarSrc]="message.avatar"
+            [name]="message.name"
+            [time]="message.sendAtTime"
+            [messageText]="message.messageText"
             [isInThread]="true">
          </app-message>
             <div class="thread-number-of-answers"><span class="fontNunito">{{ threadAnswers.length }} Antworten</span><div class="line"></div></div>

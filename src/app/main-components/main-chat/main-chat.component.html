@@ -18,6 +18,7 @@
     </div>
     <div class="main-chat-feed">
         <app-message *ngFor="let message of allMessages"
+        [messageData]="message"
         [date]="message.sendAt"
         [avatarSrc]="message.avatar"
         [name]="message.name"

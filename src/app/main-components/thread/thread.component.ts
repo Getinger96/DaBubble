@@ -16,7 +16,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class ThreadComponent {
 
-  @Input() parentMessage: Message| null = null;
+  @Input() message: Message| null = null;
+  @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
 
@@ -27,14 +28,16 @@ export class ThreadComponent {
   }
 
   ngOnInit(): void{
-    if (this. parentMessage?.id){
+    if (this. message?.messageId){
+      this.openThread.emit();
       this.loadThreadAnswers();
     }
   }
 
+
   loadThreadAnswers(): void{
-    if(this.parentMessage?.id){
-      this.threadAnswers = this.messageService.getThreadAnswers(this.parentMessage.id);
+    if(this.message?.messageId){
+      this.threadAnswers = this.messageService.getThreadAnswers(this.message.messageId);
     }
   }
 
@@ -44,9 +47,9 @@ export class ThreadComponent {
   }
 
   async sendReply(): Promise<void> {
-    if (!this.newThreadText.trim() || !this.parentMessage?.id) return;
+    if (!this.newThreadText.trim() || !this.message?.messageId) return;
     
-    await this.messageService.addThreadAnswer(this.newThreadText, this.parentMessage.id);
+    await this.messageService.addThreadAnswer(this.newThreadText, this.message.messageId);
     this.newThreadText = '';
     this.loadThreadAnswers();
   }

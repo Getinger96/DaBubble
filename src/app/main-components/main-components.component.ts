@@ -59,6 +59,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.selectedThreadMessage = message;
     this.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
+    console.log(this.selectedThreadMessage, this.showThreadWindow);
   }
 
   closeThreadView(): void {
