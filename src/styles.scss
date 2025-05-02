@@ -35,7 +35,7 @@ h1, h2, h3, h4, h5, h6, p, span {
   top: 25%;
   right: 6%;
   width: 430px;
-  height: 550px;
+  height: 600px;
 }
 
 
@@ -49,6 +49,18 @@ h1, h2, h3, h4, h5, h6, p, span {
 ::ng-deep mat-card {
   border-radius: 20px;
   overflow: hidden;
+}
+::ng-deep button.mat-icon-button {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+::ng-deep button.mat-icon-button:hover {
+  background-color: transparent !important;
+}
+
+::ng-deep button.mat-icon-button:active {
+  background-color: transparent !important;
 }
 
 *::-webkit-scrollbar {

@@ -82,7 +82,7 @@ export class MessageService {
       
       allMessages.sort((a, b) => {
         if (a.timestamp && b.timestamp) {
-          return a.timestamp - b.timestamp;
+          return b.timestamp - a.timestamp;
         }
         return 0;
       });
@@ -92,7 +92,7 @@ export class MessageService {
 
       const selectedMessage = this.selectedThreadMessageSubject.value;
       if (selectedMessage) {
-        this.updateThreadAnswers(selectedMessage.id);
+        this.updateThreadAnswers(selectedMessage.messageId);
       }
     });
   }
@@ -138,8 +138,10 @@ export class MessageService {
 
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
+    console.log('Selected Thread Message is',this.selectedThreadMessageSubject)
     this.showThreadSubject.next(true);
-    this.updateThreadAnswers(message.id);
+    this.getThreadAnswers(message.messageId)
+    this.updateThreadAnswers(message.messageId);
   }
 
 

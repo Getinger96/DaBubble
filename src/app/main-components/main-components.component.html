@@ -9,7 +9,7 @@
         <app-channel-chat [allUsersChannel]="allUsers" *ngIf="showChanelSection"></app-channel-chat>
         <app-main-chat *ngIf="!showChanelSection"></app-main-chat>
         <app-thread *ngIf="!showChanelSection" 
-        [parentMessage]="selectedThreadMessage"
+        [message]="selectedThreadMessage"
         (closeThread)="closeThreadView()"
         (openThread)="selectedThreadMessage && openThreadForMessage(selectedThreadMessage)"></app-thread>
     </div>
