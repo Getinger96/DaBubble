@@ -8,24 +8,45 @@
                 <img class="closeIcon" src="assets/img/close.png" alt="" (click)="closeDialog()">
                 </div>
                 <div class="channelHeadline">
+                    <img src="../../../../assets/img/tag_purple.png" alt="">
+                    <h3>{{data.currentChannelName}}</h3>
                     <span></span>
                 </div>
+            <section class="actualUserList">
                 <div class="users">
+                    <main class="userContainer">
                     <div class="profile" *ngFor="let member of data.members">
                         <div class="avatarImages">
                         <img  class="avatar" src="assets/img/avatar_{{member.avatar}}.png" alt="avatar">
-                        <img class="status" src="assets/img/{{member.status}}.svg " alt="status">
+                        <img class="status" src="assets/img/{{member.status}}.svg" alt="status">
                         </div>
                         <div class="username">
                     <p class="name"> {{ member.name }}</p>
+                    <img src="../../../../assets/img/close.png" alt="">
                     </div>
                     </div>
+                    <div class="further-user">
+                    <input type="text" placeholder="Name eingeben">
+                    </div>
+                </main>
+                </div>
+                <div class="newUser">
+                    <div  class="profileNewUser" (click)="addNewUser(user)" *ngFor="let user of data.allUsersChannel">
+                        <div class="avatarImagesNewUser">
+                            <img  class="avatarNewUser" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
+                            <img class="statusNewUser" src="assets/img/{{user.status}}.svg" alt="status">
+                            </div>
+                        <p class="name"> {{ user.name }}</p>
+
+                    </div>
+                
+                
+                </div>
                     <div class="add_members">
-                        <img src="assets/img/add_members.png" alt="">
-                        <span>Mitglieder hinzufügen</span>
+                   <button class="addUser" type="button">Hinzufügen</button>
     
                     </div>  
-                </div>
+                </section>
             </div>
         </mat-card-content>
       </mat-card>

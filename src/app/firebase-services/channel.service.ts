@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { RegisterService } from './register.service';
 import { MainComponentService } from './main-component.service';
+import { Member } from '../interfaces/member.interface';
 
 
 
@@ -28,7 +29,7 @@ export class ChannelService {
     private channelCreatorSubject = new BehaviorSubject<string>('');
     currentChannelCreator$ = this.channelCreatorSubject.asObservable();
     private channelIdSubject = new BehaviorSubject<string>('');
-    private channelMemberSubject = new BehaviorSubject<[]>([]);
+    private channelMemberSubject = new BehaviorSubject<Member[]>([]);
     channelMember$ = this.channelMemberSubject.asObservable();
     currentChannelId$ = this.channelIdSubject.asObservable()
 
@@ -65,7 +66,7 @@ export class ChannelService {
         this.channelDescriptionSubject.next(description)
     }
 
-    setChannelMember(members: []): void {
+    setChannelMember(members: Member[]): void {
         this.channelMemberSubject.next(members)
         console.log('this.channelMemberSubject', this.channelMemberSubject);
         
@@ -128,7 +129,7 @@ export class ChannelService {
         return {
             id: item.id,
             name: item.name,
-            members: [],
+            members: [] as Member[],
             creator: creator,
             description: item.description
 
@@ -141,6 +142,32 @@ export class ChannelService {
             members: members
         });
         console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
+    }
+
+
+    
+   async updateNewMembersInFirebase(user:any, currentChannelID:string) {
+        const channel = this.allChannels.find(allChannels => allChannels.id === currentChannelID);
+        console.log('channel', channel, user);
+
+        if (channel) {
+        const newUser = this.filterUser(user);
+        channel?.members.push(newUser)
+        const channelDocRef = doc(this.firestore, 'Channels', currentChannelID);
+        await updateDoc(channelDocRef, {
+            members: channel.members
+          });
+        }
+    }
+
+
+    filterUser(user: Member) {
+        return {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+            status: user.status
+        }
     }
 
 }

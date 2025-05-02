@@ -42,7 +42,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void { // lädt alle user !!!
-    this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
+    this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
         this.loadingStatus = this.loadingService.setLoading(true);

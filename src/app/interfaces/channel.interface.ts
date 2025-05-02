@@ -1,8 +1,11 @@
+import { Member } from './member.interface'; 
+
+
 export class Channel {
     id: string;
     name: string;
     description: string;
-    members:[];
+    members: Member[];
     creator: string;
 
 
@@ -10,7 +13,7 @@ export class Channel {
          this.id = obj ? obj.id : ''
         this.name = obj ? obj.name : ''
         this.description = obj ? obj.description : ''
-        this.members = obj ? obj.members : ''
+        this.members = obj ? obj.members : []; 
         this.creator = obj ? obj.creator : ''
 
     }
