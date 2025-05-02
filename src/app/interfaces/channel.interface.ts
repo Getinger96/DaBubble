@@ -7,6 +7,7 @@ export class Channel {
     description: string;
     members: Member[];
     creator: string;
+    date: string;
 
 
     constructor(obj?: any) {
@@ -14,7 +15,8 @@ export class Channel {
         this.name = obj ? obj.name : ''
         this.description = obj ? obj.description : ''
         this.members = obj ? obj.members : []; 
-        this.creator = obj ? obj.creator : ''
+        this.creator = obj ? obj.creator : '';
+        this.date=obj? obj.date:'';
 
     }
 

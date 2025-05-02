@@ -111,6 +111,7 @@ export class WorkspaceMenuComponent {
 
   addChannel(event: Event, ngForm: NgForm) {
     event.preventDefault();
+   
 
     const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
 
@@ -135,13 +136,14 @@ export class WorkspaceMenuComponent {
   }
 
 
-  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: Member[]) {
+  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: Member[],date:string) {
     this.mainHelperService.openChannelSection(isOpen);
     this.channelservice.setChannelName(name);
     this.channelservice.setChannelDescription(description);
     this.channelservice.setChannelcreator(creator);
     this.channelservice.setChannelId(id)
     this.channelservice.setChannelMember(members);
+    this.channelservice.setChanneldate(date)
   }
 
   addMembers() {

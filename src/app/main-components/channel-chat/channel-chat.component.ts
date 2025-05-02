@@ -25,6 +25,7 @@ export class ChannelChatComponent implements OnInit {
   currentChannelDescription: string = '';
   currentChannelCreator: string = '';
   currentChannelID: string = '';
+  currentChannelDate:string='';
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   readonly dialog = inject(MatDialog);
@@ -43,6 +44,7 @@ export class ChannelChatComponent implements OnInit {
     this.loadChannelId()
     this.loadCurrentCrator()
     this.loadMembers()
+    this.loadDate()
   }
 
   loadChannelId() {
@@ -77,6 +79,12 @@ export class ChannelChatComponent implements OnInit {
       console.log('this.members', this.members);
 
     });
+  }
+
+  loadDate(){
+    this.channelService.currentChannelDate$.subscribe(date=>{
+      this.currentChannelDate=date;
+    })
   }
 
 

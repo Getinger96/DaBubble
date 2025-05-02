@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference,deleteDoc } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference,deleteDoc, serverTimestamp } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timestamp } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { RegisterService } from './register.service';
 import { MainComponentService } from './main-component.service';
@@ -31,7 +31,9 @@ export class ChannelService {
     private channelIdSubject = new BehaviorSubject<string>('');
     private channelMemberSubject = new BehaviorSubject<Member[]>([]);
     channelMember$ = this.channelMemberSubject.asObservable();
-    currentChannelId$ = this.channelIdSubject.asObservable()
+    currentChannelId$ = this.channelIdSubject.asObservable();
+    private channelDateSubject=new BehaviorSubject<string>('');
+    currentChannelDate$=this.channelDateSubject.asObservable();
 
 
     constructor(private route: ActivatedRoute, private registerservice: RegisterService, private mainservice: MainComponentService) {
@@ -47,7 +49,7 @@ export class ChannelService {
         return onSnapshot(this.getChannelRef(), (channel) => {
             let channelssArray: Channel[] = [];
             channel.forEach(element => {
-                channelssArray.push(this.setChannelObject(element.data(), element.id))
+                channelssArray.push(this.setChannelObject(element.data(), element.id,))
                 console.log('Daten in Firebase', element.data())
             })
             this.allChannels = channelssArray
@@ -80,13 +82,18 @@ export class ChannelService {
         this.channelIdSubject.next(id)
     }
 
+    setChanneldate(date: string): void {
+        this.channelDateSubject.next(date)
+    }
+
     ngonDestroy() {
 
         this.unsubChannel();
     }
 
     async addChannel(item: Channel) {
-        return addDoc(this.getChannelRef(), this.channelJson(item, this.actualUser[0].name)).then(async docref => {
+        let timestamp = new Date().toISOString();
+        return addDoc(this.getChannelRef(), this.channelJson(item, this.actualUser[0].name,timestamp)).then(async docref => {
             this.id = docref.id
 
             await updateDoc(docref, { id: docref.id });
@@ -117,7 +124,8 @@ export class ChannelService {
             name: obj.name,
             members: obj.members,
             creator: obj.creator,
-            description: obj.description
+            description: obj.description,
+            date:obj.date
         };
     }
 
@@ -125,13 +133,14 @@ export class ChannelService {
         return collection(this.firestore, 'Channels');
     }
 
-    channelJson(item: Channel, creator: string) {
+    channelJson(item: Channel, creator: string,date:string) {
         return {
             id: item.id,
             name: item.name,
             members: [] as Member[],
             creator: creator,
-            description: item.description
+            description: item.description,
+            date:date
 
         }
     }
