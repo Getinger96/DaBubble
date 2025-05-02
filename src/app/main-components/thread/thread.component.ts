@@ -23,7 +23,7 @@ export class ThreadComponent {
   threadAnswers : Message[] = [];
   newThreadText: string = '';
 
-  constructor(private messageService: MessageService, private mainService: MainComponentService){
+  constructor(public messageService: MessageService, private mainService: MainComponentService){
   }
 
   ngOnInit(): void{

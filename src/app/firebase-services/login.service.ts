@@ -20,7 +20,7 @@ overlayvisible: boolean = false
 allUsers: User[] = [];
 
 
- constructor(private route: ActivatedRoute, private mainservice:MainComponentService, private router: Router) {
+ constructor(private route: ActivatedRoute, private mainservice: MainComponentService, private router: Router) {
       
   }
 
