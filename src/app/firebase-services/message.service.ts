@@ -129,7 +129,7 @@ export class MessageService {
       sendAtTime: item.sendAtTime,
       timestamp: item.timestamp || Date.now(),
       isOwn: item.isOwn,
-      parentId: item.threadTo || null,
+      threadTo: item.threadTo || null,
       isThread: item.isThread || false,
       isInThread: item.isInThread || false,
       threadCount: item.threadCount || 0,
@@ -142,6 +142,7 @@ export class MessageService {
     this.showThreadSubject.next(true);
     this.getThreadAnswers(message.messageId)
     this.updateThreadAnswers(message.messageId);
+
   }
 
 
@@ -151,7 +152,9 @@ export class MessageService {
   }
 
   getThreadAnswers(id: string): Message[] {
-    return this.allMessages.filter((msg) => msg.threadTo === id);
+    const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
+    console.log('Thread Answers for ID:', id, threadAnswers);
+    return threadAnswers;
   }
 
 
@@ -159,7 +162,7 @@ export class MessageService {
     const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
     replies.sort((a, b) => {
       if (a.timestamp && b.timestamp) {
-        return a.timestamp - b.timestamp;
+        return b.timestamp - a.timestamp;
       }
       return 0;
     });
@@ -226,6 +229,8 @@ export class MessageService {
     }
 
     await this.updateMessageThreadCount(threadToId);
+
+    this.allMessagesSubject.next(this.allMessages);
   }
 
   async updateMessageThreadCount(messageId: string) {

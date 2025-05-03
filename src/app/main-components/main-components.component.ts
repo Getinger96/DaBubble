@@ -35,10 +35,11 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   private routerSubscription!: Subscription;
   overlayUserCardActive:boolean = false;
   showChanelSection: boolean = false
-  constructor(private loadingService: LoadingService, private registerservice: RegisterService, private mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
+  showThreadWindow: boolean = false;
+  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, private mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
   }
   selectedThreadMessage: Message | null = null;
-  showThreadWindow = false;
+  
 
 
   ngOnInit(): void { // lädt alle user !!!
@@ -50,22 +51,27 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
         console.log('laden:', this.loadingStatus);
       }
     });
+    //lädt der aktuell clicked Message
+    this.messageService.selectedThreadMessage$.subscribe((message) => {
+      this.selectedThreadMessage = message;
+    });
       this.initchanelSubscription();
       this.initRouterSubscription();
   }
 
 
   openThreadForMessage(message: Message):void {
-    this.selectedThreadMessage = message;
     this.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
-    console.log(this.selectedThreadMessage, this.showThreadWindow);
+    this.selectedThreadMessage = message;
+    this.messageService.openThread(message);
+
   }
 
   closeThreadView(): void {
     this.showThreadWindow = false;
-    this.selectedThreadMessage = null;
     MainComponentsComponent.toggleThreads();
+    this.selectedThreadMessage = null;
   }
 
   static toggleThreads():void {

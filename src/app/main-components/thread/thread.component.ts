@@ -6,51 +6,83 @@ import { MainComponentsComponent } from '../main-components.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
   imports: [MessageComponent, CommonModule, FormsModule],
   templateUrl: './thread.component.html',
-  styleUrl: './thread.component.scss'
+  styleUrl: './thread.component.scss',
 })
 export class ThreadComponent {
-
-  @Input() message: Message| null = null;
+  @Input() selectedMessage: Message | null = null;
   @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
+  private allThreadsSubscription!: Subscription;
 
-  threadAnswers : Message[] = [];
+  threadAnswers: Message[] = [];
+  private selectedMessageSubscription!: Subscription;
+  private threadRepliesSubscription!: Subscription;
   newThreadText: string = '';
 
-  constructor(public messageService: MessageService, private mainService: MainComponentService){
+  constructor(
+    public messageService: MessageService,
+    private mainService: MainComponentService
+  ) {}
+
+  ngOnInit(): void {
+    console.log('ThreadComponent initialized');
+
+    this.selectedMessageSubscription =
+      this.messageService.selectedThreadMessage$.subscribe((message) => {
+        console.log('Selected message updated:', message);
+        this.selectedMessage = message;
+
+        if (message?.messageId) {
+          this.loadThreadAnswers();
+        }
+      });
+
+    this.threadRepliesSubscription =
+      this.messageService.threadReplies$.subscribe((replies) => {
+        console.log('Thread replies updated:', replies);
+        this.threadAnswers = replies;
+      });
   }
 
-  ngOnInit(): void{
-    if (this. message?.messageId){
-      this.openThread.emit();
-      this.loadThreadAnswers();
-    }
+  loadThreadAnswers(): void {
+    this.allThreadsSubscription = this.messageService.allMessages$.subscribe(
+      (messages) => {
+        this.threadAnswers = messages.filter((message) => message.isThread);
+        if (this.selectedMessage?.messageId) {
+          this.threadAnswers = this.messageService.getThreadAnswers(
+            this.selectedMessage.messageId
+          );
+        }
+      }
+    );
   }
 
-
-  loadThreadAnswers(): void{
-    if(this.message?.messageId){
-      this.threadAnswers = this.messageService.getThreadAnswers(this.message.messageId);
-    }
-  }
-
-  closeThreads():void{
+  closeThreads(): void {
     this.mainComponents.toggleThreads();
     this.closeThread.emit();
   }
 
   async sendReply(): Promise<void> {
-    if (!this.newThreadText.trim() || !this.message?.messageId) return;
-    
-    await this.messageService.addThreadAnswer(this.newThreadText, this.message.messageId);
+    if (!this.newThreadText.trim() || !this.selectedMessage?.messageId) return;
+    await this.messageService.addThreadAnswer(
+      this.newThreadText,
+      this.selectedMessage.messageId
+    );
     this.newThreadText = '';
     this.loadThreadAnswers();
+  }
+
+  ngOnDestroy(): void {
+    if (this.allThreadsSubscription) {
+      this.allThreadsSubscription.unsubscribe();
+    }
   }
 }

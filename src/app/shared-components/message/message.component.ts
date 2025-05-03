@@ -4,6 +4,7 @@ import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-message',
@@ -25,8 +26,11 @@ export class MessageComponent {
   @Input() isInThread: boolean | undefined = false;
   @Input() isAnswered: boolean | undefined = false;
   @Input() threadCount: number = 0;
+  @Input() threadTo!: string;
 
   mainComponents = MainComponentsComponent;
+  private allThreadsSubscription!: Subscription; 
+  threadAnswers : Message[] = [];
 
   constructor(private messageService: MessageService) {}
 
@@ -43,13 +47,25 @@ export class MessageComponent {
       this.isInThread = this.messageData.isInThread ?? this.isInThread;
       this.isAnswered = this.messageData.isAnswered ?? this.isAnswered;
       this.threadCount = this.messageData.threadCount || this.threadCount;
+      this.threadTo = this.messageData.threadTo ?? this.threadTo;
     }
   }
 
   onReplyClick(): void {
     if (this.messageData) {
       this.messageService.openThread(this.messageData);
+      this.loadThreadAnswers();
     }
+  }
+
+  loadThreadAnswers(): void {
+      this.allThreadsSubscription = this.messageService.allMessages$.subscribe((messages) => {
+      if (this.messageData) {
+        this.threadAnswers = messages.filter(message => message.isThread);
+        this.threadAnswers = this.messageService.getThreadAnswers(this.messageData.messageId);
+        this.messageService.updateThreadAnswers(this.messageData.messageId);
+      }
+    });
   }
 
   showEditMessage() {
@@ -73,5 +89,11 @@ export class MessageComponent {
 
   addNewReaction(reaction: string) {
     console.log(reaction);
+  }
+
+  ngOnDestroy(): void {
+    if (this.allThreadsSubscription) {
+      this.allThreadsSubscription.unsubscribe();
+    }
   }
 }

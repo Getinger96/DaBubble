@@ -5,16 +5,18 @@
         </div>
         <img class="close" src="assets/img/close.png" alt="close" (click)="closeThreads()">
     </div>
-    <div class="thread-feed" *ngIf="message">
+    <div class="thread-feed" *ngIf="selectedMessage">
         <div class="thread-message">
          <app-message
-            [avatarSrc]="message.avatar"
-            [name]="message.name"
-            [time]="message.sendAtTime"
-            [messageText]="message.messageText"
-            [isInThread]="true">
+            [avatarSrc]="selectedMessage.avatar"
+            [name]="selectedMessage.name"
+            [time]="selectedMessage.sendAtTime"
+            [messageText]="selectedMessage.messageText"
+            [isInThread]="true"
+            [isOwn]="selectedMessage.isOwn">
+            
          </app-message>
-            <div class="thread-number-of-answers"><span class="fontNunito">{{ threadAnswers.length }} Antworten</span><div class="line"></div></div>
+            <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span><div class="line"></div></div>
         </div>
         <div class="thread-answers">
              <app-message *ngFor="let answer of threadAnswers"
@@ -25,15 +27,6 @@
             [isThread]="true"
             [isOwn]="answer.isOwn"
         ></app-message>
-        <!--<app-message
-            [avatarSrc]="2"
-            [name]="'Frederik Beck'"
-            [time]="'15:06'"
-            [messageText]="'Ja das ist es.'"
-            [isThread]="true"
-            [isOwn]="true"
-        ></app-message>
-        -->
         </div>
     </div>
     <div class="thread-input-wrapper">

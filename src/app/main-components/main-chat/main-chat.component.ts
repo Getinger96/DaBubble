@@ -19,6 +19,7 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 
 export class MainChatComponent {
   allMessages: Message[] = [];
+  allThreads: Message[] = [];
   actualUser: User[] = [];
   private allMessageSubscription!: Subscription; 
   private actualUserSubscription!: Subscription;
@@ -62,7 +63,8 @@ export class MainChatComponent {
 
   loadMessages() {
     this.allMessageSubscription = this.messageService.allMessages$.subscribe((messages) => {
-      this.allMessages = messages;
+      this.allMessages = messages.filter(message => !message.isThread);
+      this.allThreads = messages.filter(message => message.isThread);
     });
   }
 

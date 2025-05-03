@@ -22,7 +22,7 @@
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
                 <div *ngIf="isAnswered" class="message-answered">
-                    <span class="message-answers">{{ reaction }} Antworten</span>
+                    <span class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
                     <span class="message-last-answer">Letzte Antwort 14:56</span>
                 </div>
                 <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">

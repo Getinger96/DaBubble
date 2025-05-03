@@ -8,10 +8,10 @@
         <app-workspace-menu [userArray]="allUsers"></app-workspace-menu>
         <app-channel-chat [allUsersChannel]="allUsers" *ngIf="showChanelSection"></app-channel-chat>
         <app-main-chat *ngIf="!showChanelSection"></app-main-chat>
-        <app-thread *ngIf="!showChanelSection" 
-        [message]="selectedThreadMessage"
+        <app-thread *ngIf="selectedThreadMessage" 
+        [selectedMessage]="selectedThreadMessage"
         (closeThread)="closeThreadView()"
-        (openThread)="selectedThreadMessage && openThreadForMessage(selectedThreadMessage)"></app-thread>
+        ></app-thread>
     </div>
     <app-toggle-webspace-menu></app-toggle-webspace-menu>
 </section>
