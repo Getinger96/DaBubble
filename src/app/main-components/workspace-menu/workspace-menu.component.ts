@@ -97,11 +97,13 @@ export class WorkspaceMenuComponent {
   openOverlay() {
     this.overlayvisible = true
 
+
   }
 
-  closeOverlay() {
+  closeOverlay(ngForm:NgForm) {
     this.overlayvisible = false
     this.overlay2Visible = false
+    ngForm.reset()
 
   }
 
@@ -122,7 +124,7 @@ export class WorkspaceMenuComponent {
       console.log('🎉 Channel erstellt mit ID:', this.createdChannelId);
 
       // Jetzt Overlay wechseln
-      this.closeOverlay();
+      this.closeOverlay(ngForm);
       ngForm.reset()
       this.overlay2Visible = true;
     }).catch((error) => {
@@ -146,7 +148,7 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChanneldate(date)
   }
 
-  addMembers() {
+  addMembers(ngForm:NgForm) {
     if (this.selectedOption === 'all') {
       this.addAllMembersToChannel(this.createdChannelId!);
     } else if (this.selectedOption === 'some') {
@@ -159,7 +161,7 @@ export class WorkspaceMenuComponent {
       this.addSpecificMembersToChannel(this.createdChannelId!, members);
     }
 
-    this.closeOverlay();
+    this.closeOverlay(ngForm);
 
   }
 

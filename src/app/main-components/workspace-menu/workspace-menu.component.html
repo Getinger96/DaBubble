@@ -1,11 +1,11 @@
-<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()">
+<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay(channelForm)">
 
     <form (ngSubmit)="addChannel($event, channelForm)" #channelForm="ngForm">
         <div [ngClass]="{'opacity':overlayvisible}" class="profile-dialog" (click)="onDialogClick($event)">
 
             <div class="dialog-Headline">
                 <span>Channel erstellen</span>
-                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay(channelForm)">
 
             </div>
             <div class="dialog-info">
@@ -44,14 +44,14 @@
 
 </div>
 
-<div *ngIf="overlay2Visible" class="overlay-bg" (click)="closeOverlay()">
+<div *ngIf="overlay2Visible" class="overlay-bg" (click)="closeOverlay(channelForm)">
 
-    <form (ngSubmit)="addMembers()" #channelForm="ngForm">
+    <form (ngSubmit)="addMembers(channelForm)" #channelForm="ngForm">
         <div [ngClass]="{'opacity':overlay2Visible}" class="profile-dialog" (click)="onDialogClick($event)">
 
             <div class="dialog-Headline">
                 <span> Leute hinzufügen</span>
-                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay()">
+                <img src="../../../assets/img/close.png" alt="" (click)="closeOverlay(channelForm)">
             </div>
             <div class="allMembers-checkbox">
                 <mat-radio-group [(ngModel)]="selectedOption" name="radioroup">
