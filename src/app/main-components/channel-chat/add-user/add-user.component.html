@@ -15,14 +15,14 @@
             <section class="actualUserList">
                 <div class="users">
                     <main class="userContainer">
-                    <div class="profile" *ngFor="let member of this.memberList">
+                    <div class="profile" *ngFor="let member of this.memberList let i = index">
                         <div class="avatarImages">
                         <img  class="avatar" src="assets/img/avatar_{{member.avatar}}.png" alt="avatar">
                         <img class="status" src="assets/img/{{member.status}}.svg" alt="status">
                         </div>
                         <div class="username">
                     <p class="name"> {{ member.name }}</p>
-                    <img src="../../../../assets/img/close.png" alt="">
+                    <img src="../../../../assets/img/close.png"(click)="deleteUser(i, member)" alt="">
                     </div>
                     </div>
                     <div class="further-user">

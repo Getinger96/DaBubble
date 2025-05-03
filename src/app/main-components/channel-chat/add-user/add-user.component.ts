@@ -68,10 +68,19 @@ export class AddUserComponent implements OnInit {
     console.log('newArray, ', this.newUserList);
   }
 
+  deleteUser(index: number, member:any) {
+    this.memberList.splice(index, 1);
+    this.newUserList.push(member)
+
+  }
+
+
 
   async addNewUserInFirebase() {
    await this.channelService.updateNewMembersInFirebase(this.memberList, this.data.currentChannelID);
-   this.dialogRef.close();
+   this.filterNewUser();
+   this.filterMember();
+   this.dialogRef.close(true); 
   }
 
 

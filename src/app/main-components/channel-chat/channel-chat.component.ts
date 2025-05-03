@@ -11,7 +11,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { Channel } from '../../interfaces/channel.interface';
 import { User } from '../../interfaces/user.interface';
 import { Member } from '../../interfaces/member.interface';
-
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-channel-chat',
@@ -35,7 +35,7 @@ export class ChannelChatComponent implements OnInit {
 
 
 
-  constructor(private channelService: ChannelService,) { }
+  constructor(private channelService: ChannelService,  private ngZone: NgZone) { }
 
 
   ngOnInit(): void {
@@ -112,16 +112,24 @@ export class ChannelChatComponent implements OnInit {
   }
 
   openDialogMembers() {
-    this.dialog.open(AddUserComponent, {
+    const dialogRef = this.dialog.open(AddUserComponent, {
       data: {
         allUsersChannel: this.allUsersChannel,
         members: this.members,
-        currentChannelID: this.currentChannelID, 
+        currentChannelID: this.currentChannelID,
         currentChannelName: this.currentChannelName
       },
       panelClass: 'another-dialog-position'
     });
+  
+    dialogRef.afterClosed().subscribe((result: any) => {
+      // Stelle sicher, dass die Aktualisierung innerhalb der Angular-Zone läuft
+      this.ngZone.run(() => {
+        this.loadMembers();
+      });
+    });
   }
+  
 
   closeOverlay() {
     this.overlayeditChannel = false;

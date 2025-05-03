@@ -153,35 +153,35 @@ export class ChannelService {
         console.log('✅ Mitglieder wurden zum Channel hinzugefügt');
     }
 
-
     async updateNewMembersInFirebase(userList: any[], currentChannelID: string) {
         try {
-          if (!userList || userList.length === 0) {
-            return; 
-          }
       
-          for (let index = 0; index < userList.length; index++) {
-            const user = userList[index];
-            const channel = this.allChannels.find(c => c.id === currentChannelID);
+          const channel = this.allChannels.find(c => c.id === currentChannelID);
+          if (channel) {
+            channel.members = channel.members.filter(member =>
+              userList.some(user => user.id === member.id)
+            );
+            const channelDocRef = doc(this.firestore, 'Channels', currentChannelID);
+            await updateDoc(channelDocRef, { members: channel.members });
       
-            if (channel) {
+            for (let index = 0; index < userList.length; index++) {
+              const user = userList[index];
               const newUser = this.filterUser(user);
-              const alreadyMember = channel.members.some(member => member.id === newUser.id);
+              const alreadyMember = channel.members.some(m => m.id === newUser.id);
       
               if (!alreadyMember) {
                 channel.members.push(newUser);
-                const channelDocRef = doc(this.firestore, 'Channels', currentChannelID);
-      
-                await updateDoc(channelDocRef, {
-                  members: channel.members
-                });
+                await updateDoc(channelDocRef, { members: channel.members });
               }
             }
+            
           }
+          this.channelMemberSubject.next(userList)
         } catch (error) {
           console.error('Error updating members in Firestore:', error);
         }
       }
+      
       
     
       
