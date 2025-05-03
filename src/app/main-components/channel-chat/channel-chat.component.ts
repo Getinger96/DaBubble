@@ -146,6 +146,9 @@ export class ChannelChatComponent implements OnInit {
     this.channelService.deleteChannel(this.currentChannelID)
     this.closeOverlay()
   }
+
+
+  
 }
 
 

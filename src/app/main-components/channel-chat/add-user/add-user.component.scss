@@ -239,4 +239,26 @@ body::-webkit-scrollbar {
       border-radius: 20px;
     }
   }
+
+
+  .userlengthisFull {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    margin-left: 35px;
+    margin-right: 35px;
+    background-color: #ebebeb; 
+    border-radius: 30px;
+
+    >span {
+      font-size: 18px;
+    }
+  }
+
+  .smallList {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    height: 90px !important;
+  }
   

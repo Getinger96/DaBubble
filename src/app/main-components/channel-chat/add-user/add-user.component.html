@@ -15,7 +15,7 @@
             <section class="actualUserList">
                 <div class="users">
                     <main class="userContainer">
-                    <div class="profile" *ngFor="let member of data.members">
+                    <div class="profile" *ngFor="let member of this.memberList">
                         <div class="avatarImages">
                         <img  class="avatar" src="assets/img/avatar_{{member.avatar}}.png" alt="avatar">
                         <img class="status" src="assets/img/{{member.status}}.svg" alt="status">
@@ -26,24 +26,29 @@
                     </div>
                     </div>
                     <div class="further-user">
-                    <input type="text" placeholder="Name eingeben">
+       
+                             <input [(ngModel)]="searchUser"  type="text" placeholder="Eingabe erforderlich" #name="ngModel">
                     </div>
                 </main>
                 </div>
-                <div class="newUser">
-                    <div  class="profileNewUser" (click)="addNewUser(user)" *ngFor="let user of data.allUsersChannel">
+                <div class="newUser" [ngClass]="{'smallList': this.newUserList.length ===0}" *ngIf="searchUser.trim().length > 0">
+
+                    <div *ngIf="this.newUserList.length ===0" class="userlengthisFull">
+                        <span> du hast alle Benutzer ausgewählt</span>
+                    </div>
+        
+                    <div  class="profileNewUser" (click)="addNewUser(user)" *ngFor="let user of this.newUserList">
                         <div class="avatarImagesNewUser">
                             <img  class="avatarNewUser" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
                             <img class="statusNewUser" src="assets/img/{{user.status}}.svg" alt="status">
                             </div>
                         <p class="name"> {{ user.name }}</p>
-
+                            
                     </div>
-                
                 
                 </div>
                     <div class="add_members">
-                   <button class="addUser" type="button">Hinzufügen</button>
+                   <button (click)="addNewUserInFirebase()" class="addUser" type="button">Hinzufügen</button>
     
                     </div>  
                 </section>

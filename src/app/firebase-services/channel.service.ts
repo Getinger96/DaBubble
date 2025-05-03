@@ -154,24 +154,37 @@ export class ChannelService {
     }
 
 
-    
-    async updateNewMembersInFirebase(user:any, currentChannelID:string) {
-        const channel = this.allChannels.find(allChannels => allChannels.id === currentChannelID);
-        console.log('channel', channel, user);
-
-        if (channel) {
-        const newUser = this.filterUser(user);
-        const alreadyMember  = channel?.members.some(members => members.id === newUser.id )
-        if (!alreadyMember) {
-        channel?.members.push(newUser)
-        const channelDocRef = doc(this.firestore, 'Channels', currentChannelID);
-        await updateDoc(channelDocRef, {
-            members: channel.members
-          });
+    async updateNewMembersInFirebase(userList: any[], currentChannelID: string) {
+        try {
+          if (!userList || userList.length === 0) {
+            return; 
+          }
+      
+          for (let index = 0; index < userList.length; index++) {
+            const user = userList[index];
+            const channel = this.allChannels.find(c => c.id === currentChannelID);
+      
+            if (channel) {
+              const newUser = this.filterUser(user);
+              const alreadyMember = channel.members.some(member => member.id === newUser.id);
+      
+              if (!alreadyMember) {
+                channel.members.push(newUser);
+                const channelDocRef = doc(this.firestore, 'Channels', currentChannelID);
+      
+                await updateDoc(channelDocRef, {
+                  members: channel.members
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error updating members in Firestore:', error);
         }
-
-    }
-    }
+      }
+      
+    
+      
 
     filterUser(user: Member) {
         return {
