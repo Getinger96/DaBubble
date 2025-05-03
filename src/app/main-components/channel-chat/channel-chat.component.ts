@@ -105,9 +105,15 @@ export class ChannelChatComponent implements OnInit {
   }
 
   openDialog() {
-    this.dialog.open(ShowUserComponent, {
-      data: { allUsersChannel: this.allUsersChannel },
+    const dialogRef = this.dialog.open(ShowUserComponent, {
+      data: { allUsersChannel: this.allUsersChannel,
+        members: this.members,
+       },
       panelClass: 'another-dialog-position'
+    });
+
+    dialogRef.componentInstance.addMemberClicked.subscribe(() => {
+      this.openDialogMembers();
     });
   }
 
