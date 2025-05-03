@@ -82,7 +82,7 @@
                 <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
             </div>
             <div class="channel-Info-container">
-                <span class="creator-header">{{currentChannelCreator}} <span>{{currentChannelDate | date:'dd.MM.yyyy HH:mm'}}</span></span>
+                <span class="creator-header">{{currentChannelCreator}} <span class="date-span">{{currentChannelDate | date:'dd.MM.yyyy  HH:mm'}}</span></span>
                 <span class="welcome-span">Willkomen in eurem privaten Channel!</span>
                 <div class="member-container"><span class="member-span" *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
                 <span>{{currentChannelDescription}}</span>
