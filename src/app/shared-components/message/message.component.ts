@@ -48,6 +48,7 @@ export class MessageComponent {
       this.isAnswered = this.messageData.isAnswered ?? this.isAnswered;
       this.threadCount = this.messageData.threadCount || this.threadCount;
       this.threadTo = this.messageData.threadTo ?? this.threadTo;
+      console.log(this.isOwn);
     }
   }
 
@@ -88,7 +89,7 @@ export class MessageComponent {
 
 
   addNewReaction(reaction: string) {
-    console.log(reaction);
+    console.log(reaction, this.messageService.messageId);
   }
 
   ngOnDestroy(): void {

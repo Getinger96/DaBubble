@@ -21,6 +21,7 @@ export class MessageService {
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   id?: string;
+  messageId?:string;
 
   private allMessagesSubject = new BehaviorSubject<Message[]>([]);
   allMessages$ = this.allMessagesSubject.asObservable();
@@ -74,6 +75,7 @@ export class MessageService {
         const isOwn = messageData['id'] === actualUserID;
         const message = this.setMessageObject(messageData, element.id);
         message.isOwn = isOwn;
+        this.messageId = messageData['messageId']
         
         allMessages.push(message);
         console.log(allMessages)
@@ -109,8 +111,6 @@ export class MessageService {
       console.log("Message gespeichert mit ID:", docRef.id); // Automatisch generierte ID
 
       await updateDoc(docRef, { messageId });
-   
-     
       return messageId;
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Messages:", error);
