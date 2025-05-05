@@ -22,6 +22,7 @@ export class MessageService {
   allMessages: Message[] = [];
   id?: string;
   messageId?:string;
+  lastAnswer: Message | null = null;
 
   private allMessagesSubject = new BehaviorSubject<Message[]>([]);
   allMessages$ = this.allMessagesSubject.asObservable();
@@ -56,6 +57,7 @@ export class MessageService {
       messageText: obj.messageText,
       sendAt: obj.sendAt,
       sendAtTime: obj.sendAtTime,
+      timestamp: obj.timestamp || 0,
       reaction: obj.reaction,
       isOwn: obj.isOwn,
       isAnswered: obj.isAnswered,
@@ -76,26 +78,34 @@ export class MessageService {
         const message = this.setMessageObject(messageData, element.id);
         message.isOwn = isOwn;
         this.messageId = messageData['messageId']
-        
         allMessages.push(message);
         console.log(allMessages)
         console.log(message.messageId)
       });
-      
-      allMessages.sort((a, b) => {
-        if (a.timestamp && b.timestamp) {
-          return b.timestamp - a.timestamp;
-        }
-        return 0;
-      });
-      
       this.allMessages = allMessages;
+      
       this.allMessagesSubject.next(this.allMessages);
 
       const selectedMessage = this.selectedThreadMessageSubject.value;
       if (selectedMessage) {
         this.updateThreadAnswers(selectedMessage.messageId);
       }
+    });
+  }
+
+  getLastAnswer(message: Message){
+    const allAnswers = this.allMessages.filter((msg) => msg.threadTo === message.messageId);
+    const lastAnswer = allAnswers[allAnswers.length-1];
+    console.log(lastAnswer)
+    return lastAnswer;
+    
+  }
+
+  sortAllMessages(messageArray : Message[]):void {
+    messageArray.sort((a, b) => {
+      const timestampA = a.timestamp || 0;
+      const timestampB = b.timestamp || 0;
+      return timestampA - timestampB;
     });
   }
 
@@ -153,19 +163,17 @@ export class MessageService {
 
   getThreadAnswers(id: string): Message[] {
     const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
-    console.log('Thread Answers for ID:', id, threadAnswers);
+    this.sortAllMessages(threadAnswers);
+    const lastAnswer = threadAnswers[threadAnswers.length-1];
+    this.lastAnswer = lastAnswer;
     return threadAnswers;
   }
 
 
+
   updateThreadAnswers(threadTo: string) {
     const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
-    replies.sort((a, b) => {
-      if (a.timestamp && b.timestamp) {
-        return b.timestamp - a.timestamp;
-      }
-      return 0;
-    });
+    this.sortAllMessages(replies);
     this.threadAnswersSubject.next(replies);
   }
 
@@ -208,7 +216,7 @@ export class MessageService {
       name: user.name,
       avatar: user.avatar,
       messageText: messageText,
-      sendAt: `${dayString}, ${dayNumber} ${month}`,
+      sendAt: `${dayString}, ${dayNumber}. ${month}`,
       sendAtTime: `${hours}:${minutes}`,
       timestamp: Date.now(),
       isOwn: true,
