@@ -1,4 +1,4 @@
-import { Component, Input, model } from '@angular/core';
+import { Component, Input, model , Pipe, PipeTransform } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { DirectMessageUserComponent } from './direct-message-user/direct-message-user.component';
 import { User } from '../../interfaces/user.interface';
@@ -21,6 +21,9 @@ import { Member } from '../../interfaces/member.interface';
   templateUrl: './workspace-menu.component.html',
   styleUrl: './workspace-menu.component.scss'
 })
+
+
+
 export class WorkspaceMenuComponent {
   searchTerm: string = '';
   openChannels: boolean = true;
@@ -62,13 +65,17 @@ export class WorkspaceMenuComponent {
 
 
   }
-
+ sortUsers(){
+  this.filteredUsers.sort((a,b)=>a.name.localeCompare(b.name,'de',{sensitivity:'base'}))
+ }
 
   filterUsers() {
     const term = this.searchTerm.toLowerCase();
     this.filteredUsers = this.allUsers.filter(user =>
       user.name.toLowerCase().includes(term)
     );
+
+    this.sortUsers()
   }
 
   selectUser(user: any) {
