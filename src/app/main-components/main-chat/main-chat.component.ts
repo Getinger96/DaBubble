@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +23,7 @@ export class MainChatComponent {
   actualUser: User[] = [];
   private allMessageSubscription!: Subscription; 
   private actualUserSubscription!: Subscription;
+  @ViewChild('chatFeed') private chatFeed!: ElementRef;
   
   months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
@@ -39,7 +40,7 @@ export class MainChatComponent {
     name: '',
     avatar: 0,
     messageText: '',
-    sendAt: `${this.dayString}, ${this.dayNumber} ${this.month}`,
+    sendAt: `${this.dayString}, ${this.dayNumber}. ${this.month}`,
     sendAtTime: `${this.hours}:${this.minutes}`,
     timestamp: Date.now(),
     reaction: 0,
@@ -53,17 +54,29 @@ export class MainChatComponent {
   static actualUser: any;
 
   constructor(private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService) {
-
   }
 
   ngOnInit(): void {
+    
     this.loadActualUser();
     this.loadMessages();
+    setTimeout(() => this.scrollToBottom(), 0);
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatFeed.nativeElement.scrollTop = this.chatFeed.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 
   loadMessages() {
     this.allMessageSubscription = this.messageService.allMessages$.subscribe((messages) => {
       this.allMessages = messages.filter(message => !message.isThread);
+      this.messageService.sortAllMessages(this.allMessages);
       this.allThreads = messages.filter(message => message.isThread);
     });
   }

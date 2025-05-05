@@ -27,10 +27,14 @@ export class MessageComponent {
   @Input() isAnswered: boolean | undefined = false;
   @Input() threadCount: number = 0;
   @Input() threadTo!: string;
+  @Input() dateExists: boolean | undefined = false;
+  @Input() lastAnswerDate!: string;
+  
 
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription; 
   threadAnswers : Message[] = [];
+
 
   constructor(private messageService: MessageService) {}
 
@@ -48,9 +52,15 @@ export class MessageComponent {
       this.isAnswered = this.messageData.isAnswered ?? this.isAnswered;
       this.threadCount = this.messageData.threadCount || this.threadCount;
       this.threadTo = this.messageData.threadTo ?? this.threadTo;
-      console.log(this.isOwn);
+      const lastAnswer = this.messageService.getLastAnswer(this.messageData);
+      if (lastAnswer && lastAnswer.sendAtTime && lastAnswer.sendAt) {
+        this.lastAnswerDate = lastAnswer.sendAtTime + ' ' + lastAnswer.sendAt;
+      } else {
+        this.lastAnswerDate = '';
+      }
     }
   }
+
 
   onReplyClick(): void {
     if (this.messageData) {
@@ -65,6 +75,7 @@ export class MessageComponent {
         this.threadAnswers = messages.filter(message => message.isThread);
         this.threadAnswers = this.messageService.getThreadAnswers(this.messageData.messageId);
         this.messageService.updateThreadAnswers(this.messageData.messageId);
+        this.lastAnswerDate = (this.messageService?.lastAnswer?.sendAtTime ?? '') + (this.messageService?.lastAnswer?.sendAt ?? '');
       }
     });
   }

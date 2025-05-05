@@ -18,8 +18,10 @@
          </app-message>
             <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span><div class="line"></div></div>
         </div>
-        <div class="thread-answers">
-             <app-message *ngFor="let answer of threadAnswers"
+        <div class="thread-answers" #threadFeed>
+             <app-message *ngFor="let answer of threadAnswers, index as i"
+            [date]="answer.sendAt"
+            [dateExists]="i > 0 && threadAnswers[i - 1].sendAt === answer.sendAt"
             [avatarSrc]="answer.avatar"
             [name]="answer.name"
             [time]="answer.sendAtTime"

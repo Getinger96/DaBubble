@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Message } from '../../interfaces/message.interface';
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ export class ThreadComponent {
   @Output() closeThread = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
+  @ViewChild('threadFeed') private threadFeed!: ElementRef;
 
   threadAnswers: Message[] = [];
   private selectedMessageSubscription!: Subscription;
@@ -29,12 +30,11 @@ export class ThreadComponent {
 
   constructor(
     public messageService: MessageService,
-    private mainService: MainComponentService
+    private mainService: MainComponentService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    console.log('ThreadComponent initialized');
-
     this.selectedMessageSubscription =
       this.messageService.selectedThreadMessage$.subscribe((message) => {
         console.log('Selected message updated:', message);
@@ -50,6 +50,18 @@ export class ThreadComponent {
         console.log('Thread replies updated:', replies);
         this.threadAnswers = replies;
       });
+
+    setTimeout(() => this.scrollToBottom(), 0);
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.threadFeed.nativeElement.scrollTop = this.threadFeed.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 
   loadThreadAnswers(): void {
@@ -60,9 +72,11 @@ export class ThreadComponent {
           this.threadAnswers = this.messageService.getThreadAnswers(
             this.selectedMessage.messageId
           );
-        }
+        };
+
       }
     );
+    
   }
 
   closeThreads(): void {
@@ -78,6 +92,7 @@ export class ThreadComponent {
     );
     this.newThreadText = '';
     this.loadThreadAnswers();
+    this.messageService.sortAllMessages(this.threadAnswers);
   }
 
   ngOnDestroy(): void {
