@@ -60,6 +60,60 @@ export class ChannelService {
     }
 
 
+
+   async updateUserNameInChannels(nameInput:string, nameBefore:string) {
+        try {
+
+            for (let i = 0; i < this.allChannels.length; i++) {
+                let channel = this.allChannels[i];
+
+
+                if (channel.creator === nameBefore) {
+                    const channelDocRef = doc(this.firestore, 'Channels', channel.id); 
+                    channel.creator = nameInput;
+                    await updateDoc(channelDocRef, {
+                        creator: nameInput,
+                      });
+                     
+                } else {
+
+                }
+                this.updateMemberInChannels(channel, nameInput, nameBefore)
+
+                
+            }
+            
+        } catch (error) {
+            
+        }
+    }
+
+
+    async updateMemberInChannels(channel: any, nameInput: string, nameBefore: string) {
+        let updated = false;
+      
+        for (let i = 0; i < channel.members.length; i++) {
+          const member = channel.members[i];
+      
+          // Name prüfen
+          if (member.name === nameBefore) {
+            channel.members[i].name = nameInput;
+            updated = true;
+          }
+        }
+      
+        if (updated) {
+          const channelDocRef = doc(this.firestore, 'Channels', channel.id);
+          await updateDoc(channelDocRef, {
+            members: channel.members,
+          });
+        }
+      await  this.subChannelList(); 
+      }
+
+
+      
+
     setChannelName(name: string): void {
         this.channelNameSubject.next(name);
     }
