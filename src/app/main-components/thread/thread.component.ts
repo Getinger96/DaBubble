@@ -56,6 +56,8 @@ export class ThreadComponent {
 
   ngAfterViewChecked() {
     this.scrollToBottom();
+    this.cdr.detectChanges();
+    
   }
 
   scrollToBottom(): void {

@@ -37,11 +37,12 @@ export class MainChatComponent {
   message: Message = {
     id: '',
     messageId:'',
+    channelId:'',
     name: '',
     avatar: 0,
     messageText: '',
     sendAt: `${this.dayString}, ${this.dayNumber}. ${this.month}`,
-    sendAtTime: `${this.hours}:${this.minutes}`,
+    sendAtTime: `${(this.hours<10 ? '0'+this.hours : this.hours)}:${(this.minutes<10 ? '0'+this.minutes : this.minutes)}`,
     timestamp: Date.now(),
     reaction: 0,
     isOwn: false,

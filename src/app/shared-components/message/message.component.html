@@ -9,14 +9,14 @@
             <img src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
-            <img (click)="showEditMessage()" *ngIf="isOwn"src="assets/img/dots.png" alt="dots"></div>
-            <div id="editMessagePopup" *ngIf="isOwn" [ngStyle]="isOwn && isThread ? {'left': '135px'} : {}" class="edit-message"><span (click)="hideEditMessage()">Nachricht bearbeiten</span></div>
+            <img (click)="toggleEditPopup()" *ngIf="isOwn"src="assets/img/dots.png" alt="dots"></div>
+            <div id="editMessagePopup" *ngIf="isOwn" [ngStyle]="isOwn && isThread ? {'left': '135px'} : {}" class="edit-message"><span (click)="toggleEditPopup()">Nachricht bearbeiten</span></div>
         <div *ngIf="isThread || isInThread" class="reaction-popup ">
             <img src="assets/img/add_reaction40.png" alt="">
-            <img (click)="showEditMessage()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
-            <div id="editMessagePopup" [ngStyle]="isOwn && isThread ? {'left': '135px'} : {}" *ngIf="isOwn" class="edit-message"><span (click)="hideEditMessage()">Nachricht bearbeiten</span></div>
+            <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
+            <div id="editMessagePopup" [ngStyle]="isOwn && isThread ? {'left': '135px'} : {}" *ngIf="isOwn" class="edit-message"><span (click)="toggleEditPopup()">Nachricht bearbeiten</span></div>
         </div>
-        <img [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
+        <img [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'}:{}" [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details">
             <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }} Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>

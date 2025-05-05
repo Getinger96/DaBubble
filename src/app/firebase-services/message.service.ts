@@ -51,6 +51,7 @@ export class MessageService {
   setMessageObject(obj: any, id: string): Message {
     return {
       messageId: id,
+      channelId: obj.channelId,
       id: obj.id,
       name: obj.name,
       avatar: obj.avatar,
@@ -79,8 +80,6 @@ export class MessageService {
         message.isOwn = isOwn;
         this.messageId = messageData['messageId']
         allMessages.push(message);
-        console.log(allMessages)
-        console.log(message.messageId)
       });
       this.allMessages = allMessages;
       
@@ -170,7 +169,6 @@ export class MessageService {
   }
 
 
-
   updateThreadAnswers(threadTo: string) {
     const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
     this.sortAllMessages(replies);
@@ -225,6 +223,7 @@ export class MessageService {
       threadTo: threadToId,
       id: userId,
       messageId: '',
+      channelId: '',
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
@@ -254,6 +253,7 @@ export class MessageService {
         threadCount: threadCount,
         isAnswered: threadCount > 0
       });
+
     } catch (error) {
       console.error("Error updating thread count:", error);
     }

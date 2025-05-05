@@ -3,6 +3,7 @@ import { SafeScript } from "@angular/platform-browser";
 export class Message {
     id: string;
     messageId: string;
+    channelId: string;
     name: string;
     avatar: number;
     messageText: string;
@@ -22,6 +23,7 @@ export class Message {
     constructor(obj?:any) {
         this.id = obj?obj.id:''
         this.messageId =obj?obj.messageId:''
+        this.channelId =obj?obj.channelId:''
         this.name = obj?obj.name:''
         this.avatar = obj?obj.avatar:''
         this.messageText = obj?obj.messageText:''

@@ -172,6 +172,7 @@
             border-bottom-left-radius: 30px;
             max-width: 698px;
             margin-right: 40px;
+            width: fit-content;
         }
 
         .message-under{
@@ -185,6 +186,11 @@
                     color: #535AF1;
                     padding-right: 20px;
                     cursor: pointer;
+
+                    &:hover{
+                        color: #444DF2;
+                        font-weight: 700;
+                    }
                 }
         
                 .message-last-answer{

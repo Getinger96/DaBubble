@@ -34,6 +34,7 @@ export class MessageComponent {
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription; 
   threadAnswers : Message[] = [];
+  isEditPopupOpened: boolean = false;
 
 
   constructor(private messageService: MessageService) {}
@@ -80,21 +81,16 @@ export class MessageComponent {
     });
   }
 
-  showEditMessage() {
+  toggleEditPopup(): void {
+    this.isEditPopupOpened = !this.isEditPopupOpened;
     let editMessagePopup = document.getElementById('editMessagePopup');
-    if (editMessagePopup) {
-      editMessagePopup.style.display = 'flex';
-    } else {
-      console.error('Element with id "editMessagePopup" not found.');
-    }
-  }
-
-  hideEditMessage() {
-    let editMessagePopup = document.getElementById('editMessagePopup');
-    if (editMessagePopup) {
-      editMessagePopup.style.display = 'hide';
-    } else {
-      console.error('Element with id "editMessagePopup" not found.');
+    if (editMessagePopup){
+      if(this.isEditPopupOpened){
+        editMessagePopup.style.display = 'flex';
+      } else{
+        editMessagePopup.style.display = 'none';
+      }
+      console.log(this.isEditPopupOpened)
     }
   }
 
