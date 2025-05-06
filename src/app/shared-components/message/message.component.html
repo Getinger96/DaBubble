@@ -6,7 +6,7 @@
     <div  [ngClass]="{'reverse': isOwn && !isInThread}" class="message"  >
         <div *ngIf="!isThread && !isInThread" class="reaction-popup">
             <img (click)="addNewReaction('check')" src="assets/img/check_40.png" alt="check">
-            <img src="assets/img/like.png" alt="like">
+            <img (click)="addNewReaction('like')" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
             <img (click)="toggleEditPopup()" *ngIf="isOwn"src="assets/img/dots.png" alt="dots"></div>

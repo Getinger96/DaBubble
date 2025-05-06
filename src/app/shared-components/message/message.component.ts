@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
 import { Subscription } from 'rxjs';
 
+
 @Component({
   selector: 'app-message',
   standalone: true,
@@ -96,7 +97,7 @@ export class MessageComponent {
 
 
   addNewReaction(reaction: string) {
-    console.log(reaction, this.messageService.messageId);
+    this.messageService.saveReaction(reaction);
   }
 
   ngOnDestroy(): void {

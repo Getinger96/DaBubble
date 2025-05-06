@@ -240,6 +240,29 @@ export class MessageService {
     this.allMessagesSubject.next(this.allMessages);
   }
 
+  async saveReaction(reaction: string) {
+    let emoji: string;
+
+    if (reaction === 'check') {
+      emoji = '✅';
+    } else if (reaction === 'like') {
+      emoji = '👍';
+    } else {
+      console.warn('Unbekannte Reaktion:', reaction);
+      return;
+    }
+
+    const reactionsRef = collection(
+      this.firestore,
+      `messages/${this.messageId}/reactions`
+    );
+
+    return await addDoc(reactionsRef, {
+      emoji,
+      createdAt: new Date()
+    });
+  }
+
   async updateMessageThreadCount(messageId: string) {
 
     const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
