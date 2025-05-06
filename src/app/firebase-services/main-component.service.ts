@@ -67,6 +67,9 @@ export class MainComponentService {
     this.directmessaeUserStatusSubject.next(status)
   }
 
+  
+  
+
 
   setUserObject(obj: any, id: string): User {
     return {
