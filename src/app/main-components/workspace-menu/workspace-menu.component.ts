@@ -153,6 +153,7 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChannelId(id)
     this.channelservice.setChannelMember(members);
     this.channelservice.setChanneldate(date)
+    this.mainservice.showdirectmessage=false;
   }
 
   addMembers(ngForm:NgForm) {

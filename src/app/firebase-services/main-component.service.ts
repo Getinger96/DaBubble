@@ -8,113 +8,135 @@ import { BehaviorSubject, filter } from 'rxjs';
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 
 export class MainComponentService {
-    firestore: Firestore = inject(Firestore);
-    actualUser: User[] = [];
-    unsubList;
-    allUsers: User[] = [];
-     private allUsersSubject = new BehaviorSubject<User[]>([]);
-     allUsers$ = this.allUsersSubject.asObservable();
-     private actualUserSubject = new BehaviorSubject<User[]>([])
-     acutalUser$ = this.actualUserSubject.asObservable();
-      private auth = getAuth();
+  firestore: Firestore = inject(Firestore);
+  actualUser: User[] = [];
+  unsubList;
+  allUsers: User[] = [];
+  private allUsersSubject = new BehaviorSubject<User[]>([]);
+  allUsers$ = this.allUsersSubject.asObservable();
+  private actualUserSubject = new BehaviorSubject<User[]>([])
+  acutalUser$ = this.actualUserSubject.asObservable();
+  private auth = getAuth();
+  showdirectmessage: boolean = false;
+  private directmessaeUserNameSubject = new BehaviorSubject<string>('');
+  currentusermessageName$ = this.directmessaeUserNameSubject.asObservable();
+  private directmessaeUserAvatarSubject = new BehaviorSubject<number>(0);
+  currentusermessagAvatar$ = this.directmessaeUserAvatarSubject.asObservable();
+  private directmessaeUserEmailSubject = new BehaviorSubject<string>('');
+  currentusermessagEmail$ = this.directmessaeUserEmailSubject.asObservable();
+  private directmessaeUserStatusSubject = new BehaviorSubject<string>('');
+  currentusermessagStatus$ = this.directmessaeUserStatusSubject.asObservable();
 
-    constructor(private route: ActivatedRoute,
-      private router: Router) {
-      this.unsubList = this.subList();
-    }
-
-
-    subList() {
-        return onSnapshot(this.getUserRef(), (user) => {
-            let usersArray: User[] = [];
-            user.forEach(element => {
-                usersArray.push(this.setUserObject(element.data(), element.id))
-                console.log('Daten in Firebase', element.data(), element.id)
-            })
-            this.allUsers = usersArray;
-            this.allUsersSubject.next(this.allUsers);
-            console.log(this.allUsers);
-        })
-    }
-
-    ngonDestroy() {
-        this.unsubList();
-    }
+  constructor(private route: ActivatedRoute,
+    private router: Router) {
+    this.unsubList = this.subList();
+  }
 
 
-    setUserObject(obj: any, id: string): User {
-        return {
-            uid: obj.uid,
-            id: id,
-            name: obj.name,
-            email: obj.email,
-            passwort: obj.passwort,
-            avatar: obj.avatar,
-            status: obj.status
-        };
-    }
+  subList() {
+    return onSnapshot(this.getUserRef(), (user) => {
+      let usersArray: User[] = [];
+      user.forEach(element => {
+        usersArray.push(this.setUserObject(element.data(), element.id))
+        console.log('Daten in Firebase', element.data(), element.id)
+      })
+      this.allUsers = usersArray;
+      this.allUsersSubject.next(this.allUsers);
+      console.log(this.allUsers);
+    })
+  }
 
-    getUserRef() {
-        return collection(this.firestore, 'Users');
-    }
+  ngonDestroy() {
+    this.unsubList();
+  }
+
+  setDirectmessageuserName(name: string): void {
+    this.directmessaeUserNameSubject.next(name)
+  }
+  setDirectmessageuserAvatar(avatar: number): void {
+    this.directmessaeUserAvatarSubject.next(avatar)
+  }
+  setDirectmessageuserEmail(email: string): void {
+    this.directmessaeUserEmailSubject.next(email)
+  }
+  setDirectmessageuserStatus(status: string): void {
+    this.directmessaeUserStatusSubject.next(status)
+  }
 
 
-    async saveActualUser() {
-        try {
-          // 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
-          let currentUser = await this.getCurrentUser();
-          if (currentUser) {
-            // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null), 
-            //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
-            this.allUsers$
-              .pipe(
-                filter(users => users.length > 0)  // Warte, bis mindestens ein Benutzer geladen wurde
-              )
-              .subscribe(users => {
-                // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
-                console.log('Alle Benutzer:', users);
-                this.getActualUser(currentUser.uid);  // Hier kannst du eine Methode aufrufen, um den aktiven Benutzer zu finden
-              });
-          } else {
-            // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
-            this.actualUserSubject.next([]);
-            console.log('Kein Benutzer eingeloggt', this.actualUserSubject);
-          }
-        } catch (error) {
-          console.error("Fehler beim Abrufen des Benutzers:", error);
-        }
+  setUserObject(obj: any, id: string): User {
+    return {
+      uid: obj.uid,
+      id: id,
+      name: obj.name,
+      email: obj.email,
+      passwort: obj.passwort,
+      avatar: obj.avatar,
+      status: obj.status
+    };
+  }
+
+  getUserRef() {
+    return collection(this.firestore, 'Users');
+  }
+
+
+  async saveActualUser() {
+    try {
+      // 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
+      let currentUser = await this.getCurrentUser();
+      if (currentUser) {
+        // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null), 
+        //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
+        this.allUsers$
+          .pipe(
+            filter(users => users.length > 0)  // Warte, bis mindestens ein Benutzer geladen wurde
+          )
+          .subscribe(users => {
+            // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
+            console.log('Alle Benutzer:', users);
+            this.getActualUser(currentUser.uid);  // Hier kannst du eine Methode aufrufen, um den aktiven Benutzer zu finden
+          });
+      } else {
+        // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
+        this.actualUserSubject.next([]);
+        console.log('Kein Benutzer eingeloggt', this.actualUserSubject);
       }
-    
-      // Methode, die den aktuellen Benutzer zurückgibt
-      getCurrentUser(): Promise<any> {
-        return new Promise((resolve, reject) => {
-          const unsubscribe = onAuthStateChanged(this.auth, (user) => {
-            unsubscribe(); // Entfernt den Listener, sobald wir die Info haben
-            resolve(user);  // Gibt den Benutzer zurück
-          }, reject); // Fehlerbehandlung, falls etwas schiefgeht
-        })
-    
-      }
+    } catch (error) {
+      console.error("Fehler beim Abrufen des Benutzers:", error);
+    }
+  }
 
-      getActualUser(uid: string) {
-        const user = this.allUsers.find(user => user.uid === uid);
-        this.actualUser = []
-        if (user) {
-          // Wenn der User gefunden wird, den Status ändern
-    
-          this.actualUser.push(user)
-          this.actualUserSubject.next(this.actualUser);
-          console.log('akutler User, USer ', this.actualUserSubject, this.actualUser);
-    
-    
-        } else {
-          console.log('Kein User mit dieser UID gefunden');
-        }
-    
-      }
+  // Methode, die den aktuellen Benutzer zurückgibt
+  getCurrentUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
+        unsubscribe(); // Entfernt den Listener, sobald wir die Info haben
+        resolve(user);  // Gibt den Benutzer zurück
+      }, reject); // Fehlerbehandlung, falls etwas schiefgeht
+    })
+
+  }
+
+  getActualUser(uid: string) {
+    const user = this.allUsers.find(user => user.uid === uid);
+    this.actualUser = []
+    if (user) {
+      // Wenn der User gefunden wird, den Status ändern
+
+      this.actualUser.push(user)
+      this.actualUserSubject.next(this.actualUser);
+      console.log('akutler User, USer ', this.actualUserSubject, this.actualUser);
+
+
+    } else {
+      console.log('Kein User mit dieser UID gefunden');
+    }
+
+  }
 
 }

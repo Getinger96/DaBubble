@@ -17,11 +17,12 @@ import { MessageService } from '../firebase-services/message.service';
 import { Message } from '../interfaces/message.interface';
 import { MainComponentService } from '../firebase-services/main-component.service';
 import { Router, NavigationStart } from '@angular/router';
+import { DirectMessageChatComponent } from "./direct-message-chat/direct-message-chat.component";
 
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent, DirectMessageChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })  
@@ -36,7 +37,8 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   overlayUserCardActive:boolean = false;
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
-  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, private mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
+  showdirectmessage:boolean=false;
+  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
   }
   selectedThreadMessage: Message | null = null;
   
@@ -86,6 +88,9 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.chanelSubscription = this.mainhelperService.openChannel$.subscribe(open=> {
       if (open) {
         this.showChanelSection = open
+      }
+      else{
+        this.showChanelSection=false;
       }
     })
   }

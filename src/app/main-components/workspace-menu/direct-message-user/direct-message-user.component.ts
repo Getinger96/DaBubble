@@ -5,6 +5,7 @@ import { RegisterService } from '../../../firebase-services/register.service';
 import { LoadingService } from '../../../services/loading.service';
 import { Subscription } from 'rxjs';
 import { MainComponentService } from '../../../firebase-services/main-component.service';
+import { MainHelperService } from '../../../services/main-helper.service';
 
 @Component({
   selector: 'app-direct-message-user',
@@ -19,7 +20,7 @@ actualUser:User[]= [];
   @Input() userArray!: User[];
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
-  constructor(private registerservice: RegisterService, private loadingService : LoadingService,private mainservice:MainComponentService){
+  constructor(private registerservice: RegisterService, private loadingService : LoadingService,private mainservice:MainComponentService,private mainhelperService: MainHelperService){
 
   }
 
@@ -27,6 +28,15 @@ actualUser:User[]= [];
  this.loadActualUser()
  
 
+  }
+
+  opendirectChat(name:string,close:boolean,avatar:number,email:string,status:string){
+    this.mainservice.showdirectmessage=true
+    this.mainhelperService.openChannelSection(close)
+    this.mainservice.setDirectmessageuserName(name)
+    this.mainservice.setDirectmessageuserEmail(email)
+    this.mainservice.setDirectmessageuserAvatar(avatar)
+    this.mainservice.setDirectmessageuserStatus(status)
   }
 
   loadActualUser(){
