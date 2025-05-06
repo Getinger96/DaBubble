@@ -109,6 +109,9 @@ export class ChannelService {
           });
         }
       await  this.subChannelList(); 
+      setTimeout(() => {
+        this.channelMemberSubject.next(channel.members);
+      }, 1000);
       }
 
 
