@@ -6,7 +6,6 @@ import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-message',
   standalone: true,
@@ -30,13 +29,13 @@ export class MessageComponent {
   @Input() threadTo!: string;
   @Input() dateExists: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
-  
 
   mainComponents = MainComponentsComponent;
-  private allThreadsSubscription!: Subscription; 
-  threadAnswers : Message[] = [];
+  private allThreadsSubscription!: Subscription;
+  threadAnswers: Message[] = [];
   isEditPopupOpened: boolean = false;
-
+  editMessage: boolean = false;
+  showEditPopup: boolean = false;
 
   constructor(private messageService: MessageService) {}
 
@@ -63,7 +62,6 @@ export class MessageComponent {
     }
   }
 
-
   onReplyClick(): void {
     if (this.messageData) {
       this.messageService.openThread(this.messageData);
@@ -72,29 +70,37 @@ export class MessageComponent {
   }
 
   loadThreadAnswers(): void {
-      this.allThreadsSubscription = this.messageService.allMessages$.subscribe((messages) => {
-      if (this.messageData) {
-        this.threadAnswers = messages.filter(message => message.isThread);
-        this.threadAnswers = this.messageService.getThreadAnswers(this.messageData.messageId);
-        this.messageService.updateThreadAnswers(this.messageData.messageId);
-        this.lastAnswerDate = (this.messageService?.lastAnswer?.sendAtTime ?? '') + (this.messageService?.lastAnswer?.sendAt ?? '');
+    this.allThreadsSubscription = this.messageService.allMessages$.subscribe(
+      (messages) => {
+        if (this.messageData) {
+          this.threadAnswers = messages.filter((message) => message.isThread);
+          this.threadAnswers = this.messageService.getThreadAnswers(
+            this.messageData.messageId
+          );
+          this.messageService.updateThreadAnswers(this.messageData.messageId);
+          this.lastAnswerDate =
+            (this.messageService?.lastAnswer?.sendAtTime ?? '') +
+            (this.messageService?.lastAnswer?.sendAt ?? '');
+        }
       }
-    });
+    );
   }
+
+  overwriteMessage(){
+    this.toggleEditPopup();
+    this.showEditPopup = false;
+    this.editMessage = true;
+  }
+
+  closeEditPopup(){
+    this.editMessage = false;
+    this.showEditPopup = false;
+  }
+
 
   toggleEditPopup(): void {
-    this.isEditPopupOpened = !this.isEditPopupOpened;
-    let editMessagePopup = document.getElementById('editMessagePopup');
-    if (editMessagePopup){
-      if(this.isEditPopupOpened){
-        editMessagePopup.style.display = 'flex';
-      } else{
-        editMessagePopup.style.display = 'none';
-      }
-      console.log(this.isEditPopupOpened)
-    }
+    this.showEditPopup = !this.showEditPopup;
   }
-
 
   addNewReaction(reaction: string) {
     this.messageService.saveReaction(reaction);

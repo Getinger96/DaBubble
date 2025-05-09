@@ -53,6 +53,7 @@ export class MainChatComponent {
     threadCount: 0,
   };
   static actualUser: any;
+  private scrolled = false;
 
   constructor(private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService) {
   }
@@ -65,13 +66,22 @@ export class MainChatComponent {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    if (!this.scrolled) {
+      this.scrollToBottom();
+    }
   }
 
   scrollToBottom(): void {
     try {
       this.chatFeed.nativeElement.scrollTop = this.chatFeed.nativeElement.scrollHeight;
+      this.scrolled = true;
     } catch (err) { }
+  }
+
+  onScroll(): void {
+    if (this.chatFeed.nativeElement.scrollTop < this.chatFeed.nativeElement.scrollHeight - this.chatFeed.nativeElement.clientHeight) {
+      this.scrolled = true;
+    }
   }
 
   loadMessages() {
@@ -113,6 +123,7 @@ export class MainChatComponent {
     }
     
     this.message.messageText = '';
+    this.scrollToBottom();
   }
   
   

@@ -81,6 +81,7 @@
         border-top-right-radius: 25px;
         border-bottom-left-radius: 25px;
         background-color: white;
+        z-index: 2;
 
         img{
             width: 40px;
@@ -97,7 +98,7 @@
     }
 
     .edit-message{
-        z-index: 1;
+        z-index: 3;
         cursor: pointer;
         position: absolute;
         left: 270px;
@@ -108,7 +109,7 @@
         border-bottom-left-radius: 30px;
         background-color: white;
         padding: 10px 20px;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: center;
 
@@ -127,6 +128,85 @@
 
 
         }
+        
+    }
+
+    .edit-message-input{
+
+        width: calc(100% - 290px);
+        display: flex;
+        position: relative;
+        min-height: 155px;
+        
+
+        textarea{
+            border-radius: 20px;
+            border: 1px solid #ADB0D9;
+            border: none;
+            width: 100%;
+            padding: 20px 20px;
+            resize: none;
+            &:focus{
+                outline: none;
+            }
+
+            &:hover{
+                border: 1px solid #797EF3;
+            }
+        }
+
+        
+
+        button{
+            
+            position: absolute;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px 25px;
+            border: 1px solid #797EF3;
+            border-radius: 50px;
+            cursor: pointer;
+            
+        }
+
+        .close-edit-message{
+            right: 185px;
+            bottom: 20px;
+            background: none;
+            color: #444DF2;
+            transition: 0.1s;
+
+            &:hover{
+                background-color: #444DF2;
+                color: white;
+            }
+        }
+
+        .save-edit-message{
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            background-color: #444DF2;
+            color: white;
+
+            transition: 0.1s;
+
+            &:hover{
+                color: #444DF2;
+                background-color: #ECEEFE;
+            }
+        }
+
+        img{
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            padding: 0 !important;
+            left: 20px;
+            bottom: 20px;
+            cursor: pointer;
+        }
+
         
     }
     

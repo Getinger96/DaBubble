@@ -20,6 +20,8 @@
         align-items:center;
         padding-left: 45px;
         gap: 18px;
+        
+        &:hover{}
 
         img{
             width: 30px;
@@ -29,6 +31,7 @@
         .arrow_down{
             width: 14px;
             height: 8.19px;
+            cursor: pointer;
         }
 
         .actual-group{

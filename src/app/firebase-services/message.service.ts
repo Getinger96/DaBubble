@@ -151,9 +151,7 @@ export class MessageService {
     this.showThreadSubject.next(true);
     this.getThreadAnswers(message.messageId)
     this.updateThreadAnswers(message.messageId);
-
   }
-
 
   closeThread() {
     this.showThreadSubject.next(false);

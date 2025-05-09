@@ -2,7 +2,7 @@
     <div class="main-chat-header">
         <div class="message-group">
             <div class="actual-group">
-                <img src="assets/img/tag.png" alt=""><span class="fontNunito">Entwicklerteam</span>
+                <span style="font-size: 32px;">#</span><span class="fontNunito">Entwicklerteam</span>
             </div>
             <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
         </div>
@@ -16,7 +16,7 @@
             <img src="assets/img/add_members.png" alt="">
         </div>
     </div>
-    <div class="main-chat-feed" #chatFeed>
+    <div class="main-chat-feed" #chatFeed (scroll)="onScroll()">
         <app-message *ngFor="let message of allMessages, index as i"
         [messageData]="message"
         [date]="message.sendAt"
