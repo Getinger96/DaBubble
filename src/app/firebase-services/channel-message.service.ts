@@ -35,10 +35,6 @@ export class ChannelMessageService {
 
   }
 
-<<<<<<< HEAD
-  
-
-=======
 
 
   getMessagesAndMessageId(messagesRef: Query<DocumentData>) {
@@ -60,7 +56,6 @@ export class ChannelMessageService {
   
     return unsubscribe;
   }
->>>>>>> 8a4a1d3019e16ee3d5565f5bdaa9eaad25ef0e4f
 }
 
 
