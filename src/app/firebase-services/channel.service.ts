@@ -158,6 +158,8 @@ export class ChannelService {
         })
     }
 
+    
+
 
     async updateChannel(channelId: string, name: string, description: string) {
         const channelDocRef = doc(this.firestore, 'Channels', channelId);
