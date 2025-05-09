@@ -95,13 +95,13 @@
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">
-            <textarea type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+            <textarea [(ngModel)]="message.messageText" type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
             <div class="message-icons">
                 <div>
                     <img src="assets/img/emoji.png" alt="">
                     <img src="assets/img/at.png" alt="">
                 </div>
-                <img src="assets/img/send.png" alt="">
+                <img (click)="sendmessage(currentChannelID)" src="assets/img/send.png" alt="">
             </div>
         </div>
     </div>

@@ -12,6 +12,8 @@ import {
   onSnapshot,
   Query
 } from '@angular/fire/firestore';
+import { MessageService } from './message.service';
+import { User } from '../interfaces/user.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +23,7 @@ export class ChannelMessageService {
   channelMessageId?: string;
   messageId?:string;
   lastAnswer: Message | null = null;
-  constructor() { }
+  constructor(private messageService: MessageService) { }
 
 
 
@@ -56,6 +58,17 @@ export class ChannelMessageService {
   
     return unsubscribe;
   }
+
+
+
+    async addMessage(message: Message,channelid:string){
+    
+     const channelDocRef = doc(this.firestore, 'Channels', channelid);
+     const messagesRef = collection(channelDocRef, 'messages');
+     const Userid=this.messageService.getActualUser()
+     return addDoc(messagesRef,this.messageService.messageJson(message,Userid))
+
+    }
 }
 
 
