@@ -22,14 +22,16 @@ export class MainComponentService {
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
   showdirectmessage: boolean = false;
-  private directmessaeUserNameSubject = new BehaviorSubject<string>('');
+  public directmessaeUserNameSubject = new BehaviorSubject<string>('');
   currentusermessageName$ = this.directmessaeUserNameSubject.asObservable();
-  private directmessaeUserAvatarSubject = new BehaviorSubject<number>(0);
+  public directmessaeUserAvatarSubject = new BehaviorSubject<number>(0);
   currentusermessagAvatar$ = this.directmessaeUserAvatarSubject.asObservable();
   private directmessaeUserEmailSubject = new BehaviorSubject<string>('');
   currentusermessagEmail$ = this.directmessaeUserEmailSubject.asObservable();
   private directmessaeUserStatusSubject = new BehaviorSubject<string>('');
   currentusermessagStatus$ = this.directmessaeUserStatusSubject.asObservable();
+  public directmessaeUserIdSubject = new BehaviorSubject<string>('');
+  currentusermessagId$ = this.directmessaeUserStatusSubject.asObservable();
 
   constructor(private route: ActivatedRoute,
     private router: Router) {
@@ -65,6 +67,9 @@ export class MainComponentService {
   }
   setDirectmessageuserStatus(status: string): void {
     this.directmessaeUserStatusSubject.next(status)
+  }
+  setDirectmessageuserId(id: string): void {
+    this.directmessaeUserIdSubject.next(id)
   }
 
   
@@ -122,6 +127,7 @@ export class MainComponentService {
         resolve(user);  // Gibt den Benutzer zurück
       }, reject); // Fehlerbehandlung, falls etwas schiefgeht
     })
+  
 
   }
 

@@ -17,6 +17,19 @@
         </div>
     </div>
     <div class="main-chat-feed" #chatFeed (scroll)="onScroll()">
+        <div *ngIf="!openChannel">
+        <app-direct-message
+        [messageData]="conversationMessage"
+        [name]="loadConversationMessageSender(conversationMessage)"
+        [date]="conversationMessage.timestamp"
+        [avatarSrc]="loadConversationMessageSenderAvatar(conversationMessage)"
+        [isOwn]="conversationMessage.isOwn"
+        [messageText]="conversationMessage.text"
+        >
+
+        </app-direct-message>
+        </div>
+        <div *ngIf="openChannel">
         <app-message *ngFor="let message of allMessages, index as i"
         [messageData]="message"
         [date]="message.sendAt"
@@ -31,6 +44,7 @@
         [isThread]="message.isThread"
         [isInThread]="message.isInThread">
         </app-message>
+        </div>
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">

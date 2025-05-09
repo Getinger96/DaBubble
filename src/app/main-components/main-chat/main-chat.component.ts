@@ -8,11 +8,15 @@ import { Subscription } from 'rxjs';
 import { RegisterService } from '../../firebase-services/register.service';
 import { User } from '../../interfaces/user.interface';
 import { MainComponentService } from '../../firebase-services/main-component.service';
+import { ConversationService } from '../../firebase-services/conversation.service';
+import { DirectMessageComponent } from '../../shared-components/direct-message/direct-message.component';
+import { ConversationMessage } from '../../interfaces/conversation-message.interface';
+import { MainHelperService } from '../../services/main-helper.service';
 
 @Component({
   selector: 'app-main-chat',
   standalone: true,
-  imports: [MessageComponent, CommonModule, FormsModule],
+  imports: [MessageComponent, CommonModule, FormsModule, DirectMessageComponent],
   templateUrl: './main-chat.component.html',
   styleUrls: ['./main-chat.component.scss']
 })
@@ -20,10 +24,14 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 export class MainChatComponent {
   allMessages: Message[] = [];
   allThreads: Message[] = [];
+  allConversationMessages: ConversationMessage[] = [];
   actualUser: User[] = [];
   private allMessageSubscription!: Subscription; 
   private actualUserSubscription!: Subscription;
+  private allConversationMessageSubscription!: Subscription; 
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
+  openChannel = this.mainhelperservice.openChannel;
+
   
   months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
@@ -52,10 +60,17 @@ export class MainChatComponent {
     threadTo: '',
     threadCount: 0,
   };
+
+  conversationMessage: ConversationMessage ={
+    senderId: '',
+    text: '',
+    timestamp: new Date(),
+    isOwn: false,
+  }
   static actualUser: any;
   private scrolled = false;
 
-  constructor(private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService) {
+  constructor(private mainhelperservice: MainHelperService ,private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService, private conversationservice: ConversationService) {
   }
 
   ngOnInit(): void {
@@ -92,6 +107,31 @@ export class MainChatComponent {
     });
   }
 
+  loadConversationMessages(){
+    if(!this.mainhelperservice.openChannel){
+    this.allConversationMessageSubscription = this.conversationservice.allConversationsMessagesSubject$.subscribe((messages) => {
+      this.allConversationMessages = messages;
+      this.conversationservice.sortAllMessages(this.allConversationMessages);
+    })
+    }
+  }
+
+  loadConversationMessageSender(message:ConversationMessage){
+    if(message.isOwn){
+      return this.actualUser[0].name;
+    } else{
+      return this.mainservice.directmessaeUserNameSubject.value;
+    }
+  }
+
+  loadConversationMessageSenderAvatar(message:ConversationMessage){
+    if(message.isOwn){
+      return this.actualUser[0].avatar;
+    } else{
+      return this.mainservice.directmessaeUserAvatarSubject.value;
+    }
+  }
+
   loadActualUser(){
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
@@ -101,12 +141,19 @@ export class MainChatComponent {
     });
   }
 
+  loadChannelOpen(){
+
+  }
+
   ngOnDestroy(): void {
     if (this.allMessageSubscription) {
       this.allMessageSubscription.unsubscribe();
     }
     if (this.actualUserSubscription) {
       this.actualUserSubscription.unsubscribe();
+    }
+    if (this.allConversationMessageSubscription) {
+      this.allConversationMessageSubscription.unsubscribe();
     }
   }
 

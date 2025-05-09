@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class MainHelperService {
     private showChannel = new BehaviorSubject  < boolean>(false);
     openChannel$ = this.showChannel.asObservable();
-    openChannel!: boolean
+    openChannel: boolean = true;
 
   constructor() { }
 

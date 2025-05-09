@@ -32,13 +32,14 @@ export class DirectMessageUserComponent implements OnInit {
 
   }
 
-  opendirectChat(name: string, close: boolean, avatar: number, email: string, status: string) {
+  opendirectChat(id: string,name: string, close: boolean, avatar: number, email: string, status: string) {
     this.mainservice.showdirectmessage = true
     this.mainhelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(name)
     this.mainservice.setDirectmessageuserEmail(email)
     this.mainservice.setDirectmessageuserAvatar(avatar)
     this.mainservice.setDirectmessageuserStatus(status)
+    this.mainservice.setDirectmessageuserId(id)
   }
 
   loadActualUser() {

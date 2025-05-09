@@ -34,8 +34,10 @@ export class MessageComponent {
   private allThreadsSubscription!: Subscription;
   threadAnswers: Message[] = [];
   isEditPopupOpened: boolean = false;
-  editMessage: boolean = false;
-  showEditPopup: boolean = false;
+  static editMessage: boolean = false;
+  static showEditPopup: boolean = false;
+  showEditPopup = MessageComponent.showEditPopup;
+  editMessage = MessageComponent.showEditPopup;
 
   constructor(private messageService: MessageService) {}
 
@@ -88,18 +90,18 @@ export class MessageComponent {
 
   overwriteMessage(){
     this.toggleEditPopup();
-    this.showEditPopup = false;
-    this.editMessage = true;
+    MessageComponent.showEditPopup = false;
+    MessageComponent.editMessage = true;
   }
 
   closeEditPopup(){
     this.editMessage = false;
-    this.showEditPopup = false;
+    MessageComponent.showEditPopup = false;
   }
 
 
   toggleEditPopup(): void {
-    this.showEditPopup = !this.showEditPopup;
+    MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
   addNewReaction(reaction: string) {

@@ -12,6 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 import { onSnapshot } from '@angular/fire/firestore';
 import { RegisterService } from './register.service';
 import { MainComponentService } from './main-component.service';
+import { MessageComponent } from '../shared-components/message/message.component';
 
 @Injectable({
   providedIn: 'root',
@@ -143,6 +144,10 @@ export class MessageService {
       isInThread: item.isInThread || false,
       threadCount: item.threadCount || 0,
     };
+  }
+
+  toggleEditPopup(): void {
+    MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
   openThread(message: Message) {
