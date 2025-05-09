@@ -11,6 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
+import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { MainHelperService } from '../../services/main-helper.service';
 import { Member } from '../../interfaces/member.interface';
 
@@ -44,7 +45,7 @@ export class WorkspaceMenuComponent {
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService,private mainservice:MainComponentService,
-    private mainHelperService: MainHelperService
+    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService,
   ) {
 
   }
@@ -154,6 +155,8 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChannelMember(members);
     this.channelservice.setChanneldate(date)
     this.mainservice.showdirectmessage=false;
+    this.channelMessageService.getChannelId(id)
+    
   }
 
   addMembers(ngForm:NgForm) {
