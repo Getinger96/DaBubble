@@ -8,6 +8,9 @@ import {
   addDoc,
   updateDoc,
   doc,
+  DocumentData,
+  onSnapshot,
+  Query
 } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
@@ -15,7 +18,7 @@ import {
 export class ChannelMessageService {
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
-  id?: string;
+  channelMessageId?: string;
   messageId?:string;
   lastAnswer: Message | null = null;
   constructor() { }
@@ -26,9 +29,36 @@ export class ChannelMessageService {
 
   getChannelId(channelId:string){
     const channelDocRef = doc(this.firestore, 'Channels', channelId);
-     const message = collection(channelDocRef, 'messages');
-     console.log('channelDocRef', message);
-     
+     const messagesRef = collection(channelDocRef, 'messages');
+     console.log('channelDocRef', messagesRef);
+      this.getMessagesAndMessageId(messagesRef)
+
   }
 
+
+
+  getMessagesAndMessageId(messagesRef: Query<DocumentData>) {
+    const unsubscribe = onSnapshot(
+      messagesRef,
+      (snapshot) => {
+        snapshot.forEach(element => {
+          const messageData = element.data();
+          const messageId = element.id;
+          this.channelMessageId = messageId;
+          console.log('📩 Nachricht:', messageData);
+          console.log('🆔 ID:', messageId);
+        });
+      },
+      (error) => {
+        console.error('Snapshot-Fehler:', error);
+      }
+    );
+  
+    return unsubscribe;
+  }
 }
+
+
+
+
+
