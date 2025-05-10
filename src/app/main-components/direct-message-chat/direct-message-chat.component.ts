@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf,CommonModule } from '@angular/common';
+import { UserCardService } from '../active-user/services/user-card.service';
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -16,16 +17,15 @@ currentmessageAvatar:any;
 currentmessageStatus:string='';
 overlayvisible:boolean=false;
 
-constructor(private mainservice:MainComponentService,) {
+constructor(private mainservice: MainComponentService, public usercardservice: UserCardService) {
 
 }
 
   ngOnInit():void{
-this.loadName()
-this.loadAvatar()
-this.loadEmail()
-this.loadStatus()
-
+    this.loadName()
+    this.loadAvatar()
+    this.loadEmail()
+    this.loadStatus()
   }
 
   loadName(){
