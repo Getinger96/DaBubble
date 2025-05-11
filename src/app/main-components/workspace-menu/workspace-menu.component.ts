@@ -128,6 +128,7 @@ export class WorkspaceMenuComponent {
     const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
 
     this.channelservice.addChannel(channelObj).then((docRef) => {
+      this.channelservice.addsubcolecctiontoChannel(docRef.id)
       // ✅ docRef enthält die ID des neuen Channels
      this.createdChannelId=docRef.id;
 

@@ -157,7 +157,7 @@ loadDate(){
   })
 }
 async loadMessages(channelId: string) {
- await this.channelmessageService.subList(channelId);
+ this.channelmessageService.subList(channelId);
 
   this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
     this.allMessages = messages.filter(message => !message.isThread);
