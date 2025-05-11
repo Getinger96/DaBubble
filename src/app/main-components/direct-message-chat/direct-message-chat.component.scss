@@ -74,7 +74,7 @@
 .main-chat-feed {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
+    align-items: flex-start;
     height: calc(100% - 321px);
     display: flex;
     flex-direction: column;
@@ -272,6 +272,9 @@ font-size: 28px;
             color: #686868;
             >.intro-own-text {
                 font-weight: 700;
+            }
+            >a {
+                color: #535AF1;
             }
         }
     }
