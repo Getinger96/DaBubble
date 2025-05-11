@@ -18,10 +18,16 @@ import { Subscription } from 'rxjs';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { Router, NavigationStart,RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { MainHelperService } from '../../services/main-helper.service';
+import { ConversationService } from '../../firebase-services/conversation.service';
+import { ConversationMessage } from '../../interfaces/conversation-message.interface';
+import { DirectMessageComponent } from '../../shared-components/direct-message/direct-message.component';
+import { MessageComponent } from '../../shared-components/message/message.component';
+import { MessageService } from '../../firebase-services/message.service';
 @Component({
   selector: 'app-channel-chat',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule,RouterModule],
+  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule, RouterModule, MessageComponent],
   templateUrl: './channel-chat.component.html',
   styleUrl: './channel-chat.component.scss'
 })
@@ -54,6 +60,8 @@ export class ChannelChatComponent implements OnInit {
   minutes = this.d.getMinutes();
   hours = this.d.getHours();
   channelId!: string;
+  openChannel = this.mainhelperservice.openChannel;
+  allConversationMessages: ConversationMessage[] = [];
 
   message: Message = {
     id: '',
@@ -73,11 +81,14 @@ export class ChannelChatComponent implements OnInit {
     threadTo: '',
     threadCount: 0,
   };
+  
+
+  
 
 
 
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService,private mainservice: MainComponentService, 
-       private route: ActivatedRoute,
+       private route: ActivatedRoute,private mainhelperservice : MainHelperService,private conversationservice: ConversationService, private messageService :MessageService
   ) { }
 
 
@@ -89,6 +100,9 @@ export class ChannelChatComponent implements OnInit {
     this.loadMembers();
     this.loadDate();
     this.loadRouter();
+    this.loadMessages(this.currentChannelID)
+  
+  
   }
 
   loadChannelId() {
@@ -126,14 +140,7 @@ export class ChannelChatComponent implements OnInit {
     });
   }
 
-  loadActualUser() {
-    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-      if (actualUser.length > 0) {
-        this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
-      }
-    });
-  }
+ 
 
 
 loadMembers() {
@@ -158,6 +165,17 @@ async loadMessages(channelId: string) {
     this.allThreads = messages.filter(message => message.isThread);
   });
 }
+
+
+
+  loadActualUser(){
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+        console.log('aktueller User:', this.actualUser);
+      }
+    });
+  }
 
 startEditName() {
   this.editName = true

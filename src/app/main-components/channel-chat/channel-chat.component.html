@@ -56,25 +56,22 @@
         </div>
         <div class="actual-group-members">
             <div *ngFor="let member of members.slice(0,3)">
-              <div class="members-avatar-group"
-                   (click)="members.length <= 3 ? openDialog() : null">
-                <div class="avatar" 
-                     [style.background-image]="'url(assets/img/avatar_' + member.avatar + '_square.png)'">
+                <div class="members-avatar-group" (click)="members.length <= 3 ? openDialog() : null">
+                    <div class="avatar"
+                        [style.background-image]="'url(assets/img/avatar_' + member.avatar + '_square.png)'">
+                    </div>
                 </div>
-              </div>
             </div>
-          
+
             <div class="openDialog" *ngIf="members.length > 3">
-              <button type="button" (click)="openDialog()">
-                <span class="fontNunito">+{{ members.length - 3 }}</span>
-              </button>
+                <button type="button" (click)="openDialog()">
+                    <span class="fontNunito">+{{ members.length - 3 }}</span>
+                </button>
             </div>
-          
-            <img (click)="openDialogMembers()" 
-                 src="assets/img/add_members.png" 
-                 alt="Mitglieder hinzufügen">
-          </div>
-          
+
+            <img (click)="openDialogMembers()" src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
+        </div>
+
     </div>
     <div class="main-chat-feed">
         <div class="channel-info">
@@ -82,17 +79,22 @@
                 <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
             </div>
             <div class="channel-Info-container">
-                <span class="creator-header">{{currentChannelCreator}} <span class="date-span">{{currentChannelDate | date:'dd.MM.yyyy  HH:mm'}}</span></span>
+                <span class="creator-header">{{currentChannelCreator}} <span class="date-span">{{currentChannelDate |
+                        date:'dd.MM.yyyy HH:mm'}}</span></span>
                 <span class="welcome-span">Willkomen in eurem privaten Channel!</span>
-                <div class="member-container"><span class="member-span" *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
+                <div class="member-container"><span class="member-span"
+                        *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
                 <span>{{currentChannelDescription}}</span>
             </div>
         </div>
 
+       
+
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">
-            <textarea [(ngModel)]="message.messageText" type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+            <textarea [(ngModel)]="message.messageText" type="text" class="fontNunito"
+                placeholder="Nachricht an #{{currentChannelName}}" wrap="soft"></textarea>
             <div class="message-icons">
                 <div>
                     <img src="assets/img/emoji.png" alt="">
