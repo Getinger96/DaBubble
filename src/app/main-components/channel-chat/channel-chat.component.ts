@@ -16,11 +16,12 @@ import { ChannelMessageService } from '../../firebase-services/channel-message.s
 import { Message } from '../../interfaces/message.interface';
 import { Subscription } from 'rxjs';
 import { MainComponentService } from '../../firebase-services/main-component.service';
-
+import { Router, NavigationStart,RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-channel-chat',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule],
+  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule,RouterModule],
   templateUrl: './channel-chat.component.html',
   styleUrl: './channel-chat.component.scss'
 })
@@ -31,10 +32,14 @@ export class ChannelChatComponent implements OnInit {
   currentChannelID: string = '';
   currentChannelDate: string = '';
   actualUser: User[] = [];
-  private actualUserSubscription!: Subscription
+  private actualUserSubscription!: Subscription;
+  private allMessageSubscription!: Subscription; 
+  private allConversationMessageSubscription!: Subscription; 
   
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
+  allMessages: Message[] = [];
+  allThreads: Message[] = [];
   readonly dialog = inject(MatDialog);
   overlayeditChannel: boolean = false;
   editName: boolean = false
@@ -48,6 +53,7 @@ export class ChannelChatComponent implements OnInit {
   dayNumber = this.d.getDate();
   minutes = this.d.getMinutes();
   hours = this.d.getHours();
+  channelId!: string;
 
   message: Message = {
     id: '',
@@ -70,16 +76,19 @@ export class ChannelChatComponent implements OnInit {
 
 
 
-  constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService,private mainservice: MainComponentService) { }
+  constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService,private mainservice: MainComponentService, 
+       private route: ActivatedRoute,
+  ) { }
 
 
   ngOnInit(): void {
-    this.loadName()
-    this.loadDescription()
-    this.loadChannelId()
-    this.loadCurrentCrator()
-    this.loadMembers()
-    this.loadDate()
+    this.loadName();
+    this.loadDescription();
+    this.loadChannelId();
+    this.loadCurrentCrator();
+    this.loadMembers();
+    this.loadDate();
+    this.loadRouter();
   }
 
   loadChannelId() {
@@ -99,6 +108,15 @@ export class ChannelChatComponent implements OnInit {
       this.currentChannelName = name;
       console.log(this.currentChannelName);
 
+    });
+  }
+  loadRouter() {
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('channelId');
+      if (id) {
+        this.channelId = id;
+        this.loadMessages(id);
+      }
     });
   }
 
@@ -131,7 +149,15 @@ loadDate(){
     this.currentChannelDate = date;
   })
 }
+async loadMessages(channelId: string) {
+ await this.channelmessageService.subList(channelId);
 
+  this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
+    this.allMessages = messages.filter(message => !message.isThread);
+    this.channelmessageService.sortAllMessages(this.allMessages);
+    this.allThreads = messages.filter(message => message.isThread);
+  });
+}
 
 startEditName() {
   this.editName = true
@@ -175,7 +201,6 @@ openDialogMembers() {
   });
 
   dialogRef.afterClosed().subscribe((result: any) => {
-    // Stelle sicher, dass die Aktualisierung innerhalb der Angular-Zone läuft
     this.ngZone.run(() => {
       this.loadMembers();
     });

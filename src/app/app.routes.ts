@@ -6,24 +6,29 @@ import { PasswordResetEmailComponent } from './login-components/password-reset-e
 import { PasswortResetComponent } from './login-components/passwort-reset/passwort-reset.component';
 import { ChooseAvatarComponent } from './login-components/choose-avatar/choose-avatar.component';
 import { MainComponentsComponent } from './main-components/main-components.component';
+import { ChannelChatComponent } from './main-components/channel-chat/channel-chat.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
-    
-    { path: 'chooseAvatar', component: ChooseAvatarComponent },
-    { path: 'intro', component: IntroComponent },
-    { path: '', component:LoginComponent },
-    { path: 'signUp', component:RegisterComponent },
-    { path: 'resetEmail', component:PasswordResetEmailComponent },
-    { path: 'reset', component: PasswortResetComponent },
-    {
-        path: 'main-components/:id',
-        canActivate: [authGuard],
-        loadComponent: () => import('./../../src/app/main-components/main-components.component').then(m => m.MainComponentsComponent)
-    },
-    { path: 'imprint', component: ImprintComponent },
-    { path: 'privacy', component: PrivacyComponent },
+  { path: '', component: LoginComponent },
+  { path: 'signUp', component: RegisterComponent },
+  { path: 'intro', component: IntroComponent },
+  { path: 'chooseAvatar', component: ChooseAvatarComponent },
+  { path: 'resetEmail', component: PasswordResetEmailComponent },
+  { path: 'reset', component: PasswortResetComponent },
+  {
+    path: 'main-components/:id',
+    component: MainComponentsComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'channel/:channelId',
+        component: ChannelChatComponent,
+      }
+    ]
+  },
+  { path: 'imprint', component: ImprintComponent },
+  { path: 'privacy', component: PrivacyComponent },
 ];
-

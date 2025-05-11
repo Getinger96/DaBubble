@@ -14,6 +14,7 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { MainHelperService } from '../../services/main-helper.service';
 import { Member } from '../../interfaces/member.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-workspace-menu',
@@ -32,6 +33,7 @@ export class WorkspaceMenuComponent {
   overlayvisible: boolean = false;
   overlay2Visible: boolean = false;
   @Input() userArray!: User[];
+  @Input() actualUser!: User[];
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];
@@ -41,11 +43,11 @@ export class WorkspaceMenuComponent {
   filteredUsers = [...this.allUsers];
   selectedUsers: any[] = [];
   channels: Channel[] = [];
-
+  userId?: string
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService,private mainservice:MainComponentService,
-    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService,
+    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService,private router: Router
   ) {
 
   }
@@ -155,6 +157,8 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChannelMember(members);
     this.channelservice.setChanneldate(date)
     this.mainservice.showdirectmessage=false;
+    this.userId = this.actualUser[0].id; 
+    this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
     this.channelMessageService.getChannelId(id)
     
   }

@@ -16,13 +16,13 @@ import { User } from '../interfaces/user.interface';
 import { MessageService } from '../firebase-services/message.service';
 import { Message } from '../interfaces/message.interface';
 import { MainComponentService } from '../firebase-services/main-component.service';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart,RouterModule } from '@angular/router';
 import { DirectMessageChatComponent } from "./direct-message-chat/direct-message-chat.component";
 
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent, DirectMessageChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent,RouterModule, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent, DirectMessageChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })  
@@ -33,11 +33,13 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   private loadingSubscription!: Subscription;
   private usersSubscription!: Subscription;
   private chanelSubscription!: Subscription;
+  private actualUserSubscription!: Subscription;
   private routerSubscription!: Subscription;
   overlayUserCardActive:boolean = false;
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
   showdirectmessage:boolean=false;
+  actualUser: User[] = [];
   constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
   }
   selectedThreadMessage: Message | null = null;
@@ -59,6 +61,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     });
       this.initchanelSubscription();
       this.initRouterSubscription();
+      this.loadActualUser();
   }
 
 
@@ -95,6 +98,15 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     })
   }
 
+
+    loadActualUser(){
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+        console.log('aktueller User:', this.actualUser);
+      }
+    });
+  }
 
   initRouterSubscription() {
     this.routerSubscription = this.router.events.subscribe(event => {

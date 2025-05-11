@@ -14,6 +14,7 @@ import { IntroComponent } from '../intro/intro.component';
 import { HeaderLogoComponent } from '../header-logo/header-logo.component';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -28,6 +29,8 @@ export class LoginComponent implements AfterViewInit  {
   emailFielIsEmpty: boolean = true
   passwordFieldIsEmpty: boolean = true
   user: User = new User();
+  userId?:string
+  private actualUserSubscription!: Subscription;
   @ViewChild('email') emailInput!: ElementRef;
   @ViewChild('password') passwordInput!: ElementRef;
   loginEmailIsCorrect : boolean = true;
@@ -36,6 +39,7 @@ export class LoginComponent implements AfterViewInit  {
   overlayvisible: boolean = this.loginservice.overlayvisible
   introView: boolean = true;
   logoView: boolean =  false;
+ actualUser: any;
   constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
     private mainservice:MainComponentService,private loginservice:LoginService){
   }
@@ -57,10 +61,17 @@ export class LoginComponent implements AfterViewInit  {
   }
 
   showAnimationLogin() {
+   this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+      }
+    });
+    this.userId = this.actualUser[0].id;
+
     this.overlayvisible=true;
     setTimeout(() => {
      this.overlayvisible=false
-     this.router.navigate(['/main-components']);
+  this.router.navigate([`/main-components/${this.userId}`]);
     }, 2000)
   }
 
