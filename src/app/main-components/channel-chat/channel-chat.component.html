@@ -46,15 +46,15 @@
 </div>
 
 
-<div class="main-chat-wrapper">
+<div class="main-chat-wrapper" >
     <div class="main-chat-header">
-        <div (click)="openoverlay()" class="message-group">
+        <div *ngIf="currentChannelName" (click)="openoverlay()" class="message-group">
             <div class="actual-group">
                 <img src="assets/img/tag.png" alt=""><span class="fontNunito">{{currentChannelName}}</span>
             </div>
             <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
         </div>
-        <div class="actual-group-members">
+        <div *ngIf="currentChannelName" class="actual-group-members">
             <div *ngFor="let member of members.slice(0,3)">
                 <div class="members-avatar-group" (click)="members.length <= 3 ? openDialog() : null">
                     <div class="avatar"
@@ -73,7 +73,7 @@
         </div>
 
     </div>
-    <div class="main-chat-feed">
+    <div *ngIf="currentChannelName" class="main-chat-feed">
         <div class="channel-info">
             <div>
                 <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
@@ -88,10 +88,27 @@
             </div>
         </div>
 
-        <div *ngFor="let message of allMessages">
-            <span>{{message}}</span>
+   
 
+
+
+
+    </div>
+     <div *ngIf="!currentChannelName" class="main-chat-feed">
+        <div class="channel-info">
+            <div>
+                <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
+            </div>
+            <div class="channel-Info-container">
+              
+                <span class="welcome-span">Willkomen {{this.actualUser[0].name}} erstelle einen Channel !</span>
+                <div class="member-container"><span class="member-span"
+                        *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
+                <span>{{currentChannelDescription}}</span>
+            </div>
         </div>
+
+   
 
 
 
@@ -111,3 +128,4 @@
         </div>
     </div>
 </div>
+

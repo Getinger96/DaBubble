@@ -16,7 +16,7 @@ import { ChannelMessageService } from '../../firebase-services/channel-message.s
 import { Message } from '../../interfaces/message.interface';
 import { Subscription } from 'rxjs';
 import { MainComponentService } from '../../firebase-services/main-component.service';
-import { Router, NavigationStart,RouterModule } from '@angular/router';
+import { Router, NavigationStart, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { MainHelperService } from '../../services/main-helper.service';
 import { ConversationService } from '../../firebase-services/conversation.service';
@@ -39,9 +39,9 @@ export class ChannelChatComponent implements OnInit {
   currentChannelDate: string = '';
   actualUser: User[] = [];
   private actualUserSubscription!: Subscription;
-  private allMessageSubscription!: Subscription; 
-  private allConversationMessageSubscription!: Subscription; 
-  
+  private allMessageSubscription!: Subscription;
+  private allConversationMessageSubscription!: Subscription;
+
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   allMessages: Message[] = [];
@@ -62,7 +62,6 @@ export class ChannelChatComponent implements OnInit {
   channelId!: string;
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
-
   message: Message = {
     id: '',
     messageId: '',
@@ -81,15 +80,15 @@ export class ChannelChatComponent implements OnInit {
     threadTo: '',
     threadCount: 0,
   };
-  
-
-  
 
 
 
-  constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService,private mainservice: MainComponentService, 
-       private route: ActivatedRoute,private mainhelperservice : MainHelperService,private conversationservice: ConversationService, private messageService :MessageService
-  ) { }
+
+
+
+  constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
+    private route: ActivatedRoute, private mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService
+  ) {}
 
 
   ngOnInit(): void {
@@ -100,11 +99,18 @@ export class ChannelChatComponent implements OnInit {
     this.loadMembers();
     this.loadDate();
     this.loadRouter();
-    this.loadMessages(this.currentChannelID)
-  
-  
+   
+this.mainservice.saveActualUser()
+        this.mainservice.acutalUser$.subscribe(actualuser => {
+            this.actualUser = actualuser;
+
+        });
+
+
   }
 
+
+  
   loadChannelId() {
     this.channelService.currentChannelId$.subscribe(id => {
       this.currentChannelID = id;
@@ -140,127 +146,127 @@ export class ChannelChatComponent implements OnInit {
     });
   }
 
- 
-
-
-loadMembers() {
-  this.channelService.channelMember$.subscribe(members => {
-    this.members = members;
-    console.log('this.members', this.members);
-
-  });
-}
-
-loadDate(){
-  this.channelService.currentChannelDate$.subscribe(date => {
-    this.currentChannelDate = date;
-  })
-}
-async loadMessages(channelId: string) {
- this.channelmessageService.subList(channelId);
-
-  this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-    this.allMessages = messages.filter(message => !message.isThread);
-    this.channelmessageService.sortAllMessages(this.allMessages);
-    this.allThreads = messages.filter(message => message.isThread);
-  });
-}
 
 
 
-  loadActualUser(){
-    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-      if (actualUser.length > 0) {
-        this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
-      }
+  loadMembers() {
+    this.channelService.channelMember$.subscribe(members => {
+      this.members = members;
+      console.log('this.members', this.members);
+
     });
   }
 
-startEditName() {
-  this.editName = true
-}
+  loadDate() {
+    this.channelService.currentChannelDate$.subscribe(date => {
+      this.currentChannelDate = date;
+    })
+  }
+  async loadMessages(channelId: string) {
+    this.channelmessageService.subList(channelId);
 
-saveName() {
-  this.editName = false
-}
-
-startEditDescription() {
-  this.editDescription = true
-}
-
-saveDescription() {
-  this.editDescription = false
-}
-
-openDialog() {
-  const dialogRef = this.dialog.open(ShowUserComponent, {
-    data: {
-      allUsersChannel: this.allUsersChannel,
-      members: this.members,
-    },
-    panelClass: 'another-dialog-position'
-  });
-
-  dialogRef.componentInstance.addMemberClicked.subscribe(() => {
-    this.openDialogMembers();
-  });
-}
-
-openDialogMembers() {
-  const dialogRef = this.dialog.open(AddUserComponent, {
-    data: {
-      allUsersChannel: this.allUsersChannel,
-      members: this.members,
-      currentChannelID: this.currentChannelID,
-      currentChannelName: this.currentChannelName
-    },
-    panelClass: 'another-dialog-position'
-  });
-
-  dialogRef.afterClosed().subscribe((result: any) => {
-    this.ngZone.run(() => {
-      this.loadMembers();
+    this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
+      this.allMessages = messages.filter(message => !message.isThread);
+      this.channelmessageService.sortAllMessages(this.allMessages);
+      this.allThreads = messages.filter(message => message.isThread);
     });
+  }
+
+
+
+  loadActualUser() {
+  this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+    if (actualUser) {
+      this.actualUser = actualUser;
+      console.log('aktueller User:', this.actualUser);
+    }
   });
 }
 
+  startEditName() {
+    this.editName = true
+  }
 
-closeOverlay() {
-  this.overlayeditChannel = false;
-}
+  saveName() {
+    this.editName = false
+  }
 
-openoverlay() {
-  this.overlayeditChannel = true;
-}
+  startEditDescription() {
+    this.editDescription = true
+  }
 
-onDialogClick(event: MouseEvent) {
-  event.stopPropagation();
-}
+  saveDescription() {
+    this.editDescription = false
+  }
 
-updateChannel(event: Event, ngForm: NgForm, id: string) {
+  openDialog() {
+    const dialogRef = this.dialog.open(ShowUserComponent, {
+      data: {
+        allUsersChannel: this.allUsersChannel,
+        members: this.members,
+      },
+      panelClass: 'another-dialog-position'
+    });
 
-  this.channelService.updateChannel(this.currentChannelID, this.currentChannelName, this.currentChannelDescription)
+    dialogRef.componentInstance.addMemberClicked.subscribe(() => {
+      this.openDialogMembers();
+    });
+  }
 
-  this.closeOverlay()
-}
+  openDialogMembers() {
+    const dialogRef = this.dialog.open(AddUserComponent, {
+      data: {
+        allUsersChannel: this.allUsersChannel,
+        members: this.members,
+        currentChannelID: this.currentChannelID,
+        currentChannelName: this.currentChannelName
+      },
+      panelClass: 'another-dialog-position'
+    });
 
-deleteChannel() {
-  this.channelService.deleteChannel(this.currentChannelID)
-  this.closeOverlay()
-}
+    dialogRef.afterClosed().subscribe((result: any) => {
+      this.ngZone.run(() => {
+        this.loadMembers();
+      });
+    });
+  }
 
-sendmessage(channelid: string){
-   this.message.id = this.actualUser[0]?.id || '';
+
+  closeOverlay() {
+    this.overlayeditChannel = false;
+  }
+
+  openoverlay() {
+    this.overlayeditChannel = true;
+  }
+
+  onDialogClick(event: MouseEvent) {
+    event.stopPropagation();
+  }
+
+  updateChannel(event: Event, ngForm: NgForm, id: string) {
+
+    this.channelService.updateChannel(this.currentChannelID, this.currentChannelName, this.currentChannelDescription)
+
+    this.closeOverlay()
+  }
+
+  deleteChannel() {
+    this.channelService.deleteChannel(this.currentChannelID)
+    this.closeOverlay()
+  }
+
+  sendmessage(channelid: string) {
+    this.message.id = this.actualUser[0]?.id || '';
     this.message.name = this.actualUser[0]?.name || '';
     this.message.avatar = this.actualUser[0]?.avatar || 1;
     this.message.isOwn = true;
 
-  this.channelmessageService.addMessage(this.message, channelid,)
+    this.channelmessageService.addMessage(this.message, channelid,)
 
-  this.message.messageText='';
-}
-  
+    this.message.messageText = '';
+  }
+
 }
 
 

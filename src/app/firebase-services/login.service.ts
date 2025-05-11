@@ -46,8 +46,9 @@ allUsers: User[] = [];
           console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
 
           this.updateStatusByUid(user.uid, 'Online')
-          this.mainservice.getActualUser(user.uid)
           this.mainservice.saveActualUser();
+          this.mainservice.getActualUser(user.uid)
+          
           let id:string;
           this.mainservice.acutalUser$.subscribe(user => {
             id = user[0].id;
