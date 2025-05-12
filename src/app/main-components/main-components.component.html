@@ -6,8 +6,8 @@
         <app-active-user></app-active-user>
     </div>
     <div class="body">
-        <app-workspace-menu [userArray]="allUsers" [actualUser]="actualUser"></app-workspace-menu>
-        <main class="chat-area">  <router-outlet></router-outlet></main>
+        <app-workspace-menu  [userArray]="allUsers" [actualUser]="actualUser"></app-workspace-menu>
+        <main *ngIf="!this.mainservice.showdirectmessage"  class="chat-area">  <router-outlet></router-outlet></main>
         <app-direct-message-chat *ngIf="this.mainservice.showdirectmessage"></app-direct-message-chat>
         <app-thread *ngIf="selectedThreadMessage" [selectedMessage]="selectedThreadMessage"
             (closeThread)="closeThreadView()"></app-thread>

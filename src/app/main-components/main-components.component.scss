@@ -21,10 +21,10 @@
     justify-content: flex-start;
     gap: 20px;
     height: 80vh;
-    
 
 
-    
+
+
 
     app-workspace-menu {
       height: 100%;
@@ -33,6 +33,17 @@
       transition: width 0.3s ease;
     }
 
+    app-workspace-menu {
+      height: 100%;
+      width: 20%;
+      max-width: 366px;
+      transition: width 0.3s ease;
+    }
+
+    app-workspace-menu.closed {
+      width: 0 !important;
+      overflow: hidden;
+    }
 
     .chat-area {
       max-width: 1440px;
@@ -69,6 +80,6 @@
   }
 
 
- 
+
 
 }

@@ -128,6 +128,26 @@ export class MessageService {
     }
   }
 
+  messageJson2(item: Message, id: string,channelId:string){
+return {
+      name: item.name,
+      avatar: item.avatar,
+      channelId: channelId,
+      messageText: item.messageText,
+      messageId: item.messageId || '',
+      id: id,
+      sendAt: item.sendAt,
+      sendAtTime: item.sendAtTime,
+      timestamp: item.timestamp || Date.now(),
+      isOwn: item.isOwn,
+      threadTo: item.threadTo || null,
+      isThread: item.isThread || false,
+      isInThread: item.isInThread || false,
+      threadCount: item.threadCount || 0,
+
+    };
+  }
+
   messageJson(item: Message, id: string) {
     return {
       name: item.name,
@@ -143,6 +163,7 @@ export class MessageService {
       isThread: item.isThread || false,
       isInThread: item.isInThread || false,
       threadCount: item.threadCount || 0,
+
     };
   }
 

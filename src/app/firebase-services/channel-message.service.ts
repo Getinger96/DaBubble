@@ -114,7 +114,7 @@ export class ChannelMessageService {
            const channelDocRef = doc(this.firestore, 'Channels', channelid);
      const messagesRef = collection(channelDocRef, 'messages');
      const Userid=this.messageService.getActualUser()
-     const docRef = await addDoc(messagesRef,this.messageService.messageJson(message,Userid))
+     const docRef = await addDoc(messagesRef,this.messageService.messageJson2(message,Userid,channelid))
      const messageId = docRef.id;
      await updateDoc(docRef, { messageId }); 
     } catch (error) {
