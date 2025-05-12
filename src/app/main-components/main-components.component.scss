@@ -34,7 +34,10 @@
     }
 
 
-
+    app-channel-chat {
+      max-width: 1440px;
+      flex-grow: 1;
+    }
 
 
     app-direct-message-chat {

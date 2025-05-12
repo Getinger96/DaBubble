@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference, deleteDoc, serverTimestamp } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
 import { BehaviorSubject, timestamp } from 'rxjs';
@@ -114,7 +114,25 @@ export class ChannelService {
         }, 1000);
     }
 
+setCurrentChannel(channelId: string) {
+  const channelDocRef = doc(this.firestore, 'Channels', channelId);
 
+  getDoc(channelDocRef).then((docSnap) => {
+    if (docSnap.exists()) {
+      const channel = docSnap.data() as Channel;
+      this.channelNameSubject.next(channel.name);
+      this.channelDescriptionSubject.next(channel.description);
+      this.channelCreatorSubject.next(channel.creator);
+      this.channelDateSubject.next(channel.date);
+      this.channelIdSubject.next(channelId);
+      this.channelMemberSubject.next(channel.members);
+    } else {
+      console.warn('⚠️ Channel nicht gefunden:', channelId);
+    }
+  }).catch(error => {
+    console.error('❌ Fehler beim Laden des Channels:', error);
+  });
+}
 
 
     setChannelName(name: string): void {

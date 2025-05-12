@@ -92,35 +92,44 @@ export class ChannelChatComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loadRouter();
     this.loadName();
     this.loadDescription();
     this.loadChannelId();
     this.loadCurrentCrator();
     this.loadMembers();
     this.loadDate();
-   
-
-     this.route.pathFromRoot.forEach(route => {
-    route.paramMap.subscribe(params => {
-      if (params.has('channelId')) {
-        const channelId = params.get('channelId');
-        console.log('🎯 channelId gefunden über pathFromRoot:', channelId);
-        this.channelId = channelId!;
-        this.loadMessages(channelId!);
-      }
-    });
-  });
-  
-this.mainservice.saveActualUser()
-        this.mainservice.acutalUser$.subscribe(actualuser => {
-            this.actualUser = actualuser;
-
-        });
+    this.loadActualUser();
 
 
   }
 
 
+
+
+      loadActualUser(){
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+        console.log('aktueller User:', this.actualUser);
+      }
+    });
+  }
+
+
+  loadRouter() {
+         this.route.pathFromRoot.forEach(route => {
+    route.paramMap.subscribe(params => {
+      if (params.has('channelId')) {
+        const channelId = params.get('channelId');
+        console.log('🎯 channelId gefunden über pathFromRoot:', channelId);
+        this.channelId = channelId!;
+        this.channelService.setCurrentChannel(this.channelId);
+        this.loadMessages(channelId!);
+      }
+    });
+  });
+  }
   
   loadChannelId() {
     this.channelService.currentChannelId$.subscribe(id => {
@@ -141,15 +150,7 @@ this.mainservice.saveActualUser()
 
     });
   }
-  loadRouter() {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('channelId');
-      if (id) {
-        this.channelId = id;
-        this.loadMessages(id);
-      }
-    });
-  }
+
 
   loadDescription() {
     this.channelService.currentChannelDescription$.subscribe(description => {
@@ -189,14 +190,7 @@ this.mainservice.saveActualUser()
 
 
 
-  loadActualUser() {
-  this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-    if (actualUser) {
-      this.actualUser = actualUser;
-      console.log('aktueller User:', this.actualUser);
-    }
-  });
-}
+
 
   startEditName() {
     this.editName = true
