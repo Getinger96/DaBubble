@@ -61,6 +61,8 @@ export class MessageComponent {
       } else {
         this.lastAnswerDate = '';
       }
+    }else{
+      console.log('no Message Data')
     }
   }
 

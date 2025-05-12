@@ -177,10 +177,14 @@ this.mainservice.saveActualUser()
     this.channelmessageService.subList(channelId);
 
     this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-      this.allMessages = messages.filter(message => !message.isThread);
-      this.channelmessageService.sortAllMessages(this.allMessages);
-      this.allThreads = messages.filter(message => message.isThread);
-    });
+  // Nur gültige Nachrichten durchlassen (z. B. messageText vorhanden)
+  const filtered = messages.filter(message => !!message.messageText && message.messageText.trim() !== '');
+  
+  this.allMessages = filtered.filter(message => !message.isThread);
+  this.channelmessageService.sortAllMessages(this.allMessages);
+  this.allThreads = filtered.filter(message => message.isThread);
+});
+
   }
 
 
