@@ -98,8 +98,19 @@ export class ChannelChatComponent implements OnInit {
     this.loadCurrentCrator();
     this.loadMembers();
     this.loadDate();
-    this.loadRouter();
    
+
+     this.route.pathFromRoot.forEach(route => {
+    route.paramMap.subscribe(params => {
+      if (params.has('channelId')) {
+        const channelId = params.get('channelId');
+        console.log('🎯 channelId gefunden über pathFromRoot:', channelId);
+        this.channelId = channelId!;
+        this.loadMessages(channelId!);
+      }
+    });
+  });
+  
 this.mainservice.saveActualUser()
         this.mainservice.acutalUser$.subscribe(actualuser => {
             this.actualUser = actualuser;

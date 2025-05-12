@@ -1,4 +1,5 @@
 <section *ngIf="loadingStatus" class="main-content default-background">
+
     <div class="main-head">
         <app-header></app-header>
         <app-search-bar></app-search-bar>
@@ -6,12 +7,10 @@
     </div>
     <div class="body">
         <app-workspace-menu [userArray]="allUsers" [actualUser]="actualUser"></app-workspace-menu>
-        <app-channel-chat [allUsersChannel]="allUsers"></app-channel-chat>
+        <router-outlet></router-outlet>
         <app-direct-message-chat *ngIf="this.mainservice.showdirectmessage"></app-direct-message-chat>
-        <app-thread *ngIf="selectedThreadMessage" 
-        [selectedMessage]="selectedThreadMessage"
-        (closeThread)="closeThreadView()"
-        ></app-thread>
+        <app-thread *ngIf="selectedThreadMessage" [selectedMessage]="selectedThreadMessage"
+            (closeThread)="closeThreadView()"></app-thread>
     </div>
     <app-toggle-webspace-menu></app-toggle-webspace-menu>
 </section>

@@ -1,14 +1,17 @@
 @import './../../../styles.scss';
 
 .main-chat-wrapper {
-    width: 100%;
-    background-color: #FFFFFF;
+    width: 100%;               /* Sicherstellen, dass der Wrapper die gesamte Breite einnimmt */
+    height: 100%;              /* Volle Höhe */
+    display: flex;             /* Flexbox-Layout */
+    flex-direction: column;    /* Stellt sicher, dass die Inhalte vertikal gestapelt werden */
+    background-color: white;
     border-radius: 30px;
-    height: 100%;
-
+    min-width: 0;      
 }
 
 .main-chat-header {
+    flex-shrink: 0;
     height: 96px;
     box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -78,6 +81,7 @@
 }
 
 .main-chat-feed {
+    flex-grow: 1;
     height: calc(100% - 321px);
     display: flex;
     flex-direction: column;
@@ -86,6 +90,7 @@
 }
 
 .input-wrapper {
+    flex-shrink: 0;
     padding: 38px 35px 40px 35px;
 }
 

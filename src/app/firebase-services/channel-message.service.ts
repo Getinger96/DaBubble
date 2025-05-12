@@ -37,9 +37,11 @@ export class ChannelMessageService {
 
 
   subList(channelId: string) {
+    console.log('📡 subList aufgerufen mit channelId:', channelId);
       const channelDocRef = doc(this.firestore, 'Channels', channelId);
       const messagesRef = collection(channelDocRef, 'messages');
     return onSnapshot(messagesRef, (snapshot) => {
+       console.log('🟢 Snapshot empfangen', snapshot.size);
       let allMessages: Message[] = [];
       const actualUserID = this.messageService.getActualUser();
       snapshot.forEach(element => {
