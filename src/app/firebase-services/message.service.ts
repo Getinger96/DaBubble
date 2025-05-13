@@ -11,6 +11,7 @@ import { Message } from '../interfaces/message.interface';
 import { BehaviorSubject } from 'rxjs';
 import { onSnapshot } from '@angular/fire/firestore';
 import { RegisterService } from './register.service';
+import { ChannelMessageService } from './channel-message.service';
 import { MainComponentService } from './main-component.service';
 import { MessageComponent } from '../shared-components/message/message.component';
 
@@ -18,7 +19,6 @@ import { MessageComponent } from '../shared-components/message/message.component
   providedIn: 'root',
 })
 export class MessageService {
-
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   id?: string;
@@ -41,7 +41,7 @@ export class MessageService {
 
   unsubList;
 
-  constructor(private registerService: RegisterService, private mainservice: MainComponentService) {
+  constructor(private registerService: RegisterService, private mainservice: MainComponentService,) {
     this.unsubList = this.subList();
   }
 
@@ -128,6 +128,22 @@ export class MessageService {
     }
   }
 
+
+      async addMessage(message: Message,channelid:string){
+    try {
+           const channelDocRef = doc(this.firestore, 'Channels', channelid);
+     const messagesRef = collection(channelDocRef, 'messages');
+     const Userid=this.getActualUser()
+     const docRef = await addDoc(messagesRef,this.messageJson2(message,Userid,channelid))
+     const messageId = docRef.id;
+     await updateDoc(docRef, { messageId }); 
+     return messageId
+    } catch (error) {
+      return null
+    }
+
+    }
+
   messageJson2(item: Message, id: string,channelId:string){
 return {
       name: item.name,
@@ -199,7 +215,7 @@ return {
     this.threadAnswersSubject.next(replies);
   }
 
-  async addThreadAnswer(messageText: string, threadToId: string) {
+  async addThreadAnswer(messageText: string, threadToId: string, selectedMessage:Message) {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
     
@@ -247,13 +263,13 @@ return {
       threadTo: threadToId,
       id: userId,
       messageId: '',
-      channelId: '',
+      channelId: selectedMessage.channelId,
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
     };
 
-    const answerId = await this.addMessageInFirebase(threadAnswer);
+    const answerId = await this.addMessage(threadAnswer, selectedMessage.channelId);
     if (answerId){
       threadAnswer.messageId = answerId;
       console.log('Thread created with', answerId);

@@ -90,7 +90,8 @@ export class ThreadComponent {
     if (!this.newThreadText.trim() || !this.selectedMessage?.messageId) return;
     await this.messageService.addThreadAnswer(
       this.newThreadText,
-      this.selectedMessage.messageId
+      this.selectedMessage.messageId,
+      this.selectedMessage
     );
     this.newThreadText = '';
     this.loadThreadAnswers();
