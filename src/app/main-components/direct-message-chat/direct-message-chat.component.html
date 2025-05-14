@@ -3,22 +3,22 @@
     <div class="profile-Container">
         <div class="container-Header">
             <span>Profil</span>
-            <img (click)="closeOverlay()" src="../../../assets/img/close.png" alt="">
+            <img (click)="closeOverlay()" src="assets/img/close.png" alt="">
         </div>
         <div class="container-img">
-            <img  src="../../../assets/img/avatar_large_{{currentmessageAvatar}}.png" alt="">
+            <img  src="assets/img/avatar_large_{{currentmessageAvatar}}.png" alt="">
         </div>
         <div class="container-Name">
             <span>{{currentmessageUser}}</span>
 
         </div>
         <div class="container-Status">
-            <img  src="../../../assets/img/{{currentmessageStatus}}.svg" alt="">
+            <img  src="assets/img/{{currentmessageStatus}}.svg" alt="">
             <span [ngClass]="currentmessageStatus === 'Online' ? 'status-online' : 'status-offline'" >{{currentmessageStatus}}</span>
         </div>
         <div class="container-Email">
             <div class="email-Header">
-                <img src="../../../assets/img/mail.svg" alt="">
+                <img src="assets/img/mail.svg" alt="">
                 <span>E-Mail-Adresse</span>
             </div>
           <a href="mailto:{{currentmessageEmail}}">{{currentmessageEmail}}</a>
@@ -26,17 +26,10 @@
         </div>
 
         <div class="button-container">
-
             <button class="button">Nachricht senden</button>
-
         </div>
-
     </div>
-
 </div>
-
-
-
 
 <div class="main-chat-wrapper">
     <div class="main-chat-header">
@@ -52,7 +45,6 @@
 
         </div>
 
-
     </div>
     <div class="main-chat-feed">
         <div class="intro">
@@ -64,7 +56,7 @@
                 @if(this.actualUser == this.currentmessageUser) {
                     <p><span class="intro-own-text">Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</p>
                 } @else if(this.actualUser != this.currentmessageUser) {
-                    <p>Diese Unterhaltung findet nur zwischen <a href="">&#64;{{ currentmessageUser }}</a> und dir statt.</p>
+                    <p>Diese Unterhaltung findet nur zwischen <a (click)="openOverlay()">&#64;{{ currentmessageUser }}</a> und dir statt.</p>
                 }
 
             </div>

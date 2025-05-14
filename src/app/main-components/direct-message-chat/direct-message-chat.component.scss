@@ -275,6 +275,9 @@ font-size: 28px;
             }
             >a {
                 color: #535AF1;
+                &:hover {
+                    font-weight: 700;
+                }
             }
         }
     }
