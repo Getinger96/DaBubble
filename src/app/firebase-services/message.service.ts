@@ -11,7 +11,6 @@ import { Message } from '../interfaces/message.interface';
 import { BehaviorSubject } from 'rxjs';
 import { onSnapshot } from '@angular/fire/firestore';
 import { RegisterService } from './register.service';
-import { ChannelMessageService } from './channel-message.service';
 import { MainComponentService } from './main-component.service';
 import { MessageComponent } from '../shared-components/message/message.component';
 
@@ -19,6 +18,7 @@ import { MessageComponent } from '../shared-components/message/message.component
   providedIn: 'root',
 })
 export class MessageService {
+
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   id?: string;
@@ -33,7 +33,7 @@ export class MessageService {
   );
   selectedThreadMessage$ = this.selectedThreadMessageSubject.asObservable();
 
-  private showThreadSubject = new BehaviorSubject<boolean>(false);
+  public showThreadSubject = new BehaviorSubject<boolean>(false);
   showThread$ = this.showThreadSubject.asObservable();
 
   private threadAnswersSubject = new BehaviorSubject<Message[]>([]);
@@ -275,7 +275,7 @@ return {
       console.log('Thread created with', answerId);
     }
 
-    await this.updateMessageThreadCount(threadToId);
+    await this.updateMessageThreadCount(threadToId,selectedMessage.channelId);
 
     this.allMessagesSubject.next(this.allMessages);
   }
@@ -303,13 +303,13 @@ return {
     });
   }
 
-  async updateMessageThreadCount(messageId: string) {
+  async updateMessageThreadCount(messageId: string,channelid:string) {
 
     const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
     const threadCount = replies.length;
     
 
-    const msgRef = doc(this.firestore, 'Messages', messageId);
+    const msgRef = doc(this.firestore, 'Channels', channelid);
     
     try {
       await updateDoc(msgRef, {

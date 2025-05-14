@@ -5,6 +5,7 @@ import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
 import { Subscription } from 'rxjs';
+import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 
 @Component({
   selector: 'app-message',
@@ -39,7 +40,7 @@ export class MessageComponent {
   showEditPopup = MessageComponent.showEditPopup;
   editMessage = MessageComponent.showEditPopup;
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) {}
 
   ngOnInit(): void {
     if (this.messageData) {
@@ -68,20 +69,20 @@ export class MessageComponent {
 
   onReplyClick(): void {
     if (this.messageData) {
-      this.messageService.openThread(this.messageData);
+      this.channelmessageService.openThread(this.messageData);
       this.loadThreadAnswers();
     }
   }
 
   loadThreadAnswers(): void {
-    this.allThreadsSubscription = this.messageService.allMessages$.subscribe(
+    this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
       (messages) => {
         if (this.messageData) {
           this.threadAnswers = messages.filter((message) => message.isThread);
           this.threadAnswers = this.messageService.getThreadAnswers(
             this.messageData.messageId
           );
-          this.messageService.updateThreadAnswers(this.messageData.messageId);
+          this.channelmessageService.updateThreadAnswers(this.messageData.messageId);
           this.lastAnswerDate =
             (this.messageService?.lastAnswer?.sendAtTime ?? '') +
             (this.messageService?.lastAnswer?.sendAt ?? '');

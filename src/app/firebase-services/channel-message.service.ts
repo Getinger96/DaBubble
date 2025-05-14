@@ -21,16 +21,20 @@ export class ChannelMessageService {
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   channelMessageId?: string;
-  messageId?:string;
+  messageId?: string;
   lastAnswer: Message | null = null;
   private allMessagesSubject = new BehaviorSubject<Message[]>([]);
   private selectedThreadMessageSubject = new BehaviorSubject<Message | null>(null);
   selectedThreadMessage$ = this.selectedThreadMessageSubject.asObservable();
+  public showThreadSubject = new BehaviorSubject<boolean>(false);
+  showThread$ = this.showThreadSubject.asObservable();
+  private threadAnswersSubject = new BehaviorSubject<Message[]>([]);
+  threadReplies$ = this.threadAnswersSubject.asObservable();
 
   allMessages$ = this.allMessagesSubject.asObservable();
 
   constructor(private messageService: MessageService) {
-   }
+  }
 
 
 
@@ -38,10 +42,10 @@ export class ChannelMessageService {
 
   subList(channelId: string) {
     console.log('📡 subList aufgerufen mit channelId:', channelId);
-      const channelDocRef = doc(this.firestore, 'Channels', channelId);
-      const messagesRef = collection(channelDocRef, 'messages');
+    const channelDocRef = doc(this.firestore, 'Channels', channelId);
+    const messagesRef = collection(channelDocRef, 'messages');
     return onSnapshot(messagesRef, (snapshot) => {
-       console.log('🟢 Snapshot empfangen', snapshot.size);
+      console.log('🟢 Snapshot empfangen', snapshot.size);
       let allMessages: Message[] = [];
       const actualUserID = this.messageService.getActualUser();
       snapshot.forEach(element => {
@@ -53,7 +57,7 @@ export class ChannelMessageService {
         allMessages.push(message);
       });
       this.allMessages = allMessages;
-      
+
       this.allMessagesSubject.next(this.allMessages);
 
       const selectedMessage = this.selectedThreadMessageSubject.value;
@@ -64,7 +68,15 @@ export class ChannelMessageService {
   }
 
 
-  sortAllMessages(messageArray : Message[]):void {
+  openThread(message: Message) {
+    this.selectedThreadMessageSubject.next(message);
+    console.log('Selected Thread Message is', this.selectedThreadMessageSubject)
+    this.messageService.showThreadSubject.next(true);
+    this.getThreadAnswers(message.messageId)
+    this.updateThreadAnswers(message.messageId);
+  }
+
+  sortAllMessages(messageArray: Message[]): void {
     messageArray.sort((a, b) => {
       const timestampA = a.timestamp || 0;
       const timestampB = b.timestamp || 0;
@@ -72,14 +84,28 @@ export class ChannelMessageService {
     });
   }
 
+  getThreadAnswers(id: string): Message[] {
+    const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
+    this.sortAllMessages(threadAnswers);
+    const lastAnswer = threadAnswers[threadAnswers.length - 1];
+    this.lastAnswer = lastAnswer;
+    return threadAnswers;
+  }
+
+  updateThreadAnswers(threadTo: string) {
+    const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
+    this.sortAllMessages(replies);
+    this.threadAnswersSubject.next(replies);
+  }
 
 
 
-  getChannelId(channelId:string){
+
+  getChannelId(channelId: string) {
     const channelDocRef = doc(this.firestore, 'Channels', channelId);
-     const messagesRef = collection(channelDocRef, 'messages');
-     console.log('channelDocRef', messagesRef);
-      this.getMessagesAndMessageId(messagesRef)
+    const messagesRef = collection(channelDocRef, 'messages');
+    console.log('channelDocRef', messagesRef);
+    this.getMessagesAndMessageId(messagesRef)
 
   }
 
@@ -101,31 +127,34 @@ export class ChannelMessageService {
         console.error('Snapshot-Fehler:', error);
       }
     );
-  
+
     return unsubscribe;
   }
 
-    getMessageRef() {
+  getMessageRef() {
     return collection(this.firestore, 'messages');
   }
 
-    async addMessage(message: Message,channelid:string){
+  async addMessage(message: Message, channelid: string) {
     try {
-           const channelDocRef = doc(this.firestore, 'Channels', channelid);
-     const messagesRef = collection(channelDocRef, 'messages');
-     const Userid=this.messageService.getActualUser()
-     const docRef = await addDoc(messagesRef,this.messageService.messageJson2(message,Userid,channelid))
-     const messageId = docRef.id;
-     await updateDoc(docRef, { messageId }); 
+      const channelDocRef = doc(this.firestore, 'Channels', channelid);
+      const messagesRef = collection(channelDocRef, 'messages');
+      const Userid = this.messageService.getActualUser()
+      const docRef = await addDoc(messagesRef, this.messageService.messageJson2(message, Userid, channelid))
+      const messageId = docRef.id;
+      await updateDoc(docRef, { messageId });
     } catch (error) {
-      
-    }
 
     }
 
+  }
 
 
+  
 }
+
+
+
 
 
 

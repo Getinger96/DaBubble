@@ -18,6 +18,7 @@ import { Message } from '../interfaces/message.interface';
 import { MainComponentService } from '../firebase-services/main-component.service';
 import { Router, NavigationStart,RouterModule } from '@angular/router';
 import { DirectMessageChatComponent } from "./direct-message-chat/direct-message-chat.component";
+import { ChannelMessageService } from '../firebase-services/channel-message.service';
 
 @Component({
   selector: 'app-main-components',
@@ -40,7 +41,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   showThreadWindow: boolean = false;
   showdirectmessage:boolean=false;
   actualUser: User[] = [];
-  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router) {
+  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService) {
   }
   selectedThreadMessage: Message | null = null;
   
@@ -56,7 +57,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    this.messageService.selectedThreadMessage$.subscribe((message) => {
+    this.channemessageService.selectedThreadMessage$.subscribe((message) => {
       this.selectedThreadMessage = message;
     });
       this.initchanelSubscription();
@@ -69,7 +70,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = message;
-    this.messageService.openThread(message);
+    this.channemessageService.openThread(message);
 
   }
 

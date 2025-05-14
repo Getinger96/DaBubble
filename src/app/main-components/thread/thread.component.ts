@@ -7,6 +7,7 @@ import { MessageService } from '../../firebase-services/message.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 
 @Component({
   selector: 'app-thread',
@@ -31,12 +32,13 @@ export class ThreadComponent {
   constructor(
     public messageService: MessageService,
     private mainService: MainComponentService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private channelmessageservice:ChannelMessageService
   ) {}
 
   ngOnInit(): void {
     this.selectedMessageSubscription =
-      this.messageService.selectedThreadMessage$.subscribe((message) => {
+      this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
         console.log('Selected message updated:', message);
         this.selectedMessage = message;
 
@@ -46,7 +48,7 @@ export class ThreadComponent {
       });
 
     this.threadRepliesSubscription =
-      this.messageService.threadReplies$.subscribe((replies) => {
+      this.channelmessageservice.threadReplies$.subscribe((replies) => {
         console.log('Thread replies updated:', replies);
         this.threadAnswers = replies;
       });
@@ -67,11 +69,11 @@ export class ThreadComponent {
   }
 
   loadThreadAnswers(): void {
-    this.allThreadsSubscription = this.messageService.allMessages$.subscribe(
+    this.allThreadsSubscription = this.channelmessageservice.allMessages$.subscribe(
       (messages) => {
         this.threadAnswers = messages.filter((message) => message.isThread);
         if (this.selectedMessage?.messageId) {
-          this.threadAnswers = this.messageService.getThreadAnswers(
+          this.threadAnswers = this.channelmessageservice.getThreadAnswers(
             this.selectedMessage.messageId
           );
         };
@@ -95,7 +97,7 @@ export class ThreadComponent {
     );
     this.newThreadText = '';
     this.loadThreadAnswers();
-    this.messageService.sortAllMessages(this.threadAnswers);
+    this.channelmessageservice.sortAllMessages(this.threadAnswers);
   }
 
   ngOnDestroy(): void {
