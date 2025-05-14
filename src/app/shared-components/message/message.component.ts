@@ -56,7 +56,7 @@ export class MessageComponent {
       this.isAnswered = this.messageData.isAnswered ?? this.isAnswered;
       this.threadCount = this.messageData.threadCount || this.threadCount;
       this.threadTo = this.messageData.threadTo ?? this.threadTo;
-      const lastAnswer = this.messageService.getLastAnswer(this.messageData);
+      const lastAnswer = this.channelmessageService.getLastAnswer(this.messageData);
       if (lastAnswer && lastAnswer.sendAtTime && lastAnswer.sendAt) {
         this.lastAnswerDate = lastAnswer.sendAtTime + ' ' + lastAnswer.sendAt;
       } else {
@@ -79,7 +79,7 @@ export class MessageComponent {
       (messages) => {
         if (this.messageData) {
           this.threadAnswers = messages.filter((message) => message.isThread);
-          this.threadAnswers = this.messageService.getThreadAnswers(
+          this.threadAnswers = this.channelmessageService.getThreadAnswers(
             this.messageData.messageId
           );
           this.channelmessageService.updateThreadAnswers(this.messageData.messageId);
@@ -108,7 +108,7 @@ export class MessageComponent {
   }
 
   addNewReaction(reaction: string) {
-    this.messageService.saveReaction(reaction);
+    this.channelmessageService.saveReaction(reaction);
   }
 
   ngOnDestroy(): void {

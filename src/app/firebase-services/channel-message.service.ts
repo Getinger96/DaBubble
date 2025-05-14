@@ -14,6 +14,7 @@ import {
 } from '@angular/fire/firestore';
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
+import { MainComponentService } from './main-component.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,7 +34,7 @@ export class ChannelMessageService {
 
   allMessages$ = this.allMessagesSubject.asObservable();
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService, private mainservice: MainComponentService) {
   }
 
 
@@ -62,7 +63,7 @@ export class ChannelMessageService {
 
       const selectedMessage = this.selectedThreadMessageSubject.value;
       if (selectedMessage) {
-        this.messageService.updateThreadAnswers(selectedMessage.messageId);
+        this.updateThreadAnswers(selectedMessage.messageId);
       }
     });
   }
@@ -82,6 +83,10 @@ export class ChannelMessageService {
       const timestampB = b.timestamp || 0;
       return timestampA - timestampB;
     });
+  }
+
+  getActualUser() {
+    return this.mainservice?.actualUser[0]?.id;
   }
 
   getThreadAnswers(id: string): Message[] {
@@ -143,14 +148,136 @@ export class ChannelMessageService {
       const docRef = await addDoc(messagesRef, this.messageService.messageJson2(message, Userid, channelid))
       const messageId = docRef.id;
       await updateDoc(docRef, { messageId });
+      return messageId;
     } catch (error) {
-
+      console.error('Error adding message:', error);
+      return null
     }
 
   }
 
 
-  
+
+  async addThreadAnswer(messageText: string, threadToId: string, selectedMessage: Message) {
+    const userId = this.getActualUser();
+    const user = this.mainservice.actualUser[0];
+
+    let months = [
+      'Januar',
+      'Februar',
+      'März',
+      'April',
+      'Mai',
+      'Juni',
+      'Juli',
+      'August',
+      'September',
+      'Oktober',
+      'November',
+      'Dezember',
+    ];
+    let days = [
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+      'Sonntag',
+    ];
+    let d = new Date();
+    let month = months[d.getMonth()];
+    let dayString = days[d.getDay()];
+    let dayNumber = d.getDate();
+    let minutes = d.getMinutes();
+    let hours = d.getHours();
+
+
+    const threadAnswer: Message = {
+      name: user.name,
+      avatar: user.avatar,
+      messageText: messageText,
+      sendAt: `${dayString}, ${dayNumber}. ${month}`,
+      sendAtTime: `${hours}:${minutes}`,
+      timestamp: Date.now(),
+      isOwn: true,
+      isThread: true,
+      isInThread: false,
+      threadTo: threadToId,
+      id: userId,
+      messageId: '',
+      channelId: selectedMessage.channelId,
+      reaction: 0,
+      isAnswered: false,
+      threadCount: 0,
+    };
+
+    const answerId = await this.addMessage(threadAnswer, selectedMessage.channelId);
+    if (answerId) {
+      threadAnswer.messageId = answerId;
+      console.log('Thread created with', answerId);
+    }
+
+    await this.updateMessageThreadCount(threadToId, selectedMessage.channelId);
+
+    this.allMessagesSubject.next(this.allMessages);
+  }
+  async updateMessageThreadCount(messageId: string, channelid: string) {
+    this.allMessagesSubject.next(this.allMessages);
+    const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
+    const threadCount = replies.length;
+
+
+    const channelRef = doc(this.firestore, 'Channels', channelid);
+    const msgRef= doc(channelRef,'messages',messageId)
+    
+
+    try {
+      await updateDoc(msgRef, {
+        threadCount: threadCount,
+        isAnswered: threadCount > 0
+      });
+
+    } catch (error) {
+      console.error("Error updating thread count:", error);
+    }
+  }
+
+
+  getLastAnswer(message: Message) {
+    const allAnswers = this.allMessages.filter((msg) => msg.threadTo === message.messageId);
+    const lastAnswer = allAnswers[allAnswers.length - 1];
+    console.log(lastAnswer)
+    return lastAnswer;
+
+  }
+
+
+
+  async saveReaction(reaction: string) {
+    let emoji: string;
+
+    if (reaction === 'check') {
+      emoji = '✅';
+    } else if (reaction === 'like') {
+      emoji = '👍';
+    } else {
+      console.warn('Unbekannte Reaktion:', reaction);
+      return;
+    }
+
+    const reactionsRef = collection(
+      this.firestore,
+      `messages/${this.messageId}/reactions`
+    );
+
+    return await addDoc(reactionsRef, {
+      emoji,
+      createdAt: new Date()
+    });
+  }
+
+
 }
 
 

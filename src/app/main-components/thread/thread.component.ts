@@ -90,7 +90,7 @@ export class ThreadComponent {
 
   async sendReply(): Promise<void> {
     if (!this.newThreadText.trim() || !this.selectedMessage?.messageId) return;
-    await this.messageService.addThreadAnswer(
+    await this.channelmessageservice.addThreadAnswer(
       this.newThreadText,
       this.selectedMessage.messageId,
       this.selectedMessage
