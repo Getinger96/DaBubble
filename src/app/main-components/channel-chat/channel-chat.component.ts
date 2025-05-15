@@ -63,6 +63,7 @@ export class ChannelChatComponent implements OnInit {
   channelId!: string;
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
+  toggleEmoji: boolean = false
   message: Message = {
     id: '',
     messageId: '',
@@ -106,7 +107,9 @@ export class ChannelChatComponent implements OnInit {
 
   }
 
-
+  toggleEmojiBar() {
+    this.toggleEmoji = !this.toggleEmoji;
+  }
 
 
       loadActualUser(){

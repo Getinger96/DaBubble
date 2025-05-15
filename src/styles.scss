@@ -84,8 +84,10 @@ h1, h2, h3, h4, h5, h6, p, span {
 }
 
 .emoji-mart-anchors {
-  display: flex;
-  gap:5px
+    display: flex;
+    gap: 5px;
+    border-bottom: solid 1px #615b5b;
+    margin-bottom: 5px;
 }
 
 .emoji-mart-scroll {
@@ -93,7 +95,27 @@ h1, h2, h3, h4, h5, h6, p, span {
     overflow-y: auto;
     display: flex;
     max-width: 250px;
-  padding-right: 10px;
+      scrollbar-color: #444DF2 #222222 !important;
+          padding-left: 10px;
+}
+
+.emoji-mart-anchors svg {
+  fill: #5D5D5D; 
+  opacity: 1;    
+  height: 20px;
+  width: 20px;
+  margin-left: 5px;
+
+  &:hover {
+    fill: #ae65c5; 
+    font-weight: bolder;
+  }
+}
+
+
+.emoji-mart-category-label {
+  color: white;
+  margin-bottom: 12px;
 }
 
 emoji-mart .emoji-mart-preview-data {
@@ -102,19 +124,24 @@ emoji-mart .emoji-mart-preview-data {
 .emoji-mart-search {
     justify-content: space-between;
     display: flex;
-    border: solid 1px white;
+    border: solid 1px #615b5b;
     margin-right: 15px;
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 10px;
+    margin-left: 12px;
 
 }
 
+
+.emoji-mart-preview-emoji {
+  margin-top: 12px;
+}
 .emoji-mart-sr-only {
   display: none;
 }
 input.ng-pristine.ng-valid.ng-touched {
-  background-color: #222222 !important;
+  background-color: #222222;
   border: none;
 }
 
@@ -123,6 +150,16 @@ input.ng-touched {
     border: none;
       outline: none;
 }
+
+.emoji-mart .emoji-mart-emoji {
+    padding: 6px;
+}
+
+
+.emoji-mart-preview {
+      border-top: solid 1px #615b5b;
+}
+
 /* nunito-200 - latin */
 @font-face {
     font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
