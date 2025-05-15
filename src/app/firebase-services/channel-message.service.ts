@@ -141,12 +141,12 @@ export class ChannelMessageService {
     return collection(this.firestore, 'messages');
   }
 
-  async addMessage(message: Message, channelid: string,channelname:string) {
+  async addMessage(message: Message, channelid: string, channelname: string) {
     try {
       const channelDocRef = doc(this.firestore, 'Channels', channelid);
       const messagesRef = collection(channelDocRef, 'messages');
       const Userid = this.messageService.getActualUser()
-      const docRef = await addDoc(messagesRef, this.messageService.messageJson2(message, Userid, channelid,channelname))
+      const docRef = await addDoc(messagesRef, this.messageService.messageJson2(message, Userid, channelid, channelname))
       const messageId = docRef.id;
       await updateDoc(docRef, { messageId });
       return messageId;
@@ -157,7 +157,7 @@ export class ChannelMessageService {
 
   }
 
-   async addThread(message: Message, channelid: string) {
+  async addThread(message: Message, channelid: string) {
     try {
       const channelDocRef = doc(this.firestore, 'Channels', channelid);
       const messagesRef = collection(channelDocRef, 'messages');
@@ -226,7 +226,7 @@ export class ChannelMessageService {
       id: userId,
       messageId: '',
       channelId: selectedMessage.channelId,
-      channelName:selectedMessage.channelName,
+      channelName: selectedMessage.channelName,
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
@@ -249,8 +249,8 @@ export class ChannelMessageService {
 
 
     const channelRef = doc(this.firestore, 'Channels', channelid);
-    const msgRef= doc(channelRef,'messages',messageId)
-    
+    const msgRef = doc(channelRef, 'messages', messageId)
+
 
     try {
       await updateDoc(msgRef, {
@@ -274,28 +274,39 @@ export class ChannelMessageService {
 
 
 
-  async saveReaction(reaction: string) {
-    let emoji: string;
+  async saveReaction(reaction: string, channelID: string) {
+  let emoji: string;
 
-    if (reaction === 'check') {
-      emoji = '✅';
-    } else if (reaction === 'like') {
-      emoji = '👍';
-    } else {
-      console.warn('Unbekannte Reaktion:', reaction);
-      return;
-    }
+  if (reaction === 'check') {
+    emoji = '✅';
+  } else if (reaction === 'like') {
+    emoji = '👍';
+  } else {
+    console.warn('Unbekannte Reaktion:', reaction);
+    return;
+  }
 
-    const reactionsRef = collection(
-      this.firestore,
-      `messages/${this.messageId}/reactions`
-    );
+  if (!this.messageId) {
+    console.warn('messageId ist nicht definiert');
+    return;
+  }
 
-    return await addDoc(reactionsRef, {
+  const reactionsRef = collection(
+    this.firestore,
+    'Channels', channelID, 'messages', this.messageId, 'reactions'
+  );
+
+  try {
+    const docRef = await addDoc(reactionsRef, {
       emoji,
       createdAt: new Date()
     });
+    return docRef;
+  } catch (error) {
+    console.error('Fehler beim Speichern der Reaktion:', error);
+    throw error;
   }
+}
 
 
 }

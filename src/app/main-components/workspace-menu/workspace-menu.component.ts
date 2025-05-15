@@ -72,14 +72,18 @@ export class WorkspaceMenuComponent {
   this.filteredUsers.sort((a,b)=>a.name.localeCompare(b.name,'de',{sensitivity:'base'}))
  }
 
-  filterUsers() {
-    const term = this.searchTerm.toLowerCase();
-    this.filteredUsers = this.allUsers.filter(user =>
+ filterUsers() {
+  const term = this.searchTerm.toLowerCase();
+  this.filteredUsers = this.allUsers
+    .filter(user =>
       user.name.toLowerCase().includes(term)
+    )
+    .filter(user =>
+      !this.selectedUsers.includes(user)
     );
 
-    this.sortUsers()
-  }
+  this.sortUsers();
+}
 
   selectUser(user: any) {
     if (!this.selectedUsers.includes(user)) {

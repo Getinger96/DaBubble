@@ -30,6 +30,7 @@ export class MessageComponent {
   @Input() threadTo!: string;
   @Input() dateExists: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
+  @Input() channelID!:string;
 
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
@@ -56,6 +57,7 @@ export class MessageComponent {
       this.isAnswered = this.messageData.isAnswered ?? this.isAnswered;
       this.threadCount = this.messageData.threadCount || this.threadCount;
       this.threadTo = this.messageData.threadTo ?? this.threadTo;
+      this.channelID=this.messageData.channelId?? this.channelID;
       const lastAnswer = this.channelmessageService.getLastAnswer(this.messageData);
       if (lastAnswer && lastAnswer.sendAtTime && lastAnswer.sendAt) {
         this.lastAnswerDate = lastAnswer.sendAtTime + ' ' + lastAnswer.sendAt;
@@ -107,8 +109,8 @@ export class MessageComponent {
     MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
-  addNewReaction(reaction: string) {
-    this.channelmessageService.saveReaction(reaction);
+  addNewReaction(reaction: string,channelID:string) {
+    this.channelmessageService.saveReaction(reaction,channelID);
   }
 
   ngOnDestroy(): void {
