@@ -1,4 +1,27 @@
 <div class="search-bar">
-    <input type="text" [placeholder]="placeholderSearchBar">
-    <img src="assets/img/search.svg" alt="search-icon" class="search-icon">
+  <input [(ngModel)]="searchTerm" (input)="filterUsers()" type="text" [placeholder]="placeholderSearchBar">
+  <img src="assets/img/search.svg" alt="search-icon" class="search-icon">
+
+</div>
+
+
+<div *ngIf="searchTerm" class="searchlist">
+  <div *ngIf="filteredUsers.length > 0">
+    <h4>Benutzer</h4>
+    <div *ngFor="let user of filteredUsers" class="user-entry">
+      <img src="../../../assets/img/avatar_{{user.avatar}}.png" alt="" />
+      {{ user.name }} ({{ user.email }})
+    </div>
+  </div>
+
+  <div *ngIf="filteredChannels.length > 0">
+    <h4>Channels</h4>
+    <div *ngFor="let channel of filteredChannels" class="channel-entry">
+      #{{ channel.name }}
+    </div>
+  </div>
+
+  <div *ngIf="filteredUsers.length === 0 && filteredChannels.length === 0">
+    <p>Keine Ergebnisse gefunden.</p>
+  </div>
 </div>

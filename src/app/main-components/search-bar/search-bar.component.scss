@@ -27,3 +27,14 @@
         height: 35px;
     }
 }
+
+.searchlist{
+    z-index: 99999;
+    height: 250px;
+    position: absolute;
+    background-color: white;
+    overflow: auto;
+    width: max-content;
+    padding: 16px;
+    border-radius: 30px;
+}
