@@ -53,6 +53,7 @@ export class MessageService {
     return {
       messageId: id,
       channelId: obj.channelId,
+      channelName:obj.channelname,
       id: obj.id,
       name: obj.name,
       avatar: obj.avatar,
@@ -134,7 +135,7 @@ export class MessageService {
            const channelDocRef = doc(this.firestore, 'Channels', channelid);
      const messagesRef = collection(channelDocRef, 'messages');
      const Userid=this.getActualUser()
-     const docRef = await addDoc(messagesRef,this.messageJson2(message,Userid,channelid))
+     const docRef = await addDoc(messagesRef,this.threadJson(message,Userid,channelid))
      const messageId = docRef.id;
      await updateDoc(docRef, { messageId }); 
      return messageId
@@ -144,7 +145,29 @@ export class MessageService {
 
     }
 
-  messageJson2(item: Message, id: string,channelId:string){
+  messageJson2(item: Message, id: string,channelId:string,channelname:string){
+return {
+      name: item.name,
+      avatar: item.avatar,
+      channelId: channelId,
+      channelname: channelname,
+      messageText: item.messageText,
+      messageId: item.messageId || '',
+      id: id,
+      sendAt: item.sendAt,
+      sendAtTime: item.sendAtTime,
+      timestamp: item.timestamp || Date.now(),
+      isOwn: item.isOwn,
+      threadTo: item.threadTo || null,
+      isThread: item.isThread || false,
+      isInThread: item.isInThread || false,
+      threadCount: item.threadCount || 0,
+
+    };
+  }
+
+
+   threadJson(item: Message, id: string,channelId:string){
 return {
       name: item.name,
       avatar: item.avatar,
@@ -264,6 +287,7 @@ return {
       id: userId,
       messageId: '',
       channelId: selectedMessage.channelId,
+      channelName:selectedMessage.channelName,
       reaction: 0,
       isAnswered: false,
       threadCount: 0,

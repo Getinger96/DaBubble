@@ -22,7 +22,7 @@ export class ChannelService {
     actualUser: User[] = [];
     private channelsSubject = new BehaviorSubject<Channel[]>([]);
     public channels$ = this.channelsSubject.asObservable();
-    private channelNameSubject = new BehaviorSubject<string>('');
+    public channelNameSubject = new BehaviorSubject<string>('');
     currentChannelName$ = this.channelNameSubject.asObservable();
     private channelDescriptionSubject = new BehaviorSubject<string>('');
     currentChannelDescription$ = this.channelDescriptionSubject.asObservable();

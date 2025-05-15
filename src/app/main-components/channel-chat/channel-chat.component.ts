@@ -65,7 +65,8 @@ export class ChannelChatComponent implements OnInit {
   message: Message = {
     id: '',
     messageId: '',
-    channelId: '',
+    channelId: this.currentChannelID,
+    channelName:this.currentChannelName,
     name: '',
     avatar: 0,
     messageText: '',
@@ -265,13 +266,13 @@ export class ChannelChatComponent implements OnInit {
     this.closeOverlay()
   }
 
-  sendmessage(channelid: string) {
+  sendmessage(channelid: string,channelname:string) {
     this.message.id = this.actualUser[0]?.id || '';
     this.message.name = this.actualUser[0]?.name || '';
     this.message.avatar = this.actualUser[0]?.avatar || 1;
     this.message.isOwn = true;
 
-    this.channelmessageService.addMessage(this.message, channelid,)
+    this.channelmessageService.addMessage(this.message, channelid,channelname)
 
     this.message.messageText = '';
   }

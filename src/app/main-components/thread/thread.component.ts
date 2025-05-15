@@ -27,16 +27,20 @@ export class ThreadComponent {
   threadAnswers: Message[] = [];
   private selectedMessageSubscription!: Subscription;
   private threadRepliesSubscription!: Subscription;
+
   newThreadText: string = '';
 
   constructor(
     public messageService: MessageService,
     private mainService: MainComponentService,
     private cdr: ChangeDetectorRef,
-    private channelmessageservice:ChannelMessageService
+    private channelmessageservice:ChannelMessageService,
+    private channelService: ChannelMessageService
   ) {}
 
   ngOnInit(): void {
+
+
     this.selectedMessageSubscription =
       this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
         console.log('Selected message updated:', message);

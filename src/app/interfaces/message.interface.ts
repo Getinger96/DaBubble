@@ -4,6 +4,7 @@ export class Message {
     id: string;
     messageId: string;
     channelId: string;
+    channelName:string;
     name: string;
     avatar: number;
     messageText: string;
@@ -24,6 +25,7 @@ export class Message {
         this.id = obj?obj.id:''
         this.messageId =obj?obj.messageId:''
         this.channelId =obj?obj.channelId:''
+        this.channelName=obj?obj.chanelName:''
         this.name = obj?obj.name:''
         this.avatar = obj?obj.avatar:''
         this.messageText = obj?obj.messageText:''

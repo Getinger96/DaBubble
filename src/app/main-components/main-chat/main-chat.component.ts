@@ -46,6 +46,7 @@ export class MainChatComponent {
     id: '',
     messageId:'',
     channelId:'',
+    channelName:'',
     name: '',
     avatar: 0,
     messageText: '',
