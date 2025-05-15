@@ -134,6 +134,14 @@
             <textarea [(ngModel)]="message.messageText" type="text" class="fontNunito"
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft"></textarea>
             <div class="message-icons">
+
+
+                   <div class="emojiWindow">
+                    <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
+                        [totalFrequentLines]="1" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
+                        [perLine]="7"></emoji-mart>
+                        </div>
+
                 <div>
                     <img src="assets/img/emoji.png" alt="">
                     <img src="assets/img/at.png" alt="">

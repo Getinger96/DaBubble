@@ -24,10 +24,11 @@ import { ConversationMessage } from '../../interfaces/conversation-message.inter
 import { DirectMessageComponent } from '../../shared-components/direct-message/direct-message.component';
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 @Component({
   selector: 'app-channel-chat',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule, RouterModule, MessageComponent],
+  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule, RouterModule, MessageComponent, PickerComponent],
   templateUrl: './channel-chat.component.html',
   styleUrl: './channel-chat.component.scss'
 })

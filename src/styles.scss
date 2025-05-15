@@ -83,7 +83,46 @@ h1, h2, h3, h4, h5, h6, p, span {
   background-color: #3037c9;
 }
 
+.emoji-mart-anchors {
+  display: flex;
+  gap:5px
+}
 
+.emoji-mart-scroll {
+    max-height: 290px;
+    overflow-y: auto;
+    display: flex;
+    max-width: 250px;
+  padding-right: 10px;
+}
+
+emoji-mart .emoji-mart-preview-data {
+  display: none;
+}
+.emoji-mart-search {
+    justify-content: space-between;
+    display: flex;
+    border: solid 1px white;
+    margin-right: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+
+}
+
+.emoji-mart-sr-only {
+  display: none;
+}
+input.ng-pristine.ng-valid.ng-touched {
+  background-color: #222222 !important;
+  border: none;
+}
+
+input.ng-touched {
+  background-color: #222222;
+    border: none;
+      outline: none;
+}
 /* nunito-200 - latin */
 @font-face {
     font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
