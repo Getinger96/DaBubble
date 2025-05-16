@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, Input } from '@angular/core';
+import { Component, OnInit, inject, Input, ViewChild, ElementRef } from '@angular/core';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +25,7 @@ import { DirectMessageComponent } from '../../shared-components/direct-message/d
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+
 @Component({
   selector: 'app-channel-chat',
   standalone: true,
@@ -42,7 +43,7 @@ export class ChannelChatComponent implements OnInit {
   private actualUserSubscription!: Subscription;
   private allMessageSubscription!: Subscription;
   private allConversationMessageSubscription!: Subscription;
-
+  @ViewChild('messageBox') messageBox!: ElementRef<HTMLTextAreaElement>;
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   allMessages: Message[] = [];
@@ -194,6 +195,25 @@ export class ChannelChatComponent implements OnInit {
   }
 
 
+
+  addEmoji(event: any) {
+    const emoji = event.emoji.native;
+    const textarea = this.messageBox.nativeElement;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const textBefore = this.message.messageText.slice(0, start);
+    const textAfter = this.message.messageText.slice(end);
+
+    this.message.messageText = textBefore + emoji + textAfter;
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+    });
+  
+  }
 
 
 
