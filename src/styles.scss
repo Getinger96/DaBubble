@@ -39,12 +39,15 @@ h1, h2, h3, h4, h5, h6, p, span {
 }
 
 
+
+
 ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
   transition: transform var(--mat-dialog-transition-duration, 0ms) 0ms cubic-bezier(0, 0, 0.2, 1);
   border-top-left-radius: 20px !important;
   border-top-right-radius: 10px !important;
   border-bottom-left-radius: 20px !important;
   border-bottom-right-radius: 10px !important;
+     border: 1px solid lightgray;
 }
 ::ng-deep mat-card {
   border-radius: 20px;
@@ -81,6 +84,17 @@ h1, h2, h3, h4, h5, h6, p, span {
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: #3037c9;
+}
+
+.add-member-in-channel .mat-dialog-container {
+  /* Beispiel: Position vom Dialog anpassen */
+  position: fixed !important;
+  top: 50px !important;  /* nach unten verschieben */
+  left: 50px !important; /* nach rechts verschieben */
+  margin: 0 !important;
+  transform: none !important; /* Entfernt das Zentrieren */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  border-radius: 8px;
 }
 
 .emoji-mart-anchors {
@@ -137,11 +151,11 @@ emoji-mart .emoji-mart-preview-data {
 .emoji-mart-sr-only {
   display: none;
 }
-input.ng-pristine.ng-valid.ng-touched {
+::ng-deep emoji-mart input[type="search"] {
   background-color: #222222 !important;
-  border: none;
+  border: none !important;
+  color: white; /* optional */
 }
-
 
 .emoji-mart .emoji-mart-emoji {
     padding: 6px;
@@ -153,7 +167,6 @@ input.ng-pristine.ng-valid.ng-touched {
 }
 
 input.ng-touched {
-  background-color: #222222;
     border: none;
       outline: none;
 }

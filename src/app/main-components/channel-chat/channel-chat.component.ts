@@ -4,6 +4,7 @@ import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialo
 import { MatButtonModule } from '@angular/material/button';
 import { ShowUserComponent } from './show-user/show-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
+import { AddMemberChannelComponent } from './add-member-channel/add-member-channel.component';
 import { MatIconModule } from '@angular/material/icon';
 import { HostListener } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -26,10 +27,11 @@ import { MessageComponent } from '../../shared-components/message/message.compon
 import { MessageService } from '../../firebase-services/message.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
+
 @Component({
   selector: 'app-channel-chat',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule, RouterModule, MessageComponent, PickerComponent],
+  imports: [MatButtonModule, MatIconModule, NgIf, CommonModule, FormsModule, RouterModule, MessageComponent, PickerComponent, AddMemberChannelComponent],
   templateUrl: './channel-chat.component.html',
   styleUrl: './channel-chat.component.scss'
 })
@@ -53,6 +55,7 @@ export class ChannelChatComponent implements OnInit {
   editName: boolean = false
   editDescription: boolean = false
   textInput: Message[] = [];
+  toggleMemberInChat: boolean = false;
   months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
   d = new Date();
@@ -265,6 +268,20 @@ export class ChannelChatComponent implements OnInit {
     });
   }
 
+
+  insertMemberIntoTextarea(member: Member) {
+  const insertText = `@${member.name} `;
+  this.message.messageText += insertText;
+
+}
+
+closeDialogAddMember(event: boolean) {
+  this.toggleMemberInChat = false;
+}
+
+  openDialogAddMember() {
+  this.toggleMemberInChat = !this.toggleMemberInChat
+  }
 
   closeOverlay() {
     this.overlayeditChannel = false;

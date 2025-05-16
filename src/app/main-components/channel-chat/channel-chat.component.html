@@ -130,6 +130,8 @@
 
     </div>
     <div class=" input-wrapper">
+            <app-add-member-channel *ngIf="toggleMemberInChat"  [allUsersChannel]="allUsersChannel"
+                [members]="members"    [currentChannelID]="currentChannelID"  (closeDialogAddMember)="closeDialogAddMember($event)"  (memberSelected)="insertMemberIntoTextarea($event)"></app-add-member-channel>
         <div class="main-chat-message">
             <textarea #messageBox [(ngModel)]="message.messageText" type="text" class="fontNunito"
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft"></textarea>
@@ -144,7 +146,7 @@
 
                 <div>
                     <img src="assets/img/emoji.png" alt="" (click)="toggleEmojiBar()">
-                    <img src="assets/img/at.png" alt="">
+                    <img class="atImg"  #addMemberIcon src="assets/img/at.png" alt="" (click)="openDialogAddMember()">
                 </div>
                 <img (click)="sendmessage(currentChannelID,currentChannelName)" src="assets/img/send.png" alt="">
             </div>

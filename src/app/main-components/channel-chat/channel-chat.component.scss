@@ -104,6 +104,7 @@
 .input-wrapper {
     flex-shrink: 0;
     padding: 38px 35px 40px 35px;
+    position: relative;
 }
 
 .main-chat-message {
@@ -442,6 +443,16 @@ app-show-user {
     }
   }
 
+
+
+  .atImg {
+    position: relative;
+  }
+
+  .chatIcons {
+    display: flex;
+    position: relative;
+  }
 
   .openDialog {
     &:hover,

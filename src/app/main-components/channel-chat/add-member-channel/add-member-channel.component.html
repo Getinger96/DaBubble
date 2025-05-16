@@ -1,0 +1,14 @@
+
+<div class="addMemberDialog">
+
+ <div class="users">
+                <div class="profile" (click)="addMemberInChat(member)" *ngFor="let member of members">
+                    <div class="avatarImages">
+                    <img  class="avatar" src="assets/img/avatar_{{member.avatar}}.png" alt="avatar">
+                    <img class="status" src="assets/img/{{member.status}}.svg" alt="status">
+                    </div>
+                    <div class="username">
+                <p class="name"> {{ member.name }}</p>
+                </div>
+                </div>
+</div>
