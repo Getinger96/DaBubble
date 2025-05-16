@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RegisterService } from '../../firebase-services/register.service';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { Channel } from '../../interfaces/channel.interface';
 import { CommonModule,NgIf, } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Member } from '../../interfaces/member.interface';
 
 
 @Component({
@@ -27,6 +28,9 @@ private usersSubscription!: Subscription;
    searchTerm: string = '';
    filteredUsers: User[] = [];
 filteredChannels: Channel[] = [];
+userId?: string
+  private actualUserSubscription!: Subscription;
+  actualUser: User[]=[];
 
 
 
@@ -49,10 +53,17 @@ constructor(private registerservice: RegisterService, private channelservice: Ch
       this.channels = channels;
       console.log('Channels in Component:', this.channels);
     });
-
+this.loadActualUser()
 
   }
-
+loadActualUser(){
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+        console.log('aktueller User:', this.actualUser);
+      }
+    });
+  }
 
  filterUsers() {
   const term = this.searchTerm.toLowerCase().trim();
@@ -86,4 +97,33 @@ constructor(private registerservice: RegisterService, private channelservice: Ch
     );
   }
 }
+
+
+
+opendirectmessage(id: string,name: string, close: boolean, avatar: number, email: string, status: string){
+   this.mainservice.showdirectmessage = true
+    this.mainHelperService.openChannelSection(close)
+    this.mainservice.setDirectmessageuserName(name)
+    this.mainservice.setDirectmessageuserEmail(email)
+    this.mainservice.setDirectmessageuserAvatar(avatar)
+    this.mainservice.setDirectmessageuserStatus(status)
+    this.mainservice.setDirectmessageuserId(id)
+this.searchTerm = '';
+}
+
+
+openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: Member[],date:string) {
+    this.mainHelperService.openChannelSection(isOpen);
+    this.channelservice.setChannelName(name);
+    this.channelservice.setChannelDescription(description);
+    this.channelservice.setChannelcreator(creator);
+    this.channelservice.setChannelId(id)
+    this.channelservice.setChannelMember(members);
+    this.channelservice.setChanneldate(date)
+    this.mainservice.showdirectmessage=false;
+    this.userId = this.actualUser[0].id; 
+    this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
+    this.channelMessageService.getChannelId(id)
+    this.searchTerm = '';
+  }
 }
