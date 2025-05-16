@@ -61,6 +61,7 @@ export class ChannelChatComponent implements OnInit {
   minutes = this.d.getMinutes();
   hours = this.d.getHours();
   channelId!: string;
+    toggleEmoji: boolean = false
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
   message: Message = {
@@ -106,7 +107,9 @@ export class ChannelChatComponent implements OnInit {
 
   }
 
-
+ toggleEmojiBar() {
+    this.toggleEmoji = !this.toggleEmoji;
+  }
 
 
       loadActualUser(){

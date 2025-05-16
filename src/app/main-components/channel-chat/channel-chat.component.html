@@ -136,14 +136,14 @@
             <div class="message-icons">
 
 
-                   <div class="emojiWindow">
+                   <div class="emojiWindow" *ngIf="toggleEmoji">
                     <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
                         [totalFrequentLines]="1" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
                         [perLine]="7"></emoji-mart>
                         </div>
 
                 <div>
-                    <img src="assets/img/emoji.png" alt="">
+                    <img src="assets/img/emoji.png" alt="" (click)="toggleEmojiBar()">
                     <img src="assets/img/at.png" alt="">
                 </div>
                 <img (click)="sendmessage(currentChannelID,currentChannelName)" src="assets/img/send.png" alt="">
