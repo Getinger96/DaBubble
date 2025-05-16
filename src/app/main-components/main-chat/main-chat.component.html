@@ -17,18 +17,19 @@
         </div>
     </div>
     <div class="main-chat-feed" #chatFeed (scroll)="onScroll()">
-        <div *ngIf="!openChannel">
-        <app-direct-message
-        [messageData]="conversationMessage"
-        [name]="loadConversationMessageSender(conversationMessage)"
-        [date]="conversationMessage.timestamp"
-        [avatarSrc]="loadConversationMessageSenderAvatar(conversationMessage)"
-        [isOwn]="conversationMessage.isOwn"
-        [messageText]="conversationMessage.text"
-        >
-
-        </app-direct-message>
-        </div>
+        <ng-container *ngIf="!openChannel">
+            <div *ngFor="let convMsg of allConversationMessages">
+                <app-direct-message
+                [messageData]="convMsg"
+                [name]="loadConversationMessageSender(convMsg)"
+                [date]="convMsg.timestamp"
+                [avatarSrc]="loadConversationMessageSenderAvatar(convMsg)"
+                [isOwn]="convMsg.isOwn"
+                [messageText]="convMsg.text"
+                >
+                </app-direct-message>
+            </div>
+        </ng-container>
         <div *ngIf="openChannel">
         <app-message *ngFor="let message of allMessages, index as i"
         [messageData]="message"
@@ -48,13 +49,15 @@
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">
-        <textarea [(ngModel)]="message.messageText" type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+        <textarea *ngIf="!openChannel" [(ngModel)]="newConvMessage" type="text" class="fontNunito" placeholder="Nachricht eingeben" wrap="soft"></textarea>
+        <textarea *ngIf="openChannel" [(ngModel)]="message.messageText" type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
         <div class="message-icons">
             <div>
             <img src="assets/img/emoji.png" alt="">
             <img src="assets/img/at.png" alt="">
             </div>
-            <img (click)="addMessage()" src="assets/img/send.png" alt="">
+            <img *ngIf="!openChannel" (click)="addConversationMessage()" src="assets/img/send.png" alt="">
+            <img *ngIf="openChannel" (click)="addMessage()" src="assets/img/send.png" alt="">
         </div>
         </div>
     </div>

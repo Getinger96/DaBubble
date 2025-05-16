@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { MainComponentService } from '../../../firebase-services/main-component.service';
 import { MainHelperService } from '../../../services/main-helper.service';
 import { user } from '@angular/fire/auth';
+import { DirectMessageChatComponent } from '../../direct-message-chat/direct-message-chat.component';
 
 @Component({
   selector: 'app-direct-message-user',
@@ -21,8 +22,9 @@ export class DirectMessageUserComponent implements OnInit {
   @Input() userArray!: User[];
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
+  private directMessageChatComponent!: DirectMessageChatComponent;
   constructor(private registerservice: RegisterService, private loadingService: LoadingService, private mainservice: MainComponentService, private mainhelperService: MainHelperService) {
-
+  
   }
 
   ngOnInit(): void {
@@ -40,6 +42,8 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserAvatar(avatar)
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
+    this.directMessageChatComponent.initConversation();
+    console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
   }
 
   loadActualUser() {

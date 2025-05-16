@@ -26,21 +26,45 @@ export class DirectMessageComponent {
     showEditPopup = MessageComponent.showEditPopup;
     editMessage = MessageComponent.showEditPopup;
   
+    dateFormatter = new Intl.DateTimeFormat('de-DE', {
+  weekday: 'long',
+  day: '2-digit',
+  month: 'long'
+});
+
+timeFormatter = new Intl.DateTimeFormat('de-DE', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
+});
 
   constructor( private messageservice: MessageService, private maincomponentservice: MainComponentService){}
 
   ngOnInit(): void{
     if (this.messageData) {
-      this.date = this.messageData.timestamp || this.date;
+      this.date = this.dateFormatter.format(this.messageData.timestamp)  || this.date;
       this.maincomponentservice.currentusermessagAvatar$.subscribe(avatar => {
-        this.avatarSrc = avatar || this.avatarSrc;
+        if(this.messageData?.senderId === this.maincomponentservice.directmessaeUserIdSubject.value){
+            this.avatarSrc = avatar || this.avatarSrc;
+        } else {
+            this.avatarSrc = this.maincomponentservice.actualUser[0].avatar;
+        }
+        
       });
       this.maincomponentservice.currentusermessageName$.subscribe(name => {
-        this.name = name || this.name;
+          if(this.messageData?.senderId === this.maincomponentservice.directmessaeUserIdSubject.value){
+            this.name = name || this.name;
+        } else {
+            this.name = this.maincomponentservice.actualUser[0].name;
+        }
       });
-      this.time = this.messageData.timestamp || this.time;
+      this.time = this.timeFormatter.format(this.messageData.timestamp) || this.time;
       this.messageText = this.messageData.text || this.messageText;
-      this.isOwn = this.messageData.isOwn ?? this.isOwn;
+      if (this.messageData.senderId === this.maincomponentservice.actualUser[0].id){
+        this.isOwn = true;
+      } else {
+        this.isOwn = false;
+      }
     }
     console.log('Direct Message:',this.messageData);
   }

@@ -22,10 +22,15 @@ import { MainHelperService } from '../../services/main-helper.service';
 })
 
 export class MainChatComponent {
+  
   allMessages: Message[] = [];
   allThreads: Message[] = [];
   allConversationMessages: ConversationMessage[] = [];
+  conversationId: string | null = null;
+  newConvMessage: string = '';
   actualUser: User[] = [];
+  currentUserId = this.actualUser[0].id;
+  partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
   private allMessageSubscription!: Subscription; 
   private actualUserSubscription!: Subscription;
   private allConversationMessageSubscription!: Subscription; 
@@ -74,11 +79,24 @@ export class MainChatComponent {
   constructor(private mainhelperservice: MainHelperService ,private messageService: MessageService, private registerService: RegisterService, private mainservice: MainComponentService, private conversationservice: ConversationService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     
     this.loadActualUser();
     this.loadMessages();
     setTimeout(() => this.scrollToBottom(), 0);
+    this.conversationId = await this.messageService.getOrCreateConversation(
+      this.currentUserId,
+      this.partnerUserId
+    );
+
+        const initialConvMessages = await this.messageService.getInitialConvMessages(this.conversationId);
+    this.allConversationMessages = initialConvMessages;
+
+    this.messageService.listenToMessages(this.conversationId, (liveMessages) => {
+      this.allConversationMessages = liveMessages;
+    });
+
+    
   }
 
   ngAfterViewChecked() {
@@ -172,6 +190,16 @@ export class MainChatComponent {
     
     this.message.messageText = '';
     this.scrollToBottom();
+  }
+
+  async addConversationMessage(){
+      if (this.conversationId && this.newConvMessage.trim() !== '') {
+      await this.messageService.sendMessage(this.conversationId, this.currentUserId, this.newConvMessage);
+      console.log('Success')
+      this.newConvMessage = '';
+    } else {
+      console.log('Etwas fehlt:', this.conversationId, this.newConvMessage)
+    }
   }
   
   

@@ -2,17 +2,22 @@ import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
   collection,
-  getDocs,
+  getDoc,
   addDoc,
   updateDoc,
   doc,
+  getDocs,
+  orderBy,
+  query,
 } from '@angular/fire/firestore';
 import { Message } from '../interfaces/message.interface';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timeInterval, timestamp } from 'rxjs';
 import { onSnapshot } from '@angular/fire/firestore';
 import { RegisterService } from './register.service';
 import { MainComponentService } from './main-component.service';
 import { MessageComponent } from '../shared-components/message/message.component';
+import { ConversationMessage } from '../interfaces/conversation-message.interface';
+import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +53,7 @@ export class MessageService {
   getMessageRef() {
     return collection(this.firestore, 'Messages');
   }
+
 
   setMessageObject(obj: any, id: string): Message {
     return {
@@ -129,21 +135,87 @@ export class MessageService {
     }
   }
 
+async getOrCreateConversation(currentUserId: string, partnerUserId: string){
+  const convRef = collection(this.firestore, 'conversation');
+  const snapshot = await getDocs(convRef);
+  let conversationId: string |null = null;
 
-      async addMessage(message: Message,channelid:string){
+  snapshot.forEach((docSnap) => {
+    const users = docSnap.data()['user'];
+    if(
+      users.includes(currentUserId) &&
+      users.includes(partnerUserId) &&
+      users.length === 2
+    ) {
+      conversationId = docSnap.id;
+    }
+  });
+
+  if (!conversationId){
+    const newConv = await addDoc(convRef, {
+      user: [currentUserId, partnerUserId],
+      id: conversationId,
+    });
+    conversationId = newConv.id;
+  }
+
+  const newConvDocRef = doc(convRef, conversationId);
+  await updateDoc(newConvDocRef, {
+    id: conversationId
+  });
+  return conversationId;
+}
+
+  async getInitialConvMessages(conversationId: string): Promise<any[]> {
+    const convMessagesRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+    const q = query(convMessagesRef, orderBy('timestamp'));
+    const snapshot = await getDocs(q);
+    const convMessages: any[] = [];
+    snapshot.forEach((docSnap) => {
+      convMessages.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    return convMessages;
+  }
+
+listenToMessages(conversationId: string, callback: (convMessages: any[])=> void): void{
+  const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+  const q = query(convMessageRef, orderBy('timestamp'));
+
+  onSnapshot(q, (snapshot) => {
+    const liveConvMessages: any[] = [];
+    snapshot.forEach((doc) => {
+      liveConvMessages.push({ id: doc.id, ...doc.data() });
+    });
+    callback(liveConvMessages);
+  })
+}
+
+async sendMessage(conversationId: string, senderId: string, text: string){
+  const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+  await addDoc(convMessageRef, {
+    id: conversationId,
+    senderId,
+    text,
+    timestamp: new Date(),
+    isOwn: true
+  })
+}
+
+
+  async addMessage(message: Message,channelid:string){
     try {
-           const channelDocRef = doc(this.firestore, 'Channels', channelid);
-     const messagesRef = collection(channelDocRef, 'messages');
-     const Userid=this.getActualUser()
-     const docRef = await addDoc(messagesRef,this.threadJson(message,Userid,channelid))
-     const messageId = docRef.id;
-     await updateDoc(docRef, { messageId }); 
-     return messageId
-    } catch (error) {
-      return null
+      const channelDocRef = doc(this.firestore, 'Channels', channelid);
+      const messagesRef = collection(channelDocRef, 'messages');
+      const Userid=this.getActualUser()
+      const docRef = await addDoc(messagesRef,this.threadJson(message,Userid,channelid))
+      const messageId = docRef.id;
+      await updateDoc(docRef, { messageId }); 
+      return messageId
+      } catch (error) {
+        return null
+      }
     }
 
-    }
 
   messageJson2(item: Message, id: string,channelId:string,channelname:string){
 return {

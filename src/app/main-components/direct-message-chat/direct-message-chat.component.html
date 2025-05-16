@@ -46,8 +46,20 @@
         </div>
 
     </div>
-    <div class="main-chat-feed">
-        <div class="intro">
+    <div class="main-chat-feed" #chatFeed>
+            <ng-container *ngIf="showDirectMessage">
+            <div class="conversation-feed" *ngFor="let convMsg of allConversationMessages">
+                <app-direct-message
+                [messageData]="convMsg"
+                [name]="loadConversationMessageSender(convMsg) ?? ''"
+                [avatarSrc]="loadConversationMessageSenderAvatar(convMsg)"
+                [isOwn]="convMsg.isOwn"
+                [messageText]="convMsg.text"
+                >
+                </app-direct-message>
+            </div>
+        </ng-container>
+        <div class="intro" *ngIf="allConversationMessages.length === 0">
             <div class="intro-head">
                 <img src="assets/img/avatar_{{ currentmessageAvatar }}_square.png" alt="avatar">
                 <p (click)="this.usercardservice.overlayUserCardActive = true;">{{ currentmessageUser }}</p>
@@ -62,16 +74,17 @@
             </div>
         </div>
 
+
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">
-            <textarea type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
+            <textarea [(ngModel)]="newConvMessage" type="text" class="fontNunito" placeholder="Nachricht hier eingeben" wrap="soft"></textarea>
             <div class="message-icons">
                 <div>
                     <img src="assets/img/emoji.png" alt="">
                     <img src="assets/img/at.png" alt="">
                 </div>
-                <img src="assets/img/send.png" alt="">
+                <img (click)="addConversationMessage()" src="assets/img/send.png" alt="">
             </div>
         </div>
     </div>
