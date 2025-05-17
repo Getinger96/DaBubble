@@ -46,7 +46,7 @@
 </div>
 
 
-<div class="main-chat-wrapper" >
+<div class="main-chat-wrapper">
     <div class="main-chat-header">
         <div *ngIf="currentChannelName" (click)="openoverlay()" class="message-group">
             <div class="actual-group">
@@ -129,28 +129,33 @@
 
 
     </div>
+
     <div class=" input-wrapper">
-            <app-add-member-channel *ngIf="toggleMemberInChat"  [allUsersChannel]="allUsersChannel"
-                [members]="members"    [currentChannelID]="currentChannelID"  (closeDialogAddMember)="closeDialogAddMember($event)"  (memberSelected)="insertMemberIntoTextarea($event)"></app-add-member-channel>
+         <ng-container *ngIf="toggleMemberInChat">
+            <app-add-member-channel  #addMemberComponent   [allUsersChannel]="allUsersChannel"
+                [members]="members"    [currentChannelID]="currentChannelID"    (memberSelected)="insertMemberIntoTextarea($event)"
+               ></app-add-member-channel>
+               </ng-container>
         <div class="main-chat-message">
             <textarea #messageBox [(ngModel)]="message.messageText" type="text" class="fontNunito"
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft"></textarea>
             <div class="message-icons">
 
 
-                   <div class="emojiWindow" *ngIf="toggleEmoji">
+                   <div  #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
                     <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
                         [totalFrequentLines]="2" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
                         [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
                         </div>
 
                 <div>
-                    <img src="assets/img/emoji.png" alt="" (click)="toggleEmojiBar()">
-                    <img class="atImg"  #addMemberIcon src="assets/img/at.png" alt="" (click)="openDialogAddMember()">
+                    <img #emojiImg src="assets/img/emoji.png" alt="" (click)="toggleEmojiBar()">
+                    <img #atImg class="atImg"  #addMemberIcon src="assets/img/at.png" alt="" (click)="openDialogAddMember()">
                 </div>
                 <img (click)="sendmessage(currentChannelID,currentChannelName)" src="assets/img/send.png" alt="">
             </div>
         </div>
     </div>
 </div>
+
 

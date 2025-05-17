@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, Input, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,7 +6,6 @@ import { ShowUserComponent } from './show-user/show-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { AddMemberChannelComponent } from './add-member-channel/add-member-channel.component';
 import { MatIconModule } from '@angular/material/icon';
-import { HostListener } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
 import { Channel } from '../../interfaces/channel.interface';
@@ -46,6 +45,10 @@ export class ChannelChatComponent implements OnInit {
   private allMessageSubscription!: Subscription;
   private allConversationMessageSubscription!: Subscription;
   @ViewChild('messageBox') messageBox!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('addMemberComponent') addMemberComponent!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('atImg') atImg!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   allMessages: Message[] = [];
@@ -94,8 +97,8 @@ export class ChannelChatComponent implements OnInit {
 
 
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
-    private route: ActivatedRoute, private mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService
-  ) {}
+    private route: ActivatedRoute, private mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
+  private _eref: ElementRef) {}
 
 
   ngOnInit(): void {
@@ -111,9 +114,47 @@ export class ChannelChatComponent implements OnInit {
 
   }
 
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    const clickedInsideAtAddMember = this.addMemberComponent?.nativeElement?.contains(target)
+      || this.atImg.nativeElement?.contains(target);
+
+       const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
+      || this.emojiImg.nativeElement?.contains(target);
+
+    if (!clickedInsideAtAddMember) {
+      this.toggleMemberInChat = false;
+    }
+
+    if (!clickedInsideEmoji) {
+      this.toggleEmoji = false;
+    }
+
+  }
+
+  
+
  toggleEmojiBar() {
     this.toggleEmoji = !this.toggleEmoji;
+    if (this.toggleMemberInChat) {
+      this.toggleMemberInChat = false
+    }
   }
+
+
+  
+  openDialogAddMember() {
+
+  this.toggleMemberInChat = !this.toggleMemberInChat;
+      if (this.toggleEmoji) {
+      this.toggleEmoji = false
+    }
+  }
+
+  
 
 
       loadActualUser(){
@@ -187,7 +228,6 @@ export class ChannelChatComponent implements OnInit {
     this.channelmessageService.subList(channelId);
 
     this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-  // Nur gültige Nachrichten durchlassen (z. B. messageText vorhanden)
   const filtered = messages.filter(message => !!message.messageText && message.messageText.trim() !== '');
   
   this.allMessages = filtered.filter(message => !message.isThread);
@@ -201,20 +241,11 @@ export class ChannelChatComponent implements OnInit {
 
   addEmoji(event: any) {
     const emoji = event.emoji.native;
-    const textarea = this.messageBox.nativeElement;
+  
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    this.message.messageText +=   emoji  ;
 
-    const textBefore = this.message.messageText.slice(0, start);
-    const textAfter = this.message.messageText.slice(end);
-
-    this.message.messageText = textBefore + emoji + textAfter;
-
-    setTimeout(() => {
-      textarea.focus();
-      textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
-    });
+ 
   
   }
 
@@ -275,13 +306,9 @@ export class ChannelChatComponent implements OnInit {
 
 }
 
-closeDialogAddMember(event: boolean) {
-  this.toggleMemberInChat = false;
-}
 
-  openDialogAddMember() {
-  this.toggleMemberInChat = !this.toggleMemberInChat
-  }
+
+
 
   closeOverlay() {
     this.overlayeditChannel = false;
