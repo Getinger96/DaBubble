@@ -10,7 +10,10 @@ import {
   doc,
   DocumentData,
   onSnapshot,
-  Query
+  Query,
+  deleteDoc,
+  query,
+  where
 } from '@angular/fire/firestore';
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
@@ -69,6 +72,34 @@ export class ChannelMessageService {
     });
   }
 
+  getReactionsForMessage(
+    channelId: string,
+    messageId: string,
+    callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
+  ) {
+    const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageId, 'reactions');
+
+    return onSnapshot(reactionsRef, snapshot => {
+      const reactionMap = new Map<string, { count: number, users: string[] }>();
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const emoji = data['emoji'];
+        const user = data['reactedFrom'];
+
+        if (!reactionMap.has(emoji)) {
+          reactionMap.set(emoji, { count: 0, users: [] });
+        }
+
+        const current = reactionMap.get(emoji)!;
+        current.count += 1;
+        current.users.push(user);
+      });
+
+      callback(reactionMap);
+    });
+  }
+
 
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
@@ -88,6 +119,9 @@ export class ChannelMessageService {
 
   getActualUser() {
     return this.mainservice?.actualUser[0]?.id;
+  }
+  getActualUserName() {
+    return this.mainservice?.actualUser[0]?.name;
   }
 
   getThreadAnswers(id: string): Message[] {
@@ -274,40 +308,47 @@ export class ChannelMessageService {
 
 
 
-  async saveReaction(reaction: string, channelID: string) {
-  let emoji: string;
+  async toggleReaction(reaction: string, channelID: string) {
+    let emoji: string;
+    const actualUser = this.getActualUserName();
 
-  if (reaction === 'check') {
-    emoji = '✅';
-  } else if (reaction === 'like') {
-    emoji = '👍';
-  } else {
-    console.warn('Unbekannte Reaktion:', reaction);
-    return;
+    if (reaction === 'check') {
+      emoji = '✅';
+    } else if (reaction === 'like') {
+      emoji = '👍';
+    } else {
+      console.warn('Unbekannte Reaktion:', reaction);
+      return;
+    }
+
+    if (!this.messageId) {
+      console.warn('messageId ist nicht definiert');
+      return;
+    }
+
+    const reactionsRef = collection(
+      this.firestore,
+      'Channels', channelID, 'messages', this.messageId, 'reactions'
+    );
+
+    // 🔍 Prüfen, ob User diese Reaktion schon gesetzt hat
+    const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
+    const existing = await getDocs(q);
+
+    if (!existing.empty) {
+      // 🗑️ Reaktion entfernen (toggle off)
+      existing.forEach(async docSnap => {
+        await deleteDoc(docSnap.ref);
+      });
+    } else {
+      // ➕ Reaktion setzen (toggle on)
+      await addDoc(reactionsRef, {
+        emoji,
+        createdAt: new Date(),
+        reactedFrom: actualUser
+      });
+    }
   }
-
-  if (!this.messageId) {
-    console.warn('messageId ist nicht definiert');
-    return;
-  }
-
-  const reactionsRef = collection(
-    this.firestore,
-    'Channels', channelID, 'messages', this.messageId, 'reactions'
-  );
-
-  try {
-    const docRef = await addDoc(reactionsRef, {
-      emoji,
-      createdAt: new Date()
-    });
-    return docRef;
-  } catch (error) {
-    console.error('Fehler beim Speichern der Reaktion:', error);
-    throw error;
-  }
-}
-
 
 }
 

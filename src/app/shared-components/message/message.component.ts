@@ -30,7 +30,7 @@ export class MessageComponent {
   @Input() threadTo!: string;
   @Input() dateExists: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
-  @Input() channelID!:string;
+  @Input() channelID!: string;
 
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
@@ -40,8 +40,9 @@ export class MessageComponent {
   static showEditPopup: boolean = false;
   showEditPopup = MessageComponent.showEditPopup;
   editMessage = MessageComponent.showEditPopup;
+  emojiReactions = new Map<string, { count: number, users: string[] }>();
 
-  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) {}
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) { }
 
   ngOnInit(): void {
     if (this.messageData) {
@@ -57,18 +58,36 @@ export class MessageComponent {
       this.isAnswered = this.messageData.isAnswered ?? this.isAnswered;
       this.threadCount = this.messageData.threadCount || this.threadCount;
       this.threadTo = this.messageData.threadTo ?? this.threadTo;
-      this.channelID=this.messageData.channelId?? this.channelID;
+      this.channelID = this.messageData.channelId ?? this.channelID;
+      this.channelmessageService.getReactionsForMessage(
+        this.messageData.channelId,
+        this.messageData.messageId,
+        (reactionMap) => {
+          this.emojiReactions = reactionMap;
+        }
+      );
       const lastAnswer = this.channelmessageService.getLastAnswer(this.messageData);
       if (lastAnswer && lastAnswer.sendAtTime && lastAnswer.sendAt) {
         this.lastAnswerDate = lastAnswer.sendAtTime + ' ' + lastAnswer.sendAt;
       } else {
         this.lastAnswerDate = '';
       }
-    }else{
+    } else {
       console.log('no Message Data')
     }
+
   }
 
+
+  onReactionClick(emoji: string) {
+    if (this.messageData) {
+      this.channelmessageService.toggleReaction(
+        emoji === '✅' ? 'check' : 'like',
+        this.messageData.channelId
+      );
+    }
+
+  }
   onReplyClick(): void {
     if (this.messageData) {
       this.channelmessageService.openThread(this.messageData);
@@ -93,13 +112,13 @@ export class MessageComponent {
     );
   }
 
-  overwriteMessage(){
+  overwriteMessage() {
     this.toggleEditPopup();
     MessageComponent.showEditPopup = false;
     MessageComponent.editMessage = true;
   }
 
-  closeEditPopup(){
+  closeEditPopup() {
     this.editMessage = false;
     MessageComponent.showEditPopup = false;
   }
@@ -109,8 +128,8 @@ export class MessageComponent {
     MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
-  addNewReaction(reaction: string,channelID:string) {
-    this.channelmessageService.saveReaction(reaction,channelID);
+  addNewReaction(reaction: string, channelID: string) {
+    this.channelmessageService.toggleReaction(reaction, channelID);
   }
 
   ngOnDestroy(): void {

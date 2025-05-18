@@ -1,23 +1,23 @@
-.message-wrapper{
+.message-wrapper {
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding-top: 20px;
 }
 
-.message-date-part{
+.message-date-part {
     position: relative;
     height: 35px;
     display: flex;
     align-items: center;
 
-    .date-row{
+    .date-row {
         height: 1px;
         background-color: #ADB0D9;
         width: 100%;
     }
 
-    .message-date{
+    .message-date {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -26,46 +26,46 @@
         border: 1px solid #ADB0D9;
         border-radius: 30px;
         background-color: white;
-        
+
     }
 }
 
-.message{
+.message {
     width: 100%;
     display: flex;
     padding-top: 10px;
     padding-bottom: 10px;
     position: relative;
 
-    
-    &:hover{
+
+    &:hover {
 
         background-color: #ECEFFF;
 
-        .reaction-popup{
+        .reaction-popup {
             display: flex;
         }
-        
-        &:not(.reverse){
-           
-    
-            .message-text{
+
+        &:not(.reverse) {
+
+
+            .message-text {
                 background-color: white !important;
             }
         }
 
-        &.reverse{
-            .reaction-popup{
+        &.reverse {
+            .reaction-popup {
                 left: 43px;
                 right: unset;
             }
         }
 
-     
-    }
-    
 
-    .reaction-popup{
+    }
+
+
+    .reaction-popup {
         position: absolute;
         right: 43px;
         top: -18px;
@@ -83,7 +83,7 @@
         background-color: white;
         z-index: 2;
 
-        img{
+        img {
             width: 40px;
             height: 40px;
             padding: 0;
@@ -91,13 +91,14 @@
             border-radius: 20px;
             margin-top: 3px;
             margin-bottom: 3px;
+
             &:hover {
                 background-color: #ECEEFE;
             }
         }
     }
 
-    .edit-message{
+    .edit-message {
         z-index: 3;
         cursor: pointer;
         position: absolute;
@@ -113,14 +114,14 @@
         align-items: center;
         justify-content: center;
 
-        span{
+        span {
             padding: 10px 20px;
             border-radius: 100px;
             font-size: 24px;
             font-weight: 600;
             background-color: white;
 
-            &:hover{
+            &:hover {
                 background-color: #ECEEFE;
                 color: #535AF1;
                 font-weight: 700;
@@ -128,37 +129,38 @@
 
 
         }
-        
+
     }
 
-    .edit-message-input{
+    .edit-message-input {
 
         width: calc(100% - 290px);
         display: flex;
         position: relative;
         min-height: 155px;
-        
 
-        textarea{
+
+        textarea {
             border-radius: 20px;
             border: 1px solid #ADB0D9;
             border: none;
             width: 100%;
             padding: 20px 20px;
             resize: none;
-            &:focus{
+
+            &:focus {
                 outline: none;
             }
 
-            &:hover{
+            &:hover {
                 border: 1px solid #797EF3;
             }
         }
 
-        
 
-        button{
-            
+
+        button {
+
             position: absolute;
             font-size: 18px;
             font-weight: 700;
@@ -166,23 +168,23 @@
             border: 1px solid #797EF3;
             border-radius: 50px;
             cursor: pointer;
-            
+
         }
 
-        .close-edit-message{
+        .close-edit-message {
             right: 185px;
             bottom: 20px;
             background: none;
             color: #444DF2;
             transition: 0.1s;
 
-            &:hover{
+            &:hover {
                 background-color: #444DF2;
                 color: white;
             }
         }
 
-        .save-edit-message{
+        .save-edit-message {
             position: absolute;
             right: 20px;
             bottom: 20px;
@@ -191,13 +193,13 @@
 
             transition: 0.1s;
 
-            &:hover{
+            &:hover {
                 color: #444DF2;
                 background-color: #ECEEFE;
             }
         }
 
-        img{
+        img {
             position: absolute;
             width: 40px;
             height: 40px;
@@ -207,35 +209,36 @@
             cursor: pointer;
         }
 
-        
+
     }
-    
- 
-    img{
+
+
+    img {
         width: 70px;
         height: 70px;
         padding: 10px 30px 0 45px;
     }
-    span{
+
+    span {
         font-family: "Nunito";
     }
 
-    .message-details{
+    .message-details {
         display: flex;
         flex-direction: column;
         gap: 8px;
 
-        .message-over{
+        .message-over {
             height: 25px;
             display: flex;
-            gap:20px;
+            gap: 20px;
 
-            .message-name{
+            .message-name {
                 font-weight: 700;
                 font-size: 18px;
             }
-    
-            .message-time{
+
+            .message-time {
                 font-size: 14px;
                 color: #686868;
             }
@@ -243,7 +246,7 @@
 
 
 
-        .message-text{
+        .message-text {
             padding: 15px;
             font-size: 18px;
             background-color: #ECEEFE;
@@ -255,42 +258,42 @@
             width: fit-content;
         }
 
-        .message-under{
+        .message-under {
 
-            .message-answered{
+            .message-answered {
                 height: 25px;
                 display: flex;
 
-                .message-answers{
+                .message-answers {
                     font-size: 18px;
                     color: #535AF1;
                     padding-right: 20px;
                     cursor: pointer;
 
-                    &:hover{
+                    &:hover {
                         color: #444DF2;
                         font-weight: 700;
                     }
                 }
-        
-                .message-last-answer{
+
+                .message-last-answer {
                     color: #686868;
                     font-size: 14px;
                 }
             }
-           
-            .message-not-answered{
+
+            .message-not-answered {
                 display: flex;
                 align-items: center;
                 gap: 10px;
 
-                img{
+                img {
                     width: 34px;
                     height: 34px;
                     padding: 0;
                 }
 
-                .reaction{
+                .reaction {
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -305,53 +308,87 @@
     }
 }
 
-.reverse{
+.reactions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.reaction {
+  position: relative;
+  display: inline-block;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.reaction-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 120%; /* über dem Emoji */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #535AF1;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 12px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.reaction:hover .reaction-tooltip {
+  display: block;
+}
+
+.reverse {
     flex-direction: row-reverse;
 
-    .message-text{
+    .message-text {
         border-top-right-radius: 0 !important;
         border-top-left-radius: 30px;
-        
+
     }
-    .message-over{
+
+    .message-over {
         flex-direction: row-reverse;
     }
 
-    .message-not-answered{
+    .message-not-answered {
         justify-content: end;
     }
 
-    .message-answered{
+    .message-answered {
         flex-direction: row-reverse;
 
-        .message-answers{
+        .message-answers {
             padding-right: unset;
             padding-left: 20px;
         }
     }
 }
 
-.own-message{
-    background-color:#797EF3 !important; 
+.own-message {
+    background-color: #797EF3 !important;
     margin-right: unset !important;
     margin-left: 40px;
-    color:white;
+    color: white;
     align-self: end;
 
-    &:hover{
-        
-        .reaction-popup{
+    &:hover {
+
+        .reaction-popup {
             display: flex;
         }
     }
 }
 
-.add-reaction{
+.add-reaction {
     cursor: pointer;
     border-radius: 20px;
     background-color: white;
 
-    &:hover{
-        background-color:#ECEFFF;
+    &:hover {
+        background-color: #ECEFFF;
     }
 }
