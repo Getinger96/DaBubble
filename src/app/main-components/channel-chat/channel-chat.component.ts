@@ -44,6 +44,7 @@ export class ChannelChatComponent implements OnInit {
   private actualUserSubscription!: Subscription;
   private allMessageSubscription!: Subscription;
   private allConversationMessageSubscription!: Subscription;
+    private usersSubscription!: Subscription;
   @ViewChild('messageBox') messageBox!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('addMemberComponent') addMemberComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('atImg') atImg!: ElementRef<HTMLTextAreaElement>
@@ -51,6 +52,7 @@ export class ChannelChatComponent implements OnInit {
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
+  allUsers: User[] = [];
   allMessages: Message[] = [];
   allThreads: Message[] = [];
   readonly dialog = inject(MatDialog);
@@ -110,10 +112,20 @@ export class ChannelChatComponent implements OnInit {
     this.loadMembers();
     this.loadDate();
     this.loadActualUser();
-
+    this.loadAllUser();
 
   }
 
+
+    loadAllUser() {
+    this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
+      if (users.length > 0) {
+        this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
+
+        console.log('Benutzer in der Komponente:', this.allUsers);
+      }
+    });
+  }
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
@@ -284,7 +296,7 @@ export class ChannelChatComponent implements OnInit {
   openDialogMembers() {
     const dialogRef = this.dialog.open(AddUserComponent, {
       data: {
-        allUsersChannel: this.allUsersChannel,
+        allUsers: this.allUsers,
         members: this.members,
         currentChannelID: this.currentChannelID,
         currentChannelName: this.currentChannelName

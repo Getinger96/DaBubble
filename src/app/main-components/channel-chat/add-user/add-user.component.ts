@@ -20,7 +20,7 @@ export class AddUserComponent implements OnInit {
   searchUser:string =''
   originalUserList: User[] = [];
   memberList: Member[] =[]
-  constructor( private channelService: ChannelService,  public dialogRef: MatDialogRef<AddUserComponent>, @Inject(MAT_DIALOG_DATA) public data: { allUsersChannel: User[], members: Member[],currentChannelID: string, currentChannelName:string   }) {
+  constructor( private channelService: ChannelService,  public dialogRef: MatDialogRef<AddUserComponent>, @Inject(MAT_DIALOG_DATA) public data: { allUsers: User[], members: Member[],currentChannelID: string, currentChannelName:string   }) {
  
   }
 
@@ -38,7 +38,7 @@ export class AddUserComponent implements OnInit {
 
   addNewUser(user: any) {
     console.log('user.id',user.id);
-    console.log('this.data.allUsersChannel', this.data.allUsersChannel);
+    console.log('this.data.allUsersChannel', this.data.allUsers);
     
     const index = this.newUserList.findIndex(u => u.id === user.id);
     if (index !== -1) {
@@ -46,7 +46,7 @@ export class AddUserComponent implements OnInit {
       console.log();
       
     }
-    console.log('this.data.allUsersChannel', this.data.allUsersChannel);
+    console.log('this.data.allUsersChannel', this.data.allUsers);
     this.memberList.push(user)
     console.log('this.data.members', this.data.members);
     console.log('this.data.members', this.data.members);
@@ -55,12 +55,12 @@ export class AddUserComponent implements OnInit {
 
   filterNewUser() {
 
-    for (let index = 0; index < this.data.allUsersChannel.length; index++) {
-      const user = this.data.allUsersChannel[index];
+    for (let index = 0; index < this.data.allUsers.length; index++) {
+      const user = this.data.allUsers[index];
       console.log('user, ', user);
-      const newUser = this.data.members.some(members => members.id === this.data.allUsersChannel[index].id )
+      const newUser = this.data.members.some(members => members.id === this.data.allUsers[index].id )
       if (!newUser) {
-        this.newUserList.push(this.data.allUsersChannel[index])
+        this.newUserList.push(this.data.allUsers[index])
         console.log('newArray, ', this.newUserList);
         
       }
