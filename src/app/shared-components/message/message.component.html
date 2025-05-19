@@ -6,8 +6,8 @@
     <div [ngClass]="{'reverse': isOwn && !isInThread}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
         class="message">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup">
-            <img (click)="addNewReaction('check',channelID)" src="assets/img/check_40.png" alt="check">
-            <img (click)="addNewReaction('like',channelID)" src="assets/img/like.png" alt="like">
+            <img (click)="addNewReaction('check',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check">
+            <img (click)="addNewReaction('like',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
@@ -38,7 +38,9 @@
             </div>
             <div class="reactions">
                 <ng-container *ngFor="let entry of emojiReactions | keyvalue">
-                    <span class="reaction" (click)="addNewReaction(entry.key === '👍' ? 'like' : 'check', channelID)">
+                    <span class="reaction"
+                        (click)="addNewReaction(entry.key === '👍' ? 'like' : 'check', channelID, messageData?.messageId)">
+
                         {{ entry.key }}
                         <ng-container *ngIf="entry.value.count > 1">
                             {{ entry.value.count }}

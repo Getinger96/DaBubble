@@ -308,7 +308,7 @@ export class ChannelMessageService {
 
 
 
-  async toggleReaction(reaction: string, channelID: string) {
+  async toggleReaction(reaction: string, channelID: string, messageID: string) {
     let emoji: string;
     const actualUser = this.getActualUserName();
 
@@ -321,14 +321,14 @@ export class ChannelMessageService {
       return;
     }
 
-    if (!this.messageId) {
+    if (!messageID) {
       console.warn('messageId ist nicht definiert');
       return;
     }
 
     const reactionsRef = collection(
       this.firestore,
-      'Channels', channelID, 'messages', this.messageId, 'reactions'
+      'Channels', channelID, 'messages', messageID, 'reactions'
     );
 
     // 🔍 Prüfen, ob User diese Reaktion schon gesetzt hat

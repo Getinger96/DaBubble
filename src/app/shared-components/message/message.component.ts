@@ -79,15 +79,15 @@ export class MessageComponent {
   }
 
 
-  onReactionClick(emoji: string) {
-    if (this.messageData) {
-      this.channelmessageService.toggleReaction(
-        emoji === '✅' ? 'check' : 'like',
-        this.messageData.channelId
-      );
-    }
+ // onReactionClick(emoji: string) {
+   // if (this.messageData) {
+      //this.channelmessageService.toggleReaction(
+       // emoji === '✅' ? 'check' : 'like',
+        //this.messageData.channelId
+      //);
+    //}
 
-  }
+ // }
   onReplyClick(): void {
     if (this.messageData) {
       this.channelmessageService.openThread(this.messageData);
@@ -128,8 +128,9 @@ export class MessageComponent {
     MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
-  addNewReaction(reaction: string, channelID: string) {
-    this.channelmessageService.toggleReaction(reaction, channelID);
+  addNewReaction(reaction: string, channelID: string,messageId?:string) {
+    if(!messageId)return;
+    this.channelmessageService.toggleReaction(reaction, channelID,messageId);
   }
 
   ngOnDestroy(): void {
