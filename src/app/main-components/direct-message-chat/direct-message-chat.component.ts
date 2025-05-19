@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf,CommonModule } from '@angular/common';
 import { UserCardService } from '../active-user/services/user-card.service';
-import { MessageService } from '../../firebase-services/message.service';
+import { ConversationService } from '../../firebase-services/conversation.service';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { DirectMessageComponent } from '../../shared-components/direct-message/direct-message.component';
 import { Subscription } from 'rxjs';
@@ -41,14 +41,13 @@ timeFormatter = new Intl.DateTimeFormat('de-DE', {
   hour12: false
 });
 
+private unsubscribeFromMessages?: () => void;
 
-private allConversationMessageSubscription!: Subscription;
 
 
-constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private messageService: MessageService, private mainHelperService: MainHelperService) {
+constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService) {
 
 }
-
 
   async ngOnInit(): Promise<void>{
     this.loadName();
@@ -58,7 +57,13 @@ constructor(private mainservice: MainComponentService, public usercardservice: U
     this.actualUser = this.mainservice.actualUser[0].name;
     
 
-    await this.initConversation();
+      // Initiale Konversation laden
+  await this.initConversation();
+
+  // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)
+  this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
+    await this.initConversation(); // Lade neue Konversation und Nachrichten
+  });
   }
 
   loadName(){
@@ -91,18 +96,21 @@ constructor(private mainservice: MainComponentService, public usercardservice: U
   }
 
   checkConversation(user1: string, user2: string){
-    this.messageService.getOrCreateConversation(user1, user2);
+    this.conversationservice.getOrCreateConversation(user1, user2);
   }
 
   async initConversation():Promise <void> {
-    this.allConversationMessages = [];
-    this.showDirectMessage = true;
+  if (this.unsubscribeFromMessages) {
+    this.unsubscribeFromMessages();
+    this.unsubscribeFromMessages = undefined;
+  }
+
     const currentUserId = this.mainservice.actualUser[0].id;
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
-    this.conversationId = await this.messageService.getOrCreateConversation(currentUserId, partnerUserId);
-    const initialConvMessages = await this.messageService.getInitialConvMessages(this.conversationId);
-    this.allConversationMessages = initialConvMessages;
-    this.messageService.listenToMessages(this.conversationId, (liveMessages) => {
+    this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
+
+
+     this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
     this.allConversationMessages = liveMessages;
   });
 }
@@ -111,7 +119,7 @@ async addConversationMessage() {
   const currentUserId = this.mainservice.actualUser[0].id;
 
   if (this.conversationId && this.newConvMessage.trim() !== '') {
-    await this.messageService.sendMessage(this.conversationId, currentUserId, this.newConvMessage);
+    await this.conversationservice.sendMessage(this.conversationId, currentUserId, this.newConvMessage);
     this.newConvMessage = '';
   } else {
     console.log('Fehlende Daten:', this.conversationId, this.newConvMessage);
@@ -119,10 +127,11 @@ async addConversationMessage() {
 }
 
 ngOnDestroy(): void {
-  if (this.allConversationMessageSubscription) {
-    this.allConversationMessageSubscription.unsubscribe();
+  if (this.unsubscribeFromMessages) {
+    this.unsubscribeFromMessages();
   }
 }
+
 
   loadConversationMessageSender(message:ConversationMessage){
     if(message.isOwn){

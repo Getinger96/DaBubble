@@ -13,6 +13,7 @@ import { DirectMessageComponent } from '../../shared-components/direct-message/d
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { MainHelperService } from '../../services/main-helper.service';
 
+
 @Component({
   selector: 'app-main-chat',
   standalone: true,
@@ -84,15 +85,15 @@ export class MainChatComponent {
     this.loadActualUser();
     this.loadMessages();
     setTimeout(() => this.scrollToBottom(), 0);
-    this.conversationId = await this.messageService.getOrCreateConversation(
+    this.conversationId = await this.conversationservice.getOrCreateConversation(
       this.currentUserId,
       this.partnerUserId
     );
 
-        const initialConvMessages = await this.messageService.getInitialConvMessages(this.conversationId);
+        const initialConvMessages = await this.conversationservice.getInitialConvMessages(this.conversationId);
     this.allConversationMessages = initialConvMessages;
 
-    this.messageService.listenToMessages(this.conversationId, (liveMessages) => {
+    this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
       this.allConversationMessages = liveMessages;
     });
 
@@ -128,7 +129,7 @@ export class MainChatComponent {
 
   loadConversationMessages(){
     if(!this.mainhelperservice.openChannel){
-    this.allConversationMessageSubscription = this.conversationservice.allConversationsMessagesSubject$.subscribe((messages) => {
+    this.allConversationMessageSubscription = this.conversationservice.allConversationMessagesSubject.subscribe((messages) => {
       this.allConversationMessages = messages;
       this.conversationservice.sortAllMessages(this.allConversationMessages);
     })
@@ -194,7 +195,7 @@ export class MainChatComponent {
 
   async addConversationMessage(){
       if (this.conversationId && this.newConvMessage.trim() !== '') {
-      await this.messageService.sendMessage(this.conversationId, this.currentUserId, this.newConvMessage);
+      await this.conversationservice.sendMessage(this.conversationId, this.currentUserId, this.newConvMessage);
       console.log('Success')
       this.newConvMessage = '';
     } else {

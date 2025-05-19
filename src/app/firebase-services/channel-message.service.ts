@@ -41,10 +41,6 @@ export class ChannelMessageService {
   constructor(private messageService: MessageService, private mainservice: MainComponentService) {
   }
 
-
-
-
-
   subList(channelId: string) {
     console.log('📡 subList aufgerufen mit channelId:', channelId);
     const channelDocRef = doc(this.firestore, 'Channels', channelId);

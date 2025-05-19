@@ -23,7 +23,7 @@ import { ChannelMessageService } from '../firebase-services/channel-message.serv
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent,RouterModule, WorkspaceMenuComponent, MainChatComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent, DirectMessageChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent,RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent, DirectMessageChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })  
