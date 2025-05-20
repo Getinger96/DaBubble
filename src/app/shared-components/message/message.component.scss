@@ -83,6 +83,12 @@
         background-color: white;
         z-index: 2;
 
+          &.show {
+        display: none; 
+
+    }
+
+
         img {
             width: 40px;
             height: 40px;
@@ -131,6 +137,8 @@
         }
 
     }
+
+
 
     .edit-message-input {
 
@@ -308,6 +316,29 @@
     }
 }
 
+.noHover  {
+       pointer-events: none; 
+}
+
+.emojiWindow {
+    border: solid 1px black;
+    padding: 10px 0px 5px 4px;
+    padding: 10px 0px 20px 0px;
+    border-radius: 10px;
+    background-color: #222222;
+    scrollbar-color: #444DF2 #222222 !important;
+    z-index: 100;
+    position: absolute;
+    left: 30px;
+
+ 
+}
+
+
+::ng-deep .emoji-mart-scroll {
+  max-height: 100px !important;
+}
+
 .reactions {
     display: flex;
     gap: 8px;
@@ -375,6 +406,10 @@
     color: white;
     align-self: end;
 
+
+
+
+
     &:hover {
 
         .reaction-popup {
@@ -391,4 +426,8 @@
     &:hover {
         background-color: #ECEFFF;
     }
+}
+
+.emojiWindow {
+    position: absolute;
 }

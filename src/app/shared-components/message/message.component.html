@@ -7,14 +7,22 @@
     </div>
     <div [ngClass]="{'reverse': isOwn && !isInThread}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
         class="message">
-        <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup">
-            <img (click)="addNewReaction('check',channelID,messageData?.messageId)" src="assets/img/check_40.png"
-                alt="check">
+        <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup" [ngClass]="{ 'show': showEmojiPicker }">
+
+          
+
+            <img (click)="addNewReaction('check',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check">
             <img (click)="addNewReaction('like',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
-            <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
+            <img  #emojiImg (click)="showEmojiBar()"     class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
         </div>
+    <div *ngIf="showEmojiPicker"  #emojiComponent class="emojiWindow"  [ngClass]="{ 'noHover': showEmojiPicker }">
+                        <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
+                        [totalFrequentLines]="2" [showSingleCategory]="true" [enableSearch]="false" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="false"   theme="dark"
+                        [perLine]="7"></emoji-mart>
+    </div>
+        
         <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isThread ? {'left': '135px'} : {}">
             <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
         </div>
@@ -55,7 +63,9 @@
                             {{ entry.value.users.length === 1 ? 'hat reagiert' : 'haben reagiert' }}
                         </div>
                     </span>
+
                 </ng-container>
+
             </div>
             <div *ngIf="editMessage" class="edit-message-input fontNunito">
                 <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}></textarea>

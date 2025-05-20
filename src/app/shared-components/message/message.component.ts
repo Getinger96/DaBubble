@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter,  ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
 import { Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
-
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PickerComponent],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -31,7 +31,8 @@ export class MessageComponent {
   @Input() dateExists: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
   @Input() channelID!: string;
-
+  @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   threadAnswers: Message[] = [];
@@ -41,7 +42,8 @@ export class MessageComponent {
   showEditPopup = MessageComponent.showEditPopup;
   editMessage = MessageComponent.showEditPopup;
   emojiReactions = new Map<string, { count: number, users: string[] }>();
-
+  showEmojiPicker: boolean = false;
+  hover = false;
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) { }
 
   ngOnInit(): void {
@@ -75,17 +77,33 @@ export class MessageComponent {
     } else {
       console.log('no Message Data')
     }
-    console.log('📅 Nachricht empfangen:', this.messageData?.sendAt, this.messageData?.sendAtTime);
+
   }
 
 
-  // onReactionClick(emoji: string) {
-  // if (this.messageData) {
-  //this.channelmessageService.toggleReaction(
-  // emoji === '✅' ? 'check' : 'like',
-  //this.messageData.channelId
-  //);
-  //}
+
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+       const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
+      || this.emojiImg.nativeElement?.contains(target);
+
+
+
+    if (!clickedInsideEmoji) {
+      this.showEmojiPicker = false;
+    }
+
+  }
+ // onReactionClick(emoji: string) {
+   // if (this.messageData) {
+      //this.channelmessageService.toggleReaction(
+       // emoji === '✅' ? 'check' : 'like',
+        //this.messageData.channelId
+      //);
+    //}
 
   // }
   onReplyClick(): void {
@@ -110,6 +128,11 @@ export class MessageComponent {
         }
       }
     );
+  }
+
+
+  showEmojiBar() {
+    this.showEmojiPicker = !this.showEmojiPicker;
   }
 
   overwriteMessage() {
