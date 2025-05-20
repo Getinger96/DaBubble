@@ -253,7 +253,8 @@ export class ChannelChatComponent implements OnInit {
 
   addEmoji(event: any) {
     const emoji = event.emoji.native;
-  
+    console.log('emoji', emoji);
+    
 
     this.message.messageText +=   emoji  ;
 
