@@ -18,10 +18,12 @@ import {
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
 import { MainComponentService } from './main-component.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelMessageService {
+
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   channelMessageId?: string;
@@ -56,8 +58,10 @@ export class ChannelMessageService {
         message.isOwn = isOwn;
         this.messageId = messageData['messageId']
         allMessages.push(message);
+        console.log('hier bin ich', element.data())
       });
       this.allMessages = allMessages;
+
 
       this.allMessagesSubject.next(this.allMessages);
 
@@ -226,28 +230,36 @@ export class ChannelMessageService {
       'Dezember',
     ];
     let days = [
-      'Montag',
+      'Sonntag',     // Index 0
+      'Montag',      // Index 1
       'Dienstag',
       'Mittwoch',
       'Donnerstag',
       'Freitag',
-      'Samstag',
-      'Sonntag',
+      'Samstag'      // Index 6
     ];
-    let d = new Date();
-    let month = months[d.getMonth()];
-    let dayString = days[d.getDay()];
-    let dayNumber = d.getDate();
-    let minutes = d.getMinutes();
-    let hours = d.getHours();
+    let now = new Date();
+    const locale = 'de-DE';
+
+    const weekday = now.toLocaleDateString(locale, { weekday: 'long' });  // z.B. "Montag"
+    const day = now.getDate();                                            // z.B. 20
+    const month = now.toLocaleDateString(locale, { month: 'long' });     // z.B. "Mai"
+    const time = now.toLocaleTimeString(locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });                                                                   // z.B. "14:05"
+
+    const sendAt = `${weekday}, ${day}. ${month}`;                        // → "Montag, 20. Mai"
+    const sendAtTime = time;
 
 
     const threadAnswer: Message = {
       name: user.name,
       avatar: user.avatar,
       messageText: messageText,
-      sendAt: `${dayString}, ${dayNumber}. ${month}`,
-      sendAtTime: `${hours}:${minutes}`,
+      sendAt: sendAt,
+      sendAtTime: sendAtTime,
       timestamp: Date.now(),
       isOwn: true,
       isThread: true,
@@ -346,7 +358,31 @@ export class ChannelMessageService {
     }
   }
 
+  async loadAllMessagesFromAllChannels() {
+    const channelsSnapshot = await getDocs(collection(this.firestore, 'Channels'));
+
+    const allMessages: Message[] = [];
+
+    for (const channelDoc of channelsSnapshot.docs) {
+      const channelId = channelDoc.id;
+      const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
+      const messagesSnapshot = await getDocs(messagesRef);
+
+      messagesSnapshot.forEach(docSnap => {
+        const messageData = docSnap.data();
+        const message = this.messageService.setMessageObject(messageData, docSnap.id);
+        message.isOwn = message.id === this.getActualUser();
+        allMessages.push(message);
+      });
+    }
+
+    this.sortAllMessages(allMessages);
+    this.allMessages = allMessages;
+    this.allMessagesSubject.next(this.allMessages);
+  }
+
 }
+
 
 
 

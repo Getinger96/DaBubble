@@ -264,28 +264,35 @@ return {
       'Dezember',
     ];
     let days = [
-      'Montag',
-      'Dienstag',
-      'Mittwoch',
-      'Donnerstag',
-      'Freitag',
-      'Samstag',
-      'Sonntag',
-    ];
-    let d = new Date();
-    let month = months[d.getMonth()];
-    let dayString = days[d.getDay()];
-    let dayNumber = d.getDate();
-    let minutes = d.getMinutes();
-    let hours = d.getHours();
-    
+  'Sonntag',     // Index 0
+  'Montag',      // Index 1
+  'Dienstag',
+  'Mittwoch',
+  'Donnerstag',
+  'Freitag',
+  'Samstag'      // Index 6
+];
+    let now = new Date();
+const locale = 'de-DE';
+
+const weekday = now.toLocaleDateString(locale, { weekday: 'long' });  // z.B. "Montag"
+const day = now.getDate();                                            // z.B. 20
+const month = now.toLocaleDateString(locale, { month: 'long' });     // z.B. "Mai"
+const time = now.toLocaleTimeString(locale, {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
+});                                                                   // z.B. "14:05"
+
+const sendAt = `${weekday}, ${day}. ${month}`;                        // → "Montag, 20. Mai"
+const sendAtTime = time;             
 
     const threadAnswer: Message = {
       name: user.name,
       avatar: user.avatar,
       messageText: messageText,
-      sendAt: `${dayString}, ${dayNumber}. ${month}`,
-      sendAtTime: `${hours}:${minutes}`,
+      sendAt: sendAt,
+      sendAtTime: sendAtTime,
       timestamp: Date.now(),
       isOwn: true,
       isThread: true,

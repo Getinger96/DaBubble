@@ -46,10 +46,10 @@ export class MessageComponent {
 
   ngOnInit(): void {
     if (this.messageData) {
-      this.date = this.messageData.sendAt || this.date;
+      this.date = this.messageData.sendAt;
       this.avatarSrc = this.messageData.avatar || this.avatarSrc;
       this.name = this.messageData.name || this.name;
-      this.time = this.messageData.sendAtTime || this.time;
+      this.time = this.messageData.sendAtTime;
       this.messageText = this.messageData.messageText || this.messageText;
       this.reaction = this.messageData.reaction || this.reaction;
       this.isOwn = this.messageData.isOwn ?? this.isOwn;
@@ -75,19 +75,19 @@ export class MessageComponent {
     } else {
       console.log('no Message Data')
     }
-
+    console.log('📅 Nachricht empfangen:', this.messageData?.sendAt, this.messageData?.sendAtTime);
   }
 
 
- // onReactionClick(emoji: string) {
-   // if (this.messageData) {
-      //this.channelmessageService.toggleReaction(
-       // emoji === '✅' ? 'check' : 'like',
-        //this.messageData.channelId
-      //);
-    //}
+  // onReactionClick(emoji: string) {
+  // if (this.messageData) {
+  //this.channelmessageService.toggleReaction(
+  // emoji === '✅' ? 'check' : 'like',
+  //this.messageData.channelId
+  //);
+  //}
 
- // }
+  // }
   onReplyClick(): void {
     if (this.messageData) {
       this.channelmessageService.openThread(this.messageData);
@@ -128,14 +128,19 @@ export class MessageComponent {
     MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
-  addNewReaction(reaction: string, channelID: string,messageId?:string) {
-    if(!messageId)return;
-    this.channelmessageService.toggleReaction(reaction, channelID,messageId);
+  addNewReaction(reaction: string, channelID: string, messageId?: string) {
+    if (!messageId) return;
+    this.channelmessageService.toggleReaction(reaction, channelID, messageId);
   }
 
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {
       this.allThreadsSubscription.unsubscribe();
     }
+  }
+
+  get formattedSendAt(): Date | null {
+    if (!this.messageData?.sendAt) return null;
+    return new Date(this.messageData.sendAt);
   }
 }

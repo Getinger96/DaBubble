@@ -1,12 +1,15 @@
 <div class="message-wrapper">
     <div *ngIf="!isInThread && !dateExists" class="message-date-part">
         <div class="date-row"></div>
-        <span class="message-date fontNunito">{{ date }}</span>
+        <span class="message-date fontNunito">
+            {{ date}}
+        </span>
     </div>
     <div [ngClass]="{'reverse': isOwn && !isInThread}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
         class="message">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup">
-            <img (click)="addNewReaction('check',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check">
+            <img (click)="addNewReaction('check',channelID,messageData?.messageId)" src="assets/img/check_40.png"
+                alt="check">
             <img (click)="addNewReaction('like',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">

@@ -1,5 +1,5 @@
 <div class="search-bar">
-  <input [(ngModel)]="searchTerm" (input)="filterUsers()" type="text" [placeholder]="placeholderSearchBar">
+  <input [(ngModel)]="searchTerm" (input)="filterResults()" type="text" [placeholder]="placeholderSearchBar">
   <img src="assets/img/search.svg" alt="search-icon" class="search-icon">
 
 </div>
@@ -20,8 +20,15 @@
       #{{ channel.name }}
     </div>
   </div>
-
-  <div *ngIf="filteredUsers.length === 0 && filteredChannels.length === 0">
-    <p>Keine Ergebnisse gefunden.</p>
+  <div class="message-container" *ngIf="filteredMessages.length > 0">
+  <h4>Nachrichten</h4>
+  <div *ngFor="let message of filteredMessages" class="message-entry">
+    <div (click)="navigateToMessage(message)"><img src="../../../assets/img/avatar_{{message.avatar}}.png" alt="" srcset=""> <strong>{{ message.name }}:</strong> {{ message.messageText }}</div>
+    
   </div>
+</div>
+
+  <div *ngIf="filteredUsers.length === 0 && filteredChannels.length === 0 && filteredMessages.length === 0">
+  <p>Keine Ergebnisse gefunden.</p>
+</div>
 </div>
