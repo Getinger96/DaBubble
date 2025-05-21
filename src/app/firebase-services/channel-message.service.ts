@@ -36,7 +36,7 @@ export class ChannelMessageService {
   showThread$ = this.showThreadSubject.asObservable();
   private threadAnswersSubject = new BehaviorSubject<Message[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
-
+  emojiList: { emoji: string; number: number }[] = [];
   allMessages$ = this.allMessagesSubject.asObservable();
   currentChannelname$: any;
 
@@ -357,6 +357,31 @@ export class ChannelMessageService {
       });
     }
   }
+
+
+  addEmojiInMessage(emoji: any, channelID: string, messageID: string) {
+    const actualUser = this.getActualUserName();
+
+    let index = this.checkEmojiIsInArray(emoji)
+
+
+    if (index !== -1) {
+      this.emojiList[index].number += 1;
+    }   else {
+    this.emojiList.push({ emoji, number: 1 });
+  }
+
+
+  }
+
+
+checkEmojiIsInArray(emoji: any) {
+  return this.emojiList.findIndex(e => e.emoji === emoji)
+
+
+
+}
+
 
   async loadAllMessagesFromAllChannels() {
     const channelsSnapshot = await getDocs(collection(this.firestore, 'Channels'));

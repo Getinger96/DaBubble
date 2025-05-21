@@ -33,6 +33,7 @@ export class MessageComponent {
   @Input() channelID!: string;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   threadAnswers: Message[] = [];
@@ -88,7 +89,7 @@ export class MessageComponent {
     const target = event.target as HTMLElement;
 
        const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
-      || this.emojiImg.nativeElement?.contains(target);
+      || this.emojiImg.nativeElement?.contains(target)  || this.emojiImgWriter.nativeElement?.contains(target);
 
 
 
@@ -135,6 +136,7 @@ export class MessageComponent {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
 
+
   overwriteMessage() {
     this.toggleEditPopup();
     MessageComponent.showEditPopup = false;
@@ -154,6 +156,13 @@ export class MessageComponent {
   addNewReaction(reaction: string, channelID: string, messageId?: string) {
     if (!messageId) return;
     this.channelmessageService.toggleReaction(reaction, channelID, messageId);
+  }
+
+
+  addEmoji(event: any, channelID: string, messageId?: string) {
+    const emoji = event.emoji.native;
+        if (!messageId) return;
+ this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
   }
 
   ngOnDestroy(): void {

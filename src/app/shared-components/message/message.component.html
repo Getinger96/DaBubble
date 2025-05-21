@@ -17,8 +17,8 @@
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
         </div>
-    <div *ngIf="showEmojiPicker"  [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
-                        <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
+    <div *ngIf="showEmojiPicker"   [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
+                        <emoji-mart set="apple"  (emojiClick)="addEmoji($event, channelID, messageData?.messageId)" title="Pick your emoji…" emoji="point_up" 
                         [totalFrequentLines]="2" [showSingleCategory]="true" [enableSearch]="false" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="false"   theme="dark"
                         [perLine]="7"></emoji-mart>
     </div>
@@ -27,7 +27,7 @@
             <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
         </div>
         <div *ngIf="isThread || isInThread" class="reaction-popup ">
-            <img src="assets/img/add_reaction40.png" alt="">
+            <img     src="assets/img/add_reaction40.png" alt="">
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
         </div>
         <img [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'}:{}" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
@@ -44,7 +44,7 @@
                 <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">
                     <!--<div class="reaction"><img src="assets/img/rocket.png" alt=""><span>1</span></div>
                     <div class="reaction"><img src="assets/img/check.png" alt=""><span>1</span></div>-->
-                    <img class="add-reaction" src="assets/img/add_reaction40.png" alt="">
+                    <img  #emojiImgW  (click)="showEmojiBar()"  class="add-reaction" src="assets/img/add_reaction40.png" alt="">
                 </div>
             </div>
             <div class="reactions">
