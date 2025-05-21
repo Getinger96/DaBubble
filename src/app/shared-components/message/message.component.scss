@@ -329,14 +329,20 @@
     scrollbar-color: #444DF2 #222222 !important;
     z-index: 100;
     position: absolute;
-    left: 30px;
-
+    right:  30px;
+    bottom: 20px;
+    width: max-content;
  
 }
 
+.emojiWindowLeftSide {
+  left: 30px;
+}
+
+
 
 ::ng-deep .emoji-mart-scroll {
-  max-height: 100px !important;
+max-height: 80px !important;
 }
 
 .reactions {
@@ -428,6 +434,3 @@
     }
 }
 
-.emojiWindow {
-    position: absolute;
-}
