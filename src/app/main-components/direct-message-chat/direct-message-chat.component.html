@@ -1,35 +1,6 @@
-<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()">
-
-    <div class="profile-Container">
-        <div class="container-Header">
-            <span>Profil</span>
-            <img (click)="closeOverlay()" src="assets/img/close.png" alt="">
-        </div>
-        <div class="container-img">
-            <img  src="assets/img/avatar_large_{{currentmessageAvatar}}.png" alt="">
-        </div>
-        <div class="container-Name">
-            <span>{{currentmessageUser}}</span>
-
-        </div>
-        <div class="container-Status">
-            <img  src="assets/img/{{currentmessageStatus}}.svg" alt="">
-            <span [ngClass]="currentmessageStatus === 'Online' ? 'status-online' : 'status-offline'" >{{currentmessageStatus}}</span>
-        </div>
-        <div class="container-Email">
-            <div class="email-Header">
-                <img src="assets/img/mail.svg" alt="">
-                <span>E-Mail-Adresse</span>
-            </div>
-          <a href="mailto:{{currentmessageEmail}}">{{currentmessageEmail}}</a>
-
-        </div>
-
-        <div class="button-container">
-            <button class="button">Nachricht senden</button>
-        </div>
-    </div>
-</div>
+@if (overlayvisible) {
+    <app-profile-card [overlayvisible]="overlayvisible" [currentmessageUser]="currentmessageUser" [currentmessageAvatar]="currentmessageAvatar" [currentmessageStatus]="currentmessageStatus" [currentmessageEmail]="currentmessageEmail"></app-profile-card>
+}
 
 <div class="main-chat-wrapper">
     <div class="main-chat-header">

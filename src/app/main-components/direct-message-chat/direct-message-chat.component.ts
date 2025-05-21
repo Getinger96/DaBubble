@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf,CommonModule } from '@angular/common';
 import { UserCardService } from '../active-user/services/user-card.service';
@@ -8,20 +8,21 @@ import { DirectMessageComponent } from '../../shared-components/direct-message/d
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MainHelperService } from '../../services/main-helper.service';
+import { ProfileCardComponent } from '../profile-card/profile-card.component';
 
 @Component({
   selector: 'app-direct-message-chat',
   standalone: true,
-  imports: [NgIf,CommonModule, FormsModule, DirectMessageComponent],
+  imports: [NgIf,CommonModule, FormsModule, DirectMessageComponent, ProfileCardComponent],
   templateUrl: './direct-message-chat.component.html',
   styleUrl: './direct-message-chat.component.scss'
 })
 export class DirectMessageChatComponent {
-currentmessageUser:string='';
-currentmessageEmail:string='';
-currentmessageAvatar:any;
-currentmessageStatus:string='';
-overlayvisible:boolean=false;
+@Output() currentmessageUser:string='';
+@Output() currentmessageEmail:string='';
+@Output() currentmessageAvatar:any;
+@Output() currentmessageStatus:string='';
+@Output() overlayvisible:boolean = false;
 actualUser?:string;
 allConversationMessages: ConversationMessage[] = [];
 conversationId: string | null = null;
@@ -46,7 +47,7 @@ private unsubscribeFromMessages?: () => void;
 
 
 constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService) {
-
+  
 }
 
   async ngOnInit(): Promise<void>{
@@ -100,37 +101,36 @@ constructor(private mainservice: MainComponentService, public usercardservice: U
   }
 
   async initConversation():Promise <void> {
-  if (this.unsubscribeFromMessages) {
-    this.unsubscribeFromMessages();
-    this.unsubscribeFromMessages = undefined;
-  }
+    if (this.unsubscribeFromMessages) {
+      this.unsubscribeFromMessages();
+      this.unsubscribeFromMessages = undefined;
+    }
 
     const currentUserId = this.mainservice.actualUser[0].id;
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
     this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
 
-
-     this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
+    this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
     this.allConversationMessages = liveMessages;
   });
 }
 
-async addConversationMessage() {
-  const currentUserId = this.mainservice.actualUser[0].id;
+  async addConversationMessage() {
+    const currentUserId = this.mainservice.actualUser[0].id;
 
-  if (this.conversationId && this.newConvMessage.trim() !== '') {
-    await this.conversationservice.sendMessage(this.conversationId, currentUserId, this.newConvMessage);
-    this.newConvMessage = '';
-  } else {
-    console.log('Fehlende Daten:', this.conversationId, this.newConvMessage);
+    if (this.conversationId && this.newConvMessage.trim() !== '') {
+      await this.conversationservice.sendMessage(this.conversationId, currentUserId, this.newConvMessage);
+      this.newConvMessage = '';
+    } else {
+      console.log('Fehlende Daten:', this.conversationId, this.newConvMessage);
+    }
   }
-}
 
-ngOnDestroy(): void {
-  if (this.unsubscribeFromMessages) {
-    this.unsubscribeFromMessages();
+  ngOnDestroy(): void {
+    if (this.unsubscribeFromMessages) {
+      this.unsubscribeFromMessages();
+    }
   }
-}
 
 
   loadConversationMessageSender(message:ConversationMessage){
