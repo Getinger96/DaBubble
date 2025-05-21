@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter,  ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
@@ -16,7 +16,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 })
 export class MessageComponent {
   @Input() messageData: Message | undefined;
-  @Input() date!: Date | string;
+  @Input() date!: Date | string | null;
   @Input() avatarSrc!: number;
   @Input() name!: string;
   @Input() time!: Date | string;
@@ -47,8 +47,9 @@ export class MessageComponent {
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) { }
 
   ngOnInit(): void {
+
     if (this.messageData) {
-      this.date = this.messageData.sendAt;
+     this.date=this.messageData.sendAt
       this.avatarSrc = this.messageData.avatar || this.avatarSrc;
       this.name = this.messageData.name || this.name;
       this.time = this.messageData.sendAtTime;
@@ -87,7 +88,7 @@ export class MessageComponent {
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-       const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
+    const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
       || this.emojiImg.nativeElement?.contains(target);
 
 
@@ -97,13 +98,13 @@ export class MessageComponent {
     }
 
   }
- // onReactionClick(emoji: string) {
-   // if (this.messageData) {
-      //this.channelmessageService.toggleReaction(
-       // emoji === '✅' ? 'check' : 'like',
-        //this.messageData.channelId
-      //);
-    //}
+  // onReactionClick(emoji: string) {
+  // if (this.messageData) {
+  //this.channelmessageService.toggleReaction(
+  // emoji === '✅' ? 'check' : 'like',
+  //this.messageData.channelId
+  //);
+  //}
 
   // }
   onReplyClick(): void {
@@ -162,8 +163,5 @@ export class MessageComponent {
     }
   }
 
-  get formattedSendAt(): Date | null {
-    if (!this.messageData?.sendAt) return null;
-    return new Date(this.messageData.sendAt);
-  }
+ 
 }
