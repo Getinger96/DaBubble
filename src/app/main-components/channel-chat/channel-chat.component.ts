@@ -44,7 +44,7 @@ export class ChannelChatComponent implements OnInit {
   private actualUserSubscription!: Subscription;
   private allMessageSubscription!: Subscription;
   private allConversationMessageSubscription!: Subscription;
-    private usersSubscription!: Subscription;
+  private usersSubscription!: Subscription;
   @ViewChild('messageBox') messageBox!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('addMemberComponent') addMemberComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('atImg') atImg!: ElementRef<HTMLTextAreaElement>
@@ -64,25 +64,25 @@ export class ChannelChatComponent implements OnInit {
   months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
   days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
   d = new Date();
-  month = this.months[this.d.getMonth()];
-  dayString = this.days[this.d.getDay()];
+  dayName = this.d.toLocaleString('de-DE', { weekday: 'long' });
+  monthName = this.d.toLocaleString('de-DE', { month: 'long' });
   dayNumber = this.d.getDate();
-  minutes = this.d.getMinutes();
-  hours = this.d.getHours();
+  hours = this.d.getHours().toString().padStart(2, '0');
+  minutes = this.d.getMinutes().toString().padStart(2, '0');
   channelId!: string;
-    toggleEmoji: boolean = false
+  toggleEmoji: boolean = false
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
   message: Message = {
     id: '',
     messageId: '',
     channelId: this.currentChannelID,
-    channelName:this.currentChannelName,
+    channelName: this.currentChannelName,
     name: '',
     avatar: 0,
     messageText: '',
-    sendAt: `${this.dayString}, ${this.dayNumber}. ${this.month}`,
-    sendAtTime: `${(this.hours < 10 ? '0' + this.hours : this.hours)}:${(this.minutes < 10 ? '0' + this.minutes : this.minutes)}`,
+    sendAt: `${this.dayName}, ${this.dayNumber}. ${this.monthName}`,
+    sendAtTime: `${this.hours}:${this.minutes}`,
     timestamp: Date.now(),
     reaction: 0,
     isOwn: false,
@@ -100,7 +100,7 @@ export class ChannelChatComponent implements OnInit {
 
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
     private route: ActivatedRoute, private mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
-  private _eref: ElementRef) {}
+    private _eref: ElementRef) { }
 
 
   ngOnInit(): void {
@@ -117,7 +117,7 @@ export class ChannelChatComponent implements OnInit {
   }
 
 
-    loadAllUser() {
+  loadAllUser() {
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
@@ -134,7 +134,7 @@ export class ChannelChatComponent implements OnInit {
     const clickedInsideAtAddMember = this.addMemberComponent?.nativeElement?.contains(target)
       || this.atImg.nativeElement?.contains(target);
 
-       const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
+    const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
       || this.emojiImg.nativeElement?.contains(target);
 
     if (!clickedInsideAtAddMember) {
@@ -147,9 +147,9 @@ export class ChannelChatComponent implements OnInit {
 
   }
 
-  
 
- toggleEmojiBar() {
+
+  toggleEmojiBar() {
     this.toggleEmoji = !this.toggleEmoji;
     if (this.toggleMemberInChat) {
       this.toggleMemberInChat = false
@@ -157,19 +157,19 @@ export class ChannelChatComponent implements OnInit {
   }
 
 
-  
+
   openDialogAddMember() {
 
-  this.toggleMemberInChat = !this.toggleMemberInChat;
-      if (this.toggleEmoji) {
+    this.toggleMemberInChat = !this.toggleMemberInChat;
+    if (this.toggleEmoji) {
       this.toggleEmoji = false
     }
   }
 
-  
 
 
-      loadActualUser(){
+
+  loadActualUser() {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
@@ -180,19 +180,19 @@ export class ChannelChatComponent implements OnInit {
 
 
   loadRouter() {
-         this.route.pathFromRoot.forEach(route => {
-    route.paramMap.subscribe(params => {
-      if (params.has('channelId')) {
-        const channelId = params.get('channelId');
-        console.log('🎯 channelId gefunden über pathFromRoot:', channelId);
-        this.channelId = channelId!;
-        this.channelService.setCurrentChannel(this.channelId);
-        this.loadMessages(channelId!);
-      }
+    this.route.pathFromRoot.forEach(route => {
+      route.paramMap.subscribe(params => {
+        if (params.has('channelId')) {
+          const channelId = params.get('channelId');
+          console.log('🎯 channelId gefunden über pathFromRoot:', channelId);
+          this.channelId = channelId!;
+          this.channelService.setCurrentChannel(this.channelId);
+          this.loadMessages(channelId!);
+        }
+      });
     });
-  });
   }
-  
+
   loadChannelId() {
     this.channelService.currentChannelId$.subscribe(id => {
       this.currentChannelID = id;
@@ -240,12 +240,12 @@ export class ChannelChatComponent implements OnInit {
     this.channelmessageService.subList(channelId);
 
     this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-  const filtered = messages.filter(message => !!message.messageText && message.messageText.trim() !== '');
-  
-  this.allMessages = filtered.filter(message => !message.isThread);
-  this.channelmessageService.sortAllMessages(this.allMessages);
-  this.allThreads = filtered.filter(message => message.isThread);
-});
+      const filtered = messages.filter(message => !!message.messageText && message.messageText.trim() !== '');
+
+      this.allMessages = filtered.filter(message => !message.isThread);
+      this.channelmessageService.sortAllMessages(this.allMessages);
+      this.allThreads = filtered.filter(message => message.isThread);
+    });
 
   }
 
@@ -254,12 +254,12 @@ export class ChannelChatComponent implements OnInit {
   addEmoji(event: any) {
     const emoji = event.emoji.native;
     console.log('emoji', emoji);
-    
 
-    this.message.messageText +=   emoji  ;
 
- 
-  
+    this.message.messageText += emoji;
+
+
+
   }
 
 
@@ -314,10 +314,10 @@ export class ChannelChatComponent implements OnInit {
 
 
   insertMemberIntoTextarea(member: Member) {
-  const insertText = `@${member.name} `;
-  this.message.messageText += insertText;
+    const insertText = `@${member.name} `;
+    this.message.messageText += insertText;
 
-}
+  }
 
 
 
@@ -347,13 +347,13 @@ export class ChannelChatComponent implements OnInit {
     this.closeOverlay()
   }
 
-  sendmessage(channelid: string,channelname:string) {
+  sendmessage(channelid: string, channelname: string) {
     this.message.id = this.actualUser[0]?.id || '';
     this.message.name = this.actualUser[0]?.name || '';
     this.message.avatar = this.actualUser[0]?.avatar || 1;
     this.message.isOwn = true;
 
-    this.channelmessageService.addMessage(this.message, channelid,channelname)
+    this.channelmessageService.addMessage(this.message, channelid, channelname)
 
     this.message.messageText = '';
   }
