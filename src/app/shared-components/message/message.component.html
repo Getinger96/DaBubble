@@ -20,21 +20,12 @@
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
         </div>
-     <div *ngIf="showEmojiPicker" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
-    <emoji-mart
-        set="apple"
-        (emojiClick)="addEmoji($event, channelID, messageData?.messageId)"
-        title="Pick your emoji…"
-        emoji="point_up"
-        [showSingleCategory]="true"
-        [enableSearch]="false"
-        [emojiTooltip]="false"
-        [autoFocus]="true"
-        [showPreview]="false"
-        theme="dark"
-        [perLine]="7">
-    </emoji-mart>
-</div>
+
+                 <div *ngIf="showEmojiPicker"   [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
+                        <emoji-mart set="apple"  (emojiClick)="addEmoji($event, channelID, messageData?.messageId)" title="Pick your emoji…" emoji="point_up" 
+                        [totalFrequentLines]="2" [showSingleCategory]="true" [enableSearch]="false" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="false"   theme="dark"
+                        [perLine]="7"></emoji-mart>
+    </div>
              
 
         <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isThread ? {'left': '135px'} : {}">
@@ -58,7 +49,7 @@
                 <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">
                     <!--<div class="reaction"><img src="assets/img/rocket.png" alt=""><span>1</span></div>
                     <div class="reaction"><img src="assets/img/check.png" alt=""><span>1</span></div>-->
-                    <img  #emojiImgW  (click)="showEmojiBar()"  class="add-reaction" src="assets/img/add_reaction40.png" alt="">
+                    <img  #emojiImgWriter  (click)="showEmojiBar()"  class="add-reaction" src="assets/img/add_reaction40.png" alt="">
                 </div>
             </div>
             <div class="reactions">

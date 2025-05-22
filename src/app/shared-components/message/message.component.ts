@@ -91,6 +91,7 @@ export class MessageComponent {
 
        const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
       || this.emojiImg.nativeElement?.contains(target)  || this.emojiImgWriter.nativeElement?.contains(target);
+    console.log('Clicked element:', target);
 
 
 

@@ -360,7 +360,7 @@ export class ChannelMessageService {
 
 
   addEmojiInMessage(emoji: any, channelID: string, messageID: string) {
-    const actualUser = this.getActualUserName();
+  
 
     let index = this.checkEmojiIsInArray(emoji)
 
@@ -371,7 +371,31 @@ export class ChannelMessageService {
     this.emojiList.push({ emoji, number: 1 });
   }
 
+  this.saveEmojiInFirebase(emoji, channelID,messageID )
 
+  }
+
+
+  async saveEmojiInFirebase(emoji: any, channelID: string, messageID: string) {
+
+      const actualUser = this.getActualUserName();
+     const reactionsRef = collection(this.firestore,'Channels', channelID, 'messages', messageID, 'reactions');
+    const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
+      const existingReactions = await getDocs(q);
+
+      if (!existingReactions.empty) {
+    return;
+  }
+
+
+    await addDoc(reactionsRef, {
+    emoji: emoji,
+    reactedFrom: actualUser,
+    createdAt: new Date(),
+  });
+
+
+  
   }
 
 
