@@ -12,9 +12,9 @@
 
 
 
-            <img (click)="addNewReaction('check',channelID,messageData?.messageId)" src="assets/img/check_40.png"
+            <img (click)="addEmoji('✅',channelID,messageData?.messageId)" src="assets/img/check_40.png"
                 alt="check">
-            <img (click)="addNewReaction('like',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
+            <img (click)="addEmoji('👍',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
             <img #emojiImg (click)="showEmojiBar()" class="change-color" src="assets/img/add_reaction40.png"
                 alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
@@ -55,7 +55,7 @@
             <div class="reactions">
                 <ng-container *ngFor="let entry of emojiReactions | keyvalue">
                     <span class="reaction"
-                        (click)="addNewReaction(entry.key === '👍' ? 'like' : 'check', channelID, messageData?.messageId)">
+                        (click)="addEmoji(entry.key, channelID, messageData?.messageId)">
 
                         {{ entry.key }}
                         <ng-container *ngIf="entry.value.count > 1">

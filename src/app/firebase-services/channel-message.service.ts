@@ -1,20 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import {
-  Firestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  DocumentData,
-  onSnapshot,
-  Query,
-  deleteDoc,
-  query,
-  where
-} from '@angular/fire/firestore';
+import {Firestore,collection, QuerySnapshot,  getDocs, addDoc, updateDoc, doc, DocumentData, onSnapshot, Query, deleteDoc, query, where,  getDoc} from '@angular/fire/firestore';
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
 import { MainComponentService } from './main-component.service';
@@ -37,8 +24,10 @@ export class ChannelMessageService {
   private threadAnswersSubject = new BehaviorSubject<Message[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
   emojiList: { emoji: string; number: number }[] = [];
+  emojiCountsList: { [emoji: string]: number } = {};
   allMessages$ = this.allMessagesSubject.asObservable();
   currentChannelname$: any;
+  
 
   constructor(private messageService: MessageService, private mainservice: MainComponentService) {
   }
@@ -47,58 +36,38 @@ export class ChannelMessageService {
     console.log('📡 subList aufgerufen mit channelId:', channelId);
     const channelDocRef = doc(this.firestore, 'Channels', channelId);
     const messagesRef = collection(channelDocRef, 'messages');
-    return onSnapshot(messagesRef, (snapshot) => {
-      console.log('🟢 Snapshot empfangen', snapshot.size);
-      let allMessages: Message[] = [];
-      const actualUserID = this.messageService.getActualUser();
-      snapshot.forEach(element => {
-        const messageData = element.data();
-        const isOwn = messageData['id'] === actualUserID;
-        const message = this.messageService.setMessageObject(messageData, element.id);
-        message.isOwn = isOwn;
-        this.messageId = messageData['messageId']
-        allMessages.push(message);
-        console.log('hier bin ich', element.data())
-      });
-      this.allMessages = allMessages;
+    return onSnapshot(messagesRef, snapshot => {
+    this.handleSnapshot(snapshot);
+     });
 
-
-      this.allMessagesSubject.next(this.allMessages);
-
-      const selectedMessage = this.selectedThreadMessageSubject.value;
-      if (selectedMessage) {
-        this.updateThreadAnswers(selectedMessage.messageId);
-      }
-    });
   }
 
-  getReactionsForMessage(
-    channelId: string,
-    messageId: string,
-    callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
-  ) {
-    const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageId, 'reactions');
+handleSnapshot(snapshot:  QuerySnapshot<DocumentData, DocumentData>) {
+  console.log('🟢 Snapshot empfangen', snapshot.size);
+  const actualUserID = this.messageService.getActualUser();
+  const allMessages: Message[] = [];
+  snapshot.forEach(element => {
+    const messageData = element.data();
+    const isOwn = messageData['id'] === actualUserID;
+    const message = this.messageService.setMessageObject(messageData, element.id);
+    message.isOwn = isOwn;
+    this.messageId = messageData['messageId'];
+    allMessages.push(message);
+    console.log('hier bin ich', messageData);
+  });
+  this.subListMessages(allMessages)
+}
 
-    return onSnapshot(reactionsRef, snapshot => {
-      const reactionMap = new Map<string, { count: number, users: string[] }>();
+  subListMessages(allMessages: Message[]) {
+  this.allMessages = allMessages;
+  this.allMessagesSubject.next(this.allMessages);
 
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const emoji = data['emoji'];
-        const user = data['reactedFrom'];
-
-        if (!reactionMap.has(emoji)) {
-          reactionMap.set(emoji, { count: 0, users: [] });
-        }
-
-        const current = reactionMap.get(emoji)!;
-        current.count += 1;
-        current.users.push(user);
-      });
-
-      callback(reactionMap);
-    });
+  const selectedMessage = this.selectedThreadMessageSubject.value;
+  if (selectedMessage) {
+    this.updateThreadAnswers(selectedMessage.messageId);
   }
+  }
+
 
 
   openThread(message: Message) {
@@ -208,39 +177,11 @@ export class ChannelMessageService {
   }
 
 
-
-
-
   async addThreadAnswer(messageText: string, threadToId: string, selectedMessage: Message) {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
-
-    let months = [
-      'Januar',
-      'Februar',
-      'März',
-      'April',
-      'Mai',
-      'Juni',
-      'Juli',
-      'August',
-      'September',
-      'Oktober',
-      'November',
-      'Dezember',
-    ];
-    let days = [
-      'Sonntag',     // Index 0
-      'Montag',      // Index 1
-      'Dienstag',
-      'Mittwoch',
-      'Donnerstag',
-      'Freitag',
-      'Samstag'      // Index 6
-    ];
     let now = new Date();
     const locale = 'de-DE';
-
     const weekday = now.toLocaleDateString(locale, { weekday: 'long' });  // z.B. "Montag"
     const day = now.getDate();                                            // z.B. 20
     const month = now.toLocaleDateString(locale, { month: 'long' });     // z.B. "Mai"
@@ -252,9 +193,21 @@ export class ChannelMessageService {
 
     const sendAt = `${weekday}, ${day}. ${month}`;                        // → "Montag, 20. Mai"
     const sendAtTime = time;
+    const threadAnswer: Message = this.messageJSON(user, messageText, sendAt, sendAtTime, threadToId, userId, selectedMessage)
+    const answerId = await this.addThread(threadAnswer, selectedMessage.channelId);
+    if (answerId) {
+      threadAnswer.messageId = answerId;
+      console.log('Thread created with', answerId);
+    }
 
+    await this.updateMessageThreadCount(threadToId, selectedMessage.channelId);
 
-    const threadAnswer: Message = {
+    this.allMessagesSubject.next(this.allMessages);
+  }
+
+  messageJSON(user:User, messageText: string, sendAt: string, sendAtTime: string, threadToId: string, userId: string, 
+    selectedMessage: Message) {
+      return {
       name: user.name,
       avatar: user.avatar,
       messageText: messageText,
@@ -272,18 +225,11 @@ export class ChannelMessageService {
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
-    };
+      }
 
-    const answerId = await this.addThread(threadAnswer, selectedMessage.channelId);
-    if (answerId) {
-      threadAnswer.messageId = answerId;
-      console.log('Thread created with', answerId);
-    }
-
-    await this.updateMessageThreadCount(threadToId, selectedMessage.channelId);
-
-    this.allMessagesSubject.next(this.allMessages);
   }
+
+
   async updateMessageThreadCount(messageId: string, channelid: string) {
     this.allMessagesSubject.next(this.allMessages);
     const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
@@ -315,95 +261,97 @@ export class ChannelMessageService {
   }
 
 
-
-  async toggleReaction(reaction: string, channelID: string, messageID: string) {
-    let emoji: string;
-    const actualUser = this.getActualUserName();
-
-    if (reaction === 'check') {
-      emoji = '✅';
-    } else if (reaction === 'like') {
-      emoji = '👍';
-    } else {
-      console.warn('Unbekannte Reaktion:', reaction);
-      return;
-    }
-
-    if (!messageID) {
-      console.warn('messageId ist nicht definiert');
-      return;
-    }
-
-    const reactionsRef = collection(
-      this.firestore,
-      'Channels', channelID, 'messages', messageID, 'reactions'
-    );
-
-    // 🔍 Prüfen, ob User diese Reaktion schon gesetzt hat
-    const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
-    const existing = await getDocs(q);
-
-    if (!existing.empty) {
-      // 🗑️ Reaktion entfernen (toggle off)
-      existing.forEach(async docSnap => {
-        await deleteDoc(docSnap.ref);
-      });
-    } else {
-      // ➕ Reaktion setzen (toggle on)
-      await addDoc(reactionsRef, {
-        emoji,
-        createdAt: new Date(),
-        reactedFrom: actualUser
-      });
-    }
-  }
-
-
   addEmojiInMessage(emoji: any, channelID: string, messageID: string) {
-  
-
-    let index = this.checkEmojiIsInArray(emoji)
-
-
-    if (index !== -1) {
-      this.emojiList[index].number += 1;
-    }   else {
-    this.emojiList.push({ emoji, number: 1 });
-  }
-
-  this.saveEmojiInFirebase(emoji, channelID,messageID )
-
+  this.saveEmojiInFirebaseReaction(emoji, channelID,messageID )
   }
 
 
-  async saveEmojiInFirebase(emoji: any, channelID: string, messageID: string) {
+   getReactionsForMessage(channelId: string, messageId: string,callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
+  ) {
+    const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageId, 'reactions');
 
-      const actualUser = this.getActualUserName();
-     const reactionsRef = collection(this.firestore,'Channels', channelID, 'messages', messageID, 'reactions');
-    const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
-      const existingReactions = await getDocs(q);
+    return onSnapshot(reactionsRef, snapshot => {
+      const reactionMap = new Map<string, { count: number, users: string[] }>();
 
-      if (!existingReactions.empty) {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const emoji = data['emoji'];
+        const user = data['reactedFrom'];
+
+        if (!reactionMap.has(emoji)) {
+          reactionMap.set(emoji, { count: 0, users: [] });
+        }
+
+        const current = reactionMap.get(emoji)!;
+        current.count += 1;
+        current.users.push(user);
+            console.log('current', current);
+      });
+
+      callback(reactionMap);
+      console.log('reactionMap', reactionMap);
+      
+      
+    });
+  }
+
+
+  async saveEmojiInFirebaseReaction(emoji: any, channelID: string, messageID: string) {
+       const actualUser = this.getActualUserName();
+       const reactionsRef = collection(this.firestore,'Channels', channelID, 'messages', messageID, 'reactions');
+       const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
+       const existingReactions = await getDocs(q);
+
+    if (!existingReactions.empty) {    
+      this.deleteReaction(existingReactions, channelID, messageID)
     return;
   }
+  const docRef = await addDoc(reactionsRef, this.reactionJson(emoji, actualUser));
+  await updateDoc(docRef, { id: docRef.id });  
+  const emojiQuery = query(reactionsRef, where('emoji', '==', emoji));
+  const emojiSnapshot = await getDocs(emojiQuery);
+  const count = emojiSnapshot.size;
+  this.saveEmojiInFirebaseMessage(emoji, channelID, messageID, count )
+  
+
+  }
+
+  async deleteReaction(existingReactions:  QuerySnapshot<DocumentData, DocumentData>, channelID: string, messageID: string) {
+      const reactionDoc = existingReactions.docs[0];
+      const reactionId = reactionDoc.id;   
+        const reactionDocRef= doc(this.firestore,'Channels', channelID, 'messages', messageID, 'reactions', reactionId );
+     try {
+    await deleteDoc(reactionDocRef);
+  }   catch (error) {
+    console.error('Fehler beim Löschen der Reaktion:', error);
+  }
+  }
 
 
-    await addDoc(reactionsRef, {
+ async saveEmojiInFirebaseMessage(emoji: any, channelID: string, messageID: string, count: number ) {
+      const messageDocRef = doc(this.firestore, 'Channels', channelID, 'messages', messageID);
+      const messageDocSnap = await getDoc(messageDocRef);
+
+      this.emojiCountsList = {};
+
+       if (messageDocSnap.exists()) {
+       this.emojiCountsList = messageDocSnap.data()['emojiCounts'] || {};
+      }
+
+        this.emojiCountsList[emoji] = count;
+
+        await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
+
+  } 
+
+
+reactionJson(emoji: any, actualUser: string) {
+  return {
     emoji: emoji,
     reactedFrom: actualUser,
     createdAt: new Date(),
-  });
-
-
-  
   }
-
-
-checkEmojiIsInArray(emoji: any) {
-  return this.emojiList.findIndex(e => e.emoji === emoji)
-
-
-
+    
 }
 
 

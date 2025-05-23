@@ -68,6 +68,8 @@ export class MessageComponent {
         this.messageData.messageId,
         (reactionMap) => {
           this.emojiReactions = reactionMap;
+          console.log(this.emojiReactions);
+          
         }
       );
       const lastAnswer = this.channelmessageService.getLastAnswer(this.messageData);
@@ -91,7 +93,6 @@ export class MessageComponent {
 
        const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
       || this.emojiImg.nativeElement?.contains(target)  || this.emojiImgWriter.nativeElement?.contains(target);
-    console.log('Clicked element:', target);
 
 
 
@@ -155,14 +156,11 @@ export class MessageComponent {
     MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
   }
 
-  addNewReaction(reaction: string, channelID: string, messageId?: string) {
-    if (!messageId) return;
-    this.channelmessageService.toggleReaction(reaction, channelID, messageId);
-  }
+
 
 
   addEmoji(event: any, channelID: string, messageId?: string) {
-    const emoji = event.emoji.native;
+  const emoji = event.emoji?.native || event;
         if (!messageId) return;
  this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
   }
