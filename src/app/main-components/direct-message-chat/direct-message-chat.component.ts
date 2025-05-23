@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MainHelperService } from '../../services/main-helper.service';
 import { ProfileCardComponent } from '../profile-card/profile-card.component';
+import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.service';
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -18,37 +19,36 @@ import { ProfileCardComponent } from '../profile-card/profile-card.component';
   styleUrl: './direct-message-chat.component.scss'
 })
 export class DirectMessageChatComponent {
-@Output() currentmessageUser:string='';
-@Output() currentmessageEmail:string='';
-@Output() currentmessageAvatar:any;
-@Output() currentmessageStatus:string='';
-@Output() overlayvisible:boolean = false;
-actualUser?:string;
-allConversationMessages: ConversationMessage[] = [];
-conversationId: string | null = null;
-newConvMessage: string = '';
-openChannel = this.mainHelperService.openChannel;
-showDirectMessage = this.mainservice.showdirectmessage;
+  @Output() currentmessageUser: string='';
+  @Output() currentmessageEmail: string='';
+  @Output() currentmessageAvatar: any;
+  @Output() currentmessageStatus: string='';
+  actualUser?:string;
+  allConversationMessages: ConversationMessage[] = [];
+  conversationId: string | null = null;
+  newConvMessage: string = '';
+  openChannel = this.mainHelperService.openChannel;
+  showDirectMessage = this.mainservice.showdirectmessage;
 
-dateFormatter = new Intl.DateTimeFormat('de-DE', {
-  weekday: 'long',
-  day: '2-digit',
-  month: 'long'
-});
+  dateFormatter = new Intl.DateTimeFormat('de-DE', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'long'
+  });
 
-timeFormatter = new Intl.DateTimeFormat('de-DE', {
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false
-});
+  timeFormatter = new Intl.DateTimeFormat('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
 
-private unsubscribeFromMessages?: () => void;
-
+ private unsubscribeFromMessages?: () => void;
 
 
-constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService) {
-  
-}
+
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService) {
+    
+  }
 
   async ngOnInit(): Promise<void>{
     this.loadName();
@@ -86,14 +86,6 @@ constructor(private mainservice: MainComponentService, public usercardservice: U
     this.mainservice.currentusermessagStatus$.subscribe(status=>{
       this.currentmessageStatus = status;
     })
-  }
-
-  closeOverlay(){
-    this.overlayvisible=false;
-  }
-
-  openOverlay(){
-    this.overlayvisible=true
   }
 
   checkConversation(user1: string, user2: string){
