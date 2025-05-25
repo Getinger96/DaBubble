@@ -36,7 +36,7 @@ export class ChannelMessageService {
  subList(channelId: string) {
   console.log('📡 subList aufgerufen mit channelId:', channelId);
 
-  // ❗Vorherige Snapshot-Subscription beenden
+  // Vorherige Snapshot-Subscription beenden
   if (this.unsubscribeMessagesListener) {
     this.unsubscribeMessagesListener();  // onSnapshot-Abbruch
     this.unsubscribeMessagesListener = null;
