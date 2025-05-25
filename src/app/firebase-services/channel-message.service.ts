@@ -27,25 +27,39 @@ export class ChannelMessageService {
   emojiCountsList: { [emoji: string]: number } = {};
   allMessages$ = this.allMessagesSubject.asObservable();
   currentChannelname$: any;
+  private unsubscribeMessagesListener: (() => void) | null = null;
   
 
   constructor(private messageService: MessageService, private mainservice: MainComponentService) {
   }
 
-  subList(channelId: string) {
-    console.log('📡 subList aufgerufen mit channelId:', channelId);
-    const channelDocRef = doc(this.firestore, 'Channels', channelId);
-    const messagesRef = collection(channelDocRef, 'messages');
-    return onSnapshot(messagesRef, snapshot => {
-    this.handleSnapshot(snapshot);
-     });
+ subList(channelId: string) {
+  console.log('📡 subList aufgerufen mit channelId:', channelId);
 
+  // ❗Vorherige Snapshot-Subscription beenden
+  if (this.unsubscribeMessagesListener) {
+    this.unsubscribeMessagesListener();  // onSnapshot-Abbruch
+    this.unsubscribeMessagesListener = null;
   }
 
-handleSnapshot(snapshot:  QuerySnapshot<DocumentData, DocumentData>) {
+  const channelDocRef = doc(this.firestore, 'Channels', channelId);
+  const messagesRef = collection(channelDocRef, 'messages');
+
+  // Neue Subscription starten
+  this.unsubscribeMessagesListener = onSnapshot(messagesRef, snapshot => {
+    this.handleSnapshot(snapshot);
+  });
+}
+
+handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
   console.log('🟢 Snapshot empfangen', snapshot.size);
+
   const actualUserID = this.messageService.getActualUser();
   const allMessages: Message[] = [];
+
+  // 🧹 Reset der lokalen Nachrichtenliste
+  this.allMessages = [];
+
   snapshot.forEach(element => {
     const messageData = element.data();
     const isOwn = messageData['id'] === actualUserID;
@@ -53,9 +67,9 @@ handleSnapshot(snapshot:  QuerySnapshot<DocumentData, DocumentData>) {
     message.isOwn = isOwn;
     this.messageId = messageData['messageId'];
     allMessages.push(message);
-    console.log('hier bin ich', messageData);
   });
-  this.subListMessages(allMessages)
+
+  this.subListMessages(allMessages);
 }
 
   subListMessages(allMessages: Message[]) {
@@ -117,6 +131,7 @@ handleSnapshot(snapshot:  QuerySnapshot<DocumentData, DocumentData>) {
     this.getMessagesAndMessageId(messagesRef)
 
   }
+  
 
 
 

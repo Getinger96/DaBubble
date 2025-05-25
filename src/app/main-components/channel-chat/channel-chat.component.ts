@@ -104,17 +104,15 @@ export class ChannelChatComponent implements OnInit {
 
 
   ngOnInit(): void {
+
     this.loadRouter();
-    this.loadName();
-    this.loadDescription();
-    this.loadChannelId();
-    this.loadCurrentCrator();
-    this.loadMembers();
-    this.loadDate();
+
     this.loadActualUser();
     this.loadAllUser();
 
+
   }
+
 
 
   loadAllUser() {
@@ -180,16 +178,23 @@ export class ChannelChatComponent implements OnInit {
 
 
   loadRouter() {
-    this.route.pathFromRoot.forEach(route => {
-      route.paramMap.subscribe(params => {
-        if (params.has('channelId')) {
-          const channelId = params.get('channelId');
-          console.log('🎯 channelId gefunden über pathFromRoot:', channelId);
-          this.channelId = channelId!;
-          this.channelService.setCurrentChannel(this.channelId);
-          this.loadMessages(channelId!);
-        }
-      });
+    this.route.paramMap.subscribe(params => {
+      const channelId = params.get('channelId');
+      if (channelId) {
+        this.channelId = channelId;
+        console.log('🎯 Aktive channelId:', channelId);
+
+        this.channelService.setCurrentChannel(channelId);
+
+        // Jetzt, wo wir die channelId haben, können wir laden:
+        this.loadMessages(channelId);
+        this.loadName();
+        this.loadDescription();
+        this.loadChannelId();
+        this.loadCurrentCrator();
+        this.loadMembers();
+        this.loadDate();
+      }
     });
   }
 
@@ -236,19 +241,25 @@ export class ChannelChatComponent implements OnInit {
       this.currentChannelDate = date;
     })
   }
-  async loadMessages(channelId: string) {
-    this.channelmessageService.subList(channelId);
+  loadMessages(channelId: string) {
+  console.log('📥 Nachrichten werden geladen für Channel:', channelId);
 
-    this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-      const filtered = messages.filter(message => !!message.messageText && message.messageText.trim() !== '');
-
-      this.allMessages = filtered.filter(message => !message.isThread);
-      this.channelmessageService.sortAllMessages(this.allMessages);
-      this.allThreads = filtered.filter(message => message.isThread);
-    });
-
+  if (this.allMessageSubscription) {
+    this.allMessageSubscription.unsubscribe();
   }
 
+  this.channelmessageService.subList(channelId);
+
+  this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
+    console.log('📦 Alle geladenen Nachrichten aus dem Service:', messages);
+
+    const filtered = messages.filter(message => !!message.messageText?.trim());
+    this.allMessages = filtered.filter(message => !message.isThread && message.channelId === channelId);
+    this.allThreads = filtered.filter(message => message.isThread && message.channelId === channelId);
+
+    console.log('✅ Gefilterte Nachrichten für diesen Channel:', this.allMessages);
+  });
+}
 
 
   addEmoji(event: any) {
@@ -347,17 +358,19 @@ export class ChannelChatComponent implements OnInit {
     this.closeOverlay()
   }
 
-  sendmessage(channelid: string, channelname: string) {
+  sendmessage() {
+    if (!this.currentChannelID || !this.currentChannelName) return;
+
+    this.message.channelId = this.currentChannelID;
+    this.message.channelName = this.currentChannelName;
     this.message.id = this.actualUser[0]?.id || '';
     this.message.name = this.actualUser[0]?.name || '';
     this.message.avatar = this.actualUser[0]?.avatar || 1;
     this.message.isOwn = true;
 
-    this.channelmessageService.addMessage(this.message, channelid, channelname)
-
+    this.channelmessageService.addMessage(this.message, this.currentChannelID, this.currentChannelName);
     this.message.messageText = '';
   }
-
 }
 
 

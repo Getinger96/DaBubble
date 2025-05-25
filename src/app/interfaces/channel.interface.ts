@@ -2,6 +2,7 @@ import { Member } from './member.interface';
 
 
 export class Channel {
+    
     id: string;
     name: string;
     description: string;
