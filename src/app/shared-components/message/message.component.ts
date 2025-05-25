@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter,OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit  } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
@@ -14,7 +14,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
-export class MessageComponent {
+export class MessageComponent implements OnChanges {
   @Input() messageData: Message | undefined;
   @Input() date!: Date | string | null;
   @Input() avatarSrc!: number;
@@ -30,10 +30,15 @@ export class MessageComponent {
   @Input() threadTo!: string;
   @Input() dateExists: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
+  @Input() channelIdThread!: string;
+  @Input() threadAnswersId!: string
   @Input() channelID!: string;
+@Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiThreadMask') emojiThreadMask!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiThread') emojiThread!: ElementRef<HTMLTextAreaElement>
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   threadAnswers: Message[] = [];
@@ -44,10 +49,13 @@ export class MessageComponent {
   editMessage = MessageComponent.showEditPopup;
   emojiReactions = new Map<string, { count: number, users: string[] }>();
   showEmojiPicker: boolean = false;
+  showEmojiPickerThread: boolean = false;
   hover = false;
-  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) { }
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) { 
+     
+  }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges) {
 
     if (this.messageData) {
      this.date=this.messageData.sendAt
@@ -63,6 +71,10 @@ export class MessageComponent {
       this.threadCount = this.messageData.threadCount || this.threadCount;
       this.threadTo = this.messageData.threadTo ?? this.threadTo;
       this.channelID = this.messageData.channelId ?? this.channelID;
+      this.threadAnswersId = this.messageData.messageId;
+      this.channelIdThread = this.messageData.channelId;
+      console.log('wthis.threadAnswersId,this.channelIdThreader',this.threadAnswersId,this.channelIdThread );
+      
       this.channelmessageService.getReactionsForMessage(
         this.messageData.channelId,
         this.messageData.messageId,
@@ -85,20 +97,33 @@ export class MessageComponent {
   }
 
 
-
+ 
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-       const clickedInsideEmoji = this.emojiComponent?.nativeElement?.contains(target)
-      || this.emojiImg.nativeElement?.contains(target)  || this.emojiImgWriter.nativeElement?.contains(target);
+const clickedInsideEmoji =
+  (this.emojiComponent?.nativeElement && this.emojiComponent.nativeElement.contains(target)) ||
+  (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
+  (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
+
+    console.log('this.emojiComponent?',this.emojiComponent);
 
 
+    const clickedInsideEmojiThread = 
+      this.emojiThreadMask?.nativeElement.contains(target) || this.emojiThread?.nativeElement.contains(target)
+    
 
     if (!clickedInsideEmoji) {
       this.showEmojiPicker = false;
     }
+
+      if (!clickedInsideEmojiThread) {
+      this.showEmojiPickerThread = false;
+    }
+
+
 
   }
   // onReactionClick(emoji: string) {
@@ -110,35 +135,58 @@ export class MessageComponent {
   //}
 
   // }
-  onReplyClick(): void {
-    if (this.messageData) {
-      this.channelmessageService.openThread(this.messageData);
-      this.loadThreadAnswers();
-    }
+onReplyClick(): void {
+  if (this.messageData) {
+    this.channelmessageService.openThread(this.messageData);
+    this.loadThreadAnswers();
   }
+}
 
-  loadThreadAnswers(): void {
-    this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
-      (messages) => {
-        if (this.messageData) {
-          this.threadAnswers = messages.filter((message) => message.isThread);
-          this.threadAnswers = this.channelmessageService.getThreadAnswers(
-            this.messageData.messageId
-          );
-          this.channelmessageService.updateThreadAnswers(this.messageData.messageId);
-          this.lastAnswerDate =
-            (this.messageService?.lastAnswer?.sendAtTime ?? '') +
-            (this.messageService?.lastAnswer?.sendAt ?? '');
-        }
+loadThreadAnswers(): void {
+  this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
+    (messages) => {
+      if (this.messageData) {
+        // Thread-Antworten filtern und setzen
+        this.threadAnswers = this.channelmessageService.getThreadAnswers(this.messageData.messageId);
+
+        // Emojis für jede Thread-Antwort laden
+        this.loadEmojisForThreadAnswers();
+
+        this.channelmessageService.updateThreadAnswers(this.messageData.messageId);
+
+        this.lastAnswerDate =
+          (this.messageService?.lastAnswer?.sendAtTime ?? '') +
+          (this.messageService?.lastAnswer?.sendAt ?? '');
+      }
+    }
+  );
+}
+
+loadEmojisForThreadAnswers(): void {
+  if (!this.threadAnswers || this.threadAnswers.length === 0) return;
+
+  this.threadAnswers.forEach(msg => {
+    this.channelmessageService.getReactionsForMessage(
+      msg.channelId,
+      msg.messageId,
+      (reactionMap) => {
+        // Hier die Reaktionen dem jeweiligen Thread-Message-Objekt hinzufügen
+    (msg as any)['emojiReactions'] = reactionMap;
       }
     );
-  }
+  });
+}
+
 
 
   showEmojiBar() {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
 
+
+  showEmojiBarThread() {
+        this.showEmojiPickerThread = !this.showEmojiPickerThread;
+  }
 
   overwriteMessage() {
     this.toggleEditPopup();
@@ -164,6 +212,20 @@ export class MessageComponent {
         if (!messageId) return;
  this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
   }
+
+  handleEmojiClick(event: any): void {
+  const emoji = event.emoji?.native || event;
+
+  const messageId = this.threadAnswersId ?? this.messageData?.messageId;
+  const channelId = this.channelIdThread ?? this.messageData?.channelId;
+
+  if (!messageId || !channelId) {
+    console.warn('Missing messageId or channelId for emoji reaction', { messageId, channelId });
+    return;
+  }
+
+  this.channelmessageService.addEmojiInMessage(emoji, channelId, messageId);
+}
 
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {

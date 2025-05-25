@@ -8,11 +8,12 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
-
+import { ChannelService} from '../../firebase-services/channel.service'
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [MessageComponent, CommonModule, FormsModule],
+  imports: [MessageComponent, CommonModule, FormsModule, PickerComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss',
 })
@@ -23,10 +24,12 @@ export class ThreadComponent {
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   @ViewChild('threadFeed') private threadFeed!: ElementRef;
-
+  currentChannelID?: string
   threadAnswers: Message[] = [];
+    showEmojiPicker: boolean = false;
   private selectedMessageSubscription!: Subscription;
   private threadRepliesSubscription!: Subscription;
+  emojiReactions = new Map<string, { [emoji: string]: { count: number, users: string[] } }>();
 
   newThreadText: string = '';
 
@@ -35,11 +38,11 @@ export class ThreadComponent {
     private mainService: MainComponentService,
     private cdr: ChangeDetectorRef,
     private channelmessageservice:ChannelMessageService,
-    private channelService: ChannelMessageService
+    private channelService: ChannelService
   ) {}
 
   ngOnInit(): void {
-
+    this.loadChannelId();
 
     this.selectedMessageSubscription =
       this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
@@ -60,6 +63,9 @@ export class ThreadComponent {
     setTimeout(() => this.scrollToBottom(), 0);
   }
 
+
+
+
   ngAfterViewChecked() {
     this.scrollToBottom();
     this.cdr.detectChanges();
@@ -72,6 +78,52 @@ export class ThreadComponent {
     } catch (err) { }
   }
 
+
+  loadChannelId() {
+       this.channelService.currentChannelId$.subscribe(id => {
+      this.currentChannelID = id;
+    });
+  }
+
+    showEmojiBar() {
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+  
+loadReaction() {
+  if (!this.currentChannelID) {
+    console.error("ChannelID fehlt!");
+    return;
+  }
+
+  // Für selectedMessage laden
+  if (this.selectedMessage?.messageId) {
+    this.channelmessageservice.getReactionsForMessage(
+      this.currentChannelID,
+      this.selectedMessage.messageId,
+      (reactionMap: any) => {
+        this.emojiReactions.set(this.selectedMessage!.messageId, reactionMap);
+      }
+    );
+  }
+
+  // Für jede Thread-Antwort laden
+  this.threadAnswers.forEach((message) => {
+    this.channelmessageservice.getReactionsForMessage(
+      this.currentChannelID!,
+      message.messageId,
+      (reactionMap: any) => {
+        this.emojiReactions.set(message.messageId, reactionMap);
+            console.log('this.threadAnswerswerwer', this.emojiReactions.set(message.messageId, reactionMap));
+      }
+      
+    );
+      console.log('this.threadAnswers', this.threadAnswers);
+  });
+
+  
+}
+
+
   loadThreadAnswers(): void {
     this.allThreadsSubscription = this.channelmessageservice.allMessages$.subscribe(
       (messages) => {
@@ -80,12 +132,23 @@ export class ThreadComponent {
           this.threadAnswers = this.channelmessageservice.getThreadAnswers(
             this.selectedMessage.messageId
           );
+          this.loadReaction(); 
         };
 
       }
     );
     
   }
+
+
+
+   addEmoji(event: any, channelID: string, messageId?: string) {
+  const emoji = event.emoji?.native || event;
+        if (!messageId) return;
+ this.channelmessageservice.addEmojiInMessage(emoji, channelID, messageId);
+  }
+
+
 
   closeThreads(): void {
     this.mainComponents.toggleThreads();

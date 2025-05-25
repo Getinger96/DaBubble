@@ -13,13 +13,15 @@
             [time]="selectedMessage.sendAtTime"
             [messageText]="selectedMessage.messageText"
             [isInThread]="true"
-            [isOwn]="selectedMessage.isOwn">
+            [isOwn]="selectedMessage.isOwn"
+            [emojiReactionsThead]="emojiReactions.get(selectedMessage.messageId)">
             
          </app-message>
             <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span><div class="line"></div></div>
         </div>
         <div class="thread-answers" #threadFeed>
              <app-message *ngFor="let answer of threadAnswers, index as i"
+            [messageData]="answer"
             [date]="answer.sendAt"
             [dateExists]="i > 0 && threadAnswers[i - 1].sendAt === answer.sendAt"
             [avatarSrc]="answer.avatar"
@@ -28,6 +30,9 @@
             [messageText]="answer.messageText"
             [isThread]="true"
             [isOwn]="answer.isOwn"
+            [emojiReactionsThead]="emojiReactions.get(answer.messageId)"
+            [channelIdThread]="answer.channelId"
+            [threadAnswersId]="answer.messageId"
         ></app-message>
         </div>
     </div>
@@ -40,6 +45,11 @@
                     <img src="assets/img/at.png" alt="at">
                 </div>
                     <img src="assets/img/send.png" alt="send" (click)="sendReply()">
+
+
+
+           
+             
             </div>
         </div>
     </div>

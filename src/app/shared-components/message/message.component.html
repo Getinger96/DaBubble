@@ -31,10 +31,19 @@
         <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isThread ? {'left': '135px'} : {}">
             <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
         </div>
-        <div *ngIf="isThread || isInThread" class="reaction-popup ">
-            <img     src="assets/img/add_reaction40.png" alt="">
+        <div *ngIf="isThread || isInThread" class="reaction-popup">
+            <img #emojiThread (click)="showEmojiBarThread()"   src="assets/img/add_reaction40.png" alt="">       
+
+
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
         </div>
+            <div *ngIf="(isThread || isInThread) && showEmojiPickerThread" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiThreadMask class="emojiWindowThread">
+               <emoji-mart set="apple"  (emojiClick)="handleEmojiClick($event)"
+                title="Pick your emoji…" emoji="point_up" 
+                [totalFrequentLines]="2" [showSingleCategory]="true" [enableSearch]="false" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="false"   theme="dark"
+                [perLine]="7"></emoji-mart>
+                </div>   
+
         <img [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'}:{}" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
             alt="">
         <div class="message-details" *ngIf="!editMessage">
@@ -53,7 +62,7 @@
                 </div>
             </div>
             <div class="reactions">
-                <ng-container *ngFor="let entry of emojiReactions | keyvalue">
+               <ng-container *ngFor="let entry of (isThread || isInThread ? emojiReactionsThead : emojiReactions) | keyvalue">
                     <span class="reaction"
                         (click)="addEmoji(entry.key, channelID, messageData?.messageId)">
 
