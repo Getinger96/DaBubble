@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
 import { Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
+import { ChannelService } from '../../firebase-services/channel.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 @Component({
   selector: 'app-message',
@@ -33,7 +34,9 @@ export class MessageComponent implements OnChanges {
   @Input() channelIdThread!: string;
   @Input() threadAnswersId!: string
   @Input() channelID!: string;
-@Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
+  @Input() selectedMessageId!: string;
+  @Input() selectedChannelId!: string;
+  @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
@@ -41,6 +44,7 @@ export class MessageComponent implements OnChanges {
   @ViewChild('emojiThread') emojiThread!: ElementRef<HTMLTextAreaElement>
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
+  allMessages: Message[] = []
   threadAnswers: Message[] = [];
   isEditPopupOpened: boolean = false;
   static editMessage: boolean = false;
@@ -51,12 +55,14 @@ export class MessageComponent implements OnChanges {
   showEmojiPicker: boolean = false;
   showEmojiPickerThread: boolean = false;
   hover = false;
-  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService) { 
+  currentChannelId?:string
+  message: Message[] = [];
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService ) { 
      
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
+    this.loadChannelId();
     if (this.messageData) {
      this.date=this.messageData.sendAt
       this.avatarSrc = this.messageData.avatar || this.avatarSrc;
@@ -96,8 +102,14 @@ export class MessageComponent implements OnChanges {
 
   }
 
+    loadAllMessageInChannel() {
+    this.channelmessageService.allMessages$.subscribe(Message => {
+      this.allMessages = Message;
+    });
+  }
+  
 
- 
+
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
@@ -142,6 +154,12 @@ onReplyClick(): void {
   }
 }
 
+
+  loadChannelId() {
+    this.channelService.currentChannelId$.subscribe(id => {
+      this.currentChannelId = id;
+    });
+  }
 loadThreadAnswers(): void {
   this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
     (messages) => {
@@ -213,11 +231,11 @@ loadEmojisForThreadAnswers(): void {
  this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
   }
 
-  handleEmojiClick(event: any): void {
+  handleEmojiClick(event: any,): void {
   const emoji = event.emoji?.native || event;
 
-  const messageId = this.threadAnswersId ?? this.messageData?.messageId;
-  const channelId = this.channelIdThread ?? this.messageData?.channelId;
+  const messageId = this.threadAnswersId ?? this.messageData?.messageId ?? this.selectedMessageId;
+  const channelId = this.channelIdThread ?? this.messageData?.channelId ?? this.selectedChannelId;
 
   if (!messageId || !channelId) {
     console.warn('Missing messageId or channelId for emoji reaction', { messageId, channelId });
@@ -225,6 +243,7 @@ loadEmojisForThreadAnswers(): void {
   }
 
   this.channelmessageService.addEmojiInMessage(emoji, channelId, messageId);
+  this.showEmojiPickerThread = false;
 }
 
   ngOnDestroy(): void {

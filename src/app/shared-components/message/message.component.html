@@ -64,7 +64,7 @@
             <div class="reactions">
                <ng-container *ngFor="let entry of (isThread || isInThread ? emojiReactionsThead : emojiReactions) | keyvalue">
                     <span class="reaction"
-                        (click)="addEmoji(entry.key, channelID, messageData?.messageId)">
+                        (click)="isThread || isInThread ? handleEmojiClick(entry.key) : addEmoji(entry.key, channelID, messageData?.messageId)" >
 
                         {{ entry.key }}
                         <ng-container *ngIf="entry.value.count > 1">

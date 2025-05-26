@@ -10,10 +10,12 @@ import { Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService} from '../../firebase-services/channel.service'
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { Member } from '../../interfaces/member.interface';
+import { AddMemberToThreadComponent } from './add-member-to-thread/add-member-to-thread.component';
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [MessageComponent, CommonModule, FormsModule, PickerComponent],
+  imports: [MessageComponent, CommonModule, FormsModule, PickerComponent, AddMemberToThreadComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss',
 })
@@ -26,13 +28,14 @@ export class ThreadComponent {
   @ViewChild('threadFeed') private threadFeed!: ElementRef;
   currentChannelID?: string
   threadAnswers: Message[] = [];
-    showEmojiPicker: boolean = false;
+  showEmojiPicker: boolean = false;
   private selectedMessageSubscription!: Subscription;
   private threadRepliesSubscription!: Subscription;
   emojiReactions = new Map<string, { [emoji: string]: { count: number, users: string[] } }>();
-
+  members: Member[] =[]
   newThreadText: string = '';
-
+  toggleMemberInThread: boolean = false;
+  toggleEmoji: boolean = false;
   constructor(
     public messageService: MessageService,
     private mainService: MainComponentService,
@@ -43,7 +46,7 @@ export class ThreadComponent {
 
   ngOnInit(): void {
     this.loadChannelId();
-
+    this.loadMembers();
     this.selectedMessageSubscription =
       this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
         console.log('Selected message updated:', message);
@@ -123,6 +126,25 @@ loadReaction() {
   
 }
 
+  openDialogAddMember() {
+
+    this.toggleMemberInThread = !this.toggleMemberInThread;
+    if (this.toggleEmoji) {
+      this.toggleEmoji = false
+    }
+  }
+
+  insertMemberIntoTextarea(event: Member) {
+
+  }
+
+  loadMembers() {
+    this.channelService.channelMember$.subscribe(members => {
+      this.members = members;
+      console.log('this.members', this.members);
+
+    });
+  }
 
   loadThreadAnswers(): void {
     this.allThreadsSubscription = this.channelmessageservice.allMessages$.subscribe(
