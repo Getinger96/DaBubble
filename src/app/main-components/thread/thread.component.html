@@ -48,11 +48,25 @@
                </ng-container>
 
 
+
+
+
+
         <div class="thread-input">
             <textarea type="text" class="fontNunito" placeholder="Antworten" wrap="soft" [(ngModel)]="newThreadText"></textarea>
             <div class="thread-input-icons">
+
+                
+                   <div  #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
+                    <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
+                        [totalFrequentLines]="2" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
+                        [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
+                        </div>
+
+                <div class="imgChat">
+
                 <div>
-                    <img src="assets/img/emoji.png" alt="emoji">
+                    <img #addEmojiImg src="assets/img/emoji.png" alt="emoji" (click)="openEmojiWindow()">
                     <img #addMemberAtImg src="assets/img/at.png" (click)="openDialogAddMember()" alt="at">
                 </div>
                     <img src="assets/img/send.png" alt="send" (click)="sendReply()">

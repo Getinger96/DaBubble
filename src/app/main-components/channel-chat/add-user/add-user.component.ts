@@ -68,10 +68,11 @@ export class AddUserComponent implements OnInit {
     console.log('newArray, ', this.newUserList);
   }
 
-  deleteUser(index: number, member:any) {
+  async deleteUser(index: number, member:any) {
     this.memberList.splice(index, 1);
     this.newUserList.push(member)
-
+   await this.channelService.updateNewMembersInFirebase(this.memberList, this.data.currentChannelID);
+    this.filterNewUser();
   }
 
 
@@ -86,6 +87,8 @@ export class AddUserComponent implements OnInit {
 
   filterMember() {
     this.memberList = [...this.data.members];
+      console.log('this.memberList', this.memberList);
+      
   }
 
  // searchUserInUserList() {

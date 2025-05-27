@@ -28,6 +28,8 @@ export class ThreadComponent {
   @ViewChild('threadFeed') private threadFeed!: ElementRef;
   @ViewChild('addMemberAtImg') private addMemberAtImg!: ElementRef
   @ViewChild('addMember') private addMember!: ElementRef
+  @ViewChild('addEmojiImg') private addEmojiImg!: ElementRef
+  @ViewChild('emojiComponent') private emojiComponent!: ElementRef
   currentChannelID?: string
   threadAnswers: Message[] = [];
   showEmojiPicker: boolean = false;
@@ -73,9 +75,9 @@ export class ThreadComponent {
   clickOutside(event: Event) {
        const target = event.target as HTMLElement;
 
-
+    this.handleEmojiWindow(target)
            const clickedAddMember = this.addMemberAtImg?.nativeElement?.contains(target)
-      || this.addMember.nativeElement?.contains(target);
+      || this.addMember?.nativeElement?.contains(target);
 
     if (!clickedAddMember) {
       this.toggleMemberInThread = false;
@@ -83,6 +85,16 @@ export class ThreadComponent {
        
   }
 
+
+  handleEmojiWindow(target:HTMLElement) {
+           const clickedEmojiWindow = this.emojiComponent?.nativeElement?.contains(target)
+      || this.addEmojiImg?.nativeElement?.contains(target);
+
+    if (!clickedEmojiWindow) {
+          this.toggleEmoji = false;
+  }
+
+}
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -149,12 +161,27 @@ loadReaction() {
     }
   }
 
+
+
+  openEmojiWindow() {
+        this.toggleEmoji = !this.toggleEmoji;
+    if (this.toggleMemberInThread) {
+      this.toggleMemberInThread = false
+    }
+  }
+
+
    insertMemberIntoTextarea(member: Member) {
     const insertText = `@${member.name} `;
     this.newThreadText += insertText;
 
   }
 
+
+  addEmoji(event:any){
+        const emoji = event.emoji.native;
+         this.newThreadText += emoji;
+  }
 
   loadMembers() {
     this.channelService.channelMember$.subscribe(members => {
@@ -181,12 +208,6 @@ loadReaction() {
   }
 
 
-
-   addEmoji(event: any, channelID: string, messageId?: string) {
-  const emoji = event.emoji?.native || event;
-        if (!messageId) return;
- this.channelmessageservice.addEmojiInMessage(emoji, channelID, messageId);
-  }
 
 
 
