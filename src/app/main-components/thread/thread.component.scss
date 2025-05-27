@@ -67,6 +67,7 @@
 
     .thread-input-wrapper{
         padding: 38px 35px 40px 35px;
+        position: relative;
         }
 
         .thread-input{
@@ -130,4 +131,8 @@
                 }
             }
         }
+}
+
+app-add-member-to-thread  {
+    position: relative;
 }

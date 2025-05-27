@@ -1,11 +1,10 @@
-@if (overlayvisible) {
-    <app-profile-card [overlayvisible]="overlayvisible" [currentmessageUser]="currentmessageUser" [currentmessageAvatar]="currentmessageAvatar" [currentmessageStatus]="currentmessageStatus" [currentmessageEmail]="currentmessageEmail"></app-profile-card>
-}
+<app-profile-card [currentmessageUser]="currentmessageUser" [currentmessageAvatar]="currentmessageAvatar" [currentmessageStatus]="currentmessageStatus" [currentmessageEmail]="currentmessageEmail"></app-profile-card>
+
 
 <div class="main-chat-wrapper">
     <div class="main-chat-header">
         <div class="message-group">
-            <div (click)="openOverlay()" class="actual-group">
+            <div (click)="this.profilecardservice.openProfileCard()" class="actual-group">
                 <div class="profile">
                     <img class="avatar" src="assets/img/avatar_{{ currentmessageAvatar }}.png" alt="avatar">
                     <img class="status" src="assets/img/{{ currentmessageStatus }}.svg" alt="status">
@@ -39,7 +38,7 @@
                 @if(this.actualUser == this.currentmessageUser) {
                     <p><span class="intro-own-text">Dieser Raum ist nur für dich da.</span> Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</p>
                 } @else if(this.actualUser != this.currentmessageUser) {
-                    <p>Diese Unterhaltung findet nur zwischen <a (click)="openOverlay()">&#64;{{ currentmessageUser }}</a> und dir statt.</p>
+                    <p>Diese Unterhaltung findet nur zwischen <a (click)="this.profilecardservice.openProfileCard()">&#64;{{ currentmessageUser }}</a> und dir statt.</p>
                 }
 
             </div>

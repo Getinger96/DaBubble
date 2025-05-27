@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MainHelperService } from '../../services/main-helper.service';
 import { ProfileCardComponent } from '../profile-card/profile-card.component';
+import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.service';
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -32,25 +33,25 @@ openChannel = this.mainHelperService.openChannel;
 showDirectMessage = this.mainservice.showdirectmessage;
  private scrolled = false;
 
-dateFormatter = new Intl.DateTimeFormat('de-DE', {
-  weekday: 'long',
-  day: '2-digit',
-  month: 'long'
-});
+  dateFormatter = new Intl.DateTimeFormat('de-DE', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'long'
+  });
 
-timeFormatter = new Intl.DateTimeFormat('de-DE', {
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false
-});
+  timeFormatter = new Intl.DateTimeFormat('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
 
-private unsubscribeFromMessages?: () => void;
+ private unsubscribeFromMessages?: () => void;
 
 
 
-constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService) {
-  
-}
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService) {
+    
+  }
 
   async ngOnInit(): Promise<void>{
     this.loadName();

@@ -1,9 +1,9 @@
-<div *ngIf="overlayvisible" class="overlay-bg" (click)="closeOverlay()">
+<div *ngIf="this.profilecardservice.overlayActive" class="overlay-bg" (click)="this.profilecardservice.closeProfileCard()">
 
     <div class="profile-Container">
         <div class="container-Header">
             <span>Profil</span>
-            <img (click)="closeOverlay()" src="assets/img/close.png" alt="close">
+            <img (click)="this.profilecardservice.closeProfileCard()" src="assets/img/close.png" alt="close">
         </div>
         <div class="container-img">
             <img  src="assets/img/avatar_large_{{ currentmessageAvatar }}.png" alt="avatar">

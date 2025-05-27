@@ -88,6 +88,9 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   }
 
 
+
+
+  
   initchanelSubscription() {
     this.chanelSubscription = this.mainhelperService.openChannel$.subscribe(open=> {
       if (open) {
