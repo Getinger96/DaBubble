@@ -213,10 +213,6 @@ return {
     };
   }
 
-  toggleEditPopup(): void {
-    MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
-  }
-
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
     console.log('Selected Thread Message is',this.selectedThreadMessageSubject)

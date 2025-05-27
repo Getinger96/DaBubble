@@ -47,10 +47,8 @@ export class MessageComponent implements OnChanges {
   allMessages: Message[] = []
   threadAnswers: Message[] = [];
   isEditPopupOpened: boolean = false;
-  static editMessage: boolean = false;
-  static showEditPopup: boolean = false;
-  showEditPopup = MessageComponent.showEditPopup;
-  editMessage = MessageComponent.showEditPopup;
+  editMessage: boolean = false;
+  showEditPopup: boolean = false;
   emojiReactions = new Map<string, { count: number, users: string[] }>();
   showEmojiPicker: boolean = false;
   showEmojiPickerThread: boolean = false;
@@ -208,18 +206,18 @@ loadEmojisForThreadAnswers(): void {
 
   overwriteMessage() {
     this.toggleEditPopup();
-    MessageComponent.showEditPopup = false;
-    MessageComponent.editMessage = true;
+    this.showEditPopup = false;
+    this.editMessage = true;
   }
 
   closeEditPopup() {
     this.editMessage = false;
-    MessageComponent.showEditPopup = false;
+   this.showEditPopup = false;
   }
 
 
   toggleEditPopup(): void {
-    MessageComponent.showEditPopup = !MessageComponent.showEditPopup;
+    this.showEditPopup = !this.showEditPopup;
   }
 
 
