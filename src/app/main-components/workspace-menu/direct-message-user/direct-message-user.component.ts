@@ -44,6 +44,7 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserId(id)
     this.directMessageChatComponent.initConversation();
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
+    this.directMessageChatComponent.scrollToBottom();
   }
 
   loadActualUser() {

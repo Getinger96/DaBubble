@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, ElementRef, Output, ViewChild } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf,CommonModule } from '@angular/common';
 import { UserCardService } from '../active-user/services/user-card.service';
@@ -23,12 +23,14 @@ export class DirectMessageChatComponent {
 @Output() currentmessageAvatar:any;
 @Output() currentmessageStatus:string='';
 @Output() overlayvisible:boolean = false;
+@ViewChild('chatFeed') private chatFeed!: ElementRef;
 actualUser?:string;
 allConversationMessages: ConversationMessage[] = [];
 conversationId: string | null = null;
 newConvMessage: string = '';
 openChannel = this.mainHelperService.openChannel;
 showDirectMessage = this.mainservice.showdirectmessage;
+ private scrolled = false;
 
 dateFormatter = new Intl.DateTimeFormat('de-DE', {
   weekday: 'long',
@@ -55,6 +57,7 @@ constructor(private mainservice: MainComponentService, public usercardservice: U
     this.loadAvatar();
     this.loadEmail();
     this.loadStatus();
+    setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0].name;
     
 
@@ -94,6 +97,25 @@ constructor(private mainservice: MainComponentService, public usercardservice: U
 
   openOverlay(){
     this.overlayvisible=true
+  }
+
+    ngAfterViewChecked() {
+    if (!this.scrolled) {
+      this.scrollToBottom();
+    }
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatFeed.nativeElement.scrollTop = this.chatFeed.nativeElement.scrollHeight;
+      this.scrolled = true;
+    } catch (err) { }
+  }
+
+   onScroll(): void {
+    if (this.chatFeed.nativeElement.scrollTop < this.chatFeed.nativeElement.scrollHeight - this.chatFeed.nativeElement.clientHeight) {
+      this.scrolled = true;
+    }
   }
 
   checkConversation(user1: string, user2: string){
