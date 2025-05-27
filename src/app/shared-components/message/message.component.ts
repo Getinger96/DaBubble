@@ -113,7 +113,7 @@ export class MessageComponent implements OnChanges {
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-const clickedInsideEmoji =
+  const clickedInsideEmoji =
   (this.emojiComponent?.nativeElement && this.emojiComponent.nativeElement.contains(target)) ||
   (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
   (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
@@ -133,18 +133,11 @@ const clickedInsideEmoji =
       this.showEmojiPickerThread = false;
     }
 
-
-
   }
-  // onReactionClick(emoji: string) {
-  // if (this.messageData) {
-  //this.channelmessageService.toggleReaction(
-  // emoji === '✅' ? 'check' : 'like',
-  //this.messageData.channelId
-  //);
-  //}
 
-  // }
+
+
+
 onReplyClick(): void {
   if (this.messageData) {
     this.channelmessageService.openThread(this.messageData);

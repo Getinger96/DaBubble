@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef,HostListener} from '@angular/core';
 import { Message } from '../../interfaces/message.interface';
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { CommonModule } from '@angular/common';
@@ -26,6 +26,8 @@ export class ThreadComponent {
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   @ViewChild('threadFeed') private threadFeed!: ElementRef;
+  @ViewChild('addMemberAtImg') private addMemberAtImg!: ElementRef
+  @ViewChild('addMember') private addMember!: ElementRef
   currentChannelID?: string
   threadAnswers: Message[] = [];
   showEmojiPicker: boolean = false;
@@ -36,7 +38,7 @@ export class ThreadComponent {
   newThreadText: string = '';
   toggleMemberInThread: boolean = false;
   toggleEmoji: boolean = false;
-  constructor(
+  constructor( private elementRef: ElementRef,
     public messageService: MessageService,
     private mainService: MainComponentService,
     private cdr: ChangeDetectorRef,
@@ -67,6 +69,19 @@ export class ThreadComponent {
   }
 
 
+    @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+       const target = event.target as HTMLElement;
+
+
+           const clickedAddMember = this.addMemberAtImg?.nativeElement?.contains(target)
+      || this.addMember.nativeElement?.contains(target);
+
+    if (!clickedAddMember) {
+      this.toggleMemberInThread = false;
+    }
+       
+  }
 
 
   ngAfterViewChecked() {
@@ -134,9 +149,12 @@ loadReaction() {
     }
   }
 
-  insertMemberIntoTextarea(event: Member) {
+   insertMemberIntoTextarea(member: Member) {
+    const insertText = `@${member.name} `;
+    this.newThreadText += insertText;
 
   }
+
 
   loadMembers() {
     this.channelService.channelMember$.subscribe(members => {

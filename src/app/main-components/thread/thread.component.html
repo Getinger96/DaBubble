@@ -42,7 +42,7 @@
     </div>
     <div class="thread-input-wrapper">
            <ng-container *ngIf="toggleMemberInThread" >
-            <app-add-member-to-thread (memberSelected)="insertMemberIntoTextarea($event)"
+            <app-add-member-to-thread  #addMember (memberSelected)="insertMemberIntoTextarea($event)"
                 [members]="members"  
                ></app-add-member-to-thread>
                </ng-container>
@@ -53,7 +53,7 @@
             <div class="thread-input-icons">
                 <div>
                     <img src="assets/img/emoji.png" alt="emoji">
-                    <img src="assets/img/at.png" (click)="openDialogAddMember()" alt="at">
+                    <img #addMemberAtImg src="assets/img/at.png" (click)="openDialogAddMember()" alt="at">
                 </div>
                     <img src="assets/img/send.png" alt="send" (click)="sendReply()">
 
