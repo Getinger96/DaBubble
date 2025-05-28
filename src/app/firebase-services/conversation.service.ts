@@ -9,6 +9,11 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
+  QuerySnapshot,
+  DocumentData,
+  deleteDoc,
+  getDoc
 } from '@angular/fire/firestore';
 import { Conversation } from '../interfaces/conversation.interface';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
@@ -20,7 +25,7 @@ import { MainComponentService } from './main-component.service';
 })
 export class ConversationService {
   firestore: Firestore = inject(Firestore);
-
+  emojiCountsList: { [emoji: string]: number } = {};
   allConversations: Conversation[] = [];
   conversationId: string | undefined;
   public allConversationMessagesSubject = new BehaviorSubject<
@@ -151,17 +156,25 @@ export class ConversationService {
       conversationId,
       'messages'
     );
-    await addDoc(convMessageRef, {
+    const docRef = await addDoc(convMessageRef, {
       id: conversationId,
       senderId,
       text,
       timestamp: new Date(),
       isOwn: true,
     });
+    const conversationmessageId = docRef.id;
+    await updateDoc(docRef, { conversationmessageId });
+    return conversationmessageId;
+    ;
   }
 
   getActualUser() {
     return this.mainservice?.actualUser[0]?.id;
+  }
+
+  getActualUserName() {
+    return this.mainservice?.actualUser[0]?.name;
   }
 
   getClickedUser() {
@@ -175,4 +188,115 @@ export class ConversationService {
       return Number(timestampA) - Number(timestampB);
     });
   }
+
+  addEmojiInMessage(emoji: any, conversationId: string, conversationmessageaId: string) {
+    this.saveEmojiInFirebaseReaction(emoji, conversationId, conversationmessageaId)
+  }
+
+
+  async saveEmojiInFirebaseReaction(emoji: any, conversationId: string, conversationmessageaId: string) {
+    const actualUser = this.getActualUserName();
+    const reactionsRef = collection(this.firestore, 'conversation',
+      conversationId,
+      'messages', conversationmessageaId, 'reactions');
+    const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
+    const existingReactions = await getDocs(q);
+
+    if (!existingReactions.empty) {
+      this.deleteReaction(existingReactions, conversationId, conversationmessageaId)
+      return;
+    }
+    const docRef = await addDoc(reactionsRef, this.reactionJson(emoji, actualUser));
+    await updateDoc(docRef, { id: docRef.id });
+    const emojiQuery = query(reactionsRef, where('emoji', '==', emoji));
+    const emojiSnapshot = await getDocs(emojiQuery);
+    const count = emojiSnapshot.size;
+    this.saveEmojiInFirebaseMessage(emoji, conversationId, conversationmessageaId, count)
+
+
+  }
+
+
+
+
+
+  async deleteReaction(existingReactions: QuerySnapshot<DocumentData, DocumentData>, conversationId: string, conversationmessageaId: string) {
+    const reactionDoc = existingReactions.docs[0];
+    const reactionId = reactionDoc.id;
+    const reactionDocRef = doc(this.firestore, 'conversation',
+      conversationId,
+      'messages', conversationmessageaId,'reactions', reactionId);
+    try {
+      await deleteDoc(reactionDocRef);
+    } catch (error) {
+      console.error('Fehler beim Löschen der Reaktion:', error);
+    }
+
+
+  }
+
+  reactionJson(emoji: any, actualUser: string) {
+    return {
+      emoji: emoji,
+      reactedFrom: actualUser,
+      createdAt: new Date(),
+    }
+  }
+
+
+  async saveEmojiInFirebaseMessage(emoji: any, conversationId: string, conversationmessageaId: string, count: number) {
+    const messageDocRef = doc(this.firestore, 'conversation',
+      conversationId,
+      'messages', conversationmessageaId,);
+    const messageDocSnap = await getDoc(messageDocRef);
+
+    this.emojiCountsList = {};
+
+    if (messageDocSnap.exists()) {
+      this.emojiCountsList = messageDocSnap.data()['emojiCounts'] || {};
+    }
+
+    this.emojiCountsList[emoji] = count;
+
+    await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
+
+  }
+
+
+  getReactionsForMessage(conversationId: string, conversationmessageaId: string, callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
+  ) {
+    const reactionsRef = collection(this.firestore, 'conversation',
+      conversationId,
+      'messages', conversationmessageaId, 'reactions');
+
+    return onSnapshot(reactionsRef, snapshot => {
+      const reactionMap = new Map<string, { count: number, users: string[] }>();
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const emoji = data['emoji'];
+        const user = data['reactedFrom'];
+
+        if (!reactionMap.has(emoji)) {
+          reactionMap.set(emoji, { count: 0, users: [] });
+        }
+
+        const current = reactionMap.get(emoji)!;
+        current.count += 1;
+        current.users.push(user);
+        console.log('current', current);
+      });
+
+      callback(reactionMap);
+      console.log('reactionMap', reactionMap);
+
+
+    });
+  }
+
 }
+
+
+
+
+

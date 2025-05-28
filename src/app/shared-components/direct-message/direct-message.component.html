@@ -3,36 +3,64 @@
         <div class="date-row"></div>
         <span class="message-date fontNunito">{{ date }}</span>
     </div>
-    <div  [ngClass]="{'reverse': isOwn}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}" class="message"  >
+    <div [ngClass]="{'reverse': isOwn}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}" class="message">
 
-        <div *ngIf="!editMessage && !isOwn" class="reaction-popup">
-            <img (click)="addNewReaction('check')" src="assets/img/check_40.png" alt="check">
-            <img (click)="addNewReaction('like')" src="assets/img/like.png" alt="like">
-            <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
-            <img class="change-color" src="assets/img/edit.png" alt="edit">
+       
+        <div *ngIf="showEmojiPicker" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
+            <emoji-mart set="apple" (emojiClick)="addEmoji($event, this.conversationId,this.conversationmessageid)" title="Pick your emoji…"
+                emoji="point_up" [totalFrequentLines]="2" [showSingleCategory]="true" [enableSearch]="false"
+                [emojiTooltip]="false" [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
-        <div *ngIf="!editMessage && isOwn" class="reaction-popup">
-            <img src="assets/img/add_reaction40.png" alt="add reaction">
+        <div *ngIf="!editMessage && isOwn" class="reaction-popup" [ngClass]="{ 'show': showEmojiPicker }">
+
+            <img (click)="addEmoji('✅', this.conversationId,this.conversationmessageid)" src="assets/img/check_40.png" alt="check">
+            <img (click)="addEmoji('👍', this.conversationId,this.conversationmessageid)" src="assets/img/like.png" alt="like">
+            <img #emojiImg (click)="onEmojiButtonClick($event)" class="change-color" src="assets/img/add_reaction40.png"
+                alt="react">
             <img (click)="toggleEditPopup()" src="assets/img/dots.png" alt="dots">
-               <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
-                    <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
-                </div>
+            <div *ngIf="isOwn && showEditPopup" class="edit-message"
+                [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
+                <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
+            </div>
             <img class="change-color" src="assets/img/edit.png" alt="edit">
         </div>
         <img [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details" *ngIf="!editMessage">
-            <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }} Uhr</span></div>
+            <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }}
+                    Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
                 <div class="message-not-answered">
-                    <img class="add-reaction" src="assets/img/add_reaction40.png" alt=""></div>
+                    <img class="add-reaction" src="assets/img/add_reaction40.png" alt="">
                 </div>
+            </div>
+             <div class="reactions">
+                <ng-container
+                    *ngFor="let entry of (  emojiReactions) | keyvalue">
+                    <span class="reaction"
+                        (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
+
+                        {{ entry.key }}
+                        <ng-container *ngIf="entry.value.count > 1">
+                            {{ entry.value.count }}
+                        </ng-container>
+
+                        <!-- Tooltip mit dynamischem Text -->
+                        <div class="reaction-tooltip">
+                            {{ entry.value.users.join(', ') }}
+                            {{ entry.value.users.length === 1 ? 'hat reagiert' : 'haben reagiert' }}
+                        </div>
+                    </span>
+
+                </ng-container>
+
+            </div>
         </div>
         <div *ngIf="editMessage" class="edit-message-input fontNunito">
             <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}></textarea>
             <img src="assets/img/emoji.png" alt="">
             <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
             <button class="save-edit-message fontNunito">Speichern</button>
+        </div>
     </div>
-</div>

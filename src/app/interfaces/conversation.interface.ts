@@ -6,7 +6,7 @@ export class Conversation {
     conversationMessages:ConversationMessage[] | undefined;
 
     constructor(obj?:any){
-        this.id = obj ? obj.id : ''
+        this.id = obj ? obj.id : '';
         this.users = obj ? obj.users : []; 
         this.conversationMessages = obj ? obj.conversationMessages : []; 
     }
