@@ -10,6 +10,7 @@
             <img (click)="addEmoji('👍',conversationId,conversationmessageid)" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
+        </div>
        
         <div *ngIf="showEmojiPicker" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
             <emoji-mart set="apple" (emojiClick)="addEmoji($event, this.conversationId,this.conversationmessageid)" title="Pick your emoji…"
@@ -24,8 +25,9 @@
                 [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
                 <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
             </div>
-            <img class="change-color" src="assets/img/edit.png" alt="edit">
+            <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
         </div>
+
         <img [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details" *ngIf="!editMessage">
             <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }} Uhr</span></div>
