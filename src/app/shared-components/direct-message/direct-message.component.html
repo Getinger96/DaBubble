@@ -9,7 +9,7 @@
             <img (click)="addNewReaction('check')" src="assets/img/check_40.png" alt="check">
             <img (click)="addNewReaction('like')" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
-            <img class="change-color" src="assets/img/edit.png" alt="edit">
+            <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
         </div>
 
         <div *ngIf="!editMessage && isOwn" class="reaction-popup">
@@ -18,7 +18,7 @@
                <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
                     <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
                 </div>
-            <img class="change-color" src="assets/img/edit.png" alt="edit">
+            <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
         </div>
         <img [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details" *ngIf="!editMessage">

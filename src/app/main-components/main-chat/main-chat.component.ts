@@ -73,6 +73,9 @@ export class MainChatComponent {
     text: '',
     timestamp: new Date(),
     isOwn: false,
+    isThread: false,
+    isInThread: false,
+    threadTo: ''
   }
   static actualUser: any;
   private scrolled = false;
