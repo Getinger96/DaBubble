@@ -69,10 +69,12 @@ export class MainChatComponent {
   };
 
   conversationMessage: ConversationMessage ={
+    id:'',
     senderId: '',
     text: '',
     timestamp: new Date(),
     isOwn: false,
+    conversationmessageId:'',
     isThread: false,
     isInThread: false,
     threadTo: ''

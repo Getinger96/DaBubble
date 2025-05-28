@@ -1,4 +1,4 @@
-import { Component, Input, NgModule } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, NgModule, ViewChild } from '@angular/core';
 import { MessageComponent } from '../message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { ConversationService } from '../../firebase-services/conversation.service'; // Add this import
@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { Subscription } from 'rxjs';
+import { ConversationService } from '../../firebase-services/conversation.service';
+import { Conversation } from '../../interfaces/conversation.interface';
 
 @Component({
   selector: 'app-direct-message',
@@ -25,6 +27,21 @@ export class DirectMessageComponent {
   @Input() isOwn: boolean | undefined = false;
   @Input() dateExists: boolean | undefined = false;
   @Input() isThread: boolean | undefined = false;
+showEmojiPicker: boolean = false;
+@ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
+@ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
+@ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
+conversationmessageid:string = '';
+conversationId:string='';
+editMessage: boolean = false;
+showEditPopup: boolean = false;
+emojiReactions = new Map<string, { count: number, users: string[] }>();
+
+dateFormatter = new Intl.DateTimeFormat('de-DE', {
+  weekday: 'long',
+  day: '2-digit',
+  month: 'long',
+});
   @Input() isInThread: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
 
@@ -43,54 +60,70 @@ export class DirectMessageComponent {
     month: 'long',
   });
 
-  timeFormatter = new Intl.DateTimeFormat('de-DE', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
+timeFormatter = new Intl.DateTimeFormat('de-DE', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+});
+
+constructor(
+  private messageservice: MessageService,
+  private maincomponentservice: MainComponentService,
+  private conversationservice: ConversationService
+
+) { }
+
+ngOnInit(): void {
+  if(this.messageData) {
+  const timestamp = this.messageData.timestamp;
+ this.conversationmessageid=this.messageData.conversationmessageId;
+ this.conversationId=this.messageData.id;
+
+  this.conversationservice.getReactionsForMessage(
+        this.messageData.id,
+        this.messageData.conversationmessageId,
+        (reactionMap) => {
+          this.emojiReactions = reactionMap;
+          console.log(this.emojiReactions);
+          
+        }
+      );
+
+
+
+  let dateObj: Date;
+
+  if (timestamp instanceof Date) {
+    dateObj = timestamp;
+  } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
+    dateObj = (timestamp as any).toDate();
+  } else {
+    dateObj = new Date(timestamp);
+  }
+
+  this.date = this.dateFormatter.format(dateObj);
+  this.time = this.timeFormatter.format(dateObj);
+
+  this.maincomponentservice.currentusermessagAvatar$.subscribe((avatar) => {
+    if (
+      this.messageData?.senderId ===
+      this.maincomponentservice.directmessaeUserIdSubject.value
+    ) {
+      this.avatarSrc = avatar || this.avatarSrc;
+    } else {
+      this.avatarSrc = this.maincomponentservice.actualUser[0].avatar;
+    }
   });
-
-  constructor(
-    private messageservice: MessageService,
-    private conversationService: ConversationService, // Add ConversationService
-    private maincomponentservice: MainComponentService
-  ) {}
-
-  ngOnInit(): void {
-    if (this.messageData) {
-      const timestamp = this.messageData.timestamp;
-      let dateObj: Date;
-
-      if (timestamp instanceof Date) {
-        dateObj = timestamp;
-      } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
-        dateObj = (timestamp as any).toDate();
-      } else {
-        dateObj = new Date(timestamp);
-      }
-
-      this.date = this.dateFormatter.format(dateObj);
-      this.time = this.timeFormatter.format(dateObj);
-
-      this.maincomponentservice.currentusermessagAvatar$.subscribe((avatar) => {
-        if (
-          this.messageData?.senderId ===
-          this.maincomponentservice.directmessaeUserIdSubject.value
-        ) {
-          this.avatarSrc = avatar || this.avatarSrc;
-        } else {
-          this.avatarSrc = this.maincomponentservice.actualUser[0].avatar;
-        }
-      });
-      this.maincomponentservice.currentusermessageName$.subscribe((name) => {
-        if (
-          this.messageData?.senderId ===
-          this.maincomponentservice.directmessaeUserIdSubject.value
-        ) {
-          this.name = name || this.name;
-        } else {
-          this.name = this.maincomponentservice.actualUser[0].name;
-        }
-      });
+  this.maincomponentservice.currentusermessageName$.subscribe((name) => {
+    if (
+      this.messageData?.senderId ===
+      this.maincomponentservice.directmessaeUserIdSubject.value
+    ) {
+      this.name = name || this.name;
+    } else {
+      this.name = this.maincomponentservice.actualUser[0].name;
+    }
+  });
 
       // Get last answer for thread display
       const lastAnswer = this.conversationService.getLastAnswer(
@@ -106,9 +139,9 @@ export class DirectMessageComponent {
         this.lastAnswerDate = '';
       }
 
-      this.messageText = this.messageData.text || this.messageText;
-    }
-    console.log('Direct Message:', this.messageData);
+  this.messageText = this.messageData.text || this.messageText;
+}
+console.log('Direct Message:', this.messageData);
   }
 
   // Load all messages in conversation
@@ -128,25 +161,64 @@ export class DirectMessageComponent {
     }
   }
 
-  addNewReaction(reaction: string) {
-    this.messageservice.saveReaction(reaction);
+
+
+toggleEditPopup() {
+  this.showEditPopup = !this.showEditPopup;
+}
+
+overwriteMessage() {
+  this.toggleEditPopup();
+  this.showEditPopup = false;
+  this.editMessage = true;
+}
+
+closeEditPopup() {
+  this.editMessage = false;
+  this.showEditPopup = false;
+}
+
+
+addEmoji(event: any, conversationId: string, conversationmessagId: string) {
+  const emoji = event.emoji?.native || event;
+  if (!conversationmessagId) return;
+  this.conversationservice.addEmojiInMessage(emoji, conversationId, conversationmessagId);
+}
+
+showEmojiBar() {
+  this.showEmojiPicker = !this.showEmojiPicker;
+}
+
+onEmojiButtonClick(event: MouseEvent) {
+  event.stopPropagation(); // verhindert Auslösung von handleClickOutside
+  this.showEmojiBar();
+}
+
+@HostListener('document:click', ['$event'])
+handleClickOutside(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+
+  const clickedInsideEmoji =
+    (this.emojiComponent?.nativeElement && this.emojiComponent.nativeElement.contains(target)) ||
+    (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
+    (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
+
+  console.log('this.emojiComponent?', this.emojiComponent);
+
+
+
+
+
+  if (!clickedInsideEmoji) {
+    this.showEmojiPicker = false;
   }
 
-  toggleEditPopup() {
-    this.showEditPopup = !this.showEditPopup;
-  }
 
-  overwriteMessage() {
-    this.toggleEditPopup();
-    this.showEditPopup = false;
-    this.editMessage = true;
-  }
+}
 
-  closeEditPopup() {
-    this.editMessage = false;
-    this.showEditPopup = false;
-  }
 
+
+ 
   // Thread functionality
   onReplyClick(): void {
     if (this.messageData) {

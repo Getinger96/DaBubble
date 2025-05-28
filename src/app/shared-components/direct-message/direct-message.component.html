@@ -10,15 +10,21 @@
             <img (click)="addNewReaction('like')" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
+       
+        <div *ngIf="showEmojiPicker" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
+            <emoji-mart set="apple" (emojiClick)="addEmoji($event, this.conversationId,this.conversationmessageid)" title="Pick your emoji…"
+                emoji="point_up" [totalFrequentLines]="2" [showSingleCategory]="true" [enableSearch]="false"
+                [emojiTooltip]="false" [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
         <div *ngIf="!editMessage && isOwn" class="reaction-popup">
             <img src="assets/img/add_reaction40.png" alt="add reaction">
             <img (click)="toggleEditPopup()" src="assets/img/dots.png" alt="dots">
-               <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
-                    <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
-                </div>
-            <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
+            <div *ngIf="isOwn && showEditPopup" class="edit-message"
+                [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
+                <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
+            </div>
+            <img class="change-color" src="assets/img/edit.png" alt="edit">
         </div>
         <img [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details" *ngIf="!editMessage">

@@ -53,9 +53,14 @@
         <div class="main-chat-message">
             <textarea [(ngModel)]="newConvMessage" type="text" class="fontNunito" placeholder="Nachricht hier eingeben" wrap="soft"></textarea>
             <div class="message-icons">
+                  <div  #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
+                    <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
+                        [totalFrequentLines]="2" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
+                        [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
+                        </div> 
                 <div>
-                    <img src="assets/img/emoji.png" alt="">
-                    <img src="assets/img/at.png" alt="">
+                   <img src="assets/img/emoji.png" alt="" (click)="onEmojiButtonClick($event)">
+                   
                 </div>
                 <img (click)="addConversationMessage()" src="assets/img/send.png" alt="">
             </div>

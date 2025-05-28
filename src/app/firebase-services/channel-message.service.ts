@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import {Firestore,collection, QuerySnapshot,  getDocs, addDoc, updateDoc, doc, DocumentData, onSnapshot, Query, deleteDoc, query, where,  getDoc} from '@angular/fire/firestore';
+import { Firestore, collection, QuerySnapshot, getDocs, addDoc, updateDoc, doc, DocumentData, onSnapshot, Query, deleteDoc, query, where, getDoc } from '@angular/fire/firestore';
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
 import { MainComponentService } from './main-component.service';
@@ -28,58 +28,58 @@ export class ChannelMessageService {
   allMessages$ = this.allMessagesSubject.asObservable();
   currentChannelname$: any;
   private unsubscribeMessagesListener: (() => void) | null = null;
-  
+
 
   constructor(private messageService: MessageService, private mainservice: MainComponentService) {
   }
 
- subList(channelId: string) {
-  console.log('📡 subList aufgerufen mit channelId:', channelId);
+  subList(channelId: string) {
+    console.log('📡 subList aufgerufen mit channelId:', channelId);
 
-  // Vorherige Snapshot-Subscription beenden
-  if (this.unsubscribeMessagesListener) {
-    this.unsubscribeMessagesListener();  // onSnapshot-Abbruch
-    this.unsubscribeMessagesListener = null;
+    // Vorherige Snapshot-Subscription beenden
+    if (this.unsubscribeMessagesListener) {
+      this.unsubscribeMessagesListener();  // onSnapshot-Abbruch
+      this.unsubscribeMessagesListener = null;
+    }
+
+    const channelDocRef = doc(this.firestore, 'Channels', channelId);
+    const messagesRef = collection(channelDocRef, 'messages');
+
+    // Neue Subscription starten
+    this.unsubscribeMessagesListener = onSnapshot(messagesRef, snapshot => {
+      this.handleSnapshot(snapshot);
+    });
   }
 
-  const channelDocRef = doc(this.firestore, 'Channels', channelId);
-  const messagesRef = collection(channelDocRef, 'messages');
+  handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
+    console.log('🟢 Snapshot empfangen', snapshot.size);
 
-  // Neue Subscription starten
-  this.unsubscribeMessagesListener = onSnapshot(messagesRef, snapshot => {
-    this.handleSnapshot(snapshot);
-  });
-}
+    const actualUserID = this.messageService.getActualUser();
+    const allMessages: Message[] = [];
 
-handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
-  console.log('🟢 Snapshot empfangen', snapshot.size);
+    // 🧹 Reset der lokalen Nachrichtenliste
+    this.allMessages = [];
 
-  const actualUserID = this.messageService.getActualUser();
-  const allMessages: Message[] = [];
+    snapshot.forEach(element => {
+      const messageData = element.data();
+      const isOwn = messageData['id'] === actualUserID;
+      const message = this.messageService.setMessageObject(messageData, element.id);
+      message.isOwn = isOwn;
+      this.messageId = messageData['messageId'];
+      allMessages.push(message);
+    });
 
-  // 🧹 Reset der lokalen Nachrichtenliste
-  this.allMessages = [];
-
-  snapshot.forEach(element => {
-    const messageData = element.data();
-    const isOwn = messageData['id'] === actualUserID;
-    const message = this.messageService.setMessageObject(messageData, element.id);
-    message.isOwn = isOwn;
-    this.messageId = messageData['messageId'];
-    allMessages.push(message);
-  });
-
-  this.subListMessages(allMessages);
-}
+    this.subListMessages(allMessages);
+  }
 
   subListMessages(allMessages: Message[]) {
-  this.allMessages = allMessages;
-  this.allMessagesSubject.next(this.allMessages);
+    this.allMessages = allMessages;
+    this.allMessagesSubject.next(this.allMessages);
 
-  const selectedMessage = this.selectedThreadMessageSubject.value;
-  if (selectedMessage) {
-    this.updateThreadAnswers(selectedMessage.messageId);
-  }
+    const selectedMessage = this.selectedThreadMessageSubject.value;
+    if (selectedMessage) {
+      this.updateThreadAnswers(selectedMessage.messageId);
+    }
   }
 
 
@@ -131,7 +131,7 @@ handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
     this.getMessagesAndMessageId(messagesRef)
 
   }
-  
+
 
 
 
@@ -220,9 +220,9 @@ handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
     this.allMessagesSubject.next(this.allMessages);
   }
 
-  messageJSON(user:User, messageText: string, sendAt: string, sendAtTime: string, threadToId: string, userId: string, 
+  messageJSON(user: User, messageText: string, sendAt: string, sendAtTime: string, threadToId: string, userId: string,
     selectedMessage: Message) {
-      return {
+    return {
       name: user.name,
       avatar: user.avatar,
       messageText: messageText,
@@ -240,7 +240,7 @@ handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
-      }
+    }
 
   }
 
@@ -277,11 +277,11 @@ handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
 
 
   addEmojiInMessage(emoji: any, channelID: string, messageID: string) {
-  this.saveEmojiInFirebaseReaction(emoji, channelID,messageID )
+    this.saveEmojiInFirebaseReaction(emoji, channelID, messageID)
   }
 
 
-   getReactionsForMessage(channelId: string, messageId: string,callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
+  getReactionsForMessage(channelId: string, messageId: string, callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
   ) {
     const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageId, 'reactions');
 
@@ -300,74 +300,74 @@ handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
         const current = reactionMap.get(emoji)!;
         current.count += 1;
         current.users.push(user);
-            console.log('current', current);
+        console.log('current', current);
       });
 
       callback(reactionMap);
       console.log('reactionMap', reactionMap);
-      
-      
+
+
     });
   }
 
 
   async saveEmojiInFirebaseReaction(emoji: any, channelID: string, messageID: string) {
-       const actualUser = this.getActualUserName();
-       const reactionsRef = collection(this.firestore,'Channels', channelID, 'messages', messageID, 'reactions');
-       const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
-       const existingReactions = await getDocs(q);
+    const actualUser = this.getActualUserName();
+    const reactionsRef = collection(this.firestore, 'Channels', channelID, 'messages', messageID, 'reactions');
+    const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
+    const existingReactions = await getDocs(q);
 
-    if (!existingReactions.empty) {    
+    if (!existingReactions.empty) {
       this.deleteReaction(existingReactions, channelID, messageID)
-    return;
-  }
-  const docRef = await addDoc(reactionsRef, this.reactionJson(emoji, actualUser));
-  await updateDoc(docRef, { id: docRef.id });  
-  const emojiQuery = query(reactionsRef, where('emoji', '==', emoji));
-  const emojiSnapshot = await getDocs(emojiQuery);
-  const count = emojiSnapshot.size;
-  this.saveEmojiInFirebaseMessage(emoji, channelID, messageID, count )
-  
+      return;
+    }
+    const docRef = await addDoc(reactionsRef, this.reactionJson(emoji, actualUser));
+    await updateDoc(docRef, { id: docRef.id });
+    const emojiQuery = query(reactionsRef, where('emoji', '==', emoji));
+    const emojiSnapshot = await getDocs(emojiQuery);
+    const count = emojiSnapshot.size;
+    this.saveEmojiInFirebaseMessage(emoji, channelID, messageID, count)
 
-  }
 
-  async deleteReaction(existingReactions:  QuerySnapshot<DocumentData, DocumentData>, channelID: string, messageID: string) {
-      const reactionDoc = existingReactions.docs[0];
-      const reactionId = reactionDoc.id;   
-        const reactionDocRef= doc(this.firestore,'Channels', channelID, 'messages', messageID, 'reactions', reactionId );
-     try {
-    await deleteDoc(reactionDocRef);
-  }   catch (error) {
-    console.error('Fehler beim Löschen der Reaktion:', error);
-  }
   }
 
-
- async saveEmojiInFirebaseMessage(emoji: any, channelID: string, messageID: string, count: number ) {
-      const messageDocRef = doc(this.firestore, 'Channels', channelID, 'messages', messageID);
-      const messageDocSnap = await getDoc(messageDocRef);
-
-      this.emojiCountsList = {};
-
-       if (messageDocSnap.exists()) {
-       this.emojiCountsList = messageDocSnap.data()['emojiCounts'] || {};
-      }
-
-        this.emojiCountsList[emoji] = count;
-
-        await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
-
-  } 
-
-
-reactionJson(emoji: any, actualUser: string) {
-  return {
-    emoji: emoji,
-    reactedFrom: actualUser,
-    createdAt: new Date(),
+  async deleteReaction(existingReactions: QuerySnapshot<DocumentData, DocumentData>, channelID: string, messageID: string) {
+    const reactionDoc = existingReactions.docs[0];
+    const reactionId = reactionDoc.id;
+    const reactionDocRef = doc(this.firestore, 'Channels', channelID, 'messages', messageID, 'reactions', reactionId);
+    try {
+      await deleteDoc(reactionDocRef);
+    } catch (error) {
+      console.error('Fehler beim Löschen der Reaktion:', error);
+    }
   }
-    
-}
+
+
+  async saveEmojiInFirebaseMessage(emoji: any, channelID: string, messageID: string, count: number) {
+    const messageDocRef = doc(this.firestore, 'Channels', channelID, 'messages', messageID);
+    const messageDocSnap = await getDoc(messageDocRef);
+
+    this.emojiCountsList = {};
+
+    if (messageDocSnap.exists()) {
+      this.emojiCountsList = messageDocSnap.data()['emojiCounts'] || {};
+    }
+
+    this.emojiCountsList[emoji] = count;
+
+    await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
+
+  }
+
+
+  reactionJson(emoji: any, actualUser: string) {
+    return {
+      emoji: emoji,
+      reactedFrom: actualUser,
+      createdAt: new Date(),
+    }
+
+  }
 
 
   async loadAllMessagesFromAllChannels() {
