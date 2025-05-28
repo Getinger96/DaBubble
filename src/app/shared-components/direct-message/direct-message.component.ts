@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostListener, Input, NgModule, ViewChild } from '@angular/core';
 import { MessageComponent } from '../message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
-import { ConversationService } from '../../firebase-services/conversation.service'; // Add this import
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { CommonModule } from '@angular/common';
 import { MainComponentService } from '../../firebase-services/main-component.service';
@@ -48,17 +47,10 @@ dateFormatter = new Intl.DateTimeFormat('de-DE', {
   // Component state
   allMessages: ConversationMessage[] = [];
   threadAnswers: ConversationMessage[] = [];
-  editMessage: boolean = false;
-  showEditPopup: boolean = false;
 
   // Subscriptions
   private allThreadsSubscription!: Subscription;
 
-  dateFormatter = new Intl.DateTimeFormat('de-DE', {
-    weekday: 'long',
-    day: '2-digit',
-    month: 'long',
-  });
 
 timeFormatter = new Intl.DateTimeFormat('de-DE', {
   hour: '2-digit',
@@ -126,7 +118,7 @@ ngOnInit(): void {
   });
 
       // Get last answer for thread display
-      const lastAnswer = this.conversationService.getLastAnswer(
+      const lastAnswer = this.conversationservice.getLastAnswer(
         this.messageData
       );
       if (lastAnswer && lastAnswer.timestamp) {
@@ -146,7 +138,7 @@ console.log('Direct Message:', this.messageData);
 
   // Load all messages in conversation
   loadAllMessageInConversation() {
-    this.conversationService.allMessages$.subscribe((messages) => {
+    this.conversationservice.allMessages$.subscribe((messages) => {
       this.allMessages = messages;
     });
   }
@@ -222,7 +214,7 @@ handleClickOutside(event: MouseEvent) {
   // Thread functionality
   onReplyClick(): void {
     if (this.messageData) {
-      this.conversationService.openThread(this.messageData);
+      this.conversationservice.openThread(this.messageData);
       this.loadThreadAnswers();
     }
   }
@@ -233,20 +225,20 @@ handleClickOutside(event: MouseEvent) {
     }
 
     this.allThreadsSubscription =
-      this.conversationService.allMessages$.subscribe((messages) => {
+      this.conversationservice.allMessages$.subscribe((messages) => {
         if (this.messageData && this.messageData.id) {
           // Filter and set thread answers
           const messageId = this.messageData.id;
           this.threadAnswers =
-            this.conversationService.getThreadAnswers(messageId);
+            this.conversationservice.getThreadAnswers(messageId);
 
           // Update thread answers
-          this.conversationService.updateThreadAnswers(messageId);
+          this.conversationservice.updateThreadAnswers(messageId);
 
           // Update last answer date
-          this.lastAnswerDate = this.conversationService?.lastAnswer?.timestamp
+          this.lastAnswerDate = this.conversationservice?.lastAnswer?.timestamp
             ? this.formatTimestamp(
-                this.conversationService.lastAnswer.timestamp
+                this.conversationservice.lastAnswer.timestamp
               )
             : '';
         }

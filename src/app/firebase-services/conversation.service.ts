@@ -152,6 +152,7 @@ export class ConversationService {
         isInThread: messageData['isInThread'],
         threadTo: messageData['threadTo'],
         isOwn: isOwn,
+        conversationmessageId: ''
       };
       convMessages.push(message);
     });
@@ -185,7 +186,8 @@ export class ConversationService {
           isThread: messageData['isThread'],
           isInThread: messageData['isInThread'],
           threadTo: messageData['threadTo'],
-          isOwn: isOwn,
+          isOwn: messageData['isOwn'],
+          conversationmessageId: messageData['conversationmessageId']
         };
         liveConvMessages.push(message);
       });
@@ -300,6 +302,7 @@ export class ConversationService {
       isInThread: false,
       threadTo: threadToId,
       id: '',
+      conversationmessageId: '',
     };
 
     if (this.conversationId) {

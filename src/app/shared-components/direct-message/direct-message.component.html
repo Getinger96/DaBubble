@@ -6,8 +6,8 @@
     <div  [ngClass]="{'reverse': isOwn}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}" class="message"  >
 
         <div *ngIf="!editMessage && !isOwn" class="reaction-popup">
-            <img (click)="addNewReaction('check')" src="assets/img/check_40.png" alt="check">
-            <img (click)="addNewReaction('like')" src="assets/img/like.png" alt="like">
+            <img (click)="addEmoji('✅',conversationId,conversationmessageid)" src="assets/img/check_40.png" alt="check">
+            <img (click)="addEmoji('👍',conversationId,conversationmessageid)" src="assets/img/like.png" alt="like">
             <img class="change-color" src="assets/img/add_reaction40.png" alt="react">
             <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
        
