@@ -1,3 +1,7 @@
+
+ <app-profile-card *ngIf="profilecardservice.overlayActive$ | async"  [currentmessageUser]="userName"  [currentUserId]="userId" [currentmessageAvatar]="userAvatar" [currentmessageStatus]="userStatus" [currentmessageEmail]="userEmail" ></app-profile-card>
+
+
 <div class="message-wrapper">
     <div *ngIf="!isInThread && !dateExists" class="message-date-part">
         <div class="date-row"></div>
@@ -6,10 +10,9 @@
         </span>
     </div>
     <div [ngClass]="{'reverse': isOwn && !isInThread}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
-        class="message">
+        class="message" (click)="this.profilecardservice.openProfileCard()" (click)="openProfil(userId)">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup"
             [ngClass]="{ 'show': showEmojiPicker }">
-
 
 
             <img (click)="addEmoji('✅',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check">
@@ -90,3 +93,6 @@
                 <button class="save-edit-message fontNunito">Speichern</button>
             </div>
         </div>
+
+
+               

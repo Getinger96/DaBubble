@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter,OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit  } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
+import { MainComponentService } from '../../firebase-services/main-component.service'; 
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
@@ -8,10 +9,12 @@ import { Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { ProfileCardComponent } from '../../main-components/profile-card/profile-card.component';
+import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service'; 
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule, PickerComponent],
+  imports: [CommonModule, PickerComponent, ProfileCardComponent],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -47,6 +50,7 @@ export class MessageComponent implements OnChanges {
   allMessages: Message[] = []
   threadAnswers: Message[] = [];
   isEditPopupOpened: boolean = false;
+  showProfil: boolean = false;
   editMessage: boolean = false;
   showEditPopup: boolean = false;
   emojiReactions = new Map<string, { count: number, users: string[] }>();
@@ -54,13 +58,17 @@ export class MessageComponent implements OnChanges {
   showEmojiPickerThread: boolean = false;
   hover = false;
   currentChannelId?:string
+  userId!: string
+  userStatus!: string
+  userEmail!: string
+  userAvatar!: number | null;
+  userName!:string
   message: Message[] = [];
-  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService ) { 
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService   ) { 
      
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.loadChannelId();
     if (this.messageData) {
      this.date=this.messageData.sendAt
       this.avatarSrc = this.messageData.avatar || this.avatarSrc;
@@ -77,6 +85,7 @@ export class MessageComponent implements OnChanges {
       this.channelID = this.messageData.channelId ?? this.channelID;
       this.threadAnswersId = this.messageData.messageId;
       this.channelIdThread = this.messageData.channelId;
+      this.userId = this.messageData.id
       console.log('wthis.threadAnswersId,this.channelIdThreader',this.threadAnswersId,this.channelIdThread );
       
       this.channelmessageService.getReactionsForMessage(
@@ -97,6 +106,8 @@ export class MessageComponent implements OnChanges {
     } else {
       console.log('no Message Data')
     }
+
+
 
   }
 
@@ -146,11 +157,11 @@ onReplyClick(): void {
 }
 
 
-  loadChannelId() {
-    this.channelService.currentChannelId$.subscribe(id => {
-      this.currentChannelId = id;
-    });
-  }
+
+
+
+
+
 loadThreadAnswers(): void {
   this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
     (messages) => {
@@ -243,5 +254,41 @@ loadEmojisForThreadAnswers(): void {
     }
   }
 
+
+  async getUser(userId: string) {
+const userMemberId = userId
+ await this.mainService.getUserDataFromFirebase(userMemberId) 
+  this.loadCurrentUser();
+
+  } 
+async openProfil(userId: string) {
+  await this.getUser(userId);
+}
+
+
+loadCurrentUser() {
+      this.mainService.userStatus$.subscribe(status => {
+      this.userStatus = status;
+    });
+
+      this.mainService.userEmail$.subscribe(email => {
+      this.userEmail = email;
+    });
+
+       this.mainService.userName$.subscribe(name => {
+      this.userName = name;
+    });
+
+
+        this.mainService.userId$.subscribe(id => {
+      this.userId = id;
+    });
+
+        this.mainService.userAvatar$.subscribe(avatar=> {
+
+           this.userAvatar = avatar;
+        
+    });
+} 
  
 }

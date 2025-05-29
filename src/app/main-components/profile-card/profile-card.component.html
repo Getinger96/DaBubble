@@ -1,4 +1,4 @@
-<div *ngIf="this.profilecardservice.overlayActive" class="overlay-bg" (click)="this.profilecardservice.closeProfileCard()">
+<div div *ngIf="profilecardservice.overlayActive$ | async" class="overlay-bg" (click)="this.profilecardservice.closeProfileCard()">
 
     <div class="profile-Container">
         <div class="container-Header">

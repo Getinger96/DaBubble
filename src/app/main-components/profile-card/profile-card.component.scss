@@ -18,8 +18,8 @@
 .profile-Container{
 padding: 48px;
     background-color: #FFFFFF;
-    width:700px;
-    height: 700px;
+    width: 500px;
+    height: 650px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -94,7 +94,7 @@ padding: 48px;
         color: white;
         border: 1px solid #444DF2;
         font-size: 16px;
-        padding: 8px;
+       padding: 16px;
         border-radius: 20px;
         cursor: pointer;
         &:hover{
@@ -102,4 +102,13 @@ padding: 48px;
             border: 1px solid #636af1;
         }
     }
+  }
+
+  a {
+    text-decoration: none;
+    color: #1381ff;
+    font-size: 18px;
+    line-height: 24.55px;
+    padding: 20px;
+
   }

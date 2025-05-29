@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileCardOverlayService {
 
-  overlayActive: boolean = false;
+  overlayActive$ = new BehaviorSubject<boolean>(false);
 
   constructor() { }
 
   openProfileCard() {
-    this.overlayActive = true;
+   this.overlayActive$.next(true);
   }
 
   closeProfileCard() {
-    this.overlayActive = false;
+   this.overlayActive$.next(false);
   }
 
 }

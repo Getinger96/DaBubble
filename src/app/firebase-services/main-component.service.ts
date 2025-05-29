@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
+import { collection, Firestore, onSnapshot, doc, getDoc } from '@angular/fire/firestore';
 import { User } from '../interfaces/user.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
@@ -32,6 +32,24 @@ export class MainComponentService {
   currentusermessagStatus$ = this.directmessaeUserStatusSubject.asObservable();
   public directmessaeUserIdSubject = new BehaviorSubject<string>('');
   currentusermessagId$ = this.directmessaeUserStatusSubject.asObservable();
+
+
+    public userStatusSubject = new BehaviorSubject<string>('');
+  userStatus$ = this.userStatusSubject.asObservable();
+
+    public userSubjectId = new BehaviorSubject<string>('');
+ userId$ = this.userSubjectId.asObservable();
+
+    public userSubjectEmail = new BehaviorSubject<string>('');
+ userEmail$ = this.userSubjectEmail.asObservable();
+
+public userSubjectAvatar = new BehaviorSubject<number | null>(null);
+ userAvatar$ = this.userSubjectAvatar.asObservable();
+
+
+     public userSubjectName = new BehaviorSubject<string>('');
+ userName$ = this.userSubjectName.asObservable();
+
 
   constructor(private route: ActivatedRoute,
     private router: Router) {
@@ -147,5 +165,25 @@ export class MainComponentService {
     }
 
   }
+
+
+  async getUserDataFromFirebase(userId: string) {
+        const channelDocRef = doc(this.firestore, 'Users', userId);
+        const docSnap = await getDoc(channelDocRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const  userStatus = data['status'];
+          const  userId = data['id'];
+          const  userEmail = data['email'];
+          const  userAvatar = data['avatar'];
+          const  userName = data['name'];
+          this.userStatusSubject.next(userStatus)
+          this.userSubjectId.next(userId)
+          this.userSubjectEmail.next(userEmail)
+          this.userSubjectAvatar.next(userAvatar)
+           this.userSubjectName.next(userName)
+  } 
+
+}
 
 }

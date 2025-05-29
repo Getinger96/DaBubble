@@ -24,6 +24,7 @@ export class DirectMessageChatComponent {
   @Output() currentmessageEmail: string = '';
   @Output() currentmessageAvatar: any;
   @Output() currentmessageStatus: string = '';
+   @Output() currentUserId: string = '';
   @Output() overlayvisible: boolean = false;
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
@@ -65,6 +66,7 @@ export class DirectMessageChatComponent {
     this.loadAvatar();
     this.loadEmail();
     this.loadStatus();
+    this.loadUserId();
     setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0].name;
 
@@ -96,6 +98,12 @@ export class DirectMessageChatComponent {
   loadStatus() {
     this.mainservice.currentusermessagStatus$.subscribe(status => {
       this.currentmessageStatus = status;
+    })
+  }
+
+    loadUserId() {
+    this.mainservice.currentusermessagStatus$.subscribe(id => {
+      this.currentUserId= id;
     })
   }
 
