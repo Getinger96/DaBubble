@@ -86,7 +86,7 @@ export class ChannelMessageService {
 
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
-    console.log('Selected Thread Message is', this.selectedThreadMessageSubject)
+    console.log('Selected Thread Message is', this.selectedThreadMessageSubject.value)
     this.messageService.showThreadSubject.next(true);
     this.getThreadAnswers(message.messageId)
     this.updateThreadAnswers(message.messageId);

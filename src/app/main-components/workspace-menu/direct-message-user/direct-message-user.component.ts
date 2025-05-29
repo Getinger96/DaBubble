@@ -19,7 +19,7 @@ import { DirectMessageChatComponent } from '../../direct-message-chat/direct-mes
 export class DirectMessageUserComponent implements OnInit {
   actualUser: User[] = [];
   @Input() ownAccount!: boolean;
-  @Input() userArray!: User[];
+  @Input() userArray: User[] = [];
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   private directMessageChatComponent!: DirectMessageChatComponent;
@@ -35,6 +35,12 @@ export class DirectMessageUserComponent implements OnInit {
   }
 
   opendirectChat(id: string,name: string, close: boolean, avatar: number, email: string, status: string) {
+
+       if (!this.actualUser || this.actualUser.length === 0) {
+      console.warn('actualUser not loaded yet');
+      return;
+    }
+
     this.mainservice.showdirectmessage = true
     this.mainhelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(name)
@@ -42,9 +48,8 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserAvatar(avatar)
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
-    this.directMessageChatComponent.initConversation();
+
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
-    this.directMessageChatComponent.scrollToBottom();
   }
 
   loadActualUser() {
@@ -62,13 +67,29 @@ export class DirectMessageUserComponent implements OnInit {
   }
 
   sortUsers() {
+
+        if (!this.userArray || !this.actualUser || this.actualUser.length === 0) {
+      return;
+    }
+
     this.userArray.sort((a, b) => {
       if (a.id === this.actualUser[0].id) return -1;
       if (b.id === this.actualUser[0].id) return 1;
       return 0;
-
-
     })
+  }
+
+    get isDataLoaded(): boolean {
+    return this.actualUser && this.actualUser.length > 0 && this.userArray && this.userArray.length > 0;
+  }
+
+    ngOnDestroy(): void {
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
+    if (this.actualUserSubscription) {
+      this.actualUserSubscription.unsubscribe();
+    }
   }
 
 }

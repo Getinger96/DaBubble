@@ -47,11 +47,14 @@ export class ConversationService {
   lastAnswer: ConversationMessage | null = null;
   messageId?: string;
 
+  
+
   constructor(private mainservice: MainComponentService) {
     if (this.conversationId) {
       this.getInitialConvMessages(this.conversationId);
       this.observeSelectedUserChanges();
     }
+    
   }
 
   observeSelectedUserChanges() {
@@ -152,7 +155,7 @@ export class ConversationService {
         isInThread: messageData['isInThread'],
         threadTo: messageData['threadTo'],
         isOwn: isOwn,
-        conversationmessageId: ''
+        conversationmessageId: docSnap.id
       };
       convMessages.push(message);
     });

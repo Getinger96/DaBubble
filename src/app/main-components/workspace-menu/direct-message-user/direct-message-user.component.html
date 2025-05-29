@@ -1,9 +1,10 @@
 
-
-<div (click)="opendirectChat(user.id ,user.name,false,user.avatar,user.email,user.status)"  *ngFor="let user of userArray" class="user">
-    <div  class="profile">
+<div (click)="opendirectChat(user.id, user.name, false, user.avatar, user.email, user.status)" 
+     *ngFor="let user of userArray" 
+     class="user">
+    <div class="profile">
         <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
         <img class="status" src="assets/img/{{user.status}}.svg" alt="status">
     </div>
-    <p class="name">{{ user.name }}<span *ngIf="this.actualUser[0].id==user.id"> (Du)</span></p>
+    <p class="name">{{ user.name }}<span *ngIf="actualUser?.[0]?.id === user.id"> (Du)</span></p>
 </div>

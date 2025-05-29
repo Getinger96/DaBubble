@@ -70,7 +70,6 @@ export class DirectMessageChatComponent {
     setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0].name;
 
-
     // Initiale Konversation laden
     await this.initConversation();
 
@@ -187,7 +186,9 @@ handleClickOutside(event: MouseEvent) {
 
     this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
       this.allConversationMessages = liveMessages;
+
     });
+    this.scrollToBottom();
   }
 
   async addConversationMessage() {
