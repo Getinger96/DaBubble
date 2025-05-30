@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf, CommonModule } from '@angular/common';
 import { UserCardService } from '../active-user/services/user-card.service';
@@ -11,6 +11,7 @@ import { MainHelperService } from '../../services/main-helper.service';
 import { ProfileCardComponent } from '../profile-card/profile-card.component';
 import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { ThreadComponent } from '../thread/thread.component';
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -20,6 +21,8 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
   styleUrl: './direct-message-chat.component.scss'
 })
 export class DirectMessageChatComponent {
+  @Output() openThread = new EventEmitter<ConversationMessage>();
+  @Output() closeThread = new EventEmitter<void>();
   @Output() currentmessageUser: string = '';
   @Output() currentmessageEmail: string = '';
   @Output() currentmessageAvatar: any;
@@ -28,6 +31,7 @@ export class DirectMessageChatComponent {
   @Output() overlayvisible: boolean = false;
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild(ThreadComponent) threadComponent!: ThreadComponent;
   
   actualUser?: string;
   allConversationMessages: ConversationMessage[] = [];
@@ -78,6 +82,12 @@ export class DirectMessageChatComponent {
       await this.initConversation(); // Lade neue Konversation und Nachrichten
     });
   }
+
+
+  onReplyToMessage(message: ConversationMessage) {
+    this.openThread.emit(message);
+  }
+
 
   loadName() {
     this.mainservice.currentusermessageName$.subscribe(name => {
@@ -193,9 +203,11 @@ handleClickOutside(event: MouseEvent) {
 
   async addConversationMessage() {
     const currentUserId = this.mainservice.actualUser[0].id;
+    const currentUserName = this.mainservice.actualUser[0].name;
+    const currentUserAvatar = this.mainservice.actualUser[0].avatar;
 
     if (this.conversationId && this.newConvMessage.trim() !== '') {
-      await this.conversationservice.sendMessage(this.conversationId, currentUserId, this.newConvMessage);
+      await this.conversationservice.sendMessage(this.conversationId, currentUserId, this.newConvMessage, currentUserName, currentUserAvatar);
       this.newConvMessage = '';
     } else {
       console.log('Fehlende Daten:', this.conversationId, this.newConvMessage);

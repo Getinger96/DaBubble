@@ -1,7 +1,7 @@
 <div class="thread-wrapper">
     <div class="thread-header">
-        <div *ngIf="selectedMessage" class="thread-group">
-            <span class="fontNunito">Thread</span><img src="assets/img/tag-purple.png" alt="hashtag"><span class="thread-actual-group">{{selectedMessage.channelName}}</span>
+        <div class="thread-group">
+            <span class="fontNunito">Thread</span><img *ngIf="selectedMessage" src="assets/img/tag-purple.png" alt="hashtag"><span *ngIf="selectedMessage" class="thread-actual-group">{{selectedMessage.channelName}}</span>
         </div>
         <img class="close" src="assets/img/close.png" alt="close" (click)="closeThreads()">
     </div>
@@ -18,8 +18,7 @@
             [selectedMessageId]="selectedMessage.messageId"
             [selectedChannelId]="selectedMessage.channelId"
             >
-      
-            
+
          </app-message>
             <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span><div class="line"></div></div>
         </div>
@@ -38,6 +37,35 @@
             [channelIdThread]="answer.channelId"
             [threadAnswersId]="answer.messageId"
         ></app-message>
+        </div>
+    </div>
+
+        <div class="thread-feed" *ngIf="selectedConvMessage">
+        <div class="thread-message">
+         <app-direct-message
+            [avatarSrc]="selectedConvMessage.avatar"
+            [name]="selectedConvMessage.name"
+            [time]="this.formatTime(selectedConvMessage.timestamp)"
+            [messageText]="selectedConvMessage.text"
+            [isInThread]="true"
+            [isOwn]="selectedConvMessage.isOwn"
+            [emojiReactionsThead]="emojiReactions.get(selectedConvMessage.id)"
+            >
+         </app-direct-message>
+            <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedConvMessage.threadCount }} Antworten</span><div class="line"></div></div>
+        </div>
+        <div class="thread-answers" #threadFeed>
+             <app-direct-message *ngFor="let answer of threadConvAnswers, index as i"
+            [messageData]="answer"
+            [date]="answer.timestamp"
+            [avatarSrc]="answer.avatar"
+            [name]="answer.name"
+            [time]="answer.timestamp"
+            [messageText]="answer.text"
+            [isThread]="true"
+            [isOwn]="answer.isOwn"
+            [emojiReactionsThead]="emojiReactions.get(answer.id)"
+        ></app-direct-message>
         </div>
     </div>
     <div class="thread-input-wrapper">

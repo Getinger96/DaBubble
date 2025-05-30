@@ -1,5 +1,5 @@
 <div class="message-wrapper">
-    <div *ngIf="!dateExists" class="message-date-part">
+    <div *ngIf="!isInThread" class="message-date-part">
         <div class="date-row"></div>
         <span class="message-date fontNunito">{{ date }}</span>
     </div>
@@ -26,7 +26,7 @@
                 [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
                 <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
             </div>
-            <img class="change-color" src="assets/img/edit.png" alt="edit">
+            <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
         </div>
 
 

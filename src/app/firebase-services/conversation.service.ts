@@ -148,6 +148,9 @@ export class ConversationService {
       const isOwn = messageData['senderId'] === this.getActualUser();
       const message: ConversationMessage = {
         id: docSnap.id,
+        name: messageData['name'],
+        avatar: messageData['avatar'],
+        threadCount: messageData['threadCount'],
         senderId: messageData['senderId'],
         text: messageData['text'],
         timestamp: messageData['timestamp'],
@@ -157,51 +160,77 @@ export class ConversationService {
         isOwn: isOwn,
         conversationmessageId: docSnap.id
       };
-      convMessages.push(message);
+      if(message.isThread){
+        this.allMessages.push(message)
+      } else{
+        convMessages.push(message);
+      }
+      
+      
+    
     });
+      console.log('Thread Messages for this selected Message:', this.allMessages)
     return convMessages;
   }
 
   listenToMessages(
-    conversationId: string,
-    callback: (convMessages: ConversationMessage[]) => void
-  ): () => void {
-    const convMessageRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages'
-    );
-    const q = query(convMessageRef, orderBy('timestamp'));
+  conversationId: string,
+  callback: (convMessages: ConversationMessage[]) => void
+): () => void {
+  const convMessageRef = collection(
+    this.firestore,
+    'conversation',
+    conversationId,
+    'messages'
+  );
+  const q = query(convMessageRef, orderBy('timestamp'));
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const liveConvMessages: ConversationMessage[] = [];
-      const actualUserId = this.getActualUser();
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const liveConvMessages: ConversationMessage[] = [];
+    const liveThreadMessages: ConversationMessage[] = [];
+    const actualUserId = this.getActualUser();
 
-      snapshot.forEach((doc) => {
-        const messageData = doc.data();
-        const isOwn = messageData['senderId'] === actualUserId;
-        const message: ConversationMessage = {
-          id: doc.id,
-          senderId: messageData['senderId'],
-          text: messageData['text'],
-          timestamp: messageData['timestamp'],
-          isThread: messageData['isThread'],
-          isInThread: messageData['isInThread'],
-          threadTo: messageData['threadTo'],
-          isOwn: messageData['isOwn'],
-          conversationmessageId: messageData['conversationmessageId']
-        };
+    snapshot.forEach((doc) => {
+      const messageData = doc.data();
+      const isOwn = messageData['senderId'] === actualUserId;
+      const message: ConversationMessage = {
+        id: doc.id,
+        senderId: messageData['senderId'],
+        text: messageData['text'],
+        timestamp: messageData['timestamp'],
+        isThread: messageData['isThread'],
+        isInThread: messageData['isInThread'],
+        threadTo: messageData['threadTo'],
+        threadCount: messageData['threadCount'],
+        name: messageData['name'],
+        avatar: messageData['avatar'],
+        isOwn: isOwn,
+        conversationmessageId: messageData['conversationmessageId']
+      };
+      if (message.isThread) {
+        liveThreadMessages.push(message);
+      } else {
         liveConvMessages.push(message);
-      });
-
-      callback(liveConvMessages);
+      }
     });
 
-    return unsubscribe;
-  }
+    // Update both arrays!
+    this.allMessages = [...liveThreadMessages, ...liveConvMessages];
+    this.allConversationMessagesSubject.next(liveConvMessages);
 
-  async sendMessage(conversationId: string, senderId: string, text: string) {
+    // Update thread answers if a thread is currently selected
+    const selectedMessage = this.selectedThreadMessageSubject.value;
+    if (selectedMessage && selectedMessage.id) {
+      this.updateThreadAnswers(selectedMessage.id!);
+    }
+
+    callback(liveConvMessages);
+  });
+
+  return unsubscribe;
+}
+
+  async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
     const convMessageRef = collection(
       this.firestore,
       'conversation',
@@ -217,6 +246,9 @@ export class ConversationService {
       isThread: false,
       isInThread: false,
       threadTo: '',
+      threadCount: 0,
+      name,
+      avatar
     });
     const conversationmessageId = docRef.id;
     await updateDoc(docRef, { conversationmessageId });
@@ -266,6 +298,8 @@ export class ConversationService {
 
   getThreadAnswers(id: string): ConversationMessage[] {
     const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
+    console.log('All messages are:', this.allMessages)
+    console.log('Loaded ThreadAnswers are', threadAnswers)
     this.sortAllMessages(threadAnswers);
     const lastAnswer = threadAnswers[threadAnswers.length - 1];
     this.lastAnswer = lastAnswer;
@@ -298,6 +332,9 @@ export class ConversationService {
 
     const threadAnswer: ConversationMessage = {
       senderId: userId,
+      name:user.name,
+      avatar: user.avatar,
+      threadCount: 0,
       text: messageText,
       timestamp: new Date(),
       isOwn: true,

@@ -8,8 +8,8 @@
     <div class="body">
         <app-workspace-menu  [userArray]="allUsers" [actualUser]="actualUser"></app-workspace-menu>
         <main *ngIf="!this.mainservice.showdirectmessage"  class="chat-area">  <router-outlet></router-outlet></main>
-        <app-direct-message-chat *ngIf="this.mainservice.showdirectmessage"></app-direct-message-chat>
-        <app-thread *ngIf="selectedThreadMessage" [selectedMessage]="selectedThreadMessage"
+        <app-direct-message-chat *ngIf="this.mainservice.showdirectmessage" (openThread)="openThreadForConversationMessage($event)"  (closeThread)="closeThreadView()"></app-direct-message-chat>
+        <app-thread *ngIf="selectedThreadMessage || selectedConvThreadMessage" [selectedMessage]="selectedThreadMessage" [selectedConvMessage]="selectedConvThreadMessage"
             (closeThread)="closeThreadView()"></app-thread>
     </div>
     <app-toggle-webspace-menu></app-toggle-webspace-menu>

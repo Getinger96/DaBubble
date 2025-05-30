@@ -19,6 +19,8 @@ import { MainComponentService } from '../firebase-services/main-component.servic
 import { Router, NavigationStart,RouterModule } from '@angular/router';
 import { DirectMessageChatComponent } from "./direct-message-chat/direct-message-chat.component";
 import { ChannelMessageService } from '../firebase-services/channel-message.service';
+import { ConversationMessage } from '../interfaces/conversation-message.interface';
+import { ConversationService } from '../firebase-services/conversation.service';
 
 @Component({
   selector: 'app-main-components',
@@ -41,9 +43,10 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   showThreadWindow: boolean = false;
   showdirectmessage:boolean=false;
   actualUser: User[] = [];
-  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService) {
+  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService) {
   }
   selectedThreadMessage: Message | null = null;
+  selectedConvThreadMessage: ConversationMessage | null = null;
   
 
 
@@ -57,27 +60,39 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    this.channemessageService.selectedThreadMessage$.subscribe((message) => {
+    if(this.mainservice.showdirectmessage){
+      this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
+        this.selectedConvThreadMessage = message;
+      })
+    } else {
+        this.channemessageService.selectedThreadMessage$.subscribe((message) => {
       this.selectedThreadMessage = message;
     });
+    }
       this.initchanelSubscription();
       this.initRouterSubscription();
       this.loadActualUser();
   }
 
+  openThreadForConversationMessage(message: ConversationMessage): void {
+  this.selectedConvThreadMessage = message;
+  this.showThreadWindow = true;
+  MainComponentsComponent.toggleThreads();
+  this.conversationMessage.openThread(message); //
+}
 
   openThreadForMessage(message: Message):void {
     this.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = message;
     this.channemessageService.openThread(message);
-
   }
 
   closeThreadView(): void {
     this.showThreadWindow = false;
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = null;
+    this.selectedConvThreadMessage = null;
   }
 
   static toggleThreads():void {
@@ -87,10 +102,6 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-
-  
   initchanelSubscription() {
     this.chanelSubscription = this.mainhelperService.openChannel$.subscribe(open=> {
       if (open) {

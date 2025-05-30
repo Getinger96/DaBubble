@@ -31,6 +31,8 @@ export class MainChatComponent {
   newConvMessage: string = '';
   actualUser: User[] = [];
   currentUserId = this.actualUser[0].id;
+  currentUserName = this.actualUser[0].name;
+  currentUserAvatar = this.actualUser[0].avatar;
   partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
   private allMessageSubscription!: Subscription; 
   private actualUserSubscription!: Subscription;
@@ -77,6 +79,9 @@ export class MainChatComponent {
     conversationmessageId:'',
     isThread: false,
     isInThread: false,
+    threadCount: 0,
+    name: '',
+    avatar: 0,
     threadTo: ''
   }
   static actualUser: any;
@@ -200,7 +205,7 @@ export class MainChatComponent {
 
   async addConversationMessage(){
       if (this.conversationId && this.newConvMessage.trim() !== '') {
-      await this.conversationservice.sendMessage(this.conversationId, this.currentUserId, this.newConvMessage);
+      await this.conversationservice.sendMessage(this.conversationId, this.currentUserId, this.newConvMessage, this.currentUserName, this.currentUserAvatar);
       console.log('Success')
       this.newConvMessage = '';
     } else {

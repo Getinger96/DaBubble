@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, NgModule, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, NgModule, Output, ViewChild } from '@angular/core';
 import { MessageComponent } from '../message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
@@ -8,6 +8,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { Subscription } from 'rxjs';
 import { ConversationService } from '../../firebase-services/conversation.service';
 import { FormsModule } from '@angular/forms';
+import { ThreadComponent } from '../../main-components/thread/thread.component';
 
 @Component({
   selector: 'app-direct-message',
@@ -17,6 +18,9 @@ import { FormsModule } from '@angular/forms';
   styleUrl: '../message/message.component.scss',
 })
 export class DirectMessageComponent {
+  @Output() replyClicked = new EventEmitter<ConversationMessage>();
+  @Output() closeThreadRequested = new EventEmitter<void>();
+
   @Input() messageData: ConversationMessage | undefined;
   @Input() date!: Date | string;
   @Input() avatarSrc!: number;
@@ -28,8 +32,9 @@ export class DirectMessageComponent {
   @Input() isThread: boolean | undefined = false;
   @Input() isInThread: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
+  
 
-
+  @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
@@ -208,8 +213,12 @@ export class DirectMessageComponent {
   // Thread functionality
   onReplyClick(): void {
     if (this.messageData) {
+      this.replyClicked.emit(this.messageData);
+      console.log('Message data is:', this.messageData)
       this.conversationservice.openThread(this.messageData);
       this.loadThreadAnswers();
+    } else {
+      console.error(this.messageData, 'not found')
     }
   }
 

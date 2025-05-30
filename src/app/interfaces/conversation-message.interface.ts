@@ -2,12 +2,16 @@ export class ConversationMessage {
     id: string;
     senderId: string;
     text: string;
-    timestamp: Date;
+    timestamp: Date | string;
     isOwn: boolean;
     conversationmessageId:string;
     isThread: boolean;
     isInThread: boolean;
     threadTo: string;
+    threadCount: number;
+    avatar: number;
+    name: string;
+
 
     constructor(obj?:any){
         this.id = obj ? obj.id : ''
@@ -19,5 +23,9 @@ export class ConversationMessage {
         this.isThread = obj ? obj.isThread : false;
         this.isInThread = obj ? obj.isInThread : false;
         this.threadTo = obj ? obj.threadTo: '';
+        this.threadCount = obj ? obj.threadCount: 0;
+        this.avatar = obj ? obj.avatar: 0;
+        this.name = obj ? obj.name: '';
+
     }
 }
