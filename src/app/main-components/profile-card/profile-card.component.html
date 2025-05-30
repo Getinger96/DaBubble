@@ -1,27 +1,26 @@
-<div div *ngIf="profilecardservice.overlayActive$ | async" class="overlay-bg" (click)="this.profilecardservice.closeProfileCard()">
-
+<div *ngIf="isReady && (profilecardservice.overlayActive$ | async)" class="overlay-bg" (click)="profilecardservice.closeProfileCard()">
     <div class="profile-Container">
         <div class="container-Header">
             <span>Profil</span>
             <img (click)="this.profilecardservice.closeProfileCard()" src="assets/img/close.png" alt="close">
         </div>
         <div class="container-img">
-            <img  src="assets/img/avatar_large_{{ currentmessageAvatar }}.png" alt="avatar">
+            <img  src="assets/img/avatar_large_{{ avatar }}.png" alt="avatar">
         </div>
         <div class="container-Name">
-            <span>{{ currentmessageUser }}</span>
+            <span>{{ user }}</span>
 
         </div>
         <div class="container-Status">
-            <img  src="assets/img/{{ currentmessageStatus }}.svg" alt="">
-            <span [ngClass]="currentmessageStatus === 'Online' ? 'status-online' : 'status-offline'" >{{ currentmessageStatus }}</span>
+            <img  src="assets/img/{{ status }}.svg" alt="">
+            <span [ngClass]="status === 'Online' ? 'status-online' : 'status-offline'" >{{ status }}</span>
         </div>
         <div class="container-Email">
             <div class="email-Header">
                 <img src="assets/img/mail.svg" alt="mail-icon">
                 <span>E-Mail-Adresse</span>
             </div>
-          <a href="mailto:{{ currentmessageEmail }}">{{ currentmessageEmail }}</a>
+          <a href="mailto:{{ email }}">{{ email }}</a>
 
         </div>
 

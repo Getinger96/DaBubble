@@ -244,6 +244,12 @@
             .message-name {
                 font-weight: 700;
                 font-size: 18px;
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                    color: #535AF1;
+                }
             }
 
             .message-time {

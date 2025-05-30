@@ -1,5 +1,6 @@
 
- <app-profile-card *ngIf="profilecardservice.overlayActive$ | async"  [currentmessageUser]="userName"  [currentUserId]="userId" [currentmessageAvatar]="userAvatar" [currentmessageStatus]="userStatus" [currentmessageEmail]="userEmail" ></app-profile-card>
+ <app-profile-card *ngIf="userDataReady$ | async"  [currentmessageUser]="userName"  [currentUserId]="userId" [currentmessageAvatar]="userAvatar" [currentmessageStatus]="userStatus" [currentmessageEmail]="userEmail"
+    (profileClosed)="handleProfileClosed()"></app-profile-card>
 
 
 <div class="message-wrapper">
@@ -10,7 +11,7 @@
         </span>
     </div>
     <div [ngClass]="{'reverse': isOwn && !isInThread}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
-        class="message" (click)="this.profilecardservice.openProfileCard()" (click)="openProfil(userId)">
+        class="message">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup"
             [ngClass]="{ 'show': showEmojiPicker }">
 
@@ -50,7 +51,9 @@
         <img [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'}:{}" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
             alt="">
         <div class="message-details" *ngIf="!editMessage">
-            <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }}
+            <div class="message-over" ><span class="message-name"
+                 (click)="(isThread || isInThread && selectedUserId) ? openProfil(selectedUserId) : (!isThread && messageData?.id ? openProfil(messageData!.id) : null)"
+            >{{ name }} </span><span class="message-time">{{ time }}
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">

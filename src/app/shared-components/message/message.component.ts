@@ -5,12 +5,13 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest, BehaviorSubject  } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ProfileCardComponent } from '../../main-components/profile-card/profile-card.component';
 import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service'; 
+import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-message',
   standalone: true,
@@ -39,6 +40,7 @@ export class MessageComponent implements OnChanges {
   @Input() channelID!: string;
   @Input() selectedMessageId!: string;
   @Input() selectedChannelId!: string;
+  @Input() selectedUserId!: string;
   @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
@@ -64,6 +66,8 @@ export class MessageComponent implements OnChanges {
   userAvatar!: number | null;
   userName!:string
   message: Message[] = [];
+  userDataReady$ = new BehaviorSubject<boolean>(false);
+
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService   ) { 
      
   }
@@ -259,36 +263,48 @@ loadEmojisForThreadAnswers(): void {
 const userMemberId = userId
  await this.mainService.getUserDataFromFirebase(userMemberId) 
   this.loadCurrentUser();
-
   } 
 async openProfil(userId: string) {
+
+   if (!userId) return;
   await this.getUser(userId);
 }
 
 
 loadCurrentUser() {
-      this.mainService.userStatus$.subscribe(status => {
-      this.userStatus = status;
-    });
+  combineLatest([
+    this.mainService.userStatus$,
+    this.mainService.userEmail$,
+    this.mainService.userName$,
+    this.mainService.userId$,
+    this.mainService.userAvatar$
+  ])
+  .pipe(take(1))  // ⬅️ Nur einmal abrufen
+  .subscribe(([status, email, name, id, avatar]) => {
+    this.userStatus = status;
+    this.userEmail = email;
+    this.userName = name;
+    this.userId = id;
+    this.userAvatar = avatar;
 
-      this.mainService.userEmail$.subscribe(email => {
-      this.userEmail = email;
-    });
-
-       this.mainService.userName$.subscribe(name => {
-      this.userName = name;
-    });
+  this.resetProfileCard(); 
+  });
 
 
-        this.mainService.userId$.subscribe(id => {
-      this.userId = id;
-    });
+  this.profilecardservice.openProfileCard();
+  
+}
 
-        this.mainService.userAvatar$.subscribe(avatar=> {
 
-           this.userAvatar = avatar;
-        
-    });
-} 
+resetProfileCard() {
+  this.userDataReady$.next(false); 
+  setTimeout(() => {
+    this.userDataReady$.next(true); 
+  }, 0); 
+}
+
+handleProfileClosed() {
+  this.userDataReady$.next(false); 
+}
  
 }

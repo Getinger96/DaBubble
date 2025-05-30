@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Component, Input, Output, EventEmitter, } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileCardOverlayService {
 
   overlayActive$ = new BehaviorSubject<boolean>(false);
+  @Output() profileClosed = new EventEmitter<void>();
 
   constructor() { }
 
@@ -14,7 +16,8 @@ export class ProfileCardOverlayService {
   }
 
   closeProfileCard() {
-   this.overlayActive$.next(false);
+  this.profileClosed.emit();
+  this.overlayActive$.next(false);
   }
 
 }
