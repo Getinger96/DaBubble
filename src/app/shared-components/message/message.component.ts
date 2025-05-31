@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter,OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit  } from '@angular/core';
+import { Component, Input, Output, EventEmitter,OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit, inject  } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
+import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 import { MainComponentService } from '../../firebase-services/main-component.service'; 
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
@@ -9,13 +12,13 @@ import { Subscription, combineLatest, BehaviorSubject  } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { ProfileCardComponent } from '../../main-components/profile-card/profile-card.component';
+import { ProfilCardComponent } from './profil-card/profil-card.component'; 
 import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service'; 
 import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule, PickerComponent, ProfileCardComponent],
+  imports: [CommonModule, PickerComponent,  MatCardModule, MatButtonModule  ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -37,6 +40,7 @@ export class MessageComponent implements OnChanges {
   @Input() lastAnswerDate!: string;
   @Input() channelIdThread!: string;
   @Input() threadAnswersId!: string
+  @Input() threadAnswersUserId!:string
   @Input() channelID!: string;
   @Input() selectedMessageId!: string;
   @Input() selectedChannelId!: string;
@@ -64,9 +68,11 @@ export class MessageComponent implements OnChanges {
   userStatus!: string
   userEmail!: string
   userAvatar!: number | null;
+    readonly dialog = inject(MatDialog);
   userName!:string
   message: Message[] = [];
   userDataReady$ = new BehaviorSubject<boolean>(false);
+  profileCardKey = '';
 
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService   ) { 
      
@@ -261,8 +267,9 @@ loadEmojisForThreadAnswers(): void {
 
   async getUser(userId: string) {
 const userMemberId = userId
- await this.mainService.getUserDataFromFirebase(userMemberId) 
-  this.loadCurrentUser();
+await this.mainService.getUserDataFromFirebase(userMemberId) 
+this.loadCurrentUser();
+this.openDialog();
   } 
 async openProfil(userId: string) {
 
@@ -287,24 +294,44 @@ loadCurrentUser() {
     this.userId = id;
     this.userAvatar = avatar;
 
+
+
   this.resetProfileCard(); 
   });
-
-
-  this.profilecardservice.openProfileCard();
   
 }
 
 
 resetProfileCard() {
-  this.userDataReady$.next(false); 
+  this.userDataReady$.next(false);
   setTimeout(() => {
-    this.userDataReady$.next(true); 
-  }, 0); 
+    this.userDataReady$.next(true);
+  }, 50);  
 }
 
 handleProfileClosed() {
   this.userDataReady$.next(false); 
 }
+
+
+  openDialog() {
+      if (!this.userName || !this.userEmail || !this.userStatus) {
+    console.warn('Benutzerdaten unvollständig – Dialog nicht geöffnet');
+    return;
+  }
+    const dialogRef = this.dialog.open(ProfilCardComponent, {
+      data: {
+        userStatus: this.userStatus,
+        userEmail: this.userEmail,
+        userName: this.userName,
+        userId: this.userId,
+        userAvatar: this.userAvatar,
+      },
+      panelClass: 'another-dialog-position'
+    });
+      dialogRef.componentInstance.showProfilCard.subscribe(() => {
+        dialogRef.close();
+    });
+  }
  
 }

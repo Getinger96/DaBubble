@@ -162,7 +162,7 @@ loadReaction() {
       }
       
     );
-      console.log('this.threadAnswers', this.threadAnswers);
+      console.log('this.threadAnswers', this.threadAnswers, this.threadAnswers[0].id);
   });
 
   

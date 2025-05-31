@@ -1,7 +1,4 @@
 
- <app-profile-card *ngIf="userDataReady$ | async"  [currentmessageUser]="userName"  [currentUserId]="userId" [currentmessageAvatar]="userAvatar" [currentmessageStatus]="userStatus" [currentmessageEmail]="userEmail"
-    (profileClosed)="handleProfileClosed()"></app-profile-card>
-
 
 <div class="message-wrapper">
     <div *ngIf="!isInThread && !dateExists" class="message-date-part">
@@ -52,7 +49,8 @@
             alt="">
         <div class="message-details" *ngIf="!editMessage">
             <div class="message-over" ><span class="message-name"
-                 (click)="(isThread || isInThread && selectedUserId) ? openProfil(selectedUserId) : (!isThread && messageData?.id ? openProfil(messageData!.id) : null)"
+            (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
+            : null): ( !isThread && messageData?.id? openProfil(messageData!.id): null )"
             >{{ name }} </span><span class="message-time">{{ time }}
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>

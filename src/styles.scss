@@ -30,13 +30,6 @@ h1, h2, h3, h4, h5, h6, p, span {
   margin: 0;
   padding: 0;
 }
-::ng-deep .another-dialog-position .mdc-dialog__container, .mat-mdc-dialog-container .mdc-dialog__surface {
-  position: absolute;
-  top: 25%;
-  right: 6%;
-  width: 430px;
-  height: 600px;
-}
 
 
 

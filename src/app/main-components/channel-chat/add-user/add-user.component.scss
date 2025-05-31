@@ -262,3 +262,11 @@ body::-webkit-scrollbar {
     height: 90px !important;
   }
   
+
+  ::ng-deep .another-dialog-position .mdc-dialog__container, .mat-mdc-dialog-container .mdc-dialog__surface {
+  position: absolute;
+  top: 25%;
+  right: 6%;
+  width: 430px;
+  height: 600px;
+}
