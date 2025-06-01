@@ -5,7 +5,7 @@ import { User } from '../../../interfaces/user.interface';
 import { ActivatedRoute } from '@angular/router';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { ChannelService } from '../../../firebase-services/channel.service';
-
+import { ChannelMessageService } from '../../../firebase-services/channel-message.service'; 
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +25,7 @@ export class UserCardService {
   private firestore = inject(Firestore)
 
   constructor(
-    private mainservice:MainComponentService, private channelService: ChannelService
+    private mainservice:MainComponentService, private channelService: ChannelService, private channelMessageService: ChannelMessageService
   ) 
   {
       this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
@@ -42,15 +42,16 @@ export class UserCardService {
   async saveName(nameInput:string, nameBefore:string): Promise<void> {
 
     if (nameBefore) {
-      
-    
     console.log(nameInput, this.userId, nameBefore);
     const userDocRef = doc(this.firestore, `Users/${this.userId}`);
     await updateDoc(userDocRef, { name: nameInput });
     this.mainservice.subList();
     this.channelService.subChannelList();
     this.channelService.updateUserNameInChannels(nameInput, nameBefore )
-    
+
+    if (this.userId) {
+      this.channelMessageService.updateName(nameInput, this.userId, nameBefore)
+        }
   }
 }
 }

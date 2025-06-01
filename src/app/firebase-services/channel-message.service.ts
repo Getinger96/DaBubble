@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { Firestore, collection, QuerySnapshot, getDocs, addDoc, updateDoc, doc, DocumentData, onSnapshot, Query, deleteDoc, query, where, getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, QuerySnapshot, getDocs, addDoc, updateDoc, doc,collectionGroup, DocumentData, writeBatch, onSnapshot, Query, deleteDoc, query, where, getDoc } from '@angular/fire/firestore';
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
 import { MainComponentService } from './main-component.service';
@@ -393,10 +393,41 @@ export class ChannelMessageService {
     this.allMessagesSubject.next(this.allMessages);
   }
 
+async updateName(nameInput: string, userId: string, nameBefore: string) {
+  const channelsRef = collection(this.firestore, 'Channels');
+  const channelsSnapshot = await getDocs(channelsRef);
+
+  console.log(`Channels found: ${channelsSnapshot.size}`);
+
+  for (const channelDoc of channelsSnapshot.docs) {
+    const messagesRef = collection(this.firestore, 'Channels', channelDoc.id, 'messages');
+    const q = query(
+      messagesRef,
+      where('id', '==', userId),
+      where('name', '==', nameBefore)
+    );
+    const messagesSnapshot = await getDocs(q);
+
+    console.log(`Channel ${channelDoc.id}: Messages matching criteria: ${messagesSnapshot.size}`);
+
+    for (const messageDoc of messagesSnapshot.docs) {
+      const messageDocRef = doc(this.firestore, 'Channels', channelDoc.id, 'messages', messageDoc.id);
+      await updateDoc(messageDocRef, { name: nameInput });
+      console.log(`Updated message ${messageDoc.id} in channel ${channelDoc.id}`);
+    }
+    this.subList(channelDoc.id,)
+    this.loadAllMessagesFromAllChannels();
+  }
+
+
+   
+  }
+
+
+
+
+
 }
-
-
-
 
 
 

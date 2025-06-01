@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp } from '@angular/fire/firestore';
+import { addDoc, collection, doc, getDocs, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
 import { BehaviorSubject, timestamp } from 'rxjs';
@@ -43,6 +43,7 @@ export class ChannelService {
             this.actualUser = actualuser;
 
         });
+     
     }
 
     subChannelList() {
@@ -287,5 +288,7 @@ async addsubcolecctiontoChannel(docref:string){
             status: user.status
         }
     }
+
+
 
 }
