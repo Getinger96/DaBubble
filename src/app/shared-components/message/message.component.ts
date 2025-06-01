@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter,OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit, inject  } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit, inject } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import { MainComponentService } from '../../firebase-services/main-component.service'; 
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MainComponentService } from '../../firebase-services/main-component.service';
 import { Message } from '../../interfaces/message.interface';
 import { DatePipe } from '@angular/common';
 import { MainComponentsComponent } from '../../main-components/main-components.component';
-import { Subscription, combineLatest, BehaviorSubject  } from 'rxjs';
+import { Subscription, combineLatest, BehaviorSubject } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { ProfilCardComponent } from './profil-card/profil-card.component'; 
-import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service'; 
+import { ProfilCardComponent } from './profil-card/profil-card.component';
+import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service';
 import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule, PickerComponent,  MatCardModule, MatButtonModule  ],
+  imports: [CommonModule, PickerComponent, MatCardModule, MatButtonModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -40,12 +40,12 @@ export class MessageComponent implements OnChanges {
   @Input() lastAnswerDate!: string;
   @Input() channelIdThread!: string;
   @Input() threadAnswersId!: string
-  @Input() threadAnswersUserId!:string
+  @Input() threadAnswersUserId!: string
   @Input() channelID!: string;
   @Input() selectedMessageId!: string;
   @Input() selectedChannelId!: string;
   @Input() selectedUserId!: string;
-  @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
+  @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } };
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
@@ -63,24 +63,24 @@ export class MessageComponent implements OnChanges {
   showEmojiPicker: boolean = false;
   showEmojiPickerThread: boolean = false;
   hover = false;
-  currentChannelId?:string
+  currentChannelId?: string
   userId!: string
   userStatus!: string
   userEmail!: string
   userAvatar!: number | null;
-    readonly dialog = inject(MatDialog);
-  userName!:string
+  readonly dialog = inject(MatDialog);
+  userName!: string
   message: Message[] = [];
   userDataReady$ = new BehaviorSubject<boolean>(false);
   profileCardKey = '';
 
-  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService   ) { 
-     
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService) {
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.messageData) {
-     this.date=this.messageData.sendAt
+      this.date = this.messageData.sendAt
       this.avatarSrc = this.messageData.avatar || this.avatarSrc;
       this.name = this.messageData.name || this.name;
       this.time = this.messageData.sendAtTime;
@@ -96,15 +96,15 @@ export class MessageComponent implements OnChanges {
       this.threadAnswersId = this.messageData.messageId;
       this.channelIdThread = this.messageData.channelId;
       this.userId = this.messageData.id
-      console.log('wthis.threadAnswersId,this.channelIdThreader',this.threadAnswersId,this.channelIdThread );
-      
+      console.log('wthis.threadAnswersId,this.channelIdThreader', this.threadAnswersId, this.channelIdThread);
+
       this.channelmessageService.getReactionsForMessage(
         this.messageData.channelId,
         this.messageData.messageId,
         (reactionMap) => {
           this.emojiReactions = reactionMap;
           console.log(this.emojiReactions);
-          
+
         }
       );
       const lastAnswer = this.channelmessageService.getLastAnswer(this.messageData);
@@ -121,12 +121,12 @@ export class MessageComponent implements OnChanges {
 
   }
 
-    loadAllMessageInChannel() {
+  loadAllMessageInChannel() {
     this.channelmessageService.allMessages$.subscribe(Message => {
       this.allMessages = Message;
     });
   }
-  
+
 
 
 
@@ -134,23 +134,23 @@ export class MessageComponent implements OnChanges {
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-  const clickedInsideEmoji =
-  (this.emojiComponent?.nativeElement && this.emojiComponent.nativeElement.contains(target)) ||
-  (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
-  (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
+    const clickedInsideEmoji =
+      (this.emojiComponent?.nativeElement && this.emojiComponent.nativeElement.contains(target)) ||
+      (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
+      (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
 
-    console.log('this.emojiComponent?',this.emojiComponent);
+    console.log('this.emojiComponent?', this.emojiComponent);
 
 
-    const clickedInsideEmojiThread = 
+    const clickedInsideEmojiThread =
       this.emojiThreadMask?.nativeElement.contains(target) || this.emojiThread?.nativeElement.contains(target)
-    
+
 
     if (!clickedInsideEmoji) {
       this.showEmojiPicker = false;
     }
 
-      if (!clickedInsideEmojiThread) {
+    if (!clickedInsideEmojiThread) {
       this.showEmojiPickerThread = false;
     }
 
@@ -159,53 +159,54 @@ export class MessageComponent implements OnChanges {
 
 
 
-onReplyClick(): void {
-  if (this.messageData) {
-    this.channelmessageService.openThread(this.messageData);
-    this.loadThreadAnswers();
-  }
-}
-
-
-
-
-
-
-
-loadThreadAnswers(): void {
-  this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
-    (messages) => {
-      if (this.messageData) {
-        // Thread-Antworten filtern und setzen
-        this.threadAnswers = this.channelmessageService.getThreadAnswers(this.messageData.messageId);
-
-        // Emojis für jede Thread-Antwort laden
-        this.loadEmojisForThreadAnswers();
-
-        this.channelmessageService.updateThreadAnswers(this.messageData.messageId);
-
-        this.lastAnswerDate =
-          (this.messageService?.lastAnswer?.sendAtTime ?? '') +
-          (this.messageService?.lastAnswer?.sendAt ?? '');
-      }
+  onReplyClick(): void {
+    if (this.messageData) {
+      this.channelmessageService.openThread(this.messageData);
+      this.loadThreadAnswers();
     }
-  );
-}
+  }
 
-loadEmojisForThreadAnswers(): void {
-  if (!this.threadAnswers || this.threadAnswers.length === 0) return;
 
-  this.threadAnswers.forEach(msg => {
-    this.channelmessageService.getReactionsForMessage(
-      msg.channelId,
-      msg.messageId,
-      (reactionMap) => {
-        // Hier die Reaktionen dem jeweiligen Thread-Message-Objekt hinzufügen
-    (msg as any)['emojiReactions'] = reactionMap;
+
+
+
+
+
+  loadThreadAnswers(): void {
+    this.allThreadsSubscription = this.channelmessageService.allMessages$.subscribe(
+      (messages) => {
+        if (this.messageData) {
+          // Thread-Antworten filtern und setzen
+          this.threadAnswers = this.channelmessageService.getThreadAnswers(this.messageData.messageId);
+
+          // Emojis für jede Thread-Antwort laden
+          this.loadEmojisForThreadAnswers();
+
+          this.channelmessageService.updateThreadAnswers(this.messageData.messageId);
+
+          const lastAnswer = this.messageService?.lastAnswer;
+          if (lastAnswer?.sendAtTime && lastAnswer?.sendAt) {
+            this.lastAnswerDate = `${lastAnswer.sendAtTime} ${lastAnswer.sendAt}`;
+          }
+        }
       }
     );
-  });
-}
+  }
+
+  loadEmojisForThreadAnswers(): void {
+    if (!this.threadAnswers || this.threadAnswers.length === 0) return;
+
+    this.threadAnswers.forEach(msg => {
+      this.channelmessageService.getReactionsForMessage(
+        msg.channelId,
+        msg.messageId,
+        (reactionMap) => {
+          // Hier die Reaktionen dem jeweiligen Thread-Message-Objekt hinzufügen
+          (msg as any)['emojiReactions'] = reactionMap;
+        }
+      );
+    });
+  }
 
 
 
@@ -215,7 +216,7 @@ loadEmojisForThreadAnswers(): void {
 
 
   showEmojiBarThread() {
-        this.showEmojiPickerThread = !this.showEmojiPickerThread;
+    this.showEmojiPickerThread = !this.showEmojiPickerThread;
   }
 
   overwriteMessage() {
@@ -226,7 +227,7 @@ loadEmojisForThreadAnswers(): void {
 
   closeEditPopup() {
     this.editMessage = false;
-   this.showEditPopup = false;
+    this.showEditPopup = false;
   }
 
 
@@ -238,25 +239,25 @@ loadEmojisForThreadAnswers(): void {
 
 
   addEmoji(event: any, channelID: string, messageId?: string) {
-  const emoji = event.emoji?.native || event;
-        if (!messageId) return;
- this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
+    const emoji = event.emoji?.native || event;
+    if (!messageId) return;
+    this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
   }
 
   handleEmojiClick(event: any,): void {
-  const emoji = event.emoji?.native || event;
+    const emoji = event.emoji?.native || event;
 
-  const messageId = this.threadAnswersId ?? this.messageData?.messageId ?? this.selectedMessageId;
-  const channelId = this.channelIdThread ?? this.messageData?.channelId ?? this.selectedChannelId;
+    const messageId = this.threadAnswersId ?? this.messageData?.messageId ?? this.selectedMessageId;
+    const channelId = this.channelIdThread ?? this.messageData?.channelId ?? this.selectedChannelId;
 
-  if (!messageId || !channelId) {
-    console.warn('Missing messageId or channelId for emoji reaction', { messageId, channelId });
-    return;
+    if (!messageId || !channelId) {
+      console.warn('Missing messageId or channelId for emoji reaction', { messageId, channelId });
+      return;
+    }
+
+    this.channelmessageService.addEmojiInMessage(emoji, channelId, messageId);
+    this.showEmojiPickerThread = false;
   }
-
-  this.channelmessageService.addEmojiInMessage(emoji, channelId, messageId);
-  this.showEmojiPickerThread = false;
-}
 
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {
@@ -266,59 +267,59 @@ loadEmojisForThreadAnswers(): void {
 
 
   async getUser(userId: string) {
-const userMemberId = userId
-await this.mainService.getUserDataFromFirebase(userMemberId) 
-this.loadCurrentUser();
-this.openDialog();
-  } 
-async openProfil(userId: string) {
+    const userMemberId = userId
+    await this.mainService.getUserDataFromFirebase(userMemberId)
+    this.loadCurrentUser();
+    this.openDialog();
+  }
+  async openProfil(userId: string) {
 
-   if (!userId) return;
-  await this.getUser(userId);
-}
-
-
-loadCurrentUser() {
-  combineLatest([
-    this.mainService.userStatus$,
-    this.mainService.userEmail$,
-    this.mainService.userName$,
-    this.mainService.userId$,
-    this.mainService.userAvatar$
-  ])
-  .pipe(take(1))  // ⬅️ Nur einmal abrufen
-  .subscribe(([status, email, name, id, avatar]) => {
-    this.userStatus = status;
-    this.userEmail = email;
-    this.userName = name;
-    this.userId = id;
-    this.userAvatar = avatar;
+    if (!userId) return;
+    await this.getUser(userId);
+  }
 
 
+  loadCurrentUser() {
+    combineLatest([
+      this.mainService.userStatus$,
+      this.mainService.userEmail$,
+      this.mainService.userName$,
+      this.mainService.userId$,
+      this.mainService.userAvatar$
+    ])
+      .pipe(take(1))  // ⬅️ Nur einmal abrufen
+      .subscribe(([status, email, name, id, avatar]) => {
+        this.userStatus = status;
+        this.userEmail = email;
+        this.userName = name;
+        this.userId = id;
+        this.userAvatar = avatar;
 
-  this.resetProfileCard(); 
-  });
-  
-}
 
 
-resetProfileCard() {
-  this.userDataReady$.next(false);
-  setTimeout(() => {
-    this.userDataReady$.next(true);
-  }, 50);  
-}
+        this.resetProfileCard();
+      });
 
-handleProfileClosed() {
-  this.userDataReady$.next(false); 
-}
+  }
+
+
+  resetProfileCard() {
+    this.userDataReady$.next(false);
+    setTimeout(() => {
+      this.userDataReady$.next(true);
+    }, 50);
+  }
+
+  handleProfileClosed() {
+    this.userDataReady$.next(false);
+  }
 
 
   openDialog() {
-      if (!this.userName || !this.userEmail || !this.userStatus) {
-    console.warn('Benutzerdaten unvollständig – Dialog nicht geöffnet');
-    return;
-  }
+    if (!this.userName || !this.userEmail || !this.userStatus) {
+      console.warn('Benutzerdaten unvollständig – Dialog nicht geöffnet');
+      return;
+    }
     const dialogRef = this.dialog.open(ProfilCardComponent, {
       data: {
         userStatus: this.userStatus,
@@ -329,9 +330,9 @@ handleProfileClosed() {
       },
       panelClass: 'another-dialog-position'
     });
-      dialogRef.componentInstance.showProfilCard.subscribe(() => {
-        dialogRef.close();
+    dialogRef.componentInstance.showProfilCard.subscribe(() => {
+      dialogRef.close();
     });
   }
- 
+
 }

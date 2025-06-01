@@ -254,9 +254,13 @@ export class ChannelChatComponent implements OnInit {
     console.log('📦 Alle geladenen Nachrichten aus dem Service:', messages);
 
     const filtered = messages.filter(message => !!message.messageText?.trim());
-    this.allMessages = filtered.filter(message => !message.isThread && message.channelId === channelId);
-    this.allThreads = filtered.filter(message => message.isThread && message.channelId === channelId);
+    this.allMessages = filtered
+  .filter(message => !message.isThread && message.channelId === channelId)
+  .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)); // ⬅ Sortierung nach Zeit
 
+this.allThreads = filtered
+  .filter(message => message.isThread && message.channelId === channelId)
+  .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)); // optional
     console.log('✅ Gefilterte Nachrichten für diesen Channel:', this.allMessages);
   });
 }
