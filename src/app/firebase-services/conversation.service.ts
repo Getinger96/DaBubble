@@ -17,8 +17,9 @@ import {
 } from '@angular/fire/firestore';
 import { Conversation } from '../interfaces/conversation.interface';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timestamp } from 'rxjs';
 import { MainComponentService } from './main-component.service';
+import { User } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -468,6 +469,94 @@ export class ConversationService {
     });
   }
 
+ async addThread(message: ConversationMessage) {
+    try {
+      if (!this.conversationId) {
+        throw new Error('conversationId is undefined');
+      }
+      const conversationDocRef = doc(this.firestore, 'conversation', this.conversationId);
+      const messagesRef = collection(conversationDocRef, 'messages');
+      const Userid = this.getActualUser()
+      const docRef = await addDoc(messagesRef, this.convThreadJson(message, Userid))
+      const messageId = docRef.id;
+      await updateDoc(docRef, { messageId });
+      return messageId;
+    } catch (error) {
+      console.error('Error adding message:', error);
+      return null
+    }
+
+  }
+
+
+async addConvThreadAnswer(messageText: string, threadToId: string, selectedMessage: ConversationMessage) {
+    const userId = this.getActualUser();
+    const user = this.mainservice.actualUser[0];
+    const threadAnswer: ConversationMessage = this.convMessageJSON(user, messageText, threadToId, userId)
+    const answerId = await this.addThread(threadAnswer);
+    if (answerId) {
+      threadAnswer.id = answerId;
+      console.log('Thread created with', answerId);
+    }
+
+    await this.updateConvMessageThreadCount(threadToId, selectedMessage.id);
+
+    this.allConversationMessagesSubject.next(this.allMessages);
+  }
+
+  convMessageJSON(user: User, messageText: string, threadToId: string, userId: string) {
+    return {
+      name: user.name,
+      avatar: user.avatar,
+      text: messageText,
+      timestamp: new Date(),
+      isOwn: true,
+      isThread: true,
+      isInThread: false,
+      threadTo: threadToId,
+      senderId: userId,
+      id: '',
+      threadCount: 0,
+      conversationmessageId: '', // Added to satisfy ConversationMessage interface
+    }
+
+  }
+
+     convThreadJson(item: ConversationMessage, id: string){
+  return {
+        name: item.name,
+        avatar: item.avatar,
+        text: item.text,
+        id: item.id || '',
+        timestamp: item.timestamp || Date.now(),
+        isOwn: item.isOwn,
+        threadTo: item.threadTo || null,
+        isThread: item.isThread || false,
+        isInThread: item.isInThread || false,
+        threadCount: item.threadCount || 0,
+      };
+    }
+
+  async updateConvMessageThreadCount(messageId: string, conversationId: string) {
+    this.allConversationMessagesSubject.next(this.allMessages);
+    const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
+    const threadCount = replies.length;
+
+
+    const conversationRef = doc(this.firestore, 'conversations', conversationId);
+    const msgRef = doc(conversationRef, 'messages', messageId)
+
+
+    try {
+      await updateDoc(msgRef, {
+        threadCount: threadCount,
+        isAnswered: threadCount > 0
+      });
+
+    } catch (error) {
+      console.error("Error updating thread count:", error);
+    }
+  }
 }
 
 

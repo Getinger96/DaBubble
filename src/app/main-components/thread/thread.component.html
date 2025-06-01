@@ -99,7 +99,8 @@
                     <img #addEmojiImg src="assets/img/emoji.png" alt="emoji" (click)="openEmojiWindow()">
                     <img #addMemberAtImg src="assets/img/at.png" (click)="openDialogAddMember()" alt="at">
                 </div>
-                    <img src="assets/img/send.png" alt="send" (click)="sendReply()">
+                    <img *ngIf="selectedMessage" src="assets/img/send.png" alt="send" (click)="sendReply()">
+                    <img *ngIf="selectedConvMessage" src="assets/img/send.png" alt="send" (click)="sendConvReply()">
 
 
 

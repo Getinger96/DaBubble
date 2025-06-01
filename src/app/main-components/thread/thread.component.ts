@@ -295,6 +295,18 @@ loadReaction() {
     this.channelmessageservice.sortAllMessages(this.threadAnswers);
   }
 
+    async sendConvReply(): Promise<void> {
+    if (!this.newThreadText.trim() || !this.selectedConvMessage?.id) return;
+    await this.conversationService.addConvThreadAnswer(
+      this.newThreadText,
+      this.selectedConvMessage.id,
+      this.selectedConvMessage
+    );
+    this.newThreadText = '';
+    this.loadConvThreadAnswers();
+    this.conversationService.sortAllMessages(this.threadConvAnswers);
+  }
+
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {
       this.allThreadsSubscription.unsubscribe();
