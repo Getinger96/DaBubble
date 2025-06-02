@@ -50,7 +50,7 @@ export class UserCardService {
     this.channelService.updateUserNameInChannels(nameInput, nameBefore )
 
     if (this.userId) {
-      this.channelMessageService.updateName(nameInput, this.userId, nameBefore)
+    await this.channelMessageService.updateNameEverywhere(nameInput, this.userId, nameBefore);
         }
   }
 }
