@@ -77,13 +77,12 @@ export class DirectMessageChatComponent {
 
    
 
-    this.route.paramMap.subscribe(async (params) => {
-    const partnerId = params.get('directmessageid'); // <== RICHTIGER PARAMETERNAME
-    if (partnerId) {
-      this.mainservice.directmessaeUserIdSubject.next(partnerId); // Optional, falls du's intern brauchst
-      await this.initConversation(partnerId);
-    }
-  });
+     await this.initConversation();
+
+    // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)
+    this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
+      await this.initConversation(); // Lade neue Konversation und Nachrichten
+    });
   }
 
 
@@ -187,20 +186,22 @@ handleClickOutside(event: MouseEvent) {
     this.conversationservice.getOrCreateConversation(user1, user2);
   }
 
-  async initConversation(partnerUserId: string): Promise<void> {
-  if (this.unsubscribeFromMessages) {
-    this.unsubscribeFromMessages();
-    this.unsubscribeFromMessages = undefined;
-  }
+  async initConversation(): Promise<void> {
+    if (this.unsubscribeFromMessages) {
+      this.unsubscribeFromMessages();
+      this.unsubscribeFromMessages = undefined;
+    }
 
-  const currentUserId = this.mainservice.actualUser[0].id;
-  this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
+    const currentUserId = this.mainservice.actualUser[0].id;
+    const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
+    this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
 
-  this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
-    this.allConversationMessages = liveMessages;
+    this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
+      this.allConversationMessages = liveMessages;
+
+    });
     this.scrollToBottom();
-  });
-}
+  }
 
   async addConversationMessage() {
     const currentUserId = this.mainservice.actualUser[0].id;
