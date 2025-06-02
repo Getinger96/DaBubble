@@ -12,6 +12,7 @@ import { ProfileCardComponent } from '../profile-card/profile-card.component';
 import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ThreadComponent } from '../thread/thread.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -61,7 +62,7 @@ export class DirectMessageChatComponent {
 
 
 
-  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef) {
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
 
   }
 
@@ -74,13 +75,15 @@ export class DirectMessageChatComponent {
     setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0].name;
 
-    // Initiale Konversation laden
-    await this.initConversation();
+   
 
-    // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)
-    this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
-      await this.initConversation(); // Lade neue Konversation und Nachrichten
-    });
+    this.route.paramMap.subscribe(async (params) => {
+    const partnerId = params.get('directmessageid'); // <== RICHTIGER PARAMETERNAME
+    if (partnerId) {
+      this.mainservice.directmessaeUserIdSubject.next(partnerId); // Optional, falls du's intern brauchst
+      await this.initConversation(partnerId);
+    }
+  });
   }
 
 
@@ -184,22 +187,20 @@ handleClickOutside(event: MouseEvent) {
     this.conversationservice.getOrCreateConversation(user1, user2);
   }
 
-  async initConversation(): Promise<void> {
-    if (this.unsubscribeFromMessages) {
-      this.unsubscribeFromMessages();
-      this.unsubscribeFromMessages = undefined;
-    }
-
-    const currentUserId = this.mainservice.actualUser[0].id;
-    const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
-    this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
-
-    this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
-      this.allConversationMessages = liveMessages;
-
-    });
-    this.scrollToBottom();
+  async initConversation(partnerUserId: string): Promise<void> {
+  if (this.unsubscribeFromMessages) {
+    this.unsubscribeFromMessages();
+    this.unsubscribeFromMessages = undefined;
   }
+
+  const currentUserId = this.mainservice.actualUser[0].id;
+  this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
+
+  this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
+    this.allConversationMessages = liveMessages;
+    this.scrollToBottom();
+  });
+}
 
   async addConversationMessage() {
     const currentUserId = this.mainservice.actualUser[0].id;

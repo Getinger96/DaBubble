@@ -12,6 +12,9 @@ import { CommonModule, NgIf, } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Member } from '../../interfaces/member.interface';
 import { Message } from '../../interfaces/message.interface';
+import { ConversationMessage } from '../../interfaces/conversation-message.interface';
+import { ConversationService } from '../../firebase-services/conversation.service';
+import { Conversation } from '../../interfaces/conversation.interface';
 
 
 @Component({
@@ -34,43 +37,59 @@ export class SearchBarComponent {
   actualUser: User[] = [];
   channelMessages: Message[] = [];
   filteredMessages: Message[] = [];
-
+  directMessages: ConversationMessage[] = [];
+  filteredDirectMessages: ConversationMessage[] = [];
+users: User[] = [];
+  conversations: Conversation[] = []
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
-    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router
+    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router, private conversationserice: ConversationService
   ) {
+
 
   }
 
 
-  ngOnInit(): void {
+   async ngOnInit(): Promise<void> {
+  
+    this.filterResults();
+
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
-
+        this.users = this.allUsers;  // <-- fülle users mit allUsers
         console.log('Benutzer in der Komponente:', this.allUsers);
       }
     });
+
+    // Channels laden
     this.channelservice.channels$.subscribe(channels => {
       this.channels = channels;
       console.log('Channels in Component:', this.channels);
     });
-    this.loadActualUser()
-    this.channelMessageService.loadAllMessagesFromAllChannels(); // <--- NEU
-  this.channelMessageService.allMessages$.subscribe(messages => {
-    this.channelMessages = messages;
-  });
-  }
-  loadActualUser() {
-    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-      if (actualUser.length > 0) {
-        this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
-      }
+
+   
+    this.loadActualUser();
+
+    this.channelMessageService.loadAllMessagesFromAllChannels();
+    this.channelMessageService.allMessages$.subscribe(messages => {
+      this.channelMessages = messages;
     });
 
-
+    this.conversationserice.loadAllDirectMessages();
+    this.conversationserice.allMessages$.subscribe(messages => {
+      this.directMessages = messages;
+    });
+  }
+  loadActualUser() {
+     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+    if (actualUser.length > 0) {
+      this.actualUser = actualUser;
+      this.userId = actualUser[0].id; // Hier setzen
+      console.log('aktueller User:', this.actualUser);
+    }
+  });
   }
 
   filterResults() {
@@ -111,8 +130,14 @@ export class SearchBarComponent {
       this.filteredMessages = this.channelMessages.filter(msg =>
         msg.messageText?.toLowerCase().includes(term)
       );
+
+      this.filteredDirectMessages = this.directMessages.filter(msg =>
+        msg.text?.toLowerCase().includes(term)
+      );
     }
   }
+
+ 
   opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
     this.mainservice.showdirectmessage = true
     this.mainHelperService.openChannelSection(close)
@@ -121,7 +146,10 @@ export class SearchBarComponent {
     this.mainservice.setDirectmessageuserAvatar(avatar)
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
+    this.mainservice.directmessaeUserIdSubject.next(id);
     this.searchTerm = '';
+    this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
+
   }
 
 
@@ -140,24 +168,35 @@ export class SearchBarComponent {
     this.searchTerm = '';
   }
 
- navigateToMessage(message: Message) {
-  this.channelservice.setChannelId(message.channelId);
+  navigateToMessage(message: Message) {
+    const userId = this.actualUser[0]?.id;
+    if (!userId) return;
 
-  this.router.navigateByUrl(`/main-components/${this.actualUser[0]?.id}/channel/${message.channelId}`).then(() => {
-    // Wenn es eine Thread-Antwort ist, hole die Ursprungsnachricht (threadTo) und öffne diesen Thread
+    this.searchTerm = '';
+
+    const channel = this.channels.find(c => c.id === message.channelId);
+    if (!channel) return;
+
+    this.openChannel(
+      true,
+      channel.name,
+      channel.description,
+      channel.creator,
+      channel.id,
+      channel.members,
+      channel.date
+    );
+
+    // Thread öffnen, falls nötig
     if (message.isThread && message.threadTo) {
       const originalMessage = this.channelMessageService.allMessages.find(msg => msg.messageId === message.threadTo);
       if (originalMessage) {
         this.channelMessageService.openThread(originalMessage);
       }
-    }
-
-    // Wenn es selbst ein Thread-Starter ist, öffne den Thread direkt
-    else if (message.isInThread) {
+    } else if (message.isInThread) {
       this.channelMessageService.openThread(message);
     }
-  });
+  }
 
-  this.searchTerm = '';
-}
+ 
 }

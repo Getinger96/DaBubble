@@ -8,6 +8,7 @@ import { MainComponentService } from '../../../firebase-services/main-component.
 import { MainHelperService } from '../../../services/main-helper.service';
 import { user } from '@angular/fire/auth';
 import { DirectMessageChatComponent } from '../../direct-message-chat/direct-message-chat.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-direct-message-user',
@@ -23,7 +24,7 @@ export class DirectMessageUserComponent implements OnInit {
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   private directMessageChatComponent!: DirectMessageChatComponent;
-  constructor(private registerservice: RegisterService, private loadingService: LoadingService, private mainservice: MainComponentService, private mainhelperService: MainHelperService) {
+  constructor(private registerservice: RegisterService, private loadingService: LoadingService, private mainservice: MainComponentService, private mainhelperService: MainHelperService,private router: Router) {
   
   }
 
@@ -48,6 +49,7 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserAvatar(avatar)
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
+    this.router.navigateByUrl(`/main-components/${this.actualUser[0].id}/directmessage/${id}`);
 
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
   }

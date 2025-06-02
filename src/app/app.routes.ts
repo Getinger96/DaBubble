@@ -10,6 +10,7 @@ import { ChannelChatComponent } from './main-components/channel-chat/channel-cha
 import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { authGuard } from './auth/auth.guard';
+import { DirectMessageChatComponent } from './main-components/direct-message-chat/direct-message-chat.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -26,6 +27,10 @@ export const routes: Routes = [
       {
         path: 'channel/:channelId',
         component: ChannelChatComponent,
+      },
+      {
+        path:'directmessage/:directmessageid',
+        component:DirectMessageChatComponent,
       }
     ]
   },

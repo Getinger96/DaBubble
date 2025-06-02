@@ -4,6 +4,8 @@ import { User } from '../interfaces/user.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { BehaviorSubject, filter } from 'rxjs';
+import { ConversationMessage } from '../interfaces/conversation-message.interface';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 
 
@@ -32,6 +34,8 @@ export class MainComponentService {
   currentusermessagStatus$ = this.directmessaeUserStatusSubject.asObservable();
   public directmessaeUserIdSubject = new BehaviorSubject<string>('');
   currentusermessagId$ = this.directmessaeUserStatusSubject.asObservable();
+   private allDirectMessagesSubject = new BehaviorSubject<ConversationMessage[]>([]);
+  allDirectMessages$ = this.allDirectMessagesSubject.asObservable();
 
 
     public userStatusSubject = new BehaviorSubject<string>('');
@@ -56,6 +60,10 @@ public userSubjectAvatar = new BehaviorSubject<number | null>(null);
     this.unsubList = this.subList();
   }
 
+  
+ getUserById(userId: string): User | undefined {
+    return this.allUsers.find(user => user.id === userId);
+  }
 
   subList() {
     return onSnapshot(this.getUserRef(), (user) => {

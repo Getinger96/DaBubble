@@ -8,7 +8,8 @@
 <div *ngIf="searchTerm" class="searchlist">
   <div class="search-list-container" *ngIf="filteredUsers.length > 0">
     <h4>Benutzer</h4>
-    <div (click)="opendirectmessage(user.id,user.name,false,user.avatar,user.email,user.status)" *ngFor="let user of filteredUsers" class="user-entry">
+    <div (click)="opendirectmessage(user.id,user.name,false,user.avatar,user.email,user.status)"
+      *ngFor="let user of filteredUsers" class="user-entry">
       <img src="../../../assets/img/avatar_{{user.avatar}}.png" alt="" />
       {{ user.name }} ({{ user.email }})
     </div>
@@ -16,19 +17,32 @@
 
   <div class="channel-container" *ngIf="filteredChannels.length > 0">
     <h4>Channels</h4>
-    <div *ngFor="let channel of filteredChannels" (click)="openChannel(true, channel.name,channel.description,channel.creator,channel.id, channel.members,channel.date)" class="channel-entry">
+    <div *ngFor="let channel of filteredChannels"
+      (click)="openChannel(true, channel.name,channel.description,channel.creator,channel.id, channel.members,channel.date)"
+      class="channel-entry">
       #{{ channel.name }}
     </div>
   </div>
-  <div class="message-container" *ngIf="filteredMessages.length > 0">
-  <h4>Nachrichten</h4>
-  <div *ngFor="let message of filteredMessages" class="message-entry">
-    <div (click)="navigateToMessage(message)"><img src="../../../assets/img/avatar_{{message.avatar}}.png" alt="" srcset=""> <strong>{{ message.name }}:</strong> {{ message.messageText }}</div>
-    
+ <div class="message-container" *ngIf="filteredMessages.length > 0">
+    <h4>Nachrichten in Channels</h4>
+    <div *ngFor="let message of filteredMessages" class="message-entry">
+      <div (click)="navigateToMessage(message)">
+        <img src="../../../assets/img/avatar_{{message.avatar}}.png" alt="" />
+        <strong>{{ message.name }}:</strong> {{ message.messageText }}
+      </div>
+    </div>
   </div>
-</div>
+  <div class="message-container" *ngIf="filteredDirectMessages.length > 0">
+    <h4>Nachrichten in Direktnachrichten</h4>
+    <div *ngFor="let dm of filteredDirectMessages" class="message-entry">
+      <div>
+        <img src="../../../assets/img/avatar_{{dm.avatar}}.png" alt="" />
+        <strong>{{ dm.name }}:</strong> {{ dm.text }}
+      </div>
+    </div>
+  </div>
 
   <div *ngIf="filteredUsers.length === 0 && filteredChannels.length === 0 && filteredMessages.length === 0">
-  <p>Keine Ergebnisse gefunden.</p>
-</div>
+    <p>Keine Ergebnisse gefunden.</p>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, model , Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, model, Pipe, PipeTransform } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { DirectMessageUserComponent } from './direct-message-user/direct-message-user.component';
 import { User } from '../../interfaces/user.interface';
@@ -43,17 +43,19 @@ export class WorkspaceMenuComponent {
   filteredUsers = [...this.allUsers];
   selectedUsers: any[] = [];
   channels: Channel[] = [];
-  userId?: string
+  userId?: string;
+   private actualUserSubscription!: Subscription;
 
 
-  constructor(private registerservice: RegisterService, private channelservice: ChannelService,private mainservice:MainComponentService,
-    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService,private router: Router
+  constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
+    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router
   ) {
 
   }
 
 
   ngOnInit(): void {
+    
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
@@ -68,22 +70,22 @@ export class WorkspaceMenuComponent {
 
 
   }
- sortUsers(){
-  this.filteredUsers.sort((a,b)=>a.name.localeCompare(b.name,'de',{sensitivity:'base'}))
- }
+  sortUsers() {
+    this.filteredUsers.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }))
+  }
 
- filterUsers() {
-  const term = this.searchTerm.toLowerCase();
-  this.filteredUsers = this.allUsers
-    .filter(user =>
-      user.name.toLowerCase().includes(term)
-    )
-    .filter(user =>
-      !this.selectedUsers.includes(user)
-    );
+  filterUsers() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredUsers = this.allUsers
+      .filter(user =>
+        user.name.toLowerCase().includes(term)
+      )
+      .filter(user =>
+        !this.selectedUsers.includes(user)
+      );
 
-  this.sortUsers();
-}
+    this.sortUsers();
+  }
 
   selectUser(user: any) {
     if (!this.selectedUsers.includes(user)) {
@@ -114,7 +116,7 @@ export class WorkspaceMenuComponent {
 
   }
 
-  closeOverlay(ngForm:NgForm) {
+  closeOverlay(ngForm: NgForm) {
     this.overlayvisible = false
     this.overlay2Visible = false
     ngForm.reset()
@@ -127,14 +129,14 @@ export class WorkspaceMenuComponent {
 
   addChannel(event: Event, ngForm: NgForm) {
     event.preventDefault();
-   
+
 
     const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
 
     this.channelservice.addChannel(channelObj).then((docRef) => {
       this.channelservice.addsubcolecctiontoChannel(docRef.id)
       // ✅ docRef enthält die ID des neuen Channels
-     this.createdChannelId=docRef.id;
+      this.createdChannelId = docRef.id;
 
       console.log('🎉 Channel erstellt mit ID:', this.createdChannelId);
 
@@ -152,8 +154,17 @@ export class WorkspaceMenuComponent {
 
   }
 
+   loadActualUser(){
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+        console.log('aktueller User:', this.actualUser);
+      }
+    });
+  }
 
-  openChannel(isOpen: boolean, name: string, description:string, creator:string,id:string, members: Member[],date:string) {
+
+  openChannel(isOpen: boolean, name: string, description: string, creator: string, id: string, members: Member[], date: string) {
     this.mainHelperService.openChannelSection(isOpen);
     this.channelservice.setChannelName(name);
     this.channelservice.setChannelDescription(description);
@@ -161,14 +172,14 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChannelId(id)
     this.channelservice.setChannelMember(members);
     this.channelservice.setChanneldate(date)
-    this.mainservice.showdirectmessage=false;
-    this.userId = this.actualUser[0].id; 
+    this.mainservice.showdirectmessage = false;
+    this.userId = this.actualUser[0].id;
     this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
     this.channelMessageService.getChannelId(id)
-    
+
   }
 
-  addMembers(ngForm:NgForm) {
+  addMembers(ngForm: NgForm) {
     if (this.selectedOption === 'all') {
       this.addAllMembersToChannel(this.createdChannelId!);
     } else if (this.selectedOption === 'some') {
@@ -199,6 +210,8 @@ export class WorkspaceMenuComponent {
     this.channelservice.addMembersToChannel(channelId, members);
   }
 
-
+ isUserInChannel(channel: Channel): boolean {
+  return channel.members.some(member => member.id === this.actualUser[0].id);
+}
 
 }

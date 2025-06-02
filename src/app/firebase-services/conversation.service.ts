@@ -13,13 +13,18 @@ import {
   QuerySnapshot,
   DocumentData,
   deleteDoc,
-  getDoc
+  getDoc,
+  docData,
+  collectionData
 } from '@angular/fire/firestore';
 import { Conversation } from '../interfaces/conversation.interface';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
-import { BehaviorSubject, timestamp } from 'rxjs';
+import { BehaviorSubject, from, timestamp } from 'rxjs';
 import { MainComponentService } from './main-component.service';
 import { User } from '../interfaces/user.interface';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -47,15 +52,31 @@ export class ConversationService {
 
   lastAnswer: ConversationMessage | null = null;
   messageId?: string;
+  
+
+
+
+  constructor(private mainservice: MainComponentService, ) {
+    
+    this.observeSelectedUserChanges();
+    if (this.conversationId) {
+      this.getInitialConvMessages(this.conversationId);
+      
+    }
+
+  }
 
   
 
-  constructor(private mainservice: MainComponentService) {
-    if (this.conversationId) {
-      this.getInitialConvMessages(this.conversationId);
-      this.observeSelectedUserChanges();
-    }
-    
+
+  getConversationById(conversationId: string): Observable<Conversation | undefined> {
+    if (!conversationId) return of(undefined);
+
+    const conversationDocRef = doc(this.firestore, `conversations/${conversationId}`);
+
+    return docData(conversationDocRef).pipe(
+      map(c => c ? new Conversation(c as Conversation) : undefined)
+    );
   }
 
   observeSelectedUserChanges() {
@@ -161,75 +182,75 @@ export class ConversationService {
         isOwn: isOwn,
         conversationmessageId: docSnap.id
       };
-      if(message.isThread){
+      if (message.isThread) {
         this.allMessages.push(message)
-      } else{
+      } else {
         convMessages.push(message);
       }
-      
-      
-    
+
+
+
     });
-      console.log('Thread Messages for this selected Message:', this.allMessages)
+    console.log('Thread Messages for this selected Message:', this.allMessages)
     return convMessages;
   }
 
   listenToMessages(
-  conversationId: string,
-  callback: (convMessages: ConversationMessage[]) => void
-): () => void {
-  const convMessageRef = collection(
-    this.firestore,
-    'conversation',
-    conversationId,
-    'messages'
-  );
-  const q = query(convMessageRef, orderBy('timestamp'));
+    conversationId: string,
+    callback: (convMessages: ConversationMessage[]) => void
+  ): () => void {
+    const convMessageRef = collection(
+      this.firestore,
+      'conversation',
+      conversationId,
+      'messages'
+    );
+    const q = query(convMessageRef, orderBy('timestamp'));
 
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    const liveConvMessages: ConversationMessage[] = [];
-    const liveThreadMessages: ConversationMessage[] = [];
-    const actualUserId = this.getActualUser();
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const liveConvMessages: ConversationMessage[] = [];
+      const liveThreadMessages: ConversationMessage[] = [];
+      const actualUserId = this.getActualUser();
 
-    snapshot.forEach((doc) => {
-      const messageData = doc.data();
-      const isOwn = messageData['senderId'] === actualUserId;
-      const message: ConversationMessage = {
-        id: doc.id,
-        senderId: messageData['senderId'],
-        text: messageData['text'],
-        timestamp: messageData['timestamp'],
-        isThread: messageData['isThread'],
-        isInThread: messageData['isInThread'],
-        threadTo: messageData['threadTo'],
-        threadCount: messageData['threadCount'],
-        name: messageData['name'],
-        avatar: messageData['avatar'],
-        isOwn: isOwn,
-        conversationmessageId: messageData['conversationmessageId']
-      };
-      if (message.isThread) {
-        liveThreadMessages.push(message);
-      } else {
-        liveConvMessages.push(message);
+      snapshot.forEach((doc) => {
+        const messageData = doc.data();
+        const isOwn = messageData['senderId'] === actualUserId;
+        const message: ConversationMessage = {
+          id: doc.id,
+          senderId: messageData['senderId'],
+          text: messageData['text'],
+          timestamp: messageData['timestamp'],
+          isThread: messageData['isThread'],
+          isInThread: messageData['isInThread'],
+          threadTo: messageData['threadTo'],
+          threadCount: messageData['threadCount'],
+          name: messageData['name'],
+          avatar: messageData['avatar'],
+          isOwn: isOwn,
+          conversationmessageId: messageData['conversationmessageId']
+        };
+        if (message.isThread) {
+          liveThreadMessages.push(message);
+        } else {
+          liveConvMessages.push(message);
+        }
+      });
+
+      // Update both arrays!
+      this.allMessages = [...liveThreadMessages, ...liveConvMessages];
+      this.allConversationMessagesSubject.next(liveConvMessages);
+
+      // Update thread answers if a thread is currently selected
+      const selectedMessage = this.selectedThreadMessageSubject.value;
+      if (selectedMessage && selectedMessage.id) {
+        this.updateThreadAnswers(selectedMessage.id!);
       }
+
+      callback(liveConvMessages);
     });
 
-    // Update both arrays!
-    this.allMessages = [...liveThreadMessages, ...liveConvMessages];
-    this.allConversationMessagesSubject.next(liveConvMessages);
-
-    // Update thread answers if a thread is currently selected
-    const selectedMessage = this.selectedThreadMessageSubject.value;
-    if (selectedMessage && selectedMessage.id) {
-      this.updateThreadAnswers(selectedMessage.id!);
-    }
-
-    callback(liveConvMessages);
-  });
-
-  return unsubscribe;
-}
+    return unsubscribe;
+  }
 
   async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
     const convMessageRef = collection(
@@ -333,7 +354,7 @@ export class ConversationService {
 
     const threadAnswer: ConversationMessage = {
       senderId: userId,
-      name:user.name,
+      name: user.name,
       avatar: user.avatar,
       threadCount: 0,
       text: messageText,
@@ -400,7 +421,7 @@ export class ConversationService {
     const reactionId = reactionDoc.id;
     const reactionDocRef = doc(this.firestore, 'conversation',
       conversationId,
-      'messages', conversationmessageaId,'reactions', reactionId);
+      'messages', conversationmessageaId, 'reactions', reactionId);
     try {
       await deleteDoc(reactionDocRef);
     } catch (error) {
@@ -469,7 +490,7 @@ export class ConversationService {
     });
   }
 
- async addThread(message: ConversationMessage) {
+  async addThread(message: ConversationMessage) {
     try {
       if (!this.conversationId) {
         throw new Error('conversationId is undefined');
@@ -489,7 +510,7 @@ export class ConversationService {
   }
 
 
-async addConvThreadAnswer(messageText: string, threadToId: string, selectedMessage: ConversationMessage) {
+  async addConvThreadAnswer(messageText: string, threadToId: string, selectedMessage: ConversationMessage) {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
     const threadAnswer: ConversationMessage = this.convMessageJSON(user, messageText, threadToId, userId)
@@ -522,20 +543,20 @@ async addConvThreadAnswer(messageText: string, threadToId: string, selectedMessa
 
   }
 
-     convThreadJson(item: ConversationMessage, id: string){
-  return {
-        name: item.name,
-        avatar: item.avatar,
-        text: item.text,
-        id: item.id || '',
-        timestamp: item.timestamp || Date.now(),
-        isOwn: item.isOwn,
-        threadTo: item.threadTo || null,
-        isThread: item.isThread || false,
-        isInThread: item.isInThread || false,
-        threadCount: item.threadCount || 0,
-      };
-    }
+  convThreadJson(item: ConversationMessage, id: string) {
+    return {
+      name: item.name,
+      avatar: item.avatar,
+      text: item.text,
+      id: item.id || '',
+      timestamp: item.timestamp || Date.now(),
+      isOwn: item.isOwn,
+      threadTo: item.threadTo || null,
+      isThread: item.isThread || false,
+      isInThread: item.isInThread || false,
+      threadCount: item.threadCount || 0,
+    };
+  }
 
   async updateConvMessageThreadCount(messageId: string, conversationId: string) {
     this.allConversationMessagesSubject.next(this.allMessages);
@@ -557,9 +578,65 @@ async addConvThreadAnswer(messageText: string, threadToId: string, selectedMessa
       console.error("Error updating thread count:", error);
     }
   }
+
+  isTimestamp(value: any): value is { toMillis: () => number } {
+    return value && typeof value.toMillis === 'function';
+  }
+
+  async loadAllDirectMessages(): Promise<void> {
+    const conversationsRef = collection(this.firestore, 'conversation');
+    const snapshot = await getDocs(conversationsRef);
+
+    let allMessages: ConversationMessage[] = [];
+
+    for (const convDoc of snapshot.docs) {
+      const messagesRef = collection(this.firestore, 'conversation', convDoc.id, 'messages');
+      const messagesSnapshot = await getDocs(messagesRef);
+
+      messagesSnapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const isOwn = data['senderId'] === this.getActualUser();
+
+        const message: ConversationMessage = {
+          id: docSnap.id,
+          name: data['name'],
+          avatar: data['avatar'],
+          threadCount: data['threadCount'],
+          senderId: data['senderId'],
+          text: data['text'],
+          timestamp: data['timestamp'],
+          isThread: data['isThread'],
+          isInThread: data['isInThread'],
+          threadTo: data['threadTo'],
+          isOwn: isOwn,
+          conversationmessageId: docSnap.id,
+        };
+
+        // Falls du nur normale Nachrichten (keine Threads) möchtest, filter hier
+        if (!message.isThread) {
+          allMessages.push(message);
+        }
+      });
+    }
+
+    // Sortieren nach timestamp (optional)
+    allMessages.sort((a, b) => {
+      const timeA = this.isTimestamp(a.timestamp)
+        ? a.timestamp.toMillis()
+        : new Date(a.timestamp).getTime();
+
+      const timeB = this.isTimestamp(b.timestamp)
+        ? b.timestamp.toMillis()
+        : new Date(b.timestamp).getTime();
+
+      return timeA - timeB;
+    });
+    // Update BehaviorSubject (du kannst auch ein neues Subject anlegen, wenn gewünscht)
+    this.allConversationMessagesSubject.next(allMessages);
+  }
+
+ 
+
+
+
 }
-
-
-
-
-
