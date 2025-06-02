@@ -111,11 +111,7 @@ export class ThreadComponent {
 
 }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-    this.cdr.detectChanges();
-    
-  }
+ 
 
   scrollToBottom(): void {
     try {
@@ -293,6 +289,7 @@ loadReaction() {
     this.newThreadText = '';
     this.loadThreadAnswers();
     this.channelmessageservice.sortAllMessages(this.threadAnswers);
+    this.scrollToBottom()
   }
 
     async sendConvReply(): Promise<void> {
@@ -305,6 +302,7 @@ loadReaction() {
     this.newThreadText = '';
     this.loadConvThreadAnswers();
     this.conversationService.sortAllMessages(this.threadConvAnswers);
+    this.scrollToBottom()
   }
 
   ngOnDestroy(): void {
