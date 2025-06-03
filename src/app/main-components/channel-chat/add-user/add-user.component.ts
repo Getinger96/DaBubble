@@ -20,6 +20,7 @@ export class AddUserComponent implements OnInit {
   searchUser:string =''
   originalUserList: User[] = [];
   memberList: Member[] =[]
+  filterUserList:User[]=[]
   constructor( private channelService: ChannelService,  public dialogRef: MatDialogRef<AddUserComponent>, @Inject(MAT_DIALOG_DATA) public data: { allUsers: User[], members: Member[],currentChannelID: string, currentChannelName:string   }) {
  
   }
@@ -91,6 +92,24 @@ export class AddUserComponent implements OnInit {
       
   }
 
+  filterUsers() {
+  const term = this.searchUser.toLowerCase();
+    console.log('this.searchUser.toLocaleLowerCase();',this.searchUser.toLocaleLowerCase());
+
+    if (term.length >= 2 ) {
+        this.filterUserList = this.newUserList.filter(user => user.name.toLowerCase().includes(term))
+      this.filterUserList.sort((a, b) => a.name.localeCompare(b.name));
+        console.log('this.filterUserList', this.filterUserList);
+      
+    }
+
+
+      
+ 
+    }
+    
+  }
+
  // searchUserInUserList() {
    //  const term = this.searchUser.toLowerCase();
   //   if (term.length ===0) {
@@ -102,4 +121,4 @@ export class AddUserComponent implements OnInit {
      //  )
   // }
  //}
-}
+

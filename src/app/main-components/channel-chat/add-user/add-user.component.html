@@ -27,17 +27,17 @@
                     </div>
                     <div class="further-user">
        
-                             <input [(ngModel)]="searchUser"  type="text" placeholder="Eingabe erforderlich" #name="ngModel">
+                             <input (input)="filterUsers()" [(ngModel)]="searchUser"  type="text" placeholder="Eingabe erforderlich" #name="ngModel">
                     </div>
                 </main>
                 </div>
-                <div class="newUser" [ngClass]="{'smallList': this.newUserList.length ===0}" *ngIf="searchUser.trim().length > 0">
+                <div class="newUser" [ngClass]="{'smallList': this.newUserList.length ===0}" *ngIf="searchUser.trim().length >= 2">
 
-                    <div *ngIf="this.newUserList.length ===0" class="userlengthisFull">
+                    <div *ngIf="this.newUserList.length ===0 && searchUser.trim().length >= 1" class="userlengthisFull">
                         <span> du hast alle Benutzer ausgewählt</span>
                     </div>
         
-                    <div  class="profileNewUser" (click)="addNewUser(user)" *ngFor="let user of this.newUserList">
+                    <div  class="profileNewUser" (click)="addNewUser(user)" *ngFor="let user of this.filterUserList">
                         <div class="avatarImagesNewUser">
                             <img  class="avatarNewUser" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
                             <img class="statusNewUser" src="assets/img/{{user.status}}.svg" alt="status">
