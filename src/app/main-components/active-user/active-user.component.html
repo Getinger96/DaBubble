@@ -17,4 +17,5 @@
 </div>
 
 <app-user-card-menu (closeCard)="showUserCard = false" [actualUserUserCard]="actualUser"></app-user-card-menu>
-<app-edit-user></app-edit-user>
+<app-edit-user [actualUserUserCard]="actualUser"></app-edit-user>
+<app-change-avatar-card [actualUserUserCard]="actualUser"></app-change-avatar-card>
