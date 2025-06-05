@@ -8,12 +8,13 @@ import { LoginService } from '../../firebase-services/login.service';
 import { UserCardMenuComponent } from './user-card-menu/user-card-menu.component';
 import { UserCardService } from './services/user-card.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { ChangeAvatarCardComponent } from "./change-avatar-card/change-avatar-card.component";
 
 
 @Component({
   selector: 'app-active-user',
   standalone: true,
-  imports: [CommonModule, RouterModule, UserCardMenuComponent, EditUserComponent],
+  imports: [CommonModule, RouterModule, UserCardMenuComponent, EditUserComponent, ChangeAvatarCardComponent],
   templateUrl: './active-user.component.html',
   styleUrl: './active-user.component.scss'
 })
@@ -60,6 +61,7 @@ export class ActiveUserComponent implements OnInit {
     document.body.style.overflow = 'auto';
     this.usercardservice.overlayUserCardActive = false;
     this.usercardservice.overlayEditUserActive = false;
+    this.usercardservice.overlayEditChangAvatar =false;
   }
 
   logOut(){

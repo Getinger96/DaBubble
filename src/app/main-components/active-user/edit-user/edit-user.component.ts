@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserCardService } from '../services/user-card.service';
 import { NgClass } from '@angular/common';
+import { User } from '../../../interfaces/user.interface';
 
 @Component({
   selector: 'app-edit-user',
@@ -10,6 +11,7 @@ import { NgClass } from '@angular/common';
   styleUrl: './edit-user.component.scss'
 })
 export class EditUserComponent {
+   @Input() actualUserUserCard: User[] = [];
   constructor(public usercardservice: UserCardService) {
 
   }

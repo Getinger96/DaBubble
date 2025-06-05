@@ -29,6 +29,7 @@ export class SearchBarComponent {
   placeholderSearchBar: string = "Devspace durchsuchen";
   allUsers: User[] = [];
   channels: Channel[] = [];
+  allMessages: ConversationMessage[]=[]
   searchTerm: string = '';
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
@@ -135,8 +136,28 @@ users: User[] = [];
         msg.text?.toLowerCase().includes(term)
       );
     }
+      console.log('this.filteredDirectMessages',this.filteredDirectMessages);
   }
 
+
+    // Load all messages in conversation
+  loadAllMessageInConversation() {
+    this.conversationserice.allMessages$.subscribe((messages) => {
+      this.allMessages = messages;
+    });
+    console.log('this.allMessages',this.allMessages);
+    
+  }
+
+  openDirectMessageChat(dm: ConversationMessage, close: boolean) {
+    this.mainservice.showdirectmessage = true
+    this.mainHelperService.openChannelSection(close)
+    this.mainservice.setDirectmessageuserName(dm.name)
+    this.mainservice.setDirectmessageuserId(dm.senderId)
+    this.mainservice.directmessaeUserIdSubject.next(dm.name);
+    this.searchTerm = '';
+    this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${dm.conversationmessageId}`);
+  }
  
   opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
     this.mainservice.showdirectmessage = true
