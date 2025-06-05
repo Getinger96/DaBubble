@@ -50,6 +50,8 @@ export class ConversationService {
   private threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
 
+
+
   lastAnswer: ConversationMessage | null = null;
   messageId?: string;
   
@@ -216,7 +218,7 @@ export class ConversationService {
         const messageData = doc.data();
         const isOwn = messageData['senderId'] === actualUserId;
         const message: ConversationMessage = {
-          id: doc.id,
+          id: messageData['id'],
           senderId: messageData['senderId'],
           text: messageData['text'],
           timestamp: messageData['timestamp'],
@@ -584,56 +586,57 @@ export class ConversationService {
   }
 
   async loadAllDirectMessages(): Promise<void> {
-    const conversationsRef = collection(this.firestore, 'conversation');
-    const snapshot = await getDocs(conversationsRef);
+  const conversationsRef = collection(this.firestore, 'conversation');
+  const snapshot = await getDocs(conversationsRef);
 
-    let allMessages: ConversationMessage[] = [];
+  let allMessages: ConversationMessage[] = [];
 
-    for (const convDoc of snapshot.docs) {
-      const messagesRef = collection(this.firestore, 'conversation', convDoc.id, 'messages');
-      const messagesSnapshot = await getDocs(messagesRef);
+  for (const convDoc of snapshot.docs) {
+    const convId = convDoc.id;
+    const messagesRef = collection(this.firestore, 'conversation', convId, 'messages');
+    const messagesSnapshot = await getDocs(messagesRef);
 
-      messagesSnapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const isOwn = data['senderId'] === this.getActualUser();
+    messagesSnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const isOwn = data['senderId'] === this.getActualUser();
 
-        const message: ConversationMessage = {
-          id: docSnap.id,
-          name: data['name'],
-          avatar: data['avatar'],
-          threadCount: data['threadCount'],
-          senderId: data['senderId'],
-          text: data['text'],
-          timestamp: data['timestamp'],
-          isThread: data['isThread'],
-          isInThread: data['isInThread'],
-          threadTo: data['threadTo'],
-          isOwn: isOwn,
-          conversationmessageId: docSnap.id,
-        };
+      const message: ConversationMessage = {
+        id: data['id'],
+        name: data['name'],
+        avatar: data['avatar'],
+        threadCount: data['threadCount'],
+        senderId: data['senderId'],
+        text: data['text'],
+        timestamp: data['timestamp'],
+        isThread: data['isThread'],
+        isInThread: data['isInThread'],
+        threadTo: data['threadTo'],
+        isOwn: isOwn,
+        conversationmessageId: docSnap.id,
+        
+      };
 
-        // Falls du nur normale Nachrichten (keine Threads) möchtest, filter hier
-        if (!message.isThread) {
-          allMessages.push(message);
-        }
-      });
-    }
-
-    // Sortieren nach timestamp (optional)
-    allMessages.sort((a, b) => {
-      const timeA = this.isTimestamp(a.timestamp)
-        ? a.timestamp.toMillis()
-        : new Date(a.timestamp).getTime();
-
-      const timeB = this.isTimestamp(b.timestamp)
-        ? b.timestamp.toMillis()
-        : new Date(b.timestamp).getTime();
-
-      return timeA - timeB;
+      if (!message.isThread) {
+        allMessages.push(message);
+      }
     });
-    // Update BehaviorSubject (du kannst auch ein neues Subject anlegen, wenn gewünscht)
-    this.allConversationMessagesSubject.next(allMessages);
   }
+
+  // Sortieren
+  allMessages.sort((a, b) => {
+    const timeA = this.isTimestamp(a.timestamp)
+      ? a.timestamp.toMillis()
+      : new Date(a.timestamp).getTime();
+
+    const timeB = this.isTimestamp(b.timestamp)
+      ? b.timestamp.toMillis()
+      : new Date(b.timestamp).getTime();
+
+    return timeA - timeB;
+  });
+
+  this.allConversationMessagesSubject.next(allMessages);
+}
 
  
 

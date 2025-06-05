@@ -23,7 +23,7 @@
       #{{ channel.name }}
     </div>
   </div>
- <div class="message-container" *ngIf="filteredMessages.length > 0">
+  <div class="message-container" *ngIf="filteredMessages.length > 0">
     <h4>Nachrichten in Channels</h4>
     <div *ngFor="let message of filteredMessages" class="message-entry">
       <div (click)="navigateToMessage(message)">
@@ -35,7 +35,7 @@
   <div class="message-container" *ngIf="filteredDirectMessages.length > 0">
     <h4>Nachrichten in Direktnachrichten</h4>
     <div *ngFor="let dm of filteredDirectMessages" class="message-entry">
-      <div>
+      <div (click)="navigateToDirectMessage(dm)">
         <img src="../../../assets/img/avatar_{{dm.avatar}}.png" alt="" />
         <strong>{{ dm.name }}:</strong> {{ dm.text }}
       </div>

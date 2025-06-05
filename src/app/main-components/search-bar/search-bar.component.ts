@@ -15,6 +15,7 @@ import { Message } from '../../interfaces/message.interface';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { ConversationService } from '../../firebase-services/conversation.service';
 import { Conversation } from '../../interfaces/conversation.interface';
+import { collection, getDocs } from '@angular/fire/firestore';
 
 
 @Component({
@@ -38,9 +39,10 @@ export class SearchBarComponent {
   channelMessages: Message[] = [];
   filteredMessages: Message[] = [];
   directMessages: ConversationMessage[] = [];
-  filteredDirectMessages: ConversationMessage[] = [];
-users: User[] = [];
+  filteredDirectMessages: any[] = []
+  users: User[] = [];
   conversations: Conversation[] = []
+
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
@@ -51,9 +53,9 @@ users: User[] = [];
   }
 
 
-   async ngOnInit(): Promise<void> {
-  
-    this.filterResults();
+  async ngOnInit(): Promise<void> {
+
+
 
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
@@ -69,7 +71,7 @@ users: User[] = [];
       console.log('Channels in Component:', this.channels);
     });
 
-   
+
     this.loadActualUser();
 
     this.channelMessageService.loadAllMessagesFromAllChannels();
@@ -81,15 +83,19 @@ users: User[] = [];
     this.conversationserice.allMessages$.subscribe(messages => {
       this.directMessages = messages;
     });
+    const convRef = collection(this.conversationserice.firestore, 'conversation');
+    const snapshot = await getDocs(convRef);
+    this.conversations = snapshot.docs.map(docSnap => new Conversation(docSnap.data()));
+
   }
   loadActualUser() {
-     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-    if (actualUser.length > 0) {
-      this.actualUser = actualUser;
-      this.userId = actualUser[0].id; // Hier setzen
-      console.log('aktueller User:', this.actualUser);
-    }
-  });
+    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
+      if (actualUser.length > 0) {
+        this.actualUser = actualUser;
+        this.userId = actualUser[0].id; // Hier setzen
+        console.log('aktueller User:', this.actualUser);
+      }
+    });
   }
 
   filterResults() {
@@ -98,35 +104,31 @@ users: User[] = [];
     this.filteredUsers = [];
     this.filteredChannels = [];
     this.filteredMessages = [];
+    this.filteredDirectMessages = [];
 
-    if (!term) {
-      return;
-    }
+    if (!term) return;
 
     if (term.startsWith('@')) {
-      const userTerm = term.slice(1); // Entfernt das '@'
+      const userTerm = term.slice(1);
       this.filteredUsers = this.allUsers.filter(user =>
         user.name.toLowerCase().includes(userTerm) ||
         user.email.toLowerCase().includes(userTerm)
       );
     } else if (term.startsWith('#')) {
-      const channelTerm = term.slice(1); // Entfernt das '#'
+      const channelTerm = term.slice(1);
       this.filteredChannels = this.channels.filter(channel =>
         channel.name.toLowerCase().includes(channelTerm)
       );
     } else {
-      // Filtert Benutzer
       this.filteredUsers = this.allUsers.filter(user =>
         user.name.toLowerCase().includes(term) ||
         user.email.toLowerCase().includes(term)
       );
 
-      // Filtert Channels
       this.filteredChannels = this.channels.filter(channel =>
         channel.name.toLowerCase().includes(term)
       );
 
-      // Filtert Nachrichten
       this.filteredMessages = this.channelMessages.filter(msg =>
         msg.messageText?.toLowerCase().includes(term)
       );
@@ -137,7 +139,38 @@ users: User[] = [];
     }
   }
 
- 
+  navigateToDirectMessage(dm: ConversationMessage) {
+    if (!this.userId) return;
+
+    // Finde die passende Conversation
+    const conversation = this.conversations.find(conv =>
+      conv.id?.includes(dm.id)
+    );
+
+    if (!conversation) {
+      console.warn('Keine passende Konversation gefunden');
+      return;
+    }
+
+    // Bestimme den anderen Teilnehmer (nicht den aktuellen Nutzer)
+    const otherUserId = conversation.users.find(uid => uid !== this.userId);
+    const user = this.allUsers.find(u => u.id === otherUserId);
+
+    if (!user) {
+      console.warn('User zu Direktnachricht nicht gefunden');
+      return;
+    }
+
+    this.opendirectmessage(
+      user.id!,
+      user.name,
+      false,
+      user.avatar,
+      user.email,
+      user.status
+    );
+  }
+
   opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
     this.mainservice.showdirectmessage = true
     this.mainHelperService.openChannelSection(close)
@@ -198,5 +231,4 @@ users: User[] = [];
     }
   }
 
- 
 }
