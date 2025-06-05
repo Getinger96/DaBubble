@@ -30,6 +30,7 @@ export class SearchBarComponent {
   placeholderSearchBar: string = "Devspace durchsuchen";
   allUsers: User[] = [];
   channels: Channel[] = [];
+  allMessages: ConversationMessage[] = []
   searchTerm: string = '';
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
@@ -137,98 +138,121 @@ export class SearchBarComponent {
         msg.text?.toLowerCase().includes(term)
       );
     }
+    console.log('this.filteredDirectMessages', this.filteredDirectMessages);
   }
 
-  navigateToDirectMessage(dm: ConversationMessage) {
-    if (!this.userId) return;
 
-    // Finde die passende Conversation
-    const conversation = this.conversations.find(conv =>
-      conv.id?.includes(dm.id)
-    );
+  // Load all messages in conversation
+  loadAllMessageInConversation() {
+    this.conversationserice.allMessages$.subscribe((messages) => {
+      this.allMessages = messages;
+    });
+    console.log('this.allMessages', this.allMessages);
 
-    if (!conversation) {
-      console.warn('Keine passende Konversation gefunden');
-      return;
-    }
-
-    // Bestimme den anderen Teilnehmer (nicht den aktuellen Nutzer)
-    const otherUserId = conversation.users.find(uid => uid !== this.userId);
-    const user = this.allUsers.find(u => u.id === otherUserId);
-
-    if (!user) {
-      console.warn('User zu Direktnachricht nicht gefunden');
-      return;
-    }
-
-    this.opendirectmessage(
-      user.id!,
-      user.name,
-      false,
-      user.avatar,
-      user.email,
-      user.status
-    );
   }
 
-  opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
+  openDirectMessageChat(dm: ConversationMessage, close: boolean) {
     this.mainservice.showdirectmessage = true
     this.mainHelperService.openChannelSection(close)
-    this.mainservice.setDirectmessageuserName(name)
-    this.mainservice.setDirectmessageuserEmail(email)
-    this.mainservice.setDirectmessageuserAvatar(avatar)
-    this.mainservice.setDirectmessageuserStatus(status)
-    this.mainservice.setDirectmessageuserId(id)
-    this.mainservice.directmessaeUserIdSubject.next(id);
+    this.mainservice.setDirectmessageuserName(dm.name)
+    this.mainservice.setDirectmessageuserId(dm.senderId)
+    this.mainservice.directmessaeUserIdSubject.next(dm.name);
     this.searchTerm = '';
-    this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
-
+    this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${dm.conversationmessageId}`);
   }
 
 
-  openChannel(isOpen: boolean, name: string, description: string, creator: string, id: string, members: Member[], date: string) {
-    this.mainHelperService.openChannelSection(isOpen);
-    this.channelservice.setChannelName(name);
-    this.channelservice.setChannelDescription(description);
-    this.channelservice.setChannelcreator(creator);
-    this.channelservice.setChannelId(id)
-    this.channelservice.setChannelMember(members);
-    this.channelservice.setChanneldate(date)
-    this.mainservice.showdirectmessage = false;
-    this.userId = this.actualUser[0].id;
-    this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
-    this.channelMessageService.getChannelId(id)
-    this.searchTerm = '';
+
+navigateToDirectMessage(dm: ConversationMessage) {
+  if (!this.userId) return;
+
+  // Finde die passende Conversation
+  const conversation = this.conversations.find(conv =>
+    conv.id?.includes(dm.id)
+  );
+
+  if (!conversation) {
+    console.warn('Keine passende Konversation gefunden');
+    return;
   }
 
-  navigateToMessage(message: Message) {
-    const userId = this.actualUser[0]?.id;
-    if (!userId) return;
+  // Bestimme den anderen Teilnehmer (nicht den aktuellen Nutzer)
+  const otherUserId = conversation.users.find(uid => uid !== this.userId);
+  const user = this.allUsers.find(u => u.id === otherUserId);
 
-    this.searchTerm = '';
+  if (!user) {
+    console.warn('User zu Direktnachricht nicht gefunden');
+    return;
+  }
 
-    const channel = this.channels.find(c => c.id === message.channelId);
-    if (!channel) return;
+  this.opendirectmessage(
+    user.id!,
+    user.name,
+    false,
+    user.avatar,
+    user.email,
+    user.status
+  );
+}
 
-    this.openChannel(
-      true,
-      channel.name,
-      channel.description,
-      channel.creator,
-      channel.id,
-      channel.members,
-      channel.date
-    );
+opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
+  this.mainservice.showdirectmessage = true
+  this.mainHelperService.openChannelSection(close)
+  this.mainservice.setDirectmessageuserName(name)
+  this.mainservice.setDirectmessageuserEmail(email)
+  this.mainservice.setDirectmessageuserAvatar(avatar)
+  this.mainservice.setDirectmessageuserStatus(status)
+  this.mainservice.setDirectmessageuserId(id)
+  this.mainservice.directmessaeUserIdSubject.next(id);
+  this.searchTerm = '';
+  this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
 
-    // Thread öffnen, falls nötig
-    if (message.isThread && message.threadTo) {
-      const originalMessage = this.channelMessageService.allMessages.find(msg => msg.messageId === message.threadTo);
-      if (originalMessage) {
-        this.channelMessageService.openThread(originalMessage);
-      }
-    } else if (message.isInThread) {
-      this.channelMessageService.openThread(message);
+}
+
+
+openChannel(isOpen: boolean, name: string, description: string, creator: string, id: string, members: Member[], date: string) {
+  this.mainHelperService.openChannelSection(isOpen);
+  this.channelservice.setChannelName(name);
+  this.channelservice.setChannelDescription(description);
+  this.channelservice.setChannelcreator(creator);
+  this.channelservice.setChannelId(id)
+  this.channelservice.setChannelMember(members);
+  this.channelservice.setChanneldate(date)
+  this.mainservice.showdirectmessage = false;
+  this.userId = this.actualUser[0].id;
+  this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
+  this.channelMessageService.getChannelId(id)
+  this.searchTerm = '';
+}
+
+navigateToMessage(message: Message) {
+  const userId = this.actualUser[0]?.id;
+  if (!userId) return;
+
+  this.searchTerm = '';
+
+  const channel = this.channels.find(c => c.id === message.channelId);
+  if (!channel) return;
+
+  this.openChannel(
+    true,
+    channel.name,
+    channel.description,
+    channel.creator,
+    channel.id,
+    channel.members,
+    channel.date
+  );
+
+  // Thread öffnen, falls nötig
+  if (message.isThread && message.threadTo) {
+    const originalMessage = this.channelMessageService.allMessages.find(msg => msg.messageId === message.threadTo);
+    if (originalMessage) {
+      this.channelMessageService.openThread(originalMessage);
     }
+  } else if (message.isInThread) {
+    this.channelMessageService.openThread(message);
   }
+}
 
 }

@@ -14,6 +14,7 @@ export class UserCardService {
   private actualUserSubscription!: Subscription;
   overlayUserCardActive: boolean = false;
   overlayEditUserActive: boolean = false;
+  overlayEditChangAvatar: boolean = false;
   userId?:string;
   avatar?:number;
   name?:string;

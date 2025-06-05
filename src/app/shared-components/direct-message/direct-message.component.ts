@@ -137,6 +137,7 @@ export class DirectMessageComponent {
       this.messageText = this.messageData.text || this.messageText;
     }
     console.log('Direct Message:', this.messageData);
+     this.loadAllMessageInConversation()
   }
 
 
@@ -145,6 +146,8 @@ export class DirectMessageComponent {
     this.conversationservice.allMessages$.subscribe((messages) => {
       this.allMessages = messages;
     });
+    console.log('this.allMessages',this.allMessages);
+    
   }
 
   ngAfterViewInit(): void {

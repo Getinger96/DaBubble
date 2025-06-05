@@ -5,7 +5,7 @@
             <img (click)="usercardservice.overlayEditUserActive = false;" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
-            <img src="assets/img/avatar_2_square.png" alt="avatar">
+            <img class="userimg" (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditChangAvatar = true;"  src="assets/img/avatar_{{ actualUserUserCard[0].avatar  }}_square.png" alt="avatar">
         </div>
         <div class="name">
             <div class="name-head">
