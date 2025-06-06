@@ -15,10 +15,13 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service';
 import { take } from 'rxjs/operators';
+import { doc, updateDoc } from '@angular/fire/firestore';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule, PickerComponent, MatCardModule, MatButtonModule],
+  imports: [CommonModule,FormsModule, PickerComponent, MatCardModule, MatButtonModule],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -73,6 +76,7 @@ export class MessageComponent implements OnChanges {
   message: Message[] = [];
   userDataReady$ = new BehaviorSubject<boolean>(false);
   profileCardKey = '';
+  editedMessageText: string = '';
 
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService) {
 
@@ -219,11 +223,34 @@ export class MessageComponent implements OnChanges {
     this.showEmojiPickerThread = !this.showEmojiPickerThread;
   }
 
-  overwriteMessage() {
-    this.toggleEditPopup();
-    this.showEditPopup = false;
-    this.editMessage = true;
+ overwriteMessage() {
+  this.toggleEditPopup();
+  this.showEditPopup = false;
+  this.editMessage = true;
+  this.editedMessageText = this.messageText; // Initialize with current text
+}
+
+async saveEditedMessage() {
+  if (!this.messageData || !this.editedMessageText.trim()) return;
+
+  // Update in Firestore
+  const channelId = this.channelID || this.messageData.channelId;
+  const messageId = this.messageData.messageId;
+  const newText = this.editedMessageText.trim();
+
+  if (channelId && messageId) {
+    const messageDocRef = this.messageService.firestore
+      ? doc(this.messageService.firestore, 'channels', channelId, 'messages', messageId)
+      : null;
+
+    if (messageDocRef) {
+      await updateDoc(messageDocRef, { messageText: newText });
+      this.messageText = newText;
+      this.editMessage = false;
+      this.showEditPopup = false;
+    }
   }
+}
 
   closeEditPopup() {
     this.editMessage = false;

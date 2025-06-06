@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-direct-message-chat',
   standalone: true,
-  imports: [NgIf, CommonModule, FormsModule, DirectMessageComponent, ProfileCardComponent, PickerComponent],
+  imports: [NgIf, CommonModule, FormsModule, DirectMessageComponent, ProfileCardComponent, PickerComponent, ThreadComponent],
   templateUrl: './direct-message-chat.component.html',
   styleUrl: './direct-message-chat.component.scss'
 })
@@ -62,7 +62,7 @@ export class DirectMessageChatComponent {
 
 
 
-  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
 
   }
 
@@ -88,6 +88,13 @@ export class DirectMessageChatComponent {
 
   onReplyToMessage(message: ConversationMessage) {
     this.openThread.emit(message);
+  }
+
+
+  // Add this method to handle thread closing
+  onCloseThread() {
+    this.conversationservice.closeThread();
+    this.closeThread.emit();
   }
 
 
@@ -238,5 +245,7 @@ handleClickOutside(event: MouseEvent) {
       return this.currentmessageAvatar;
     }
   }
+
+  
 
 }

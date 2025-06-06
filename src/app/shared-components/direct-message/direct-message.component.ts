@@ -9,13 +9,14 @@ import { Subscription } from 'rxjs';
 import { ConversationService } from '../../firebase-services/conversation.service';
 import { FormsModule } from '@angular/forms';
 import { ThreadComponent } from '../../main-components/thread/thread.component';
+import { doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-direct-message',
   standalone: true,
   imports: [CommonModule, PickerComponent, FormsModule],
   templateUrl: './direct-message.component.html',
-  styleUrl: '../message/message.component.scss',
+  styleUrls: ['../message/message.component.scss', './direct-message.component.scss'],
 })
 export class DirectMessageComponent {
   @Output() replyClicked = new EventEmitter<ConversationMessage>();
@@ -41,6 +42,7 @@ export class DirectMessageComponent {
 
   showEmojiPicker: boolean = false;
   conversationmessageid: string = '';
+  editedMessageText: string = '';
   conversationId: string = '';
   editMessage: boolean = false;
   showEditPopup: boolean = false;
@@ -166,11 +168,34 @@ export class DirectMessageComponent {
     this.showEditPopup = !this.showEditPopup;
   }
 
-  overwriteMessage() {
-    this.toggleEditPopup();
-    this.showEditPopup = false;
-    this.editMessage = true;
+overwriteMessage() {
+  this.toggleEditPopup();
+  this.showEditPopup = false;
+  this.editMessage = true;
+  this.editedMessageText = this.messageText; // Initialize with current text
+}
+
+async saveEditedMessage() {
+  if (!this.messageData || !this.editedMessageText.trim()) return;
+
+  // Update in Firestore
+  const conversationId = this.conversationId;
+  const conversationmessageId = this.conversationmessageid;
+  const newText = this.editedMessageText.trim();
+
+  if (conversationId && conversationmessageId) {
+    const messageDocRef = this.conversationservice.firestore
+      ? doc(this.conversationservice.firestore, 'conversation', conversationId, 'messages', conversationmessageId)
+      : null;
+
+    if (messageDocRef) {
+      await updateDoc(messageDocRef, { text: newText });
+      this.messageText = newText;
+      this.editMessage = false;
+      this.showEditPopup = false;
+    }
   }
+}
 
   closeEditPopup() {
     this.editMessage = false;

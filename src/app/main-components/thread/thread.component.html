@@ -59,10 +59,10 @@
         <div class="thread-answers" #threadFeed>
              <app-direct-message *ngFor="let answer of threadConvAnswers, index as i"
             [messageData]="answer"
-            [date]="answer.timestamp"
+            [date]="this.formatDate(answer.timestamp)"
             [avatarSrc]="answer.avatar"
             [name]="answer.name"
-            [time]="answer.timestamp"
+            [time]="this.formatTime(answer.timestamp)"
             [messageText]="answer.text"
             [isThread]="true"
             [isOwn]="answer.isOwn"

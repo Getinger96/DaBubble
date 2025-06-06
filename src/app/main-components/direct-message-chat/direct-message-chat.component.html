@@ -16,6 +16,7 @@
         </div>
 
     </div>
+
     <div class="main-chat-feed" #chatFeed (scroll)="onScroll()" [ngStyle]="allConversationMessages.length === 0 ? {'justify-content':'flex-end'} : {}">
             <ng-container *ngIf="showDirectMessage">
             <div class="conversation-feed"  *ngFor="let convMsg of allConversationMessages">
@@ -48,8 +49,6 @@
 
             </div>
         </div>
-
-
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">

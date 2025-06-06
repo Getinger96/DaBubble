@@ -47,7 +47,7 @@ export class ConversationService {
   public showThreadSubject = new BehaviorSubject<boolean>(false);
   showThread$ = this.showThreadSubject.asObservable();
 
-  private threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
+  public threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
 
 
@@ -67,6 +67,7 @@ export class ConversationService {
     }
 
   }
+
 
   
 
@@ -322,8 +323,9 @@ export class ConversationService {
 
   getThreadAnswers(id: string): ConversationMessage[] {
     const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
-    console.log('All messages are:', this.allMessages)
-    console.log('Loaded ThreadAnswers are', threadAnswers)
+    console.log('Filtering for threadTo:', id);
+  console.log('All messages:', this.allMessages);
+  console.log('Filtered threadAnswers:', threadAnswers);
     this.sortAllMessages(threadAnswers);
     const lastAnswer = threadAnswers[threadAnswers.length - 1];
     this.lastAnswer = lastAnswer;

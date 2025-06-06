@@ -66,13 +66,13 @@
 
             </div>
         </div>
-
-    </div>
-
     <div *ngIf="editMessage" class="edit-message-input fontNunito">
-        <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}></textarea>
+        <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
         <img src="assets/img/emoji.png" alt="">
         <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
-        <button class="save-edit-message fontNunito">Speichern</button>
+        <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
     </div>
+    </div>
+
+
 </div>
