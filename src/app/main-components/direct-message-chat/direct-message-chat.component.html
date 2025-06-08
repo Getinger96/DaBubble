@@ -40,7 +40,7 @@
         <div class="intro" *ngIf="allConversationMessages.length === 0">
             <div class="intro-head">
                 <img src="assets/img/avatar_{{ currentmessageAvatar }}_square.png" alt="avatar">
-                <p (click)="this.usercardservice.overlayUserCardActive = true;">{{ currentmessageUser }}</p>
+                <p (click)="this.profilecardservice.openProfileCard()" >{{ currentmessageUser }}</p>
             </div>
             <div class="intro-text">
                 @if(this.actualUser == this.currentmessageUser) {

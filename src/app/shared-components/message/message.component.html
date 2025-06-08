@@ -45,8 +45,8 @@
                 [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
-  <img *ngIf="messageData?.avatar !== undefined && messageData?.avatar !== null"
-     [src]="'assets/img/avatar_' + messageData!.avatar + '.png'"
+  <img 
+     [src]="'assets/img/avatar_' + avatarSrc + '.png'"
      [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
                     <div class="message-details" *ngIf="!editMessage">
             <div class="message-over" ><span class="message-name"
