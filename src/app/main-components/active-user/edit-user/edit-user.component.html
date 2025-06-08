@@ -2,7 +2,7 @@
     <div class="content">
         <div class="head">
             <p>Dein Profil bearbeiten</p>
-            <img (click)="usercardservice.overlayEditUserActive = false;" src="assets/img/close.png" alt="close">
+            <img (click)="usercardservice.overlayEditUserActive = false; resetName()" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
             <img class="userimg" (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditChangAvatar = true;"  src="assets/img/avatar_{{ actualUserUserCard[0].avatar  }}_square.png" alt="avatar">
@@ -12,11 +12,11 @@
                 <img src="assets/img/account_circle.svg" alt="profil-icon">
                 <p>Vollständiger Name</p>
             </div>
-            <input type="text" #nameInput [placeholder]="usercardservice.name">
+        <input type="text" [(ngModel)]="usercardservice.changedName" [placeholder]="usercardservice.name">
         </div>
         <div class="button-container">
-            <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.overlayUserCardActive = true;"class="cancel">Abbrechen</button>
-            <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.saveName(nameInput.value, usercardservice.name!)" class="save">Speichern</button>
+            <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.overlayUserCardActive = true; resetName()"class="cancel">Abbrechen</button>
+            <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.saveName(usercardservice.changedName!, usercardservice.name!)" class="save">Speichern</button>
         </div>
     </div>
 </section>

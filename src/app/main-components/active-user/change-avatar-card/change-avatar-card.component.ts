@@ -20,9 +20,21 @@ export class ChangeAvatarCardComponent implements OnChanges{
 ngOnChanges(changes: SimpleChanges) {
   if (this.actualUserUserCard && this.actualUserUserCard.length > 0) {
     this.newAvatarImg = this.actualUserUserCard[0].avatar;
+
+
+    if (!this.usercardservice.overlayEditChangAvatar ) {
+          this.newAvatarImg = this.actualUserUserCard[0].avatar;
+    }
   }
 }
 
+
+resetAvatarSelection() {
+   if (!this.usercardservice.overlayEditChangAvatar ) {
+          this.newAvatarImg = this.actualUserUserCard[0].avatar;
+          this.disabledButton = false;
+    }
+}
 
   changeAvatarImg(newAvatarImgSelection:number) {
     this.disabledButton = true;
