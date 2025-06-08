@@ -90,6 +90,53 @@ export class ChannelService {
     }
 
 
+    async updateAvatarImgInChannels(newAvatarImg:number, userId: string) {
+              try {
+
+            for (let i = 0; i < this.allChannels.length; i++) {
+                let channel = this.allChannels[i];
+
+                    const channelDocRef = doc(this.firestore, 'Channels', channel.id);
+                    await updateDoc(channelDocRef, {
+                        avatar: newAvatarImg,
+                    });
+                this.updateAvatarInMemberChannels(channel, newAvatarImg, userId)
+                
+                }
+
+        } catch (error) {
+
+        }
+    
+    }
+
+
+ async   updateAvatarInMemberChannels(channel: Channel, newAvatarImg: number, userId:string )  {
+         let updated = false;
+        for (let i = 0; i < channel.members.length; i++) {
+            const member = channel.members[i];
+           if (member.id === userId && member.avatar !== String(newAvatarImg)) {
+                channel.members[i].avatar = String(newAvatarImg);
+                updated = true;
+            } 
+        }
+
+        if (updated) {
+            const channelDocRef = doc(this.firestore, 'Channels', channel.id);
+            await updateDoc(channelDocRef, {
+                members: channel.members,
+            });
+
+        }
+    this.subChannelList();
+      setTimeout(() => {
+        this.subChannelList();
+         this.channelMemberSubject.next(channel.members);
+    }, 1000); 
+        
+    }
+
+
     async updateMemberInChannels(channel: any, nameInput: string, nameBefore: string) {
         let updated = false;
 
@@ -114,6 +161,9 @@ export class ChannelService {
             this.channelMemberSubject.next(channel.members);
         }, 1000);
     }
+
+
+
 
 setCurrentChannel(channelId: string) {
   const channelDocRef = doc(this.firestore, 'Channels', channelId);

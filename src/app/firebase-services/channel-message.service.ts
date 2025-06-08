@@ -377,9 +377,8 @@ async updateNameEverywhere(nameInput: string, userId: string, nameBefore: string
     const channelId = channelDoc.id;
     await this.updateMessageNames(channelId, nameInput, userId, nameBefore);
     await this.updateReactionNames(channelId, nameInput, nameBefore);
-    this.subList(channelId);
-    this.loadAllMessagesFromAllChannels();
   }
+    this.loadAllMessagesFromAllChannels();
 }
 
 async updateMessageNames(channelId: string, nameInput: string, userId: string, nameBefore: string) {
@@ -409,6 +408,28 @@ async updateReactionNames(channelId: string, nameInput: string, nameBefore: stri
   }
 }
 
+
+async updateAvatarEverywhere(avatarImgNumber: number, userId: string) {
+  const channelsRef = collection(this.firestore, 'Channels');
+  const channelsSnapshot = await getDocs(channelsRef);
+  for (const channelDoc of channelsSnapshot.docs) {
+    const channelId = channelDoc.id;
+    await this.updateMessageAvatar(channelId, avatarImgNumber, userId);
+    this.subList(channelId);
+    this.loadAllMessagesFromAllChannels();
+  }
+}
+
+async updateMessageAvatar(channelId: string, avatarImgNumber: number, userId: string) {
+  const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
+  const q = query(messagesRef, where('id', '==', userId));
+  const messagesSnapshot = await getDocs(q);
+
+  for (const docSnap of messagesSnapshot.docs) {
+    const docRef = doc(this.firestore, 'Channels', channelId, 'messages', docSnap.id);
+    await updateDoc(docRef, { avatar: avatarImgNumber });
+  }
+}
 
 }
 

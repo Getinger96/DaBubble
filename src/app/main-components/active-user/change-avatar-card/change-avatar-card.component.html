@@ -30,7 +30,7 @@
 
     <div class="next-button">
     <button     [disabled]="!disabledButton" 
-    [ngClass]="{'disabled': !disabledButton}"> Speichern</button>
+    [ngClass]="{'disabled': !disabledButton}" (click)="usercardservice.saveNewAvatarImg(newAvatarImg)"> Speichern</button>
     </div>
 
    </div>

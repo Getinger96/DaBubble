@@ -1,4 +1,4 @@
-import { Component, Input, OnInit , AfterViewInit} from '@angular/core';
+import { Component, Input, OnInit , AfterViewInit, SimpleChanges, OnChanges} from '@angular/core';
 import { UserCardService } from '../services/user-card.service';
 import { NgClass } from '@angular/common';
 import { User } from '../../../interfaces/user.interface';
@@ -9,7 +9,7 @@ import { User } from '../../../interfaces/user.interface';
   templateUrl: './change-avatar-card.component.html',
   styleUrl: './change-avatar-card.component.scss'
 })
-export class ChangeAvatarCardComponent implements AfterViewInit{
+export class ChangeAvatarCardComponent implements OnChanges{
   @Input() actualUserUserCard: User[] = [];
   disabledButton:boolean = false;
   newAvatarImg!: number
@@ -17,11 +17,11 @@ export class ChangeAvatarCardComponent implements AfterViewInit{
 
   }
 
-
-  ngAfterViewInit(): void {
-    this.newAvatarImg = this.actualUserUserCard[0].avatar 
-    
+ngOnChanges(changes: SimpleChanges) {
+  if (this.actualUserUserCard && this.actualUserUserCard.length > 0) {
+    this.newAvatarImg = this.actualUserUserCard[0].avatar;
   }
+}
 
 
   changeAvatarImg(newAvatarImgSelection:number) {
