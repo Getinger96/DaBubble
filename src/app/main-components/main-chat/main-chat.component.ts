@@ -79,6 +79,7 @@ export class MainChatComponent {
     conversationmessageId:'',
     isThread: false,
     isInThread: false,
+    isAnswered: false,
     threadCount: 0,
     name: '',
     avatar: 0,

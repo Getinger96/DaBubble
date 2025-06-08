@@ -298,7 +298,7 @@ loadConvThreadAnswers(): void {
     if (!this.newThreadText.trim() || !this.selectedMessage?.messageId) return;
     await this.channelmessageservice.addThreadAnswer(
       this.newThreadText,
-      this.selectedMessage.id,
+      this.selectedMessage.messageId,
       this.selectedMessage
     );
     this.newThreadText = '';
@@ -307,18 +307,17 @@ loadConvThreadAnswers(): void {
     this.scrollToBottom()
   }
 
-    async sendConvReply(): Promise<void> {
-    if (!this.newThreadText.trim() || !this.selectedConvMessage?.id) return;
-    await this.conversationService.addConvThreadAnswer(
-      this.newThreadText,
-      this.selectedConvMessage.conversationmessageId,
-      this.selectedConvMessage
-    );
-    this.newThreadText = '';
-    this.loadConvThreadAnswers();
-    this.conversationService.sortAllMessages(this.threadConvAnswers);
-    this.scrollToBottom()
-  }
+async sendConvReply(): Promise<void> {
+  if (!this.newThreadText.trim() || !this.selectedConvMessage) return;
+  await this.conversationService.addConvThreadAnswer(
+    this.newThreadText,
+    this.selectedConvMessage
+  );
+  this.newThreadText = '';
+  this.loadConvThreadAnswers();
+  this.conversationService.sortAllMessages(this.threadConvAnswers);
+  this.scrollToBottom();
+}
 
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {

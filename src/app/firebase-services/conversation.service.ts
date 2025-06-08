@@ -183,7 +183,8 @@ export class ConversationService {
         isInThread: messageData['isInThread'],
         threadTo: messageData['threadTo'],
         isOwn: isOwn,
-        conversationmessageId: docSnap.id
+        conversationmessageId: docSnap.id,
+        isAnswered: messageData['isAnswered']
       };
       if (message.isThread) {
         this.allMessages.push(message)
@@ -230,7 +231,8 @@ export class ConversationService {
           name: messageData['name'],
           avatar: messageData['avatar'],
           isOwn: isOwn,
-          conversationmessageId: messageData['conversationmessageId']
+          conversationmessageId: messageData['conversationmessageId'],
+          isAnswered : messageData['isAnswered']
         };
         if (message.isThread) {
           liveThreadMessages.push(message);
@@ -369,6 +371,7 @@ export class ConversationService {
       threadTo: threadToId,
       id: '',
       conversationmessageId: '',
+      isAnswered: false
     };
 
     if (this.conversationId) {
@@ -494,40 +497,54 @@ export class ConversationService {
     });
   }
 
-  async addThread(message: ConversationMessage) {
-    try {
-      if (!this.conversationId) {
-        throw new Error('conversationId is undefined');
-      }
-      const conversationDocRef = doc(this.firestore, 'conversation', this.conversationId);
-      const messagesRef = collection(conversationDocRef, 'messages');
-      const Userid = this.getActualUser()
-      const docRef = await addDoc(messagesRef, this.convThreadJson(message, Userid))
-      const messageId = docRef.id;
-      await updateDoc(docRef, { messageId });
-      return messageId;
-    } catch (error) {
-      console.error('Error adding message:', error);
-      return null
-    }
+async addConvThreadAnswer(
+  messageText: string,
+  parentMessage: ConversationMessage // <-- pass the whole parent message
+) {
+  const userId = this.getActualUser();
+  const user = this.mainservice.actualUser[0];
 
-  }
+  // Create the thread answer object
+  const threadAnswer: ConversationMessage = {
+    senderId: userId,
+    name: user.name,
+    avatar: user.avatar,
+    threadCount: 0,
+    text: messageText,
+    timestamp: new Date(),
+    isThread: true,
+    isInThread: false,
+    threadTo: parentMessage.conversationmessageId, // <-- CRUCIAL!
+    id: '', // will be set after Firestore creation
+    conversationmessageId: '', // will be set after Firestore creation
+    isOwn: true, // not needed in Firestore, but fine for local use
+    isAnswered: false
+  };
 
+  if (this.conversationId) {
+    const convMessageRef = collection(
+      this.firestore,
+      'conversation',
+      this.conversationId,
+      'messages'
+    );
 
-  async addConvThreadAnswer(messageText: string, threadToId: string, selectedMessage: ConversationMessage) {
-    const userId = this.getActualUser();
-    const user = this.mainservice.actualUser[0];
-    const threadAnswer: ConversationMessage = this.convMessageJSON(user, messageText, threadToId, userId)
-    const answerId = await this.addThread(threadAnswer);
-    if (answerId) {
-      threadAnswer.id = answerId;
-      console.log('Thread created with', answerId);
-    }
+    // Add to Firestore
+    const docRef = await addDoc(convMessageRef, threadAnswer);
+    threadAnswer.id = docRef.id;
+    threadAnswer.conversationmessageId = docRef.id;
 
-    await this.updateConvMessageThreadCount(threadToId, selectedMessage.id);
+    // Update the Firestore doc with its own ID
+    await updateDoc(docRef, { conversationmessageId: docRef.id });
 
+    // Optionally update thread count on parent
+    await this.updateConvMessageThreadCount(parentMessage.conversationmessageId, parentMessage.id);
+
+    // Update local state/observable
+    this.allMessages.push(threadAnswer);
     this.allConversationMessagesSubject.next(this.allMessages);
   }
+}
 
   convMessageJSON(user: User, messageText: string, threadToId: string, userId: string) {
     return {
@@ -543,24 +560,11 @@ export class ConversationService {
       id: '',
       threadCount: 0,
       conversationmessageId: '', // Added to satisfy ConversationMessage interface
+      isAnswered: false
     }
 
   }
 
-  convThreadJson(item: ConversationMessage, id: string) {
-    return {
-      name: item.name,
-      avatar: item.avatar,
-      text: item.text,
-      id: item.id || '',
-      timestamp: item.timestamp || Date.now(),
-      isOwn: item.isOwn,
-      threadTo: item.threadTo || null,
-      isThread: item.isThread || false,
-      isInThread: item.isInThread || false,
-      threadCount: item.threadCount || 0,
-    };
-  }
 
   async updateConvMessageThreadCount(messageId: string, conversationId: string) {
     this.allConversationMessagesSubject.next(this.allMessages);
@@ -615,6 +619,7 @@ export class ConversationService {
         threadTo: data['threadTo'],
         isOwn: isOwn,
         conversationmessageId: docSnap.id,
+        isAnswered: data['isAnswered']
         
       };
 

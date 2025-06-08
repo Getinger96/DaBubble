@@ -28,10 +28,12 @@ export class DirectMessageComponent {
   @Input() name!: string;
   @Input() time!: Date | string;
   @Input() messageText!: string;
+  @Input() threadCount: number = 0;
   @Input() isOwn: boolean | undefined = false;
   @Input() dateExists: boolean | undefined = false;
   @Input() isThread: boolean | undefined = false;
   @Input() isInThread: boolean | undefined = false;
+  @Input() isAnswered: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
   
 

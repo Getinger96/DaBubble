@@ -9,6 +9,7 @@ import { MainHelperService } from '../../../services/main-helper.service';
 import { user } from '@angular/fire/auth';
 import { DirectMessageChatComponent } from '../../direct-message-chat/direct-message-chat.component';
 import { Router } from '@angular/router';
+import { ThreadComponent } from '../../thread/thread.component';
 
 @Component({
   selector: 'app-direct-message-user',
@@ -41,7 +42,7 @@ export class DirectMessageUserComponent implements OnInit {
       console.warn('actualUser not loaded yet');
       return;
     }
-
+   
     this.mainservice.showdirectmessage = true
     this.mainhelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(name)
@@ -50,8 +51,8 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
     this.router.navigateByUrl(`/main-components/${this.actualUser[0].id}/directmessage/${id}`);
-
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
+    
   }
 
   loadActualUser() {
