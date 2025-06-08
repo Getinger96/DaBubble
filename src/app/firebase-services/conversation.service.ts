@@ -499,10 +499,15 @@ export class ConversationService {
 
 async addConvThreadAnswer(
   messageText: string,
-  parentMessage: ConversationMessage // <-- pass the whole parent message
-) {
+  parentMessage: ConversationMessage
+): Promise<void> {
   const userId = this.getActualUser();
   const user = this.mainservice.actualUser[0];
+
+  if (!this.conversationId) {
+    console.error('No conversation ID available');
+    return;
+  }
 
   // Create the thread answer object
   const threadAnswer: ConversationMessage = {
@@ -514,14 +519,14 @@ async addConvThreadAnswer(
     timestamp: new Date(),
     isThread: true,
     isInThread: false,
-    threadTo: parentMessage.conversationmessageId, // <-- CRUCIAL!
-    id: '', // will be set after Firestore creation
-    conversationmessageId: '', // will be set after Firestore creation
-    isOwn: true, // not needed in Firestore, but fine for local use
+    threadTo: parentMessage.conversationmessageId,
+    id: '',
+    conversationmessageId: '',
+    isOwn: true,
     isAnswered: false
   };
 
-  if (this.conversationId) {
+  try {
     const convMessageRef = collection(
       this.firestore,
       'conversation',
@@ -531,18 +536,24 @@ async addConvThreadAnswer(
 
     // Add to Firestore
     const docRef = await addDoc(convMessageRef, threadAnswer);
-    threadAnswer.id = docRef.id;
-    threadAnswer.conversationmessageId = docRef.id;
-
+    
     // Update the Firestore doc with its own ID
     await updateDoc(docRef, { conversationmessageId: docRef.id });
 
-    // Optionally update thread count on parent
-    await this.updateConvMessageThreadCount(parentMessage.conversationmessageId, parentMessage.id);
+    // Update thread count on parent message
+    await this.updateConvMessageThreadCount(
+      parentMessage.conversationmessageId, 
+      this.conversationId
+    );
 
-    // Update local state/observable
-    this.allMessages.push(threadAnswer);
-    this.allConversationMessagesSubject.next(this.allMessages);
+    // DON'T manually update local arrays - let the listener handle it!
+    // The listenToMessages method will automatically detect the new message
+    // and update this.allMessages and this.allConversationMessagesSubject
+
+    console.log('Thread answer created with ID:', docRef.id);
+  } catch (error) {
+    console.error('Error creating thread answer:', error);
+    // You might want to show a user-friendly error message here
   }
 }
 
@@ -566,26 +577,33 @@ async addConvThreadAnswer(
   }
 
 
-  async updateConvMessageThreadCount(messageId: string, conversationId: string) {
-    this.allConversationMessagesSubject.next(this.allMessages);
-    const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
-    const threadCount = replies.length;
 
+async updateConvMessageThreadCount(messageId: string, conversationId: string) {
+  // Filter replies based on the messageId (which should be conversationmessageId)
+  const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
+  const threadCount = replies.length;
 
-    const conversationRef = doc(this.firestore, 'conversations', conversationId);
-    const msgRef = doc(conversationRef, 'messages', messageId)
+  // Use the current conversationId, not the passed conversationId parameter
+  const currentConversationId = this.conversationId || conversationId;
+  
+  // Create the correct document reference
+  const msgRef = doc(this.firestore, 'conversation', currentConversationId, 'messages', messageId);
 
-
-    try {
-      await updateDoc(msgRef, {
-        threadCount: threadCount,
-        isAnswered: threadCount > 0
-      });
-
-    } catch (error) {
-      console.error("Error updating thread count:", error);
-    }
+  try {
+    await updateDoc(msgRef, {
+      threadCount: threadCount,
+      isAnswered: threadCount > 0
+    });
+    
+    console.log(`Updated thread count for message ${messageId}: ${threadCount}`);
+  } catch (error) {
+    console.error("Error updating thread count:", error, {
+      messageId,
+      conversationId: currentConversationId,
+      threadCount
+    });
   }
+}
 
   isTimestamp(value: any): value is { toMillis: () => number } {
     return value && typeof value.toMillis === 'function';

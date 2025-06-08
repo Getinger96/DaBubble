@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { NgIf, CommonModule } from '@angular/common';
 import { User } from '../../../interfaces/user.interface';
 import { RegisterService } from '../../../firebase-services/register.service';
@@ -10,6 +10,8 @@ import { user } from '@angular/fire/auth';
 import { DirectMessageChatComponent } from '../../direct-message-chat/direct-message-chat.component';
 import { Router } from '@angular/router';
 import { ThreadComponent } from '../../thread/thread.component';
+import { ConversationService } from '../../../firebase-services/conversation.service';
+import { MainComponentsComponent } from '../../main-components.component';
 
 @Component({
   selector: 'app-direct-message-user',
@@ -22,10 +24,11 @@ export class DirectMessageUserComponent implements OnInit {
   actualUser: User[] = [];
   @Input() ownAccount!: boolean;
   @Input() userArray: User[] = [];
+  @Output() closeThread = new EventEmitter<void>();
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   private directMessageChatComponent!: DirectMessageChatComponent;
-  constructor(private registerservice: RegisterService, private loadingService: LoadingService, private mainservice: MainComponentService, private mainhelperService: MainHelperService,private router: Router) {
+  constructor(private registerservice: RegisterService, private loadingService: LoadingService, private mainservice: MainComponentService, private mainhelperService: MainHelperService, private mainComponent: MainComponentsComponent,private router: Router) {
   
   }
 
@@ -52,6 +55,7 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserId(id)
     this.router.navigateByUrl(`/main-components/${this.actualUser[0].id}/directmessage/${id}`);
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
+    this.closeThread.emit();
     
   }
 
@@ -94,5 +98,7 @@ export class DirectMessageUserComponent implements OnInit {
       this.actualUserSubscription.unsubscribe();
     }
   }
+
+  
 
 }

@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-direct-message-chat',
   standalone: true,
-  imports: [NgIf, CommonModule, FormsModule, DirectMessageComponent, ProfileCardComponent, PickerComponent, ThreadComponent],
+  imports: [NgIf, CommonModule, FormsModule, DirectMessageComponent, ProfileCardComponent, PickerComponent],
   templateUrl: './direct-message-chat.component.html',
   styleUrl: './direct-message-chat.component.scss'
 })
@@ -73,7 +73,7 @@ export class DirectMessageChatComponent {
     this.loadStatus();
     this.loadUserId();
     setTimeout(() => this.scrollToBottom(), 0);
-    this.actualUser = this.mainservice.actualUser[0].name;
+    this.actualUser = this.mainservice.actualUser[0]?.name;
 
    
 
@@ -88,13 +88,6 @@ export class DirectMessageChatComponent {
 
   onReplyToMessage(message: ConversationMessage) {
     this.openThread.emit(message);
-  }
-
-
-  // Add this method to handle thread closing
-  onCloseThread() {
-    this.conversationservice.closeThread();
-    this.closeThread.emit();
   }
 
 
@@ -199,7 +192,7 @@ handleClickOutside(event: MouseEvent) {
       this.unsubscribeFromMessages = undefined;
     }
 
-    const currentUserId = this.mainservice.actualUser[0].id;
+    const currentUserId = this.mainservice.actualUser[0]?.id;
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
     this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
 
@@ -245,7 +238,5 @@ handleClickOutside(event: MouseEvent) {
       return this.currentmessageAvatar;
     }
   }
-
-  
 
 }

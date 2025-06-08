@@ -1,4 +1,4 @@
-import { Component, Input, model, Pipe, PipeTransform } from '@angular/core';
+import { Component, EventEmitter, Input, model, Output, Pipe, PipeTransform } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { DirectMessageUserComponent } from './direct-message-user/direct-message-user.component';
 import { User } from '../../interfaces/user.interface';
@@ -34,6 +34,7 @@ export class WorkspaceMenuComponent {
   overlay2Visible: boolean = false;
   @Input() userArray!: User[];
   @Input() actualUser!: User[];
+  @Output() closeThread = new EventEmitter<void>();
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];

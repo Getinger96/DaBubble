@@ -39,11 +39,11 @@
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
-                <div *ngIf="isAnswered" class="message-answered">
+                <div *ngIf="threadCount && threadCount > 0" class="message-answered">
                     <span class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
                     <span class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
                 </div>
-                <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">
+                <div *ngIf="!threadCount || threadCount === 0" class="message-not-answered">
                     <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
                         src="assets/img/add_reaction40.png" alt="">
                 </div>

@@ -25,7 +25,7 @@ import { ConversationService } from '../firebase-services/conversation.service';
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent,RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, ChannelChatComponent, DirectMessageChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent, RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, DirectMessageChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })  
@@ -41,7 +41,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   overlayUserCardActive:boolean = false;
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
-  showdirectmessage:boolean=false;
+  showdirectmessage:boolean = false;
   actualUser: User[] = [];
   constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService) {
   }
@@ -88,9 +88,9 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.channemessageService.openThread(message);
   }
 
-  closeThreadView(): void {
-    this.showThreadWindow = false;
+  public closeThreadView(): void {
     MainComponentsComponent.toggleThreads();
+    this.showThreadWindow = false;
     this.selectedThreadMessage = null;
     this.selectedConvThreadMessage = null;
   }
@@ -99,6 +99,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     const threads = document.querySelector('app-thread');
     if (threads) {
       threads.classList.toggle('closed');
+      
     }
   }
 
