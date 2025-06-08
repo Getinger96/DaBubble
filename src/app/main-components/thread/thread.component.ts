@@ -225,7 +225,7 @@ loadConvThreadAnswers(): void {
     (messages) => {
       if (this.selectedConvMessage?.id) {
         this.threadConvAnswers = this.conversationService.getThreadAnswers(
-          this.selectedConvMessage.id
+          this.selectedConvMessage.conversationmessageId
         );
         this.loadReaction(); 
       } else {

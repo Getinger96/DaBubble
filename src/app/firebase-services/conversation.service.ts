@@ -309,7 +309,7 @@ export class ConversationService {
       this.selectedThreadMessageSubject
     );
     this.showThreadSubject.next(true);
-    const messageId = message.id;
+    const messageId = message.conversationmessageId;
     if (messageId) {
       this.getThreadAnswers(messageId);
       this.updateThreadAnswers(messageId);
