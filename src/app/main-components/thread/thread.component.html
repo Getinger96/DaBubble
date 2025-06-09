@@ -55,7 +55,11 @@
             [emojiReactionsThead]="emojiReactions.get(selectedConvMessage.id)"
             >
          </app-direct-message>
-            <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedConvMessage.threadCount }} Antworten</span><div class="line"></div></div>
+            <div class="thread-number-of-answers">
+                <span>
+                         {{ threadCountService.getThreadCount(selectedConvMessage.conversationmessageId) | async }} Antworten
+                </span>
+            <div class="line"></div></div>
         </div>
         <div class="thread-answers" #threadFeed>
              <app-direct-message *ngFor="let answer of threadConvAnswers, index as i"

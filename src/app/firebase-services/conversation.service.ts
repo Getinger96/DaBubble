@@ -523,7 +523,7 @@ export class ConversationService {
       isThread: true,
       isInThread: false,
       threadTo: parentMessage.conversationmessageId,
-      id: '',
+      id: parentMessage.id,
       conversationmessageId: '',
       isOwn: true,
       isAnswered: false

@@ -67,6 +67,8 @@ export class DirectMessageChatComponent {
   }
 
   async ngOnInit(): Promise<void> {
+
+
     this.loadName();
     this.loadAvatar();
     this.loadEmail();
@@ -74,9 +76,6 @@ export class DirectMessageChatComponent {
     this.loadUserId();
     setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0]?.name;
-
-   
-
      await this.initConversation();
 
     // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)

@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 import { ConversationService } from '../../firebase-services/conversation.service';
 import { FormsModule } from '@angular/forms';
 import { ThreadComponent } from '../../main-components/thread/thread.component';
-import { doc, updateDoc } from '@angular/fire/firestore';
+import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
+import { ThreadCountService } from '../../firebase-services/thread-count.service';
 
 @Component({
   selector: 'app-direct-message',
@@ -70,7 +71,8 @@ export class DirectMessageComponent {
   constructor(
     private messageservice: MessageService,
     private maincomponentservice: MainComponentService,
-    private conversationservice: ConversationService
+    private conversationservice: ConversationService,
+    public threadCountService : ThreadCountService
 
   ) { }
 
@@ -89,6 +91,12 @@ export class DirectMessageComponent {
 
         }
       );
+
+      if (this.messageData?.conversationmessageId) {
+      this.threadCountService.getThreadCount(this.messageData.conversationmessageId).subscribe(count => {
+      this.threadCount = count;
+        });
+      }
 
       let dateObj: Date;
 
@@ -141,7 +149,8 @@ export class DirectMessageComponent {
       this.messageText = this.messageData.text || this.messageText;
     }
     console.log('Direct Message:', this.messageData);
-     this.loadAllMessageInConversation()
+     this.loadAllMessageInConversation();
+     this.loadThreadAnswers();
   }
 
 
@@ -175,6 +184,23 @@ overwriteMessage() {
   this.showEditPopup = false;
   this.editMessage = true;
   this.editedMessageText = this.messageText; // Initialize with current text
+}
+
+async deleteMessage(){
+  const conversationId = this.conversationId;
+  const conversationmessageId = this.conversationmessageid;
+
+    if (conversationId && conversationmessageId) {
+    const messageDocRef = this.conversationservice.firestore
+      ? doc(this.conversationservice.firestore, 'conversation', conversationId, 'messages', conversationmessageId)
+      : null;
+
+    if (messageDocRef) {
+      await deleteDoc(messageDocRef);
+      this.editMessage = false;
+      this.showEditPopup = false;
+    }
+  }
 }
 
 async saveEditedMessage() {
@@ -252,31 +278,30 @@ async saveEditedMessage() {
     }
   }
 
-  loadThreadAnswers(): void {
-    if (this.allThreadsSubscription) {
-      this.allThreadsSubscription.unsubscribe();
-    }
-
-    this.allThreadsSubscription =
-      this.conversationservice.allMessages$.subscribe((messages) => {
-        if (this.messageData && this.messageData.id) {
-          // Filter and set thread answers
-          const messageId = this.messageData.id;
-          this.threadAnswers =
-            this.conversationservice.getThreadAnswers(messageId);
-
-          // Update thread answers
-          this.conversationservice.updateThreadAnswers(messageId);
-
-          // Update last answer date
-          this.lastAnswerDate = this.conversationservice?.lastAnswer?.timestamp
-            ? this.formatTimestamp(
-              this.conversationservice.lastAnswer.timestamp
-            )
-            : '';
-        }
-      });
+loadThreadAnswers(): void {
+  if (this.allThreadsSubscription) {
+    this.allThreadsSubscription.unsubscribe();
   }
+
+  this.allThreadsSubscription =
+    this.conversationservice.allMessages$.subscribe((messages) => {
+      if (this.messageData && this.messageData.id) {
+        const messageId = this.messageData.id;
+        this.threadAnswers = this.conversationservice.getThreadAnswers(messageId);
+        
+        // Update local count
+        this.threadCount = this.threadAnswers.length;
+        
+        // Update global thread count service
+        this.threadCountService.updateThreadCount(messageId, this.threadCount);
+
+        this.conversationservice.updateThreadAnswers(messageId);
+        this.lastAnswerDate = this.conversationservice?.lastAnswer?.timestamp
+          ? this.formatTimestamp(this.conversationservice.lastAnswer.timestamp)
+          : '';
+      }
+    });
+}
 
   private formatTimestamp(timestamp: any): string {
     let dateObj: Date;
