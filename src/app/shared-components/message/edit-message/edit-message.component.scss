@@ -1,0 +1,96 @@
+.main-chat-message {
+    height: 145px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    position: relative;
+
+    textarea {
+        border: none;
+        width: calc(100% - 40px);
+        padding: 20px 20px;
+        height: calc(100% - 100px);
+        background-color: transparent;
+        resize: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .message-icons {
+        position: absolute;
+        width: calc(100% - 40px);
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        justify-content: space-between;
+
+        img {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+    }
+}
+
+
+
+.emojiIcon { 
+display: flex;
+position: relative;
+
+}
+
+
+
+
+div {
+display: flex;
+gap: 25px;
+        .close-edit-message {
+            background: white;
+            color: #444DF2;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 1px solid rgb(68, 77, 242);
+            cursor: pointer;
+
+
+            &:hover {
+                background-color: #444DF2;
+                color: white;
+            }
+          
+        
+    }
+
+
+
+        .save-edit-message {
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #444DF2;
+            color: white;
+
+            &:hover {
+                color: #444DF2;
+                background-color: #ECEEFE;
+            }
+        }
+
+}
+
+.emojiWindow {
+    border: solid 1px black;
+    padding: 10px 0px 5px 4px;
+    border-radius: 10px;
+    background-color: #222222;
+    scrollbar-color: #444DF2 #222222 !important;
+    z-index: 100;
+    position: absolute;
+    bottom: 125px;
+    width: max-content;
+}

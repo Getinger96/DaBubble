@@ -7,10 +7,15 @@
             {{ date}}
         </span>
     </div>
-    <div [ngClass]="{'reverse': isOwn && !isInThread}" [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
+
+
+    <div [ngClass]="{'reverse': isOwn && !isInThread,
+            'no-hover-popup': isEditing(threadAnswersId)}"  
+    [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
         class="message">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup"
-            [ngClass]="{ 'show': showEmojiPicker }">
+            [ngClass]="{ 'show': showEmojiPicker}" >
+
 
 
             <img (click)="addEmoji('✅',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check">
@@ -21,6 +26,13 @@
             <img (click)="toggleEditPopup()" *ngIf="isOwn" src="assets/img/dots.png" alt="dots">
         </div>
 
+
+            <div class="editOwnMessage" *ngIf="isOwn && isEditing(threadAnswersId) && mainHelperService.showEditMessage" >
+              <app-edit-message [messageTextEdit]="messageText"  [messageEditId]="editMessageId!"
+              [channelID]="channelID" (cancelEdit)="onCancelEdit()">
+                 </app-edit-message>
+            </div>
+
         <div *ngIf="showEmojiPicker" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
             <emoji-mart set="apple" (emojiClick)="addEmoji($event, channelID, messageData?.messageId)"
                 title="Pick your emoji…" emoji="point_up" [totalFrequentLines]="2" [showSingleCategory]="true"
@@ -28,10 +40,14 @@
                 [perLine]="7"></emoji-mart>
         </div>
 
-
         <div *ngIf="isOwn && showEditPopup" class="edit-message" [ngStyle]="isThread ? {'left': '135px'} : {}">
-            <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
+            <span (click)="overwriteMessage(threadAnswersId)">Nachricht bearbeiten</span>
+            <span> Nachricht löschen</span>
         </div>
+
+
+      
+
         <div *ngIf="isThread || isInThread" class="reaction-popup">
             <img #emojiThread (click)="showEmojiBarThread()" src="assets/img/add_reaction40.png" alt="">
 

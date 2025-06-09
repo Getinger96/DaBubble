@@ -8,6 +8,7 @@ export class MainHelperService {
     private showChannel = new BehaviorSubject  < boolean>(false);
     openChannel$ = this.showChannel.asObservable();
     openChannel: boolean = true;
+    showEditMessage: boolean = false
 
   constructor() { }
 

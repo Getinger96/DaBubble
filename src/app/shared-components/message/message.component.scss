@@ -31,44 +31,38 @@
 }
 
 .message {
-    width: 100%;
-    display: flex;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    position: relative;
+  width: 100%;
+  display: flex;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  position: relative;
 
+  &:not(.no-hover-popup):hover {
+    background-color: #ECEFFF;
 
-    &:hover {
-
-        background-color: #ECEFFF;
-
-        .reaction-popup {
-            display: flex;
-        }
-
-        &:not(.reverse) {
-
-
-            .message-text {
-                background-color: white !important;
-            }
-        }
-
-        &.reverse {
-            .reaction-popup {
-                left: 43px;
-                right: unset;
-            }
-        }
-
-
+    .reaction-popup {
+      display: flex;
     }
+
+    &:not(.reverse) {
+      .message-text {
+        background-color: white !important;
+      }
+    }
+
+    &.reverse {
+      .reaction-popup {
+        left: 43px;
+        right: unset;
+      }
+    }
+  }
 
 
     .reaction-popup {
         position: absolute;
         right: 43px;
-        top: -18px;
+        top: 10px;
         display: none;
         align-items: center;
         justify-content: center;
@@ -105,32 +99,33 @@
     }
 
     .edit-message {
-        z-index: 3;
-        cursor: pointer;
-        position: absolute;
-        left: 270px;
-        width: max-content;
-        border: 1px solid #ADB0D9;
-        border-bottom-right-radius: 30px;
-        border-top-right-radius: 30px;
-        border-bottom-left-radius: 30px;
-        background-color: white;
-        padding: 10px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      z-index: 3;
+    cursor: pointer;
+    position: absolute;
+    left: 270px;
+    width: max-content;
+    border: 1px solid #ADB0D9;
+    border-bottom-right-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    background-color: white;
+    padding: 10px 0px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column-reverse;
+    gap: 5px;
 
         span {
             padding: 10px 20px;
             border-radius: 100px;
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 16px;
+             font-weight: 700;
             background-color: white;
 
             &:hover {
                 background-color: #ECEEFE;
                 color: #535AF1;
-                font-weight: 700;
             }
 
 
@@ -461,3 +456,12 @@ max-height: 80px !important;
     }
 }
 
+.editOwnMessage {
+    position: absolute;
+    left: 30px;
+    top: 0px;
+    bottom: 0px;
+    width: 90%;
+    z-index: 999;
+    background: white;
+}

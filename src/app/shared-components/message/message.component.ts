@@ -17,11 +17,12 @@ import { ProfileCardOverlayService } from '../../main-components/profile-card/pr
 import { take } from 'rxjs/operators';
 import { doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
-
+import { EditMessageComponent } from './edit-message/edit-message.component';
+import { MainHelperService } from '../../services/main-helper.service';
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule,FormsModule, PickerComponent, MatCardModule, MatButtonModule],
+  imports: [CommonModule, FormsModule, PickerComponent, MatCardModule, MatButtonModule, EditMessageComponent],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -77,8 +78,11 @@ export class MessageComponent implements OnChanges {
   userDataReady$ = new BehaviorSubject<boolean>(false);
   profileCardKey = '';
   editedMessageText: string = '';
+ editMessageId: string | null = null;
 
-  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService) {
+  constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService,
+    public mainHelperService: MainHelperService
+  ) {
 
   }
 
@@ -172,8 +176,13 @@ export class MessageComponent implements OnChanges {
 
 
 
+isEditing(messageId: string): boolean {
+  return this.editMessageId === messageId;
+}
 
-
+startEdit(messageId: string) {
+  this.editMessageId = messageId;
+}
 
 
   loadThreadAnswers(): void {
@@ -223,11 +232,13 @@ export class MessageComponent implements OnChanges {
     this.showEmojiPickerThread = !this.showEmojiPickerThread;
   }
 
- overwriteMessage() {
+ overwriteMessage(messageId:string) {
   this.toggleEditPopup();
   this.showEditPopup = false;
   this.editMessage = true;
-  this.editedMessageText = this.messageText; // Initialize with current text
+  this.startEdit(messageId);
+  this.mainHelperService.showEditMessage= true
+  this.editedMessageText = this.messageText;
 }
 
 async saveEditedMessage() {
@@ -263,7 +274,11 @@ async saveEditedMessage() {
   }
 
 
-
+onCancelEdit() {
+  this.mainHelperService.showEditMessage = false;
+  this.editMessage = false;
+  this.editMessageId = null;
+}
 
   addEmoji(event: any, channelID: string, messageId?: string) {
     const emoji = event.emoji?.native || event;

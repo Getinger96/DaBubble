@@ -1,0 +1,24 @@
+        <div class="main-chat-message" *ngIf="mainHelperService.showEditMessage">
+            <textarea #messageBox [(ngModel)]="textEdit"  type="text" class="fontNunito"
+                [placeholder]="messageTextEdit" wrap="soft"></textarea>
+            <div class="message-icons">
+
+
+                   <div  #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
+                    <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
+                        [totalFrequentLines]="2" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
+                        [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
+                        </div>
+
+                <div class="emojiIcon">
+                
+                    <img #emojiImg (click)="showEmojiBar()" src="assets/img/emoji.png" alt="">
+                
+                 </div>
+
+                 <div>
+                <button (click)="closeEditMessageText()" class="close-edit-message fontNunito">Abbrechen</button>
+                <button (click)="editMessage(messageEditId, channelID)"  class="save-edit-message fontNunito">Speichern</button>
+                </div>
+            </div>
+        </div>
