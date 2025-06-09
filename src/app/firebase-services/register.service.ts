@@ -12,11 +12,8 @@ import { filter } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class RegisterService {
-  // Initialisiere Firestore
-  firestore: Firestore = inject(Firestore);
-
-  // Initialisiere Firebase Auth
-  private auth = getAuth();
+  firestore: Firestore = inject(Firestore); // Initialisiere Firestore
+  private auth = getAuth(); // Initialisiere Firebase Auth
   private provider = new GoogleAuthProvider();
   private current = this.auth.currentUser;
   oobCode: string | null = null;
@@ -24,22 +21,15 @@ export class RegisterService {
   uid?: string;
   name?: string;
   userEmailExist?: boolean = false
-  
-  constructor(private route: ActivatedRoute,
-    private router: Router) {
 
+  constructor(private route: ActivatedRoute,private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.oobCode = params['oobCode'];
     });
-
-
   }
 
-
- 
   getSingleDocRef(docID: string) {
     return doc(collection(this.firestore, 'Users'), docID);
-
   }
 
   async deleteUserFirebase() {
@@ -50,21 +40,15 @@ export class RegisterService {
       if (currentUser) {
         await deleteUser(currentUser);
         await deleteDoc(docRef);
-        console.log("Benutzer erfolgreich gelöscht.", currentUser, docRef);
       }
     }
-
-
   }
-
-
-
 
   async checkIfUserExistsBeforeRegistration(item: User) {
     try {
       let userQuery = query(this.getUserRef(), where("email", "==", item.email))
       const querySnapshot = await getDocs(userQuery);
-     
+
       if (!querySnapshot.empty) {
         this.userEmailExist = true
         return false
@@ -77,14 +61,9 @@ export class RegisterService {
     }
   }
 
-
-
-
-
   async addNewUser(item: User, event: Event) {
     try {
       event.preventDefault();
-     
       const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
       if (!await this.checkIfUserExistsBeforeRegistration(item)) {
         return false;
@@ -92,11 +71,9 @@ export class RegisterService {
       const user = userCredential.user;
       this.name = item.name;
       this.addInFirebase(item, user.uid);
-      console.log("Benutzer erfolgreich registriert und in Firestore gespeichert");
       this.router.navigate(['/chooseAvatar']);
       return true
     } catch (error) {
-      console.error("Fehler bei der Registrierung oder beim Speichern in Firestore:", error);
       return false;
     }
   }
@@ -105,19 +82,13 @@ export class RegisterService {
     return addDoc(this.getUserRef(), this.userJson(item, uid)).then(async docRef => {
       this.id = docRef.id;
       this.uid = uid;
-      console.log('item.uid', item.uid);
 
-      console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
       await updateDoc(docRef, { id: docRef.id });
       return docRef.id;
     }).catch(error => {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });
   }
-
-
-
-
 
   userJson(item: User, uid: string) {
     return {
@@ -130,8 +101,8 @@ export class RegisterService {
       status: 'Offline'
     };
   }
-  // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
-  setUserObject(obj: any, id: string): User {
+
+  setUserObject(obj: any, id: string): User { // Funktion, um das Benutzerobjekt in das Firestore-Format zu konvertieren
     return {
       uid: obj.uid,
       id: id,
@@ -143,40 +114,22 @@ export class RegisterService {
     };
   }
 
-
-
   async updateUserAvatar(avatar: number) {
     try {
       if (!this.id) {
         throw new Error("Fehler: Benutzer-ID nicht gesetzt!");
       }
-
-      const userRef = doc(this.firestore, "Users", this.id);
-
-      // Verwende setDoc, um sicherzustellen, dass das Dokument existiert oder erstellt wird
+      const userRef = doc(this.firestore, "Users", this.id);// Verwende setDoc, um sicherzustellen, dass das Dokument existiert oder erstellt wird
       await updateDoc(userRef, { avatar: avatar });
-
-      console.log("Avatar erfolgreich aktualisiert");
       this.router.navigate(['/']);
     } catch (error) {
       console.error("Fehler beim Aktualisieren des Avatars:", error);
     }
   }
 
-
-
-  // Funktion, um die Referenz auf die Firestore-Sammlung 'Users' zu bekommensetUserObject
-  getUserRef() {
+  getUserRef() { // Funktion, um die Referenz auf die Firestore-Sammlung 'Users' zu bekommensetUserObject
     return collection(this.firestore, 'Users');
   }
-
-
-
-
-
-
-
-
 
   sendEmailforPasswordreset(item: User) {
     sendPasswordResetEmail(this.auth, item.email)
@@ -192,11 +145,10 @@ export class RegisterService {
 
   }
 
-
   resetPassword(newPasswort: any, confirmedPasswort: any): void {
     if (this.oobCode && newPasswort === confirmedPasswort) {
-      // Passwort nur zurücksetzen, wenn der oobCode vorhanden und die Passwörter übereinstimmen
-      const auth = getAuth();
+     
+      const auth = getAuth(); // Passwort nur zurücksetzen, wenn der oobCode vorhanden und die Passwörter übereinstimmen
       confirmPasswordReset(auth, this.oobCode, newPasswort)
         .then(() => {
           alert('Ihr Passwort wurde erfolgreich zurückgesetzt!');
@@ -210,10 +162,4 @@ export class RegisterService {
       alert('Die Passwörter stimmen nicht überein!');
     }
   }
-
-
-
-
 }
-
-
