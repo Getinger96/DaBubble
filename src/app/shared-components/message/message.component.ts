@@ -50,6 +50,7 @@ export class MessageComponent implements OnChanges {
   @Input() selectedChannelId!: string;
   @Input() selectedUserId!: string;
   @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } };
+  @Input() isThreadRootMessage: boolean = false;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
@@ -67,6 +68,7 @@ export class MessageComponent implements OnChanges {
   showEmojiPicker: boolean = false;
   showEmojiPickerThread: boolean = false;
   hover = false;
+
   currentChannelId?: string
   userId!: string
   userStatus!: string
