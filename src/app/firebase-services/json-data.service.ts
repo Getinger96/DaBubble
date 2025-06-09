@@ -10,8 +10,6 @@ export class JsonDataService {
 
   constructor() { }
 
-
-
   messageJSON(user: User, messageText: string, sendAt: string, sendAtTime: string, threadToId: string, userId: string, selectedMessage: Message) {
     return {
       name: user.name,
