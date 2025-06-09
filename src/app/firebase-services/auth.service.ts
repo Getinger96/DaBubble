@@ -32,14 +32,14 @@ export class AuthService {
       this.mainservice.acutalUser$.subscribe(user => {
         this.id = user[0].id;
       });
-      this.timeoutforroute(this.id)
+      this.timeoutForRoute(this.id)
     } catch (error) {
       this.loginWithGoogleAccountError(error);
     }
     return true;
   }
 
-  timeoutforroute(id?: string) {
+  timeoutForRoute(id?: string) {
     setTimeout(() => {
       this.router.navigate(['/main-components/' + id]);
     }, 3000);
