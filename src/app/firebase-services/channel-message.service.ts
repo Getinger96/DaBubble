@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from '../interfaces/message.interface';
-import { Firestore, collection, QuerySnapshot, getDocs, addDoc, updateDoc, doc,collectionGroup, DocumentData, writeBatch, onSnapshot, Query, deleteDoc, query, where, getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, QuerySnapshot, getDocs, addDoc, updateDoc, doc, collectionGroup, DocumentData, writeBatch, onSnapshot, Query, deleteDoc, query, where, getDoc } from '@angular/fire/firestore';
 import { MessageService } from './message.service';
 import { User } from '../interfaces/user.interface';
 import { MainComponentService } from './main-component.service';
-import { JsonDataService } from './json-data.service'; 
+import { JsonDataService } from './json-data.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -34,31 +34,22 @@ export class ChannelMessageService {
   }
 
   subList(channelId: string) {
-    console.log('📡 subList aufgerufen mit channelId:', channelId);
-
-    // Vorherige Snapshot-Subscription beenden
-    if (this.unsubscribeMessagesListener) {
+    if (this.unsubscribeMessagesListener) {// Vorherige Snapshot-Subscription beenden
       this.unsubscribeMessagesListener();  // onSnapshot-Abbruch
       this.unsubscribeMessagesListener = null;
     }
-
     const channelDocRef = doc(this.firestore, 'Channels', channelId);
     const messagesRef = collection(channelDocRef, 'messages');
 
-    // Neue Subscription starten
-    this.unsubscribeMessagesListener = onSnapshot(messagesRef, snapshot => {
+    this.unsubscribeMessagesListener = onSnapshot(messagesRef, snapshot => {// Neue Subscription starten
       this.handleSnapshot(snapshot);
     });
   }
 
   handleSnapshot(snapshot: QuerySnapshot<DocumentData, DocumentData>) {
-    console.log('🟢 Snapshot empfangen', snapshot.size);
-
     const actualUserID = this.messageService.getActualUser();
     const allMessages: Message[] = [];
-
-    // 🧹 Reset der lokalen Nachrichtenliste
-    this.allMessages = [];
+    this.allMessages = [];// 🧹 Reset der lokalen Nachrichtenliste
 
     snapshot.forEach(element => {
       const messageData = element.data();
@@ -68,7 +59,6 @@ export class ChannelMessageService {
       this.messageId = messageData['messageId'];
       allMessages.push(message);
     });
-
     this.subListMessages(allMessages);
   }
 
@@ -82,11 +72,8 @@ export class ChannelMessageService {
     }
   }
 
-
-
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
-    console.log('Selected Thread Message is', this.selectedThreadMessageSubject.value)
     this.messageService.showThreadSubject.next(true);
     this.getThreadAnswers(message.messageId)
     this.updateThreadAnswers(message.messageId);
@@ -121,19 +108,12 @@ export class ChannelMessageService {
     this.threadAnswersSubject.next(replies);
   }
 
-
-
-
   getChannelId(channelId: string) {
     const channelDocRef = doc(this.firestore, 'Channels', channelId);
     const messagesRef = collection(channelDocRef, 'messages');
-    console.log('channelDocRef', messagesRef);
     this.getMessagesAndMessageId(messagesRef)
 
   }
-
-
-
 
   getMessagesAndMessageId(messagesRef: Query<DocumentData>) {
     const unsubscribe = onSnapshot(
@@ -143,15 +123,12 @@ export class ChannelMessageService {
           const messageData = element.data();
           const messageId = element.id;
           this.channelMessageId = messageId;
-          console.log('📩 Nachricht:', messageData);
-          console.log('🆔 ID:', messageId);
         });
       },
       (error) => {
         console.error('Snapshot-Fehler:', error);
       }
     );
-
     return unsubscribe;
   }
 
@@ -172,7 +149,6 @@ export class ChannelMessageService {
       console.error('Error adding message:', error);
       return null
     }
-
   }
 
   async addThread(message: Message, channelid: string) {
@@ -188,49 +164,42 @@ export class ChannelMessageService {
       console.error('Error adding message:', error);
       return null
     }
-
   }
 
 
   async addThreadAnswer(messageText: string, threadToId: string, selectedMessage: Message) {
-    const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
-    let now = new Date();
-    const locale = 'de-DE';
-    const weekday = now.toLocaleDateString(locale, { weekday: 'long' });  // z.B. "Montag"
-    const day = now.getDate();                                            // z.B. 20
-    const month = now.toLocaleDateString(locale, { month: 'long' });     // z.B. "Mai"
-    const time = now.toLocaleTimeString(locale, {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });                                                                   // z.B. "14:05"
+    const { sendAt, sendAtTime } = this.getFormattedDateTime();
+    const threadAnswer: Message = this.createThreadAnswer(user, messageText, sendAt, sendAtTime, threadToId, selectedMessage);
 
-    const sendAt = `${weekday}, ${day}. ${month}`;                        // → "Montag, 20. Mai"
-    const sendAtTime = time;
-    const threadAnswer: Message = this.jsonDataService.messageJSON(user, messageText, sendAt, sendAtTime, threadToId, userId, selectedMessage)
     const answerId = await this.addThread(threadAnswer, selectedMessage.channelId);
-    if (answerId) {
-      threadAnswer.messageId = answerId;
-      console.log('Thread created with', answerId);
-    }
+    if (answerId) threadAnswer.messageId = answerId;
 
     await this.updateMessageThreadCount(threadToId, selectedMessage.channelId);
-
     this.allMessagesSubject.next(this.allMessages);
   }
 
+  private getFormattedDateTime() {
+    const now = new Date();
+    const locale = 'de-DE';
+    const weekday = now.toLocaleDateString(locale, { weekday: 'long' });
+    const day = now.getDate();
+    const month = now.toLocaleDateString(locale, { month: 'long' });
+    const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+    return { sendAt: `${weekday}, ${day}. ${month}`, sendAtTime: time };
+  }
+
+  private createThreadAnswer(user: User, messageText: string, sendAt: string, sendAtTime: string, threadToId: string, selectedMessage: Message): Message {
+    const userId = this.getActualUser();
+    return this.jsonDataService.messageJSON(user, messageText, sendAt, sendAtTime, threadToId, userId, selectedMessage);
+  }
 
   async updateMessageThreadCount(messageId: string, channelid: string) {
     this.allMessagesSubject.next(this.allMessages);
     const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
     const threadCount = replies.length;
-
-
     const channelRef = doc(this.firestore, 'Channels', channelid);
     const msgRef = doc(channelRef, 'messages', messageId)
-
-
     try {
       await updateDoc(msgRef, {
         threadCount: threadCount,
@@ -242,57 +211,42 @@ export class ChannelMessageService {
     }
   }
 
-
   getLastAnswer(message: Message) {
     const allAnswers = this.allMessages.filter((msg) => msg.threadTo === message.messageId);
     const lastAnswer = allAnswers[allAnswers.length - 1];
-    console.log(lastAnswer)
     return lastAnswer;
 
   }
-
 
   addEmojiInMessage(emoji: any, channelID: string, messageID: string) {
     this.saveEmojiInFirebaseReaction(emoji, channelID, messageID)
   }
 
-
-  getReactionsForMessage(channelId: string, messageId: string, callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void
-  ) {
+  getReactionsForMessage(channelId: string, messageId: string, callback: (reactionMap: Map<string, { count: number, users: string[] }>) => void) {
     const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageId, 'reactions');
-
     return onSnapshot(reactionsRef, snapshot => {
       const reactionMap = new Map<string, { count: number, users: string[] }>();
-
       snapshot.forEach(doc => {
         const data = doc.data();
         const emoji = data['emoji'];
         const user = data['reactedFrom'];
-
         if (!reactionMap.has(emoji)) {
           reactionMap.set(emoji, { count: 0, users: [] });
         }
-
         const current = reactionMap.get(emoji)!;
         current.count += 1;
         current.users.push(user);
-        console.log('current', current);
       });
-
       callback(reactionMap);
       console.log('reactionMap', reactionMap);
-
-
     });
   }
-
 
   async saveEmojiInFirebaseReaction(emoji: any, channelID: string, messageID: string) {
     const actualUser = this.getActualUserName();
     const reactionsRef = collection(this.firestore, 'Channels', channelID, 'messages', messageID, 'reactions');
     const q = query(reactionsRef, where('reactedFrom', '==', actualUser), where('emoji', '==', emoji));
     const existingReactions = await getDocs(q);
-
     if (!existingReactions.empty) {
       this.deleteReaction(existingReactions, channelID, messageID)
       return;
@@ -303,8 +257,6 @@ export class ChannelMessageService {
     const emojiSnapshot = await getDocs(emojiQuery);
     const count = emojiSnapshot.size;
     this.saveEmojiInFirebaseMessage(emoji, channelID, messageID, count)
-
-
   }
 
   async deleteReaction(existingReactions: QuerySnapshot<DocumentData, DocumentData>, channelID: string, messageID: string) {
@@ -318,23 +270,17 @@ export class ChannelMessageService {
     }
   }
 
-
   async saveEmojiInFirebaseMessage(emoji: any, channelID: string, messageID: string, count: number) {
     const messageDocRef = doc(this.firestore, 'Channels', channelID, 'messages', messageID);
     const messageDocSnap = await getDoc(messageDocRef);
-
     this.emojiCountsList = {};
 
     if (messageDocSnap.exists()) {
       this.emojiCountsList = messageDocSnap.data()['emojiCounts'] || {};
     }
-
     this.emojiCountsList[emoji] = count;
-
     await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
-
   }
-
 
   reactionJson(emoji: any, actualUser: string) {
     return {
@@ -342,20 +288,15 @@ export class ChannelMessageService {
       reactedFrom: actualUser,
       createdAt: new Date(),
     }
-
   }
-
 
   async loadAllMessagesFromAllChannels() {
     const channelsSnapshot = await getDocs(collection(this.firestore, 'Channels'));
-
     const allMessages: Message[] = [];
-
     for (const channelDoc of channelsSnapshot.docs) {
       const channelId = channelDoc.id;
       const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
       const messagesSnapshot = await getDocs(messagesRef);
-
       messagesSnapshot.forEach(docSnap => {
         const messageData = docSnap.data();
         const message = this.messageService.setMessageObject(messageData, docSnap.id);
@@ -363,78 +304,69 @@ export class ChannelMessageService {
         allMessages.push(message);
       });
     }
-
     this.sortAllMessages(allMessages);
     this.allMessages = allMessages;
     this.allMessagesSubject.next(this.allMessages);
   }
 
-async updateNameEverywhere(nameInput: string, userId: string, nameBefore: string) {
-  const channelsRef = collection(this.firestore, 'Channels');
-  const channelsSnapshot = await getDocs(channelsRef);
+  async updateNameEverywhere(nameInput: string, userId: string, nameBefore: string) {
+    const channelsRef = collection(this.firestore, 'Channels');
+    const channelsSnapshot = await getDocs(channelsRef);
 
-  for (const channelDoc of channelsSnapshot.docs) {
-    const channelId = channelDoc.id;
-    await this.updateMessageNames(channelId, nameInput, userId, nameBefore);
-    await this.updateReactionNames(channelId, nameInput, nameBefore);
-  }
+    for (const channelDoc of channelsSnapshot.docs) {
+      const channelId = channelDoc.id;
+      await this.updateMessageNames(channelId, nameInput, userId, nameBefore);
+      await this.updateReactionNames(channelId, nameInput, nameBefore);
+    }
     this.loadAllMessagesFromAllChannels();
-}
-
-async updateMessageNames(channelId: string, nameInput: string, userId: string, nameBefore: string) {
-  const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
-  const q = query(messagesRef, where('id', '==', userId), where('name', '==', nameBefore));
-  const messagesSnapshot = await getDocs(q);
-
-  for (const docSnap of messagesSnapshot.docs) {
-    const docRef = doc(this.firestore, 'Channels', channelId, 'messages', docSnap.id);
-    await updateDoc(docRef, { name: nameInput });
   }
-}
 
-async updateReactionNames(channelId: string, nameInput: string, nameBefore: string) {
-  const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
-  const messagesSnapshot = await getDocs(messagesRef);
+  async updateMessageNames(channelId: string, nameInput: string, userId: string, nameBefore: string) {
+    const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
+    const q = query(messagesRef, where('id', '==', userId), where('name', '==', nameBefore));
+    const messagesSnapshot = await getDocs(q);
 
-  for (const messageDoc of messagesSnapshot.docs) {
-    const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageDoc.id, 'reactions');
-    const q = query(reactionsRef, where('reactedFrom', '==', nameBefore));
-    const reactionsSnapshot = await getDocs(q);
+    for (const docSnap of messagesSnapshot.docs) {
+      const docRef = doc(this.firestore, 'Channels', channelId, 'messages', docSnap.id);
+      await updateDoc(docRef, { name: nameInput });
+    }
+  }
 
-    for (const reactionDoc of reactionsSnapshot.docs) {
-      const docRef = doc(this.firestore, 'Channels', channelId, 'messages', messageDoc.id, 'reactions', reactionDoc.id);
-      await updateDoc(docRef, { reactedFrom: nameInput });
+  async updateReactionNames(channelId: string, nameInput: string, nameBefore: string) {
+    const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
+    const messagesSnapshot = await getDocs(messagesRef);
+
+    for (const messageDoc of messagesSnapshot.docs) {
+      const reactionsRef = collection(this.firestore, 'Channels', channelId, 'messages', messageDoc.id, 'reactions');
+      const q = query(reactionsRef, where('reactedFrom', '==', nameBefore));
+      const reactionsSnapshot = await getDocs(q);
+
+      for (const reactionDoc of reactionsSnapshot.docs) {
+        const docRef = doc(this.firestore, 'Channels', channelId, 'messages', messageDoc.id, 'reactions', reactionDoc.id);
+        await updateDoc(docRef, { reactedFrom: nameInput });
+      }
+    }
+  }
+
+  async updateAvatarEverywhere(avatarImgNumber: number, userId: string) {
+    const channelsRef = collection(this.firestore, 'Channels');
+    const channelsSnapshot = await getDocs(channelsRef);
+    for (const channelDoc of channelsSnapshot.docs) {
+      const channelId = channelDoc.id;
+      await this.updateMessageAvatar(channelId, avatarImgNumber, userId);
+      this.subList(channelId);
+      this.loadAllMessagesFromAllChannels();
+    }
+  }
+
+  async updateMessageAvatar(channelId: string, avatarImgNumber: number, userId: string) {
+    const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
+    const q = query(messagesRef, where('id', '==', userId));
+    const messagesSnapshot = await getDocs(q);
+
+    for (const docSnap of messagesSnapshot.docs) {
+      const docRef = doc(this.firestore, 'Channels', channelId, 'messages', docSnap.id);
+      await updateDoc(docRef, { avatar: avatarImgNumber });
     }
   }
 }
-
-
-async updateAvatarEverywhere(avatarImgNumber: number, userId: string) {
-  const channelsRef = collection(this.firestore, 'Channels');
-  const channelsSnapshot = await getDocs(channelsRef);
-  for (const channelDoc of channelsSnapshot.docs) {
-    const channelId = channelDoc.id;
-    await this.updateMessageAvatar(channelId, avatarImgNumber, userId);
-    this.subList(channelId);
-    this.loadAllMessagesFromAllChannels();
-  }
-}
-
-async updateMessageAvatar(channelId: string, avatarImgNumber: number, userId: string) {
-  const messagesRef = collection(this.firestore, 'Channels', channelId, 'messages');
-  const q = query(messagesRef, where('id', '==', userId));
-  const messagesSnapshot = await getDocs(q);
-
-  for (const docSnap of messagesSnapshot.docs) {
-    const docRef = doc(this.firestore, 'Channels', channelId, 'messages', docSnap.id);
-    await updateDoc(docRef, { avatar: avatarImgNumber });
-  }
-}
-
-}
-
-
-
-
-
-
