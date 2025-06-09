@@ -55,4 +55,16 @@ export class UserCardService {
         }
   }
 }
+
+
+async saveNewAvatarImg(avatarNumber: number) {
+  if (!avatarNumber || !this.userId) return;
+  const userDocRef = doc(this.firestore, `Users/${this.userId}`);
+  await updateDoc(userDocRef, { avatar: avatarNumber });
+  await this.channelService.updateAvatarImgInChannels(avatarNumber, this.userId);
+  await this.channelMessageService.updateAvatarEverywhere(avatarNumber, this.userId);
+  this.mainservice.subList();
+  this.channelService.subChannelList();
+  this.overlayEditChangAvatar = false;
+}
 }

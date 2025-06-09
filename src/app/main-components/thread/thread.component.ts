@@ -25,6 +25,9 @@ import { ConversationService } from '../../firebase-services/conversation.servic
 export class ThreadComponent {
   @Input() selectedMessage: Message | null = null;
   @Input() selectedConvMessage: ConversationMessage | null = null;
+  @Input() time!: Date | string;
+  @Input() date!: Date | string;
+  @Input() threadReplies: any;
   @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
@@ -217,20 +220,20 @@ loadReaction() {
     );
   }
 
-    loadConvThreadAnswers(): void {
-    this.allConvThreadsSubscription = this.conversationService.allMessages$.subscribe(
-      (messages) => {
-        this.threadConvAnswers = messages.filter((message) => message.isThread);
-        if (this.selectedConvMessage?.id) {
-          this.threadConvAnswers = this.conversationService.getThreadAnswers(
-            this.selectedConvMessage.id
-          );
-          this.loadReaction(); 
-        };
-
+loadConvThreadAnswers(): void {
+  this.allConvThreadsSubscription = this.conversationService.allMessages$.subscribe(
+    (messages) => {
+      if (this.selectedConvMessage?.id) {
+        this.threadConvAnswers = this.conversationService.getThreadAnswers(
+          this.selectedConvMessage.conversationmessageId
+        );
+        this.loadReaction(); 
+      } else {
+        this.threadConvAnswers = [];
       }
-    );
-  }
+    }
+  );
+}
 
    dateFormatter = new Intl.DateTimeFormat('de-DE', {
     weekday: 'long',
@@ -272,6 +275,18 @@ loadReaction() {
     }
     return this.timeFormatter.format(dateObj);
   }
+
+  formatDate(timestamp: any): string {
+    let dateObj: Date;
+    if (timestamp instanceof Date) {
+      dateObj = timestamp;
+    } else if (timestamp && typeof timestamp.toDate === 'function') {
+      dateObj = timestamp.toDate();
+    } else {
+      dateObj = new Date(timestamp);
+    }
+    return this.dateFormatter.format(dateObj);
+  }
   
 
   closeThreads(): void {
@@ -292,18 +307,17 @@ loadReaction() {
     this.scrollToBottom()
   }
 
-    async sendConvReply(): Promise<void> {
-    if (!this.newThreadText.trim() || !this.selectedConvMessage?.id) return;
-    await this.conversationService.addConvThreadAnswer(
-      this.newThreadText,
-      this.selectedConvMessage.id,
-      this.selectedConvMessage
-    );
-    this.newThreadText = '';
-    this.loadConvThreadAnswers();
-    this.conversationService.sortAllMessages(this.threadConvAnswers);
-    this.scrollToBottom()
-  }
+async sendConvReply(): Promise<void> {
+  if (!this.newThreadText.trim() || !this.selectedConvMessage) return;
+  await this.conversationService.addConvThreadAnswer(
+    this.newThreadText,
+    this.selectedConvMessage
+  );
+  this.newThreadText = '';
+  this.loadConvThreadAnswers();
+  this.conversationService.sortAllMessages(this.threadConvAnswers);
+  this.scrollToBottom();
+}
 
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {

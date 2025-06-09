@@ -45,9 +45,10 @@
                 [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
-        <img [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'}:{}" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
-            alt="">
-        <div class="message-details" *ngIf="!editMessage">
+  <img 
+     [src]="'assets/img/avatar_' + avatarSrc + '.png'"
+     [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
+                    <div class="message-details" *ngIf="!editMessage">
             <div class="message-over" ><span class="message-name"
             (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
             : null): ( !isThread && messageData?.id? openProfil(messageData!.id): null )"
@@ -88,10 +89,10 @@
 
             </div>
             <div *ngIf="editMessage" class="edit-message-input fontNunito">
-                <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}></textarea>
+                <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}} [(ngModel)]="editedMessageText"></textarea>
                 <img src="assets/img/emoji.png" alt="">
                 <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
-                <button class="save-edit-message fontNunito">Speichern</button>
+                <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
             </div>
         </div>
 

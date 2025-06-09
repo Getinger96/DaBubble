@@ -13,7 +13,7 @@
         </div>
 
 
-        <div *ngIf="!editMessage && isOwn" class="reaction-popup" [ngClass]="{ 'show': showEmojiPicker }">
+        <div *ngIf="!editMessage && !isInThread" class="reaction-popup" [ngClass]="{ 'show': showEmojiPicker }">
 
             <img (click)="addEmoji('✅', this.conversationId,this.conversationmessageid)" src="assets/img/check_40.png"
                 alt="check">
@@ -21,12 +21,12 @@
                 alt="like">
             <img #emojiImg (click)="onEmojiButtonClick($event)" class="change-color" src="assets/img/add_reaction40.png"
                 alt="react">
-            <img (click)="toggleEditPopup()" src="assets/img/dots.png" alt="dots">
+            <img *ngIf="isOwn" (click)="toggleEditPopup()" src="assets/img/dots.png" alt="dots">
             <div *ngIf="isOwn && showEditPopup" class="edit-message"
-                [ngStyle]="isOwn ? {'left': '90px','top':'25px'} : {}">
+                [ngStyle]="isOwn ? {'left': '175px','top':'25px'} : {}">
                 <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
             </div>
-            <img class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
+            <img *ngIf="!isInThread && !isThread" class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
         </div>
 
 
@@ -39,11 +39,14 @@
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
-                <div class="message-not-answered">
-                    <img #emojiImg (click)="onEmojiButtonClick($event)" class="add-reaction"
+                <div *ngIf="threadCount && threadCount > 0" class="message-answered">
+                    <span class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
+                    <span class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
+                </div>
+                <div *ngIf="!threadCount || threadCount === 0" class="message-not-answered">
+                    <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
                         src="assets/img/add_reaction40.png" alt="">
                 </div>
-
             </div>
             <div class="reactions">
                 <ng-container *ngFor="let entry of (  emojiReactions) | keyvalue">
@@ -66,13 +69,13 @@
 
             </div>
         </div>
-
-    </div>
-
     <div *ngIf="editMessage" class="edit-message-input fontNunito">
-        <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}></textarea>
+        <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
         <img src="assets/img/emoji.png" alt="">
         <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
-        <button class="save-edit-message fontNunito">Speichern</button>
+        <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
     </div>
+    </div>
+
+
 </div>

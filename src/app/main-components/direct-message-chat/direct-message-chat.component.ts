@@ -62,7 +62,7 @@ export class DirectMessageChatComponent {
 
 
 
-  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, private conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
 
   }
 
@@ -73,7 +73,7 @@ export class DirectMessageChatComponent {
     this.loadStatus();
     this.loadUserId();
     setTimeout(() => this.scrollToBottom(), 0);
-    this.actualUser = this.mainservice.actualUser[0].name;
+    this.actualUser = this.mainservice.actualUser[0]?.name;
 
    
 
@@ -192,7 +192,7 @@ handleClickOutside(event: MouseEvent) {
       this.unsubscribeFromMessages = undefined;
     }
 
-    const currentUserId = this.mainservice.actualUser[0].id;
+    const currentUserId = this.mainservice.actualUser[0]?.id;
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
     this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
 

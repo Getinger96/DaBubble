@@ -5,6 +5,7 @@ export class ConversationMessage {
     timestamp: Date |string;
     isOwn: boolean;
     conversationmessageId:string;
+    isAnswered: boolean;
     isThread: boolean;
     isInThread: boolean;
     threadTo: string;
@@ -20,6 +21,7 @@ export class ConversationMessage {
         this.timestamp = obj ? obj.timestamp : Date; 
         this.isOwn = obj ? obj.isOwn : false;
         this.conversationmessageId=obj?obj.conversationmessageId:''
+        this.isAnswered = obj ? obj.isAnswered : false;
         this.isThread = obj ? obj.isThread : false;
         this.isInThread = obj ? obj.isInThread : false;
         this.threadTo = obj ? obj.threadTo: '';
