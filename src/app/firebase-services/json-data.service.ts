@@ -59,4 +59,13 @@ export class JsonDataService {
         status: 'Online'
       };
     }
+
+    reactionJson(emoji: any, actualUser: string) {
+        return {
+          emoji: emoji,
+          reactedFrom: actualUser,
+          createdAt: new Date(),
+        }
+      }
+    
 }

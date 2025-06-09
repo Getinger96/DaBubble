@@ -90,6 +90,7 @@ export class ChannelMessageService {
   getActualUser() {
     return this.mainservice?.actualUser[0]?.id;
   }
+
   getActualUserName() {
     return this.mainservice?.actualUser[0]?.name;
   }
@@ -251,7 +252,7 @@ export class ChannelMessageService {
       this.deleteReaction(existingReactions, channelID, messageID)
       return;
     }
-    const docRef = await addDoc(reactionsRef, this.reactionJson(emoji, actualUser));
+    const docRef = await addDoc(reactionsRef, this.jsonDataService.reactionJson(emoji, actualUser));
     await updateDoc(docRef, { id: docRef.id });
     const emojiQuery = query(reactionsRef, where('emoji', '==', emoji));
     const emojiSnapshot = await getDocs(emojiQuery);
@@ -281,15 +282,7 @@ export class ChannelMessageService {
     this.emojiCountsList[emoji] = count;
     await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
   }
-
-  reactionJson(emoji: any, actualUser: string) {
-    return {
-      emoji: emoji,
-      reactedFrom: actualUser,
-      createdAt: new Date(),
-    }
-  }
-
+  
   async loadAllMessagesFromAllChannels() {
     const channelsSnapshot = await getDocs(collection(this.firestore, 'Channels'));
     const allMessages: Message[] = [];
