@@ -171,7 +171,7 @@ export class ConversationService {
       const messageData = docSnap.data();
       const isOwn = messageData['senderId'] === this.getActualUser();
       const message: ConversationMessage = {
-        id: docSnap.id,
+        id: messageData['data'],
         name: messageData['name'],
         avatar: messageData['avatar'],
         threadCount: messageData['threadCount'],

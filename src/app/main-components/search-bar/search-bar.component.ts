@@ -176,8 +176,14 @@ navigateToDirectMessage(dm: ConversationMessage) {
     return;
   }
 
-  // Bestimme den anderen Teilnehmer (nicht den aktuellen Nutzer)
-  const otherUserId = conversation.users.find(uid => uid !== this.userId);
+  // Versuche den anderen Nutzer zu finden, oder nimm dich selbst
+  let otherUserId = conversation.users.find(uid => uid !== this.userId);
+
+  if (!otherUserId) {
+    // Wenn kein anderer gefunden wurde, handelt es sich wohl um eine Selbst-Notiz
+    otherUserId = this.userId;
+  }
+
   const user = this.allUsers.find(u => u.id === otherUserId);
 
   if (!user) {
