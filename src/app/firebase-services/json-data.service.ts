@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { Message } from '../interfaces/message.interface';
+import { Channel } from '../interfaces/channel.interface';
+import { Member } from '../interfaces/member.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -67,5 +69,17 @@ export class JsonDataService {
           createdAt: new Date(),
         }
       }
+
+       channelJson(item: Channel, creator: string, date: string) {
+              return {
+                  id: item.id,
+                  name: item.name,
+                  members: [] as Member[],
+                  creator: creator,
+                  description: item.description,
+                  date: date
+      
+              }
+          }
     
 }
