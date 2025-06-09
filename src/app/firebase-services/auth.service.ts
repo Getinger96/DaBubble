@@ -7,6 +7,7 @@ import { getDocs } from 'firebase/firestore';
 import { RegisterService } from '../firebase-services/register.service';
 import { MainComponentService } from './main-component.service';
 import { LoginService } from './login.service';
+import { JsonDataService } from './json-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthService {
   constructor(
 
     private router: Router,
-    private firestore: Firestore, private registerservice: RegisterService, private mainservice: MainComponentService, private loginservice: LoginService) { }
+    private firestore: Firestore, private registerservice: RegisterService, private mainservice: MainComponentService, private loginservice: LoginService,private jsonservice:JsonDataService) { }
 
   async loginWithGoogle(event: Event) {
     event.preventDefault();
@@ -70,25 +71,13 @@ export class AuthService {
     }
   }
 
-  userJsonGoogleMail(item: User, id: string) {
-    return {
-      name: item.name,
-      email: item.email,
-      passwort: item.passwort,
-      id: '',
-      uid: item.uid,
-      avatar: 1,
-      status: 'Online'
-    };
-  }
-
   async userWithGoogleMail(user: any) {
     const userEmail = user.email;
     const userExists = await this.loginservice.checkIfUserExists(user.email);
 
     if (!userExists) {
       console.log('➕ Benutzer existiert NICHT – wird neu erstellt.');
-      let newUser = this.newUserWithGoogleMail(user);
+      let newUser = this.jsonservice.newUserWithGoogleMail(user);
       this.addInFirebaseGoogleMailUser(newUser, user.uid);
       this.mainservice.getActualUser(user.uid);
     } else {
@@ -109,7 +98,7 @@ export class AuthService {
   }
 
   addInFirebaseGoogleMailUser(item: User, id: string) {
-    return addDoc(this.registerservice.getUserRef(), this.userJsonGoogleMail(item, id)).then(async docRef => {
+    return addDoc(this.registerservice.getUserRef(), this.jsonservice.userJsonGoogleMail(item, id)).then(async docRef => {
       this.id = docRef.id;
       console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
       await updateDoc(docRef, { id: docRef.id });
@@ -117,18 +106,6 @@ export class AuthService {
     }).catch(error => {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });
-  }
-
-  newUserWithGoogleMail(user: any) {
-    return {
-      uid: user.uid,
-      id: '',
-      name: user.displayName || 'Unbekannt',
-      email: user.email || '',
-      passwort: '',
-      avatar: 1,
-      status: 'Online'
-    };
   }
 
   loginWithGoogleAccountError(error: any) {

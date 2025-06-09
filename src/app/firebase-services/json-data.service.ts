@@ -33,4 +33,30 @@ export class JsonDataService {
       }
   
     }
+
+
+     userJsonGoogleMail(item: User, id: string) {
+    return {
+      name: item.name,
+      email: item.email,
+      passwort: item.passwort,
+      id: '',
+      uid: item.uid,
+      avatar: 1,
+      status: 'Online'
+    };
+  }
+
+
+  newUserWithGoogleMail(user: any) {
+      return {
+        uid: user.uid,
+        id: '',
+        name: user.displayName || 'Unbekannt',
+        email: user.email || '',
+        passwort: '',
+        avatar: 1,
+        status: 'Online'
+      };
+    }
 }
