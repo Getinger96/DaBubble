@@ -23,27 +23,19 @@ import { user } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class MessageService {
-
   firestore: Firestore = inject(Firestore);
   allMessages: Message[] = [];
   id?: string;
-  messageId?:string;
+  messageId?: string;
   lastAnswer: Message | null = null;
-
   private allMessagesSubject = new BehaviorSubject<Message[]>([]);
   allMessages$ = this.allMessagesSubject.asObservable();
-
-  private selectedThreadMessageSubject = new BehaviorSubject<Message | null>(
-    null
-  );
+  private selectedThreadMessageSubject = new BehaviorSubject<Message | null>(null);
   selectedThreadMessage$ = this.selectedThreadMessageSubject.asObservable();
-
   public showThreadSubject = new BehaviorSubject<boolean>(false);
   showThread$ = this.showThreadSubject.asObservable();
-
   private threadAnswersSubject = new BehaviorSubject<Message[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
-
   unsubList;
 
   constructor(private registerService: RegisterService, private mainservice: MainComponentService,) {
@@ -54,12 +46,11 @@ export class MessageService {
     return collection(this.firestore, 'Messages');
   }
 
-
   setMessageObject(obj: any, id: string): Message {
     return {
       messageId: id,
       channelId: obj.channelId,
-      channelName:obj.channelname,
+      channelName: obj.channelname,
       id: obj.id,
       name: obj.name,
       avatar: obj.avatar,
@@ -90,9 +81,7 @@ export class MessageService {
         allMessages.push(message);
       });
       this.allMessages = allMessages;
-      
       this.allMessagesSubject.next(this.allMessages);
-
       const selectedMessage = this.selectedThreadMessageSubject.value;
       if (selectedMessage) {
         this.updateThreadAnswers(selectedMessage.messageId);
@@ -100,15 +89,15 @@ export class MessageService {
     });
   }
 
-  getLastAnswer(message: Message){
+  getLastAnswer(message: Message) {
     const allAnswers = this.allMessages.filter((msg) => msg.threadTo === message.messageId);
-    const lastAnswer = allAnswers[allAnswers.length-1];
+    const lastAnswer = allAnswers[allAnswers.length - 1];
     console.log(lastAnswer)
     return lastAnswer;
-    
+
   }
 
-  sortAllMessages(messageArray : Message[]):void {
+  sortAllMessages(messageArray: Message[]): void {
     messageArray.sort((a, b) => {
       const timestampA = a.timestamp || 0;
       const timestampB = b.timestamp || 0;
@@ -116,16 +105,15 @@ export class MessageService {
     });
   }
 
-  getActualUser(){
+  getActualUser() {
     return this.mainservice?.actualUser[0]?.id;
   }
 
   async addMessageInFirebase(item: Message) {
     try {
       const userID = this.getActualUser();
-      const docRef = await addDoc(this.getMessageRef(), this.messageJson(item,userID));
+      const docRef = await addDoc(this.getMessageRef(), this.messageJson(item, userID));
       const messageId = docRef.id;
-      console.log("Message gespeichert mit ID:", docRef.id); // Automatisch generierte ID
 
       await updateDoc(docRef, { messageId });
       return messageId;
@@ -135,25 +123,23 @@ export class MessageService {
     }
   }
 
-
-
-  async addMessage(message: Message,channelid:string){
+  async addMessage(message: Message, channelid: string) {
     try {
       const channelDocRef = doc(this.firestore, 'Channels', channelid);
       const messagesRef = collection(channelDocRef, 'messages');
-      const Userid=this.getActualUser()
-      const docRef = await addDoc(messagesRef,this.threadJson(message,Userid,channelid))
+      const Userid = this.getActualUser()
+      const docRef = await addDoc(messagesRef, this.threadJson(message, Userid, channelid))
       const messageId = docRef.id;
-      await updateDoc(docRef, { messageId }); 
+      await updateDoc(docRef, { messageId });
       return messageId
-      } catch (error) {
-        return null
-      }
+    } catch (error) {
+      return null
     }
+  }
 
 
-  messageJson2(item: Message, id: string,channelId:string,channelname:string){
-return {
+  messageJson2(item: Message, id: string, channelId: string, channelname: string) {
+    return {
       name: item.name,
       avatar: item.avatar,
       channelId: channelId,
@@ -173,9 +159,8 @@ return {
     };
   }
 
-
-   threadJson(item: Message, id: string,channelId:string){
-return {
+  threadJson(item: Message, id: string, channelId: string) {
+    return {
       name: item.name,
       avatar: item.avatar,
       channelId: channelId,
@@ -215,7 +200,6 @@ return {
 
   openThread(message: Message) {
     this.selectedThreadMessageSubject.next(message);
-    console.log('Selected Thread Message is',this.selectedThreadMessageSubject)
     this.showThreadSubject.next(true);
     this.getThreadAnswers(message.messageId)
     this.updateThreadAnswers(message.messageId);
@@ -229,11 +213,10 @@ return {
   getThreadAnswers(id: string): Message[] {
     const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
     this.sortAllMessages(threadAnswers);
-    const lastAnswer = threadAnswers[threadAnswers.length-1];
+    const lastAnswer = threadAnswers[threadAnswers.length - 1];
     this.lastAnswer = lastAnswer;
     return threadAnswers;
   }
-
 
   updateThreadAnswers(threadTo: string) {
     const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
@@ -241,54 +224,41 @@ return {
     this.threadAnswersSubject.next(replies);
   }
 
-  async addThreadAnswer(messageText: string, threadToId: string, selectedMessage:Message) {
+  async addThreadAnswer(messageText: string, threadToId: string, selectedMessage: Message) {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
-    
-    let months = [
-      'Januar',
-      'Februar',
-      'März',
-      'April',
-      'Mai',
-      'Juni',
-      'Juli',
-      'August',
-      'September',
-      'Oktober',
-      'November',
-      'Dezember',
-    ];
-    let days = [
-  'Sonntag',     // Index 0
-  'Montag',      // Index 1
-  'Dienstag',
-  'Mittwoch',
-  'Donnerstag',
-  'Freitag',
-  'Samstag'      // Index 6
-];
-    let now = new Date();
-const locale = 'de-DE';
+    const { sendAt, sendAtTime } = this.getCurrentTimeDetails();
 
-const weekday = now.toLocaleDateString(locale, { weekday: 'long' });  // z.B. "Montag"
-const day = now.getDate();                                            // z.B. 20
-const month = now.toLocaleDateString(locale, { month: 'long' });     // z.B. "Mai"
-const time = now.toLocaleTimeString(locale, {
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false
-});                                                                   // z.B. "14:05"
+    const threadAnswer: Message = this.createThreadAnswer(messageText, sendAt, sendAtTime, user, userId, threadToId, selectedMessage);
 
-const sendAt = `${weekday}, ${day}. ${month}`;                        // → "Montag, 20. Mai"
-const sendAtTime = time;             
+    const answerId = await this.addMessage(threadAnswer, selectedMessage.channelId);
+    if (answerId) {
+      threadAnswer.messageId = answerId;
+    }
 
-    const threadAnswer: Message = {
+    await this.updateMessageThreadCount(threadToId, selectedMessage.channelId);
+    this.allMessagesSubject.next(this.allMessages);
+  }
+
+  private getCurrentTimeDetails() {
+    const now = new Date();
+    const locale = 'de-DE';
+    const weekday = now.toLocaleDateString(locale, { weekday: 'long' });
+    const day = now.getDate();
+    const month = now.toLocaleDateString(locale, { month: 'long' });
+    const time = now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false });
+
+    const sendAt = `${weekday}, ${day}. ${month}`;
+    return { sendAt, sendAtTime: time };
+  }
+
+  private createThreadAnswer(messageText: string, sendAt: string, sendAtTime: string, user: any, userId: string, threadToId: string, selectedMessage: Message): Message {
+    return {
       name: user.name,
       avatar: user.avatar,
-      messageText: messageText,
-      sendAt: sendAt,
-      sendAtTime: sendAtTime,
+      messageText,
+      sendAt,
+      sendAtTime,
       timestamp: Date.now(),
       isOwn: true,
       isThread: true,
@@ -297,54 +267,43 @@ const sendAtTime = time;
       id: userId,
       messageId: '',
       channelId: selectedMessage.channelId,
-      channelName:selectedMessage.channelName,
+      channelName: selectedMessage.channelName,
       reaction: 0,
       isAnswered: false,
       threadCount: 0,
     };
-
-    const answerId = await this.addMessage(threadAnswer, selectedMessage.channelId);
-    if (answerId){
-      threadAnswer.messageId = answerId;
-      console.log('Thread created with', answerId);
-    }
-
-    await this.updateMessageThreadCount(threadToId,selectedMessage.channelId);
-
-    this.allMessagesSubject.next(this.allMessages);
   }
 
   async saveReaction(reaction: string) {
-    let emoji: string;
+  const emoji = this.getReactionEmoji(reaction);
+  if (!emoji) return;
 
-    if (reaction === 'check') {
-      emoji = '✅';
-    } else if (reaction === 'like') {
-      emoji = '👍';
-    } else {
+  const reactionsRef = collection(this.firestore, `messages/${this.messageId}/reactions`);
+  return await this.addReactionToFirestore(reactionsRef, emoji);
+}
+
+private getReactionEmoji(reaction: string): string | null {
+  switch (reaction) {
+    case 'check': return '✅';
+    case 'like': return '👍';
+    default:
       console.warn('Unbekannte Reaktion:', reaction);
-      return;
-    }
-
-    const reactionsRef = collection(
-      this.firestore,
-      `messages/${this.messageId}/reactions`
-    );
-
-    return await addDoc(reactionsRef, {
-      emoji,
-      createdAt: new Date()
-    });
+      return null;
   }
+}
 
-  async updateMessageThreadCount(messageId: string,channelid:string) {
+private async addReactionToFirestore(reactionsRef: any, emoji: string) {
+  return await addDoc(reactionsRef, {
+    emoji,
+    createdAt: new Date()
+  });
+}
 
+  async updateMessageThreadCount(messageId: string, channelid: string) {
     const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
     const threadCount = replies.length;
-    
-
     const msgRef = doc(this.firestore, 'Channels', channelid);
-    
+
     try {
       await updateDoc(msgRef, {
         threadCount: threadCount,
@@ -354,4 +313,5 @@ const sendAtTime = time;
     } catch (error) {
       console.error("Error updating thread count:", error);
     }
-  }}
+  }
+}
