@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-edit-user',
   standalone: true,
   imports: [NgClass, FormsModule],
-  templateUrl: './edit-user.component.html',
+  templateUrl:'./edit-user.component.html',
   styleUrl: './edit-user.component.scss'
 })
 export class EditUserComponent {

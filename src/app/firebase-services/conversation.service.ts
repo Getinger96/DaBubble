@@ -127,39 +127,49 @@ export class ConversationService {
   }
 
   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
-  const convRef = collection(this.firestore, 'conversation');
+    const convRef = collection(this.firestore, 'conversation');
+    const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
 
-  // Hole nur Konversationen, die den currentUser enthalten
-  const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
-  let conversationId: string | null = null;
+    let conversationId: string | null = null;
 
-  snapshot.forEach((docSnap) => {
-    const users = docSnap.data()['user'];
-    const id = docSnap.id;  // Firestore-Dokument-ID (falls du sie brauchst)
-    console.log('Found conversation with users:', users, 'and ID:', id);
+    snapshot.forEach((docSnap) => {
+      const users = docSnap.data()['user'];
+      const id = docSnap.id;
 
-    if (
-      users.includes(partnerUserId.trim()) &&  // Entfernen von Leerzeichen
-      users.length === 2
-    ) {
-      console.log('Conversation matched:', id);
-      conversationId = id;
-    }
-  });
-
-  // Wenn keine Konversation gefunden wurde, erstelle eine neue
-  if (!conversationId) {
-    console.log('No conversation found, creating a new one...');
-    const newConv = await addDoc(convRef, {
-      user: [currentUserId, partnerUserId]
+      if (currentUserId === partnerUserId) {
+        // Prüfen auf doppelten Self-Chat-Eintrag
+        if (
+          users.length === 2 &&
+          users[0] === currentUserId &&
+          users[1] === partnerUserId
+        ) {
+          conversationId = id;
+        }
+      } else {
+        // Normalfall: Zwei verschiedene User
+        if (
+          users.includes(currentUserId.trim()) &&
+          users.includes(partnerUserId.trim()) &&
+          users.length === 2
+        ) {
+          conversationId = id;
+        }
+      }
     });
-    console.log('Created new conversation with ID:', newConv.id);
-    conversationId = newConv.id;
-  }
 
-  this.conversationId = conversationId;
-  return conversationId;
-}
+    // Falls keine passende Konversation gefunden wurde, neue anlegen
+    if (!conversationId) {
+      console.log('No conversation found, creating a new one...');
+      const newConv = await addDoc(convRef, {
+        user: [currentUserId, partnerUserId] // funktioniert auch für [id, id]
+      });
+      console.log('Created new conversation with ID:', newConv.id);
+      conversationId = newConv.id;
+    }
+
+    this.conversationId = conversationId;
+    return conversationId;
+  }
 
   async getInitialConvMessages(conversationId: string): Promise<any[]> {
     const convMessagesRef = collection(
