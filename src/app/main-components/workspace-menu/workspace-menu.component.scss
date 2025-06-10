@@ -8,13 +8,13 @@
     flex-direction: column;
     gap: 25px;
     height: calc(100% - 64px);
+    max-width: 200px;
     >.head {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         gap: 25px;
-
         >div {
             display: flex;
             align-items: center;
