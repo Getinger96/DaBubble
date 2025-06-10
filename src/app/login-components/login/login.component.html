@@ -1,114 +1,145 @@
+<div [ngClass]="{'d-flex':overlayvisible}" class="overlay_register">
 
-
-<div [ngClass]="{'d-flex':overlayvisible}"  class="overlay_register">
     <div>
-     <img src="../../assets/img/05B-Overlay Three.png" alt="">
+
+        <img src="../../assets/img/05B-Overlay Three.png" alt="">
+
     </div>
+
 </div>
 
 
 <header class="headerContainer">
+
     <div>
-    <app-intro *ngIf="introView" class="introCard"></app-intro>
+
+        <app-intro *ngIf="introView" class="introCard"></app-intro>
+
     </div>
 
     <div>
-    <app-header-logo *ngIf="logoView" class="introCard"></app-header-logo>
+
+        <app-header-logo *ngIf="logoView" class="introCard"></app-header-logo>
+
     </div>
 
-        <div class="newRegistration">
-            <span > Neu bei DABubble ?  </span>
-            
-            <a   routerLink="/signUp" class="newAccount">Konto erstellen</a>
-            
-            </div>
+    <div class="newRegistration">
 
+        <span> Neu bei DABubble ? </span>
 
-        </header>
+        <a routerLink="/signUp" class="newAccount">Konto erstellen</a>
+
+    </div>
+
+</header>
+
 <main>
-<section>
 
-    <div class="loginCard">
+    <section>
 
-        <h1> Anmeldung</h1>
-        <span class="recommendWordAdress">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</span>
-        
+        <div class="loginCard">
 
-        <form class="loginForm fontNunito" (submit)="loginAccount(email.value,password.value, $event)">
+            <h1> Anmeldung</h1>
+            <span class="recommendWordAdress">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+                verwendest.</span>
 
-            <div class="input-Fields">
-                <div (focusin)="setFocusEmail('email', true)" class="custom-input" [ngClass]="{'borderPurple ': isActiveEmail}" (focusout)="setFocusEmail('email', false)">
-                    <mat-icon [ngStyle]="{'color': isActiveEmail ? 'black': 'gray'}">mail</mat-icon>
-                    <input (blur)="inputFieldEmailIsEmpty()" #email name="email" type="email" placeholder="beispielname@email.com">
-                </div>
-                <span *ngIf="!loginEmailIsCorrect"  class="incorrect-input">*Die E-Mail Adresse ist leider ungültig</span>
-                <span *ngIf="!emailFielIsEmpty" class="incorrect-input">*Geben Sie eine E-Mail ein </span>
-            </div>
-        
+            <form class="loginForm fontNunito" (submit)="loginAccount(email.value,password.value, $event)">
+
                 <div class="input-Fields">
-                    <div (focusin)="setFocusPassword('password', true)" [ngClass]="{'borderPurple ': isActivePassword}"  class="custom-input" (focusout)="setFocusPassword('password', false)">
+
+                    <div (focusin)="setFocusEmail('email', true)" class="custom-input"
+                        [ngClass]="{'borderPurple ': isActiveEmail}" (focusout)="setFocusEmail('email', false)">
+
+                        <mat-icon [ngStyle]="{'color': isActiveEmail ? 'black': 'gray'}">mail</mat-icon>
+                        <input (blur)="inputFieldEmailIsEmpty()" #email name="email" type="email"
+                            placeholder="beispielname@email.com">
+
+                    </div>
+
+                    <span *ngIf="!loginEmailIsCorrect" class="incorrect-input">*Die E-Mail Adresse ist leider
+                        ungültig</span>
+                    <span *ngIf="!emailFielIsEmpty" class="incorrect-input">*Geben Sie eine E-Mail ein </span>
+
+                </div>
+
+                <div class="input-Fields">
+
+                    <div (focusin)="setFocusPassword('password', true)" [ngClass]="{'borderPurple ': isActivePassword}"
+                        class="custom-input" (focusout)="setFocusPassword('password', false)">
+
                         <mat-icon [ngStyle]="{'color': isActivePassword ? 'black': 'gray'}">lock</mat-icon>
-                        <input  name="password" (blur)="inputFieldPasswordIsEmpty()" #password type="password" placeholder="Passwort" required="">
+                        <input name="password" (blur)="inputFieldPasswordIsEmpty()" #password type="password"
+                            placeholder="Passwort" required="">
+
                     </div>
                     <div class="errorText">
-                    <span  *ngIf="!loginEmailAndPasswordAreCorrect"  class="incorrect-input" >*Falsches Passwort oder E-Mail..Bitte noch einmal versuchen</span>
-                    <span *ngIf="!passwordFieldIsEmpty" class="incorrect-input">*Geben Sie ein Passwort ein </span>
-                    <span *ngIf="!passWordLengthIsCorrect" class="incorrect-input">*Passwort muss mindestens 6 zeichen lang sein </span>
-                    </div>    
+
+                        <span *ngIf="!loginEmailAndPasswordAreCorrect" class="incorrect-input">*Falsches Passwort oder
+                            E-Mail..Bitte noch einmal versuchen</span>
+                        <span *ngIf="!passwordFieldIsEmpty" class="incorrect-input">*Geben Sie ein Passwort ein </span>
+                        <span *ngIf="!passWordLengthIsCorrect" class="incorrect-input">*Passwort muss mindestens 6
+                            zeichen lang sein </span>
+
+                    </div>
+
                 </div>
-               
 
                 <div class="forgottPassword">
-                <a   routerLink="/resetEmail">Passwort vergessen ?</a>
 
-                 </div>
+                    <a routerLink="/resetEmail">Passwort vergessen ?</a>
 
+                </div>
 
-                 <div class="line">
+                <div class="line">
 
                     <hr>
                     <span>ODER</span>
                     <hr>
-                 </div>
+
+                </div>
 
 
-                    <button [ngClass]="{'buttonErrorDesign': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" (click)="login($event)"  (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)" class="googleLogin fontNunito">
-                        <div>
+                <button [ngClass]="{'buttonErrorDesign': !passWordLengthIsCorrect && !passwordFieldIsEmpty }"
+                    (click)="login($event)" (mouseenter)="hoverBtn(true)" (mouseleave)="hoverBtn(false)"
+                    class="googleLogin fontNunito">
+
+                    <div>
+
                         <img src="../../assets/img/Google (1).png" alt="">
                         <a href="" [ngStyle]="{'font-weight': isHovered ? '700': '400'}"> Anmelden mit Google</a>
-                         </div>
-                    </button>
-            
-
-                    <div class="loginButtons">
-                        <button  [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }" type="submit" class="loginBtn">Anmelden</button>
-                        <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }"  class="guestLoginBtn" (click)="guestLogin($event)">Gäste-Login</button>
-                        
-
 
                     </div>
 
-        </form>
+                </button>
 
-    </div>
+                <div class="loginButtons">
 
+                    <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }"
+                        type="submit" class="loginBtn">Anmelden</button>
 
+                    <button [ngClass]="{'buttonloginErrorText': !passWordLengthIsCorrect && !passwordFieldIsEmpty }"
+                        class="guestLoginBtn" (click)="guestLogin($event)">Gäste-Login</button>
 
+                </div>
 
-</section>
+            </form>
+
+        </div>
+
+    </section>
+
 </main>
 
-
 <div class="newRegistrationMobileView">
-    <span > Neu bei DABubble ?  </span>
-    
-    <a   routerLink="/signUp" class="newAccountMobile">Konto erstellen</a>
-    
-    </div>
 
+    <span> Neu bei DABubble ? </span>
+    <a routerLink="/signUp" class="newAccountMobile">Konto erstellen</a>
+
+</div>
 
 <div class="links">
 
-    <a   routerLink="/imprint" class="imprintAndPrivacy">Impressum</a>
-    <a   routerLink="/privacy" class="imprintAndPrivacy">Datenschutz</a>
+    <a routerLink="/imprint" class="imprintAndPrivacy">Impressum</a>
+    <a routerLink="/privacy" class="imprintAndPrivacy">Datenschutz</a>
+
 </div>

@@ -1,81 +1,104 @@
-<div [ngClass]="{'d-flex':overlayvisible}"  class="overlay_register">
-       <div>
+<div [ngClass]="{'d-flex':overlayvisible}" class="overlay_register">
+
+    <div>
+
         <img src="../../assets/img/03B-Overlay One.png" alt="">
-       </div>
+
+    </div>
+
 </div>
+
 <header class="headerContainer">
-<app-header class="hi"></app-header>
+
+    <app-header class="hi"></app-header>
+
 </header>
+
 <div class="register-container">
-   
+
     <div class="register-card">
-     
-    
+
         <div>
+
             <a routerLink=""><img src="../../assets/img/13. Go back.png" alt=""></a>
             <h1>Konto erstellen</h1>
-        </div>
-        <span class="recommendWordAdress">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DaBubble-Konto</span>
 
+        </div>
+
+        <span class="recommendWordAdress">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+            DaBubble-Konto</span>
 
         <form (ngSubmit)="addUser($event, contactForm)" #contactForm="ngForm">
 
-            <div  class="input-containers"    (focusin)="divfocusName('text',true)"
-                [ngClass]="{'borderPurple':borderVisibleName, 'empty-input-Name':!user.name && name.touched}" (focusout)="divfocusName('text',false)"  >
+            <div class="input-containers" (focusin)="divfocusName('text',true)"
+                [ngClass]="{'borderPurple':borderVisibleName, 'empty-input-Name':!user.name && name.touched}"
+                (focusout)="divfocusName('text',false)">
+
                 <div>
+
                     <mat-icon [ngStyle]="{'color':borderVisibleName ? 'black':'gray'}">person</mat-icon>
                     <input [(ngModel)]="user.name" id="name" name="name" placeholder="Name und Nachname" type="text"
                         #name="ngModel" required>
 
                 </div>
             </div>
-   
-                <span *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen und Nachnamen
-                    ein</span>
-   
+
+            <span *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen und Nachnamen
+                ein</span>
+
             <div class="input-containers" (focusin)="divfocusmail('email',true)"
-                [ngClass]="{'borderPurple':borderVisibleMail, 'empty-input-Name':!user.email && email.touched}" (focusout)="divfocusmail('email',false)">
+                [ngClass]="{'borderPurple':borderVisibleMail, 'empty-input-Name':!user.email && email.touched}"
+                (focusout)="divfocusmail('email',false)">
+
                 <div>
+
                     <mat-icon [ngStyle]="{'color': borderVisibleMail ? 'black': 'gray'}">mail</mat-icon>
                     <input [(ngModel)]="user.email" name="email" placeholder="beispielemail@email.com" type="email"
-                    #email="ngModel"   required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
+                        #email="ngModel" required pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}">
+
                 </div>
-            </div>
-   
-                <span *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</span>
-                    <span *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
-                        ein</span>
-                <span *ngIf="userAlreadyExist" class="validation-text"> Diese E-Mail ist vergeben. Gib bitte eine andere an. </span>        
-            <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
-                [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}" (focusout)="divfocusPasswort('password',false)">
-                <div>
-                    <mat-icon [ngStyle]="{'color': borderVisiblepasswort ? 'black': 'gray'}">lock</mat-icon>
-                    <input  #passwort="ngModel"  [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort" type="password" required>
-                </div>
+
             </div>
 
-                <span *ngIf="passwort.touched && !user.passwort || user.passwort.length<6&& passwort.touched" class="validation-text">Passwort muss mindestens 6 zeichen lang sein</span>
-      
+            <span *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige
+                E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</span>
+            <span *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
+                ein</span>
+            <span *ngIf="userAlreadyExist" class="validation-text"> Diese E-Mail ist vergeben. Gib bitte eine andere an.
+            </span>
+
+            <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
+                [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}"
+                (focusout)="divfocusPasswort('password',false)">
+
+                <div>
+
+                    <mat-icon [ngStyle]="{'color': borderVisiblepasswort ? 'black': 'gray'}">lock</mat-icon>
+                    <input #passwort="ngModel" [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort"
+                        type="password" required>
+
+                </div>
+
+            </div>
+
+            <span *ngIf="passwort.touched && !user.passwort || user.passwort.length<6&& passwort.touched"
+                class="validation-text">Passwort muss mindestens 6 zeichen lang sein</span>
 
             <div class="checkbox-container">
+
                 <input type="checkbox" [(ngModel)]="isChecked" name="terms" id="">
                 <span>Ich stimme der Datenschuterklärung zu</span>
+
             </div>
 
             <div class="button-container">
-                <input [disabled]="!isChecked || !contactForm.valid" type="submit" value="Weiter">
-            </div>
 
+                <input [disabled]="!isChecked || !contactForm.valid" type="submit" value="Weiter">
+
+            </div>
 
         </form>
 
     </div>
 
-   
-   
-
-
-
-
 </div>
-

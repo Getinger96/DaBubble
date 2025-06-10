@@ -1,4 +1,3 @@
-
 @import '../../../styles.scss';
 
 $font-primary: 'Nunito', sans-serif;
@@ -9,7 +8,7 @@ $font-secondary: 'Figtree', sans-serif;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 80px;  
+    top: 80px;
     left: 250px;
     transform: translate(-50%, -50%);
 
@@ -17,28 +16,25 @@ $font-secondary: 'Figtree', sans-serif;
         top: 30px;
         left: 60%;
         transform: translateX(-40%);
-        }
+    }
 
-        @media (max-width: 600px) {
-            top: 30px;
-            left: 60%;
-            transform: translateX(-50%);
-            }
+    @media (max-width: 600px) {
+        top: 30px;
+        left: 60%;
+        transform: translateX(-50%);
+    }
 
+    @media (max-width: 500px) {
+        top: 30px;
+        left: 60%;
+        transform: translateX(-40%);
+    }
 
-            @media (max-width: 500px) {
-                top: 30px;
-                left: 60%;
-                transform: translateX(-40%);
-                }
-
-        @media (max-height: 700px) {
-            top: 30px;
-            left: 70%;
-            transform: translateX(-50%);
-            }
-
-
+    @media (max-height: 700px) {
+        top: 30px;
+        left: 70%;
+        transform: translateX(-50%);
+    }
 
     .logo {
         width: 130px;
@@ -48,52 +44,40 @@ $font-secondary: 'Figtree', sans-serif;
 
 
 
-            @media (max-width: 720px) {
-                width: 70px;
-                height: 70px;
-                animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
-                }
-
-           
+        @media (max-width: 720px) {
+            width: 70px;
+            height: 70px;
+            animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
+        }
 
 
-                }
 
 
-            }
+    }
 
 
+}
 
 .animation-slide-headline {
-overflow: hidden;
-transform: translateX(-67px);
-                                
-                    
-
-
-     h1 {
-    font-size: 32px;
-    font-family: $font-primary;
-    font-weight: 700;
-    color: black;
     overflow: hidden;
-    padding-bottom: 15px;
-    
-    
-    
-        
-    
-    @media (max-width: 720px) {
-        padding-bottom: 10px;
+    transform: translateX(-67px);
+
+    h1 {
+        font-size: 32px;
+        font-family: $font-primary;
+        font-weight: 700;
+        color: black;
+        overflow: hidden;
+        padding-bottom: 15px;
+
+        @media (max-width: 720px) {
+            padding-bottom: 10px;
         }
 
         @media (max-width: 500px) {
             font-size: 32px;
             transform: translateX(-20px);
             margin-left: 20px;
-                }
+        }
     }
- }
-
-
-
+}

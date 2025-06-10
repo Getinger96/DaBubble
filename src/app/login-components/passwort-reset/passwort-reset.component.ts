@@ -20,23 +20,18 @@ import { HeaderLogoComponent } from "../header-logo/header-logo.component";
   styleUrl: './passwort-reset.component.scss'
 })
 export class PasswortResetComponent {
+
   borderVisiblepasswort: boolean = false;
-  borderVisiblepasswortNew: boolean= false;
-  newPasswort:string=''
-  confirmedPasswort:string=''
-  length: any='';
+  borderVisiblepasswortNew: boolean = false;
+  newPasswort: string = ''
+  confirmedPasswort: string = ''
+  length: any = '';
   oobCode: string | null = null;
-  overlayvisible:boolean=false;
- 
+  overlayvisible: boolean = false;
 
-  
-    constructor(private registerservice: RegisterService){
+  constructor(private registerservice: RegisterService) {
 
-    }
-    
-  
- 
-  
+  }
 
   divfocusPasswort(field: string, isFocused: boolean) {
     this.borderVisiblepasswort = isFocused
@@ -45,12 +40,11 @@ export class PasswortResetComponent {
     this.borderVisiblepasswortNew = isFocused
   }
 
-
-  resetPassword(newPasswort: any,confirmedPasswort: any){
-    this.registerservice.resetPassword(newPasswort,confirmedPasswort)
-    this.overlayvisible=true;
+  resetPassword(newPasswort: any, confirmedPasswort: any) {
+    this.registerservice.resetPassword(newPasswort, confirmedPasswort)
+    this.overlayvisible = true;
     setTimeout(() => {
-     this.overlayvisible=false
+      this.overlayvisible = false
     }, 2000);
 
   }

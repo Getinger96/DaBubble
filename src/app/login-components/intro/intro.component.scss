@@ -7,95 +7,86 @@ body {
 }
 
 section {
-    background-color: #535af1 ;
+    background-color: #535af1;
     width: 100%;
     height: 100%;
     display: flex;
-  animation:   move-section-to-corner ease-in-out 600ms forwards 1.2s;
-  overflow: hidden;
-  position: fixed;
-  z-index: 100;
+    animation: move-section-to-corner ease-in-out 600ms forwards 1.2s;
+    overflow: hidden;
+    position: fixed;
+    z-index: 100;
 }
-
 
 .intro {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation:  move-to-corner ease-in-out 600ms forwards 1.0s;
+    animation: move-to-corner ease-in-out 600ms forwards 1.0s;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
-
-         
     @media (max-width: 720px) {
-        animation:  move-to-corner-small ease-in-out 600ms forwards 1.0s;
-        }
+        animation: move-to-corner-small ease-in-out 600ms forwards 1.0s;
+    }
 
-        @media (max-height: 700px) {
-            animation:  move-to-corner-mobile ease-in-out 600ms forwards 1.0s;
-            }
-    
+    @media (max-height: 700px) {
+        animation: move-to-corner-mobile ease-in-out 600ms forwards 1.0s;
+    }
+
     .logo {
         animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner ease-in-out 600ms forwards 1.2s;
         width: 190px;
         height: 190px;
 
-
-        
         @media (max-width: 1200px) {
             width: 170px;
             height: 170px;
-            }
+        }
 
+        @media (max-width: 720px) {
+            width: 130px;
+            height: 130px;
+            animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
+        }
 
-
-            @media (max-width: 720px) {
-                width: 130px;
-                height: 130px;
-                animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
-                }
-
-                @media (max-width: 500px) {
-                    width: 90px;
-                    height: 90px;
-                    animation: logo-animation-small ease-in-out 1.2s forwards, move-img-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
-                    }
-    
-        
+        @media (max-width: 500px) {
+            width: 90px;
+            height: 90px;
+            animation: logo-animation-small ease-in-out 1.2s forwards, move-img-to-corner-mobile-small ease-in-out 600ms forwards 1.2s;
+        }
     }
 
 
     .animation-slide-headline {
         overflow: hidden;
-        animation: intro-animation ease-in-out 1.2s forwards , intro-animation-to-corner ease-in-out 600ms forwards 1.2s;
+        animation: intro-animation ease-in-out 1.2s forwards, intro-animation-to-corner ease-in-out 600ms forwards 1.2s;
 
 
-    h1 {
-        font-size: 80px;
-        font-family: $font-primary;
-        font-weight: 700;
-        color: white;
-        animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner ease-in-out 600ms forwards 1.2s;
-        transform: translateX(-400px);
-        opacity: 0;
-        overflow: hidden;
-        padding-top: 15px;
-        padding-bottom: 15px;
+        h1 {
+            font-size: 80px;
+            font-family: $font-primary;
+            font-weight: 700;
+            color: white;
+            animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner ease-in-out 600ms forwards 1.2s;
+            transform: translateX(-400px);
+            opacity: 0;
+            overflow: hidden;
+            padding-top: 15px;
+            padding-bottom: 15px;
 
 
-        @media (max-width: 1200px) {
-            font-size: 60px;
-        
+            @media (max-width: 1200px) {
+                font-size: 60px;
+
             }
-        
-            
-        
-        @media (max-width: 720px) {
-            font-size: 40px;
-            transform: translateX(-200px);
+
+
+
+            @media (max-width: 720px) {
+                font-size: 40px;
+                transform: translateX(-200px);
             }
 
             @media (max-width: 500px) {
@@ -103,24 +94,16 @@ section {
                 transform: translateX(-20px);
                 margin-left: 0px;
                 animation: headline-animation ease-in-out 1.2s forwards, move-headline-to-corner-small ease-in-out 600ms forwards 1.2s;
-                }
+            }
         }
-        
-    }
 
     }
 
+}
 
-    
- 
-
-
-
-        
-   
 @keyframes move-section-to-corner {
     from {
-        background-color: #535af1 ;
+        background-color: #535af1;
     }
 
     to {
@@ -131,11 +114,9 @@ section {
     }
 }
 
-
 @keyframes intro-animation {
     from {
         transform: translateX(0);
-        
     }
 
     to {
@@ -146,7 +127,6 @@ section {
 @keyframes intro-animation-to-corner {
     from {
         transform: translateX(-40px);
-        
     }
 
     to {
@@ -164,7 +144,6 @@ section {
     }
 }
 
-
 @keyframes logo-animation-small {
     from {
         transform: translateX(0);
@@ -181,75 +160,72 @@ section {
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
     to {
-        top: 80px;  
+        top: 80px;
         left: 250px;
         z-index: 100;
     }
 }
-
 
 @keyframes move-to-corner-small {
     from {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-      }
-      to {
+    }
+
+    to {
         top: 30px;
         left: 60%;
         transform: translateX(-50%);
-      }
+    }
+}
+
+@keyframes move-to-corner-mobile {
+    from {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
-
-    @keyframes move-to-corner-mobile {
-        from {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-          }
-          to {
-            top: 30px;
-            left: 70%;
-            transform: translateX(-60%);
-          }
-        }
-    
-
-
+    to {
+        top: 30px;
+        left: 70%;
+        transform: translateX(-60%);
+    }
+}
 
 @keyframes move-img-to-corner {
     from {
         width: 190px;
         height: 190px;
     }
+
     to {
         width: 130px;
         height: 130px;
     }
 }
-
-
 
 @keyframes move-img-to-corner-mobile {
     from {
         width: 130px;
         height: 130px;
     }
+
     to {
         width: 70px;
         height: 70px;
     }
 }
 
-
-
 @keyframes move-img-to-corner-mobile-small {
     from {
         width: 90px;
         height: 90px;
     }
+
     to {
         width: 70px;
         height: 70px;
@@ -260,6 +236,7 @@ section {
     from {
         font-size: 60px;
     }
+
     to {
         font-size: 32px;
         color: black;
@@ -267,39 +244,31 @@ section {
     }
 }
 
-
-
-
-
 @keyframes move-headline-to-corner {
     from {
         font-size: 80px;
     }
+
     to {
         font-size: 32px;
         color: black;
     }
 }
 
-
 @keyframes move-headline-to-corner-mobile {
     from {
         font-size: 40px;
     }
+
     to {
         font-size: 24px;
         color: black;
     }
 }
 
-
-
-
-
-
 @keyframes headline-animation {
     from {
-          transform: translateX(-400px);
+        transform: translateX(-400px);
         opacity: 0;
     }
 
@@ -308,7 +277,3 @@ section {
         opacity: 1;
     }
 }
-
-
-
-

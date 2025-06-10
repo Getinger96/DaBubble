@@ -14,23 +14,21 @@ body {
 
 .fontFigtree {
     font-family: 'Figtree';
-  }
+}
 
+.introContainer {
 
-
-  .introContainer {
-
-    @media (max-width: 720px) {    
-    position: absolute;
-    top: 0;
-    left: 160px;
-    right: 0;
-    bottom: 0;
+    @media (max-width: 720px) {
+        position: absolute;
+        top: 0;
+        left: 160px;
+        right: 0;
+        bottom: 0;
 
     }
-  }
+}
 
-  .introCard {
+.introCard {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -41,52 +39,40 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    bottom:0;
-    animation:  none-animation ease-in-out 600ms forwards 1.2s;
+    bottom: 0;
+    animation: none-animation ease-in-out 600ms forwards 1.2s;
     z-index: 10;
+}
 
-
-
-
-
-  }
-
-  @keyframes none-animation {
+@keyframes none-animation {
     from {
         z-index: 10;
     }
+
     to {
         z-index: -99;
     }
 }
 
-    
-
-  .headerContainer {
+.headerContainer {
     display: flex;
-    justify-content: space-between;  
-    align-items: center;             
+    justify-content: space-between;
+    align-items: center;
     padding: 30px 20px 0px 20px;
 
-    
-    @media (max-width: 720px) {    
+    @media (max-width: 720px) {
         padding: 60px;
         position: relative;
+    }
+
+    @media (max-width: 450px) {
+        justify-content: center;
+        padding: 95px 20px 20px 0px;
+    }
 }
-
-
-@media (max-width: 450px) {    
-    justify-content: center;  
-    padding: 95px 20px 20px 0px;
-}
-
-
-  }
-
-
 
 .newRegistration {
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -99,12 +85,11 @@ body {
         font-size: 18px;
     }
 
-    @media (max-width: 720px) {    
+    @media (max-width: 720px) {
         display: none;
-}
+    }
 
 }
-
 
 .imprintAndPrivacy {
     color: #797EF3;
@@ -115,6 +100,7 @@ body {
     border: solid 1px #ECEEFE;
     font-family: $font-secondary !important;
     text-decoration: none;
+
     &:hover {
         border-color: #797EF3;
     }
@@ -125,7 +111,6 @@ main {
     justify-content: center;
     align-items: center;
 }
-
 
 section {
     width: 610px;
@@ -139,20 +124,16 @@ section {
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
     margin-left: 24px;
     margin-right: 24px;
-    
 
-
-    @media (max-width: 720px) {    
+    @media (max-width: 720px) {
         height: 600px;
-}
+    }
 
-@media (max-height: 700px) {
-    height: 440px;
-    width: 100%;
-    min-height: 440px;
-}
-
-
+    @media (max-height: 700px) {
+        height: 440px;
+        width: 100%;
+        min-height: 440px;
+    }
 
 }
 
@@ -163,13 +144,12 @@ section {
 .links {
     display: flex;
     justify-content: center;
-    gap:10px;
+    gap: 10px;
     margin-top: 40px;
 
-    
-    @media (max-width: 720px) {    
-  display: none;
-}
+    @media (max-width: 720px) {
+        display: none;
+    }
 }
 
 .loginCard {
@@ -181,17 +161,17 @@ section {
     @media (max-width: 720px) {
         padding: 30px 20px 20px 20px;
         flex: 1;
-           }
+    }
 
-           @media (max-width: 450px) {
-            padding: 10px 20px 20px 10px;
-     
-               }
-           
+    @media (max-width: 450px) {
+        padding: 10px 20px 20px 10px;
+
+    }
+
     @media (max-height: 700px) {
         padding: 10px 20px 20px 20px;
-    
-}
+
+    }
 
     h1 {
         color: #444DF2;
@@ -200,10 +180,9 @@ section {
         font-family: $font-primary;
         margin-block-end: 20px;
 
-
         @media (max-width: 720px) {
             font-size: 24px;
-               }
+        }
     }
 
     .recommendWordAdress {
@@ -215,14 +194,14 @@ section {
         @media (max-width: 720px) {
             font-size: 16px;
             line-height: 20px;
-            }
+        }
 
-
-            @media (max-height: 700px) {
-                display: none;
-            }
+        @media (max-height: 700px) {
+            display: none;
+        }
     }
 }
+
 .loginForm {
     width: 90%;
     margin-top: 40px;
@@ -236,35 +215,33 @@ section {
         gap: 20px;
     }
 
-    @media (max-width: 450px) {
-    }
+    @media (max-width: 450px) {}
 
     @media (max-height: 700px) {
         margin-top: 0px;
         gap: 15px;
     }
-
 }
 
 .custom-input {
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
-    border-radius: 30px; 
+    border-radius: 30px;
     padding: 10px;
     width: 100%;
-    background-color :#ECEEFE;
+    background-color: #ECEEFE;
     height: 40px;
 
     @media (max-width: 450px) {
         gap: 5px;
         width: 95%;
-        }
+    }
 
-        @media (max-height: 700px) {
-            height: 30px;
-            padding: 5px;
-            }
+    @media (max-height: 700px) {
+        height: 30px;
+        padding: 5px;
+    }
 }
 
 mat-icon {
@@ -272,12 +249,10 @@ mat-icon {
     width: 24px;
 }
 
-
 .custom-input mat-icon {
     margin-right: 15px;
     color: gray;
     margin-left: 20px;
-
 
     @media (max-width: 450px) {
         margin-left: 10px;
@@ -291,9 +266,6 @@ mat-icon {
     width: 100%;
     font-size: 16px;
     background: transparent;
-
-
-
 }
 
 mat-form-field {
@@ -310,29 +282,27 @@ mat-form-field {
     display: flex;
     justify-content: center;
     display: none;
-  
+
     >div {
-      animation: slidein ease-in-out 1.2s forwards;
-      display: flex;
-      align-items: center;
+        animation: slidein ease-in-out 1.2s forwards;
+        display: flex;
+        align-items: center;
     }
-  }
+}
 
-
-  @keyframes slidein {
+@keyframes slidein {
     from {
-      transform: translateX(500px);
+        transform: translateX(500px);
     }
-  
-    to {
-      transform: translateX(0);
-    }
-  }
 
-  
-  .d-flex {
+    to {
+        transform: translateX(0);
+    }
+}
+
+.d-flex {
     display: flex;
-  }
+}
 
 .full-width {
     width: 100%;
@@ -352,10 +322,9 @@ mat-form-field {
     color: red;
 }
 
-.forgottPassword  {
+.forgottPassword {
     display: flex;
     justify-content: center;
-
 
     a {
         text-decoration: none;
@@ -363,23 +332,19 @@ mat-form-field {
         color: #797EF3;
         font-weight: 400;
         font-size: 18px;
-        
- 
 
-     &:hover {
-        background-color: #ECEEFE;
-        border-radius: 30px;
-        font-weight: 500;
-     }
+        &:hover {
+            background-color: #ECEEFE;
+            border-radius: 30px;
+            font-weight: 500;
+        }
     }
-    
-
 }
-
 
 .buttonErrorDesign {
     height: 40px !important;
 }
+
 .line {
     display: flex;
     justify-content: center;
@@ -393,7 +358,6 @@ hr {
     flex: 1;
     background-color: #adb0d9;
 }
-
 
 .googleLogin {
     height: 50px;
@@ -420,25 +384,21 @@ hr {
 
             &:hover {
                 font-weight: 700;
-             }
+            }
         }
     }
 
-    
 }
-
-
 
 .loginButtons {
     display: flex;
     justify-content: center;
     gap: 60px;
 
-    @media (max-width: 720px) {    
+    @media (max-width: 720px) {
         gap: 15px;
+    }
 }
-}
-
 
 .loginBtn {
     border-radius: 25px;
@@ -450,10 +410,6 @@ hr {
     background-color: #444DF2;
     color: white;
     cursor: pointer;
-
-
-
-
 }
 
 .buttonloginErrorText {
@@ -464,7 +420,6 @@ hr {
     padding-bottom: 10px !important;
 }
 
-
 .guestLoginBtn {
     border-radius: 25px;
     padding-top: 15px;
@@ -474,44 +429,33 @@ hr {
     border: solid 1px #444DF2;
     color: #444DF2;
     cursor: pointer;
-    
- 
 
-
-    &:hover{
+    &:hover {
         border: solid 1px #444DF2;
         color: white;
-        background-color: #444DF2 ;
-    
+        background-color: #444DF2;
+
     }
 }
-
-
-
-
-
 
 .newRegistrationMobileView {
     display: none;
 
-    @media (max-width: 720px) {    
-        display:flex;
+    @media (max-width: 720px) {
+        display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
         margin-top: 15px;
         gap: 10px;
-}
+    }
 
     span {
         color: black;
         font-weight: 400;
         font-size: 18px;
     }
-
-
 }
-
 
 .newAccountMobile {
     color: #797EF3;
@@ -522,11 +466,11 @@ hr {
     border: solid 1px #444DF2;
     font-family: $font-secondary !important;
     text-decoration: none;
+
     &:hover {
-    font-weight: 500;
+        font-weight: 500;
     }
 }
-
 
 .newAccount {
     color: #797EF3;
@@ -537,7 +481,8 @@ hr {
     border: solid 1px transparent;
     font-family: $font-secondary !important;
     text-decoration: none;
+
     &:hover {
-    border-color: #444DF2;
+        border-color: #444DF2;
     }
 }
