@@ -8,6 +8,7 @@
     flex-direction: column;
     gap: 25px;
     height: calc(100% - 64px);
+
     >.head {
         display: flex;
         flex-direction: row;
@@ -57,6 +58,7 @@
                     cursor: pointer;
                 }
 
+
                 >h4 {
                     margin: 0;
                     font-family: $font-primary;
@@ -65,7 +67,16 @@
                     color: #000000;
                 }
             }
+
+            >.add-img {
+                >img {
+                    cursor: pointer;
+                }
+
+            }
         }
+
+
 
         >.channels-menu {
             display: flex;
@@ -74,12 +85,14 @@
             justify-content: center;
             gap: 13px;
             padding: 4px 20px 4px 20px;
+
             >.channel {
                 width: 100%;
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
                 cursor: pointer;
+
                 >p {
                     text-align: center;
                     margin: 0;
@@ -88,6 +101,7 @@
                     font-weight: 700;
                     color: #000000;
                     padding: 4px 20px 4px 20px;
+
                     &:hover {
                         color: #535AF1;
                         background-color: #ECEEFE;
@@ -95,6 +109,7 @@
                     }
                 }
             }
+
             >.add-channel {
                 padding-top: 24px;
                 display: flex;
@@ -218,7 +233,8 @@
     >input {
         width: 100%;
         border: none;
-        &:focus{
+
+        &:focus {
             outline: none;
         }
     }
@@ -234,7 +250,8 @@
     >input {
         width: 100%;
         border: none;
-        &:focus{
+
+        &:focus {
             outline: none;
         }
     }
@@ -252,7 +269,7 @@
         border-radius: 30px;
         font-size: 18px;
 
-      
+
     }
 }
 
@@ -319,12 +336,12 @@
 }
 
 .user {
-   border-radius: 50px;
+    border-radius: 50px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 16px;
-    
+
 
     &:hover {
         background-color: rgba(0, 0, 0, 0.5);
@@ -338,7 +355,7 @@
 
 .selected-tags {
     display: flex;
-    
+
     gap: 5px;
     margin-bottom: 5px;
 }

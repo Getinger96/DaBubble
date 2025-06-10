@@ -132,16 +132,17 @@
                 <img src="assets/img/workspaces.svg" alt="workspaces">
                 <h4>Channels</h4>
             </div>
-            <div (click)="openOverlay()"><img src="assets/img/add.svg" alt="add"></div>
+            <div class="add-img" (click)="openOverlay()"><img src="assets/img/add.svg" alt="add"></div>
         </div>
         <nav *ngIf="openChannels" class="channels-menu">
-          <ng-container *ngFor="let channel of channels">
-  <div *ngIf="isUserInChannel(channel)" class="channel">
-    <p># <span (click)="openChannel(true, channel.name, channel.description, channel.creator, channel.id, channel.members, channel.date)">
-      {{ channel.name }}
-    </span></p>
-  </div>
-</ng-container>
+            <ng-container *ngFor="let channel of channels">
+                <div *ngIf="isUserInChannel(channel)" class="channel">
+                    <p># <span
+                            (click)="openChannel(true, channel.name, channel.description, channel.creator, channel.id, channel.members, channel.date)">
+                            {{ channel.name }}
+                        </span></p>
+                </div>
+            </ng-container>
             <div (click)="openOverlay()" class="add-channel"><img src="assets/img/add_circle.svg"
                     alt="add-channel">Channel hinzufügen</div>
         </nav>
@@ -156,7 +157,8 @@
             </div>
         </div>
         <nav *ngIf="openDirectMessages" class="direct-messages">
-            <app-direct-message-user (closeThread)="closeThread.emit()" [userArray]="userArray"></app-direct-message-user>
+            <app-direct-message-user (closeThread)="closeThread.emit()"
+                [userArray]="userArray"></app-direct-message-user>
 
         </nav>
     </div>
