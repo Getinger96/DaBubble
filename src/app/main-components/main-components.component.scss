@@ -12,6 +12,9 @@
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
+    >.devspace-mobile{ 
+      display: none;
+    }
   }
 
   .body {
@@ -21,10 +24,6 @@
     justify-content: flex-start;
     gap: 20px;
     height: 80vh;
-
-
-
-   
 
     app-workspace-menu {
       height: 100%;
@@ -72,14 +71,18 @@
     left: -155px;
   }
 
-
-
   app-thread.closed {
     width: 0 !important;
     overflow: hidden;
   }
 
+}
 
-
-
+@media (max-width: 768px) {
+  .main-content > .main-head > app-search-bar, app-header {
+    display: none;
+  }
+  .main-content > .main-head > .devspace-mobile {
+    display: block;
+  }
 }

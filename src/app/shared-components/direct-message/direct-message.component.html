@@ -25,6 +25,7 @@
             <div *ngIf="isOwn && showEditPopup" class="edit-message"
                 [ngStyle]="isOwn ? {'left': '175px','top':'25px'} : {}">
                 <span (click)="overwriteMessage()">Nachricht bearbeiten</span>
+                <span (click)="deleteMessage()">Nachricht löschen</span>
             </div>
             <img *ngIf="!isInThread && !isThread" class="change-color" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
         </div>
@@ -40,7 +41,7 @@
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
                 <div *ngIf="threadCount && threadCount > 0" class="message-answered">
-                    <span class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
+                    <span class="message-answers">{{ threadCountService.getThreadCount(messageData?.conversationmessageId ?? '') | async }} Antworten</span>
                     <span class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
                 </div>
                 <div *ngIf="!threadCount || threadCount === 0" class="message-not-answered">

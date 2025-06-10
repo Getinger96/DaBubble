@@ -15,6 +15,8 @@ import { Member } from '../../interfaces/member.interface';
 import { AddMemberToThreadComponent } from './add-member-to-thread/add-member-to-thread.component';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { ConversationService } from '../../firebase-services/conversation.service';
+import { ThreadCountService } from '../../firebase-services/thread-count.service';
+
 @Component({
   selector: 'app-thread',
   standalone: true,
@@ -49,13 +51,16 @@ export class ThreadComponent {
   newThreadText: string = '';
   toggleMemberInThread: boolean = false;
   toggleEmoji: boolean = false;
+  threadCount: number = 0;
+  private threadCountSubscription?: Subscription;
   constructor( private elementRef: ElementRef,
     public messageService: MessageService,
     private mainService: MainComponentService,
     private cdr: ChangeDetectorRef,
     private channelmessageservice:ChannelMessageService,
     private channelService: ChannelService,
-    private conversationService: ConversationService
+    private conversationService: ConversationService,
+    public threadCountService: ThreadCountService
   ) {}
 
   ngOnInit(): void {
@@ -86,6 +91,14 @@ export class ThreadComponent {
       });
 
     setTimeout(() => this.scrollToBottom(), 0);
+
+        if (this.selectedConvMessage?.conversationmessageId) {
+      this.threadCountSubscription = this.threadCountService
+        .getThreadCount(this.selectedConvMessage.conversationmessageId)
+        .subscribe(count => {
+          this.threadCount = count;
+        });
+    }
   }
 
 
@@ -326,5 +339,9 @@ async sendConvReply(): Promise<void> {
        if (this.allConvThreadsSubscription) {
       this.allConvThreadsSubscription.unsubscribe();
     }
+        if (this.threadCountSubscription) {
+      this.threadCountSubscription.unsubscribe();
+    }
+
   }
 }
