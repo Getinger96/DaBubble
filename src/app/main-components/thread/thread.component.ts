@@ -234,18 +234,30 @@ loadReaction() {
   }
 
 loadConvThreadAnswers(): void {
-  this.allConvThreadsSubscription = this.conversationService.allMessages$.subscribe(
-    (messages) => {
-      if (this.selectedConvMessage?.id) {
-        this.threadConvAnswers = this.conversationService.getThreadAnswers(
-          this.selectedConvMessage.conversationmessageId
-        );
-        this.loadReaction(); 
-      } else {
-        this.threadConvAnswers = [];
+  console.log('Loading thread answers for message:', this.selectedConvMessage);
+  
+  if (this.allThreadsSubscription) {
+    this.allThreadsSubscription.unsubscribe();
+  }
+
+  this.allThreadsSubscription =
+    this.conversationService.allMessages$.subscribe((messages) => {
+      console.log('All messages subscription fired:', messages);
+      
+      if (this.selectedConvMessage && this.selectedConvMessage.conversationmessageId) {
+        const messageId = this.selectedConvMessage.conversationmessageId;
+        
+        // Add a small delay to ensure allMessages is updated
+        setTimeout(() => {
+          this.threadConvAnswers = this.conversationService.getThreadAnswers(messageId);
+          console.log('Thread answers found:', this.threadAnswers);
+          
+          this.threadCount = this.threadAnswers.length;
+          this.threadCountService.updateThreadCount(messageId, this.threadCount);
+          
+        }, 0);
       }
-    }
-  );
+    });
 }
 
    dateFormatter = new Intl.DateTimeFormat('de-DE', {

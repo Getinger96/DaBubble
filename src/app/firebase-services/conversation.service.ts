@@ -82,49 +82,47 @@ export class ConversationService {
     );
   }
 
-  observeSelectedUserChanges() {
-    let unsubscribeListener: (() => void) | null = null;
+observeSelectedUserChanges() {
+  let unsubscribeListener: (() => void) | null = null;
 
-    this.mainservice.directmessaeUserIdSubject.subscribe(
-      async (partnerUserId) => {
-        const currentUserId = this.getActualUser();
+  this.mainservice.directmessaeUserIdSubject.subscribe(
+    async (partnerUserId) => {
+      const currentUserId = this.getActualUser();
 
-        if (!partnerUserId || !currentUserId) return;
+      if (!partnerUserId || !currentUserId) return;
 
-        const conversationId = await this.getOrCreateConversation(
-          currentUserId,
-          partnerUserId
-        );
-        this.conversationId = conversationId;
+      // IMPORTANT: Reset state when switching conversations
+      this.closeThread();
+      this.allMessages = [];
+      this.lastAnswer = null;
 
-        const initialMessages = await this.getInitialConvMessages(
-          conversationId
-        );
-        // Update allMessages array
-        this.allMessages = initialMessages;
-        this.allConversationMessagesSubject.next(initialMessages);
-
-        if (unsubscribeListener) {
-          unsubscribeListener();
-        }
-
-        unsubscribeListener = this.listenToMessages(
-          conversationId,
-          (messages) => {
-            // Update allMessages array when new messages arrive
-            this.allMessages = messages;
-            this.allConversationMessagesSubject.next(messages);
-
-            // Update thread answers if a thread is currently selected
-            const selectedMessage = this.selectedThreadMessageSubject.value;
-            if (selectedMessage && selectedMessage.id) {
-              this.updateThreadAnswers(selectedMessage.id!);
-            }
-          }
-        );
+      // Unsubscribe from previous conversation first
+      if (unsubscribeListener) {
+        unsubscribeListener();
       }
-    );
-  }
+
+      const conversationId = await this.getOrCreateConversation(
+        currentUserId,
+        partnerUserId
+      );
+      this.conversationId = conversationId;
+
+      // DON'T call getInitialConvMessages here - let the listener handle everything
+      // const initialMessages = await this.getInitialConvMessages(conversationId);
+      // this.allMessages = initialMessages;
+      // this.allConversationMessagesSubject.next(initialMessages);
+
+      // Set up the listener immediately - it will load all messages
+      unsubscribeListener = this.listenToMessages(
+        conversationId,
+        (messages) => {
+          // The listenToMessages already updates everything we need
+          console.log('Messages updated via listener:', messages);
+        }
+      );
+    }
+  );
+}
 
   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
     const convRef = collection(this.firestore, 'conversation');
@@ -181,6 +179,7 @@ export class ConversationService {
     const q = query(convMessagesRef, orderBy('timestamp'));
     const snapshot = await getDocs(q);
     const convMessages: any[] = [];
+
     snapshot.forEach((docSnap) => {
       const messageData = docSnap.data();
       const isOwn = messageData['senderId'] === this.getActualUser();
@@ -212,63 +211,72 @@ export class ConversationService {
     return convMessages;
   }
 
-  listenToMessages(
-    conversationId: string,
-    callback: (convMessages: ConversationMessage[]) => void
-  ): () => void {
-    const convMessageRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages'
-    );
-    const q = query(convMessageRef, orderBy('timestamp'));
+ listenToMessages(
+  conversationId: string,
+  callback: (convMessages: ConversationMessage[]) => void
+): () => void {
+  const convMessageRef = collection(
+    this.firestore,
+    'conversation',
+    conversationId,
+    'messages'
+  );
+  const q = query(convMessageRef, orderBy('timestamp'));
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const liveConvMessages: ConversationMessage[] = [];
-      const liveThreadMessages: ConversationMessage[] = [];
-      const actualUserId = this.getActualUser();
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const liveConvMessages: ConversationMessage[] = [];
+    const liveThreadMessages: ConversationMessage[] = [];
+    const actualUserId = this.getActualUser();
 
-      snapshot.forEach((doc) => {
-        const messageData = doc.data();
-        const isOwn = messageData['senderId'] === actualUserId;
-        const message: ConversationMessage = {
-          id: messageData['id'],
-          senderId: messageData['senderId'],
-          text: messageData['text'],
-          timestamp: messageData['timestamp'],
-          isThread: messageData['isThread'],
-          isInThread: messageData['isInThread'],
-          threadTo: messageData['threadTo'],
-          threadCount: messageData['threadCount'],
-          name: messageData['name'],
-          avatar: messageData['avatar'],
-          isOwn: isOwn,
-          conversationmessageId: messageData['conversationmessageId'],
-          isAnswered: messageData['isAnswered']
-        };
-        if (message.isThread) {
-          liveThreadMessages.push(message);
-        } else {
-          liveConvMessages.push(message);
-        }
-      });
+    snapshot.forEach((doc) => {
+      const messageData = doc.data();
+      const isOwn = messageData['senderId'] === actualUserId;
+      const message: ConversationMessage = {
+        id: messageData['id'],
+        senderId: messageData['senderId'],
+        text: messageData['text'],
+        timestamp: messageData['timestamp'],
+        isThread: messageData['isThread'],
+        isInThread: messageData['isInThread'],
+        threadTo: messageData['threadTo'],
+        threadCount: messageData['threadCount'],
+        name: messageData['name'],
+        avatar: messageData['avatar'],
+        isOwn: isOwn,
+        conversationmessageId: messageData['conversationmessageId'], // Make sure this is set correctly
+        isAnswered: messageData['isAnswered']
+      };
 
-      // Update both arrays!
-      this.allMessages = [...liveThreadMessages, ...liveConvMessages];
-      this.allConversationMessagesSubject.next(liveConvMessages);
-
-      // Update thread answers if a thread is currently selected
-      const selectedMessage = this.selectedThreadMessageSubject.value;
-      if (selectedMessage && selectedMessage.id) {
-        this.updateThreadAnswers(selectedMessage.id!);
+      if (message.isThread) {
+        liveThreadMessages.push(message);
+      } else {
+        liveConvMessages.push(message);
       }
-
-      callback(liveConvMessages);
     });
 
-    return unsubscribe;
-  }
+    // CRITICAL: Update both arrays with ALL messages!
+    this.allMessages = [...liveThreadMessages, ...liveConvMessages];
+    
+    // Log to verify
+    console.log('All messages updated in listener:', this.allMessages);
+    console.log('Thread messages:', liveThreadMessages);
+    console.log('Conversation messages:', liveConvMessages);
+    
+    // Emit only conversation messages for the main chat display
+    this.allConversationMessagesSubject.next(liveConvMessages);
+
+    // Update thread answers if a thread is currently selected
+    const selectedMessage = this.selectedThreadMessageSubject.value;
+    if (selectedMessage && selectedMessage.conversationmessageId) {
+      this.updateThreadAnswers(selectedMessage.conversationmessageId);
+    }
+
+    callback(liveConvMessages);
+  });
+
+  return unsubscribe;
+}
+
 
   async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
     const convMessageRef = collection(
@@ -338,9 +346,6 @@ export class ConversationService {
 
   getThreadAnswers(id: string): ConversationMessage[] {
     const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
-    console.log('Filtering for threadTo:', id);
-    console.log('All messages:', this.allMessages);
-    console.log('Filtered threadAnswers:', threadAnswers);
     this.sortAllMessages(threadAnswers);
     const lastAnswer = threadAnswers[threadAnswers.length - 1];
     this.lastAnswer = lastAnswer;
