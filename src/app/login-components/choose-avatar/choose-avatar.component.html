@@ -1,55 +1,56 @@
 <header class="headerContainer">
 
-<app-header></app-header>
+    <app-header></app-header>
+
 </header>
 
 <main>
-<section>
-    <div class="choose-avatar-card">
 
-    <div class="headline">
-        <a routerLink="/signUp"><img src="../../assets/img/13. Go back.png" alt="" (click)="deleteUser()"></a>
-        <h1>Wähle dein Avatar</h1>
-    </div>            
+    <section>
 
+        <div class="choose-avatar-card">
 
-    <div class="avatar-Section">
+            <div class="headline">
+                <a routerLink="/signUp"><img src="../../assets/img/13. Go back.png" alt="" (click)="deleteUser()"></a>
+                <h1>Wähle dein Avatar</h1>
+            </div>
 
-        <img class="avata_img" src="../../assets/img/avatar_large_{{ avatarImgNumber }}.png" alt="">
+            <div class="avatar-Section">
 
-        <h2> {{ registerservice.name}}</h2>
-    </div>
+                <img class="avata_img" src="../../assets/img/avatar_large_{{ avatarImgNumber }}.png" alt="">
+                <h2> {{ registerservice.name}}</h2>
 
+            </div>
 
+            <div class="choose-Avatar">
 
+                <span> Aus der Liste wählen</span>
 
-    <div class="choose-Avatar">
-        <span> Aus der Liste wählen</span>
+                <div>
+                    <img (click)="avatarSelection(2)" src="../../assets/img/avatar_2.png" alt="">
+                    <img (click)="avatarSelection(3)" src="../../assets/img/avatar_3.png" alt="">
+                    <img (click)="avatarSelection(4)" src="../../assets/img/avatar_4.png" alt="">
+                    <img (click)="avatarSelection(5)" src="../../assets/img/avatar_5.png" alt="">
+                    <img (click)="avatarSelection(6)" src="../../assets/img/avatar_6.png" alt="">
+                    <img (click)="avatarSelection(7)" src="../../assets/img/avatar_7.png" alt="">
 
-        <div>
-            <img (click)="avatarSelection(2)" src="../../assets/img/avatar_2.png" alt="">
-            <img (click)="avatarSelection(3)" src="../../assets/img/avatar_3.png" alt="">
-            <img (click)="avatarSelection(4)" src="../../assets/img/avatar_4.png" alt="">
-            <img (click)="avatarSelection(5)"  src="../../assets/img/avatar_5.png" alt="">
-            <img (click)="avatarSelection(6)" src="../../assets/img/avatar_6.png" alt="">
-            <img  (click)="avatarSelection(7)" src="../../assets/img/avatar_7.png" alt="">
+                </div>
+
+            </div>
+
+            <div class="next-button">
+                <button (click)="SelectAvatarImg()"> Weiter</button>
+            </div>
+
         </div>
-    </div>
 
-    <div class="next-button">
-    <button (click)="SelectAvatarImg()"> Weiter</button>
-    </div>
+    </section>
 
-</div>
-</section>
 </main>
-
-
-
-
 
 <div class="links">
 
-    <a   routerLink="" class="imprintAndPrivacy">Impressum</a>
-    <a   routerLink="" class="imprintAndPrivacy">Datenschutz</a>
+    <a routerLink="" class="imprintAndPrivacy">Impressum</a>
+    <a routerLink="" class="imprintAndPrivacy">Datenschutz</a>
+    
 </div>

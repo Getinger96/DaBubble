@@ -16,22 +16,21 @@ import { RouterModule } from '@angular/router';
 })
 export class ChooseAvatarComponent {
 
-avatarImgNumber : number = 1;
+  avatarImgNumber: number = 1;
 
 
-constructor(public registerservice: RegisterService) {
+  constructor(public registerservice: RegisterService) {
 
-}
-avatarSelection(imgNumber: number) {
-      this.avatarImgNumber = imgNumber;
-}
+  }
+  avatarSelection(imgNumber: number) {
+    this.avatarImgNumber = imgNumber;
+  }
 
+  SelectAvatarImg() {
+    this.registerservice.updateUserAvatar(this.avatarImgNumber)
+  }
 
-SelectAvatarImg() {
-  this.registerservice.updateUserAvatar(this.avatarImgNumber)
-}
-
-async deleteUser() {
-await  this.registerservice.deleteUserFirebase()
-}
+  async deleteUser() {
+    await this.registerservice.deleteUserFirebase()
+  }
 }
