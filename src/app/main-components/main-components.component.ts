@@ -60,7 +60,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    if(this.mainservice.showdirectmessage){
+    if(this.mainservice.showDirectMessage$){
       this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
         this.selectedConvThreadMessage = message;
       })
@@ -72,6 +72,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       this.initchanelSubscription();
       this.initRouterSubscription();
       this.loadActualUser();
+      
   }
 
   openThreadForConversationMessage(message: ConversationMessage): void {
@@ -144,6 +145,10 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     if (workspace) {
       workspace.classList.toggle('closed');
     }
+  }
+
+  openChat() {
+    console.log('x');
   }
 
 }

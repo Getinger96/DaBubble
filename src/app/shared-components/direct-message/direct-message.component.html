@@ -39,16 +39,18 @@
             <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }}
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
-            <div class="message-under">
-                <div *ngIf="threadCount && threadCount > 0" class="message-answered">
-                    <span class="message-answers">{{ threadCountService.getThreadCount(messageData?.conversationmessageId ?? '') | async }} Antworten</span>
-                    <span class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
-                </div>
-                <div *ngIf="!threadCount || threadCount === 0" class="message-not-answered">
-                    <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
-                        src="assets/img/add_reaction40.png" alt="">
-                </div>
-            </div>
+    <div class="message-under">
+  <div *ngIf="(threadCount$ | async) as count">
+    <div *ngIf="count > 0" class="message-answered">
+      <span class="message-answers">{{ count }} Antworten</span>
+      <span class="message-last-answer">Letzte Antwort {{ lastAnswer$ | async }}</span>
+    </div>
+    <div *ngIf="count === 0" class="message-not-answered">
+      <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
+           src="assets/img/add_reaction40.png" alt="">
+    </div>
+  </div>
+</div>
             <div class="reactions">
                 <ng-container *ngFor="let entry of (  emojiReactions) | keyvalue">
                     <span class="reaction"

@@ -13,6 +13,8 @@ import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ThreadComponent } from '../thread/thread.component';
 import { ActivatedRoute } from '@angular/router';
+import { combineLatest, filter, map, switchMap } from 'rxjs';
+
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -33,13 +35,13 @@ export class DirectMessageChatComponent {
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
   @ViewChild(ThreadComponent) threadComponent!: ThreadComponent;
-  
+
   actualUser?: string;
   allConversationMessages: ConversationMessage[] = [];
   conversationId: string | null = null;
   newConvMessage: string = '';
   openChannel = this.mainHelperService.openChannel;
-  showDirectMessage = this.mainservice.showdirectmessage;
+  showDirectMessage$ = this.mainservice.showDirectMessage$;
   toggleEmoji: boolean = false
   toggleMemberInChat: boolean = false;
 
@@ -59,39 +61,57 @@ export class DirectMessageChatComponent {
   });
 
   private unsubscribeFromMessages?: () => void;
+  private initSub?: Subscription;
 
 
 
-  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
-
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef, private route: ActivatedRoute) {
+ this.route.params.subscribe(p => {
+    if (p['directmessageid']) {
+      this.mainservice.setDirectmessageuserId(p['directmessageid']);
+    }
+  });
   }
 
   async ngOnInit(): Promise<void> {
+  combineLatest([
+    this.mainservice.acutalUser$.pipe(filter(u => u.length > 0)),
+    this.mainservice.directmessaeUserIdSubject.pipe(filter(id => !!id))
+  ]).subscribe(async ([users, partnerId]) => {
+    // 1. eigene User-Daten setzen
+    const me = users[0];
+    this.actualUser = me.name;
 
-
+    // 2. Felder für Profil-Blende
     this.loadName();
-    this.loadAvatar();
     this.loadEmail();
+    this.loadAvatar();
     this.loadStatus();
-    this.loadUserId();
-    setTimeout(() => this.scrollToBottom(), 0);
-    this.actualUser = this.mainservice.actualUser[0]?.name;
-     await this.initConversation();
+    this.loadUserId();   // ACHTUNG: hier currentusermessagId$ benutzen
 
-    // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)
-    this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
-      await this.initConversation(); // Lade neue Konversation und Nachrichten
-    });
-  }
+    // 3. jetzt Konversation sicher starten
+    await this.initConversation();
+  });
+  this.conversationservice.allMessages$.subscribe(messages => {
+    console.log('Messages received in component:', messages);
+    this.allConversationMessages = messages;
+    this.mainservice.showDirectMessage$.subscribe(value => console.log('showDirectMessage$', value));
+    this.scrollToBottom();
+  });
+}
 
+
+  
 
   onReplyToMessage(message: ConversationMessage) {
     this.openThread.emit(message);
   }
 
 
+
   loadName() {
     this.mainservice.currentusermessageName$.subscribe(name => {
+        console.log('[Component] Name empfangen:', name);  // <--- LOG
       this.currentmessageUser = name
     })
   }
@@ -111,9 +131,9 @@ export class DirectMessageChatComponent {
     })
   }
 
-    loadUserId() {
-    this.mainservice.currentusermessagStatus$.subscribe(id => {
-      this.currentUserId= id;
+  loadUserId() {
+    this.mainservice.currentusermessagId$.subscribe(id => {
+      this.currentUserId = id;
     })
   }
 
@@ -122,9 +142,9 @@ export class DirectMessageChatComponent {
   }
 
   onEmojiButtonClick(event: MouseEvent) {
-  event.stopPropagation(); // verhindert Auslösung von handleClickOutside
-  this.toggleEmojiBar();
-}
+    event.stopPropagation(); // verhindert Auslösung von handleClickOutside
+    this.toggleEmojiBar();
+  }
   toggleEmojiBar() {
     this.toggleEmoji = !this.toggleEmoji;
     if (this.toggleMemberInChat) {
@@ -143,18 +163,18 @@ export class DirectMessageChatComponent {
 
   }
 
- @HostListener('document:click', ['$event'])
-handleClickOutside(event: MouseEvent) {
-  const target = event.target as HTMLElement;
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
 
-  const clickedInsideEmoji =
-    this.emojiComponent?.nativeElement?.contains(target) ||
-    (target.closest('.emojiWindow') !== null); // sicherstellen, dass auch Kinderelemente zählen
+    const clickedInsideEmoji =
+      this.emojiComponent?.nativeElement?.contains(target) ||
+      (target.closest('.emojiWindow') !== null); // sicherstellen, dass auch Kinderelemente zählen
 
-  if (!clickedInsideEmoji) {
-    this.toggleEmoji = false;
+    if (!clickedInsideEmoji) {
+      this.toggleEmoji = false;
+    }
   }
-}
 
 
 
@@ -193,13 +213,19 @@ handleClickOutside(event: MouseEvent) {
 
     const currentUserId = this.mainservice.actualUser[0]?.id;
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
+
+    if (!currentUserId || !partnerUserId) {
+      console.warn('Fehlende User IDs beim Init:', { currentUserId, partnerUserId });
+      return;
+    }
+
     this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
+    console.log('Lade Konversation mit ID:', this.conversationId);
 
     this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
       this.allConversationMessages = liveMessages;
-
+      this.scrollToBottom();
     });
-    this.scrollToBottom();
   }
 
   async addConversationMessage() {
@@ -216,6 +242,7 @@ handleClickOutside(event: MouseEvent) {
   }
 
   ngOnDestroy(): void {
+    this.initSub?.unsubscribe();
     if (this.unsubscribeFromMessages) {
       this.unsubscribeFromMessages();
     }

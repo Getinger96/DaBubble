@@ -7,7 +7,7 @@ import { MainComponentsComponent } from '../main-components.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService} from '../../firebase-services/channel.service'
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -15,7 +15,6 @@ import { Member } from '../../interfaces/member.interface';
 import { AddMemberToThreadComponent } from './add-member-to-thread/add-member-to-thread.component';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { ConversationService } from '../../firebase-services/conversation.service';
-import { ThreadCountService } from '../../firebase-services/thread-count.service';
 
 @Component({
   selector: 'app-thread',
@@ -30,6 +29,7 @@ export class ThreadComponent {
   @Input() time!: Date | string;
   @Input() date!: Date | string;
   @Input() threadReplies: any;
+  threadCount$: Observable<number> = of(0);
   @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
@@ -60,15 +60,14 @@ export class ThreadComponent {
     private channelmessageservice:ChannelMessageService,
     private channelService: ChannelService,
     private conversationService: ConversationService,
-    public threadCountService: ThreadCountService
   ) {}
 
   ngOnInit(): void {
     this.loadChannelId();
     this.loadMembers();
-  if (this.mainService.showdirectmessage) {
+  if (this.mainService.showDirectMessage$) {
     this.selectedMessageSubscription = this.conversationService.selectedThreadMessage$.subscribe((message) => {
-      console.log('Selected Conversationmessage updated:', message);
+      console.log('Selected Conversationmessage updated:', message, message?.threadCount);
       this.selectedConvMessage = message;
       if (message?.id) {
         this.loadConvThreadAnswers();
@@ -86,20 +85,22 @@ export class ThreadComponent {
 
     this.threadRepliesSubscription =
       this.channelmessageservice.threadReplies$.subscribe((replies) => {
-        console.log('Thread replies updated:', replies);
         this.threadAnswers = replies;
+              console.log('Thread replies updated and threadCount:', replies)
       });
 
     setTimeout(() => this.scrollToBottom(), 0);
 
-        if (this.selectedConvMessage?.conversationmessageId) {
-      this.threadCountSubscription = this.threadCountService
-        .getThreadCount(this.selectedConvMessage.conversationmessageId)
-        .subscribe(count => {
-          this.threadCount = count;
-        });
-    }
   }
+
+    ngOnChanges(){
+
+        if (this.selectedConvMessage) {
+      this.threadCount$ = typeof this.selectedConvMessage.threadCount === 'number'
+        ? of(this.selectedConvMessage.threadCount)
+        : this.selectedConvMessage.threadCount || this.threadCount$;
+        }
+      }
 
 
     @HostListener('document:click', ['$event'])
@@ -234,18 +235,26 @@ loadReaction() {
   }
 
 loadConvThreadAnswers(): void {
-  this.allConvThreadsSubscription = this.conversationService.allMessages$.subscribe(
-    (messages) => {
-      if (this.selectedConvMessage?.id) {
-        this.threadConvAnswers = this.conversationService.getThreadAnswers(
-          this.selectedConvMessage.conversationmessageId
-        );
-        this.loadReaction(); 
-      } else {
-        this.threadConvAnswers = [];
+  console.log('Loading thread answers for message:', this.selectedConvMessage);
+  
+  if (this.allThreadsSubscription) {
+    this.allThreadsSubscription.unsubscribe();
+  }
+
+  this.allThreadsSubscription =
+    this.conversationService.allMessages$.subscribe((messages) => {
+      console.log('All messages subscription fired:', messages);
+      
+      if (this.selectedConvMessage && this.selectedConvMessage.conversationmessageId) {
+        const messageId = this.selectedConvMessage.conversationmessageId;
+        
+        // Add a small delay to ensure allMessages is updated
+        setTimeout(() => {
+          this.threadConvAnswers = this.conversationService.getThreadAnswers(messageId);
+          console.log('Thread answers found:', this.threadAnswers);
+        }, 0);
       }
-    }
-  );
+    });
 }
 
    dateFormatter = new Intl.DateTimeFormat('de-DE', {
