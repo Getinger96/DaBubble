@@ -16,7 +16,7 @@
                 <span *ngIf="!editName" class="current-Name">#{{currentChannelName}}</span>
                 <div *ngIf="editName" class="input-channel-name-container">
                     <img src="assets/img/tag-grey.png" alt="">
-                    <input [(ngModel)]=" currentChannelName" type="text" name="name"
+                    <input [(ngModel)]="currentChannelName" type="text" name="name"
                         placeholder=" z.B Kooperationsprojekte" #name="ngModel" required>
                 </div>
             </div>
