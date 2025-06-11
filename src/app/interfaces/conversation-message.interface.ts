@@ -1,4 +1,5 @@
 export class ConversationMessage {
+    [x: string]: any;
     id: string;
     senderId: string;
     text: string;

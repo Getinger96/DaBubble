@@ -5,12 +5,11 @@ import { ConversationMessage } from '../../interfaces/conversation-message.inter
 import { CommonModule } from '@angular/common';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { Subscription } from 'rxjs';
+import { map, Observable, of, Subscription } from 'rxjs';
 import { ConversationService } from '../../firebase-services/conversation.service';
 import { FormsModule } from '@angular/forms';
 import { ThreadComponent } from '../../main-components/thread/thread.component';
 import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
-import { ThreadCountService } from '../../firebase-services/thread-count.service';
 
 @Component({
   selector: 'app-direct-message',
@@ -29,7 +28,6 @@ export class DirectMessageComponent {
   @Input() name!: string;
   @Input() time!: Date | string;
   @Input() messageText!: string;
-  @Input() threadCount: number = 0;
   @Input() isOwn: boolean | undefined = false;
   @Input() dateExists: boolean | undefined = false;
   @Input() isThread: boolean | undefined = false;
@@ -37,12 +35,15 @@ export class DirectMessageComponent {
   @Input() isAnswered: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
   
+  
 
   @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
 
+  threadCount$: Observable<number> = of(0);
+  lastAnswer$: Observable<string> = of('');
   showEmojiPicker: boolean = false;
   conversationmessageid: string = '';
   editedMessageText: string = '';
@@ -72,7 +73,6 @@ export class DirectMessageComponent {
     private messageservice: MessageService,
     private maincomponentservice: MainComponentService,
     private conversationservice: ConversationService,
-    public threadCountService : ThreadCountService
 
   ) { }
 
@@ -92,11 +92,6 @@ export class DirectMessageComponent {
         }
       );
 
-      if (this.messageData?.conversationmessageId) {
-      this.threadCountService.getThreadCount(this.messageData.conversationmessageId).subscribe(count => {
-      this.threadCount = count;
-        });
-      }
 
       let dateObj: Date;
 
@@ -146,11 +141,45 @@ export class DirectMessageComponent {
         this.lastAnswerDate = '';
       }
 
+            // Initialize reactive observables
+      this.initializeReactiveData();
+
       this.messageText = this.messageData.text || this.messageText;
     }
     console.log('Direct Message:', this.messageData);
      this.loadAllMessageInConversation();
      this.loadThreadAnswers();
+  }
+
+  ngOnChanges(){
+
+        if (this.messageData) {
+  this.initializeReactiveData();
+    } else {
+      console.log('no Message Data')
+    }
+  }
+
+   private initializeReactiveData(): void {
+    if (!this.messageData) return;
+
+    // Set up threadCount$ observable
+    this.threadCount$ = typeof this.messageData.threadCount === 'number'
+      ? of(this.messageData.threadCount)
+      : this.messageData.threadCount || of(0);
+
+    // Set up lastAnswer$ observable that reacts to thread changes
+    this.lastAnswer$ = this.conversationservice.allMessages$.pipe(
+      map(() => {
+        if (!this.messageData) return '';
+        
+        const lastAnswer = this.conversationservice.getLastAnswer(this.messageData);
+        if (lastAnswer && lastAnswer.timestamp) {
+          return this.formatTimestamp(lastAnswer.timestamp);
+        }
+        return '';
+      })
+    );
   }
 
 
@@ -278,30 +307,21 @@ async saveEditedMessage() {
     }
   }
 
-loadThreadAnswers(): void {
-  if (this.allThreadsSubscription) {
-    this.allThreadsSubscription.unsubscribe();
+
+  loadThreadAnswers(): void {
+    if (this.allThreadsSubscription) {
+      this.allThreadsSubscription.unsubscribe();
+    }
+
+    this.allThreadsSubscription =
+      this.conversationservice.allMessages$.subscribe((messages) => {
+        if (this.messageData && this.messageData.id) {
+          const messageId = this.messageData.id;
+          this.threadAnswers = this.conversationservice.getThreadAnswers(messageId);
+          this.conversationservice.updateThreadAnswers(messageId);
+        }
+      });
   }
-
-  this.allThreadsSubscription =
-    this.conversationservice.allMessages$.subscribe((messages) => {
-      if (this.messageData && this.messageData.id) {
-        const messageId = this.messageData.id;
-        this.threadAnswers = this.conversationservice.getThreadAnswers(messageId);
-        
-        // Update local count
-        this.threadCount = this.threadAnswers.length;
-        
-        // Update global thread count service
-        this.threadCountService.updateThreadCount(messageId, this.threadCount);
-
-        this.conversationservice.updateThreadAnswers(messageId);
-        this.lastAnswerDate = this.conversationservice?.lastAnswer?.timestamp
-          ? this.formatTimestamp(this.conversationservice.lastAnswer.timestamp)
-          : '';
-      }
-    });
-}
 
   private formatTimestamp(timestamp: any): string {
     let dateObj: Date;
