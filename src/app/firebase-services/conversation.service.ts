@@ -68,10 +68,6 @@ export class ConversationService {
 
   }
 
-
-
-
-
   getConversationById(conversationId: string): Observable<Conversation | undefined> {
     if (!conversationId) return of(undefined);
 
@@ -91,12 +87,10 @@ export class ConversationService {
 
       if (!partnerUserId || !currentUserId) return;
 
-      // IMPORTANT: Reset state when switching conversations
       this.closeThread();
       this.allMessages = [];
       this.lastAnswer = null;
 
-      // Unsubscribe from previous conversation first
       if (unsubscribeListener) {
         unsubscribeListener();
       }
@@ -107,16 +101,9 @@ export class ConversationService {
       );
       this.conversationId = conversationId;
 
-      // DON'T call getInitialConvMessages here - let the listener handle everything
-      // const initialMessages = await this.getInitialConvMessages(conversationId);
-      // this.allMessages = initialMessages;
-      // this.allConversationMessagesSubject.next(initialMessages);
-
-      // Set up the listener immediately - it will load all messages
       unsubscribeListener = this.listenToMessages(
         conversationId,
         (messages) => {
-          // The listenToMessages already updates everything we need
           console.log('Messages updated via listener:', messages);
         }
       );
