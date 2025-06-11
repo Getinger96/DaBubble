@@ -18,7 +18,7 @@
     </div>
 
     <div class="main-chat-feed" #chatFeed (scroll)="onScroll()" [ngStyle]="allConversationMessages.length === 0 ? {'justify-content':'flex-end'} : {}">
-            <ng-container *ngIf="showDirectMessage">
+            <ng-container *ngIf="showDirectMessage$ | async">
             <div class="conversation-feed"  *ngFor="let convMsg of allConversationMessages">
                 <app-direct-message 
                 *ngIf="!convMsg.isThread"

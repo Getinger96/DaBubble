@@ -83,6 +83,7 @@ export class ConversationService {
 
   this.mainservice.directmessaeUserIdSubject.subscribe(
     async (partnerUserId) => {
+        console.log('Selected user changed:', partnerUserId);
       const currentUserId = this.getActualUser();
 
       if (!partnerUserId || !currentUserId) return;
@@ -202,6 +203,7 @@ export class ConversationService {
   conversationId: string,
   callback: (convMessages: ConversationMessage[]) => void
 ): () => void {
+    console.log('Listening to messages for conversationId:', conversationId);
   const convMessageRef = collection(
     this.firestore,
     'conversation',
