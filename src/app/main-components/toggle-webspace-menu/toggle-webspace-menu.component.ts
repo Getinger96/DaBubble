@@ -12,7 +12,10 @@ import { MainComponentsComponent } from '../main-components.component';
 
 export class ToggleWebspaceMenuComponent {
   mainComponents = MainComponentsComponent;
-  isWorkspaceOpen:boolean = true;
+  isWorkspaceOpen: boolean = true;
+  mobile: boolean = false;
+
+  private mediaQuery = window.matchMedia('(max-width: 768px)');
 
  toggleWorkspace(){
     this.mainComponents.toggleWorkspace();
@@ -20,6 +23,19 @@ export class ToggleWebspaceMenuComponent {
       this.isWorkspaceOpen = false;
     } else if(!this.isWorkspaceOpen) {
       this.isWorkspaceOpen = true;
+    }
+  }
+
+  constructor() {
+    this.handleMediaChange(this.mediaQuery);
+    this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
+  }
+
+
+  handleMediaChange(e: MediaQueryListEvent | MediaQueryList) {
+    this.mobile = e.matches;
+    if (e.matches) {
+      this.isWorkspaceOpen = false;
     }
   }
 
