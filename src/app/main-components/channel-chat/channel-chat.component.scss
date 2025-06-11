@@ -231,11 +231,11 @@ app-add-member-channel  {
     border-radius: 30px;
     border: 1px solid #535AF1;
     display: flex;
-
+    background-color: #f0f8ff;
     >input {
         width: 100%;
         border: none;
-
+        background-color: none;
         &:focus {
             outline: none;
         }
@@ -248,11 +248,11 @@ app-add-member-channel  {
     padding: 8px;
     border-radius: 30px;
     border: 1px solid #535AF1;
-
+    background-color: #f0f8ff;
     >input {
         width: 100%;
         border: none;
-
+        background-color: none;
         &:focus {
             outline: none;
         }

@@ -78,11 +78,12 @@ export class ConversationService {
     );
   }
 
-observeSelectedUserChanges() {
+ observeSelectedUserChanges() {
   let unsubscribeListener: (() => void) | null = null;
 
   this.mainservice.directmessaeUserIdSubject.subscribe(
     async (partnerUserId) => {
+        console.log('Selected user changed:', partnerUserId);
       const currentUserId = this.getActualUser();
 
       if (!partnerUserId || !currentUserId) return;
@@ -110,8 +111,7 @@ observeSelectedUserChanges() {
     }
   );
 }
-
-   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
+  async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
     const convRef = collection(this.firestore, 'conversation');
     const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
 
@@ -198,11 +198,12 @@ observeSelectedUserChanges() {
     return convMessages;
   }
 
-  
- listenToMessages(
+
+  listenToMessages(
   conversationId: string,
   callback: (convMessages: ConversationMessage[]) => void
 ): () => void {
+    console.log('Listening to messages for conversationId:', conversationId);
   const convMessageRef = collection(
     this.firestore,
     'conversation',
@@ -264,7 +265,6 @@ observeSelectedUserChanges() {
 
   return unsubscribe;
 }
-
 
   async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
     const convMessageRef = collection(

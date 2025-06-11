@@ -60,7 +60,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    if(this.mainservice.showdirectmessage){
+    if(this.mainservice.showDirectMessage$){
       this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
         this.selectedConvThreadMessage = message;
       })
