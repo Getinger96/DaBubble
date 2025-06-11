@@ -28,7 +28,7 @@ export class DirectMessageChatComponent {
   @Output() currentmessageEmail: string = '';
   @Output() currentmessageAvatar: any;
   @Output() currentmessageStatus: string = '';
-   @Output() currentUserId: string = '';
+  @Output() currentUserId: string = '';
   @Output() overlayvisible: boolean = false;
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
