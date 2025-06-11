@@ -22,7 +22,9 @@
             >
 
          </app-message>
-            <div class="thread-number-of-answers"><span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span><div class="line"></div></div>
+            <div class="thread-number-of-answers">
+                <span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span>
+                <div class="line"></div></div>
         </div>
         <div class="thread-answers" #threadFeed>
              <app-message *ngFor="let answer of threadAnswers, index as i"
@@ -57,7 +59,7 @@
          </app-direct-message>
             <div class="thread-number-of-answers">
                 <span>
-                         {{ threadCountService.getThreadCount(selectedConvMessage.conversationmessageId) | async }} Antworten
+                         {{ threadCount$ | async }} Antworten
                 </span>
             <div class="line"></div></div>
         </div>

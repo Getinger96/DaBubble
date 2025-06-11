@@ -146,6 +146,10 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     }
   }
 
+  openChat() {
+    console.log('x');
+  }
+
 }
 
  
