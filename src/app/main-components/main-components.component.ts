@@ -50,7 +50,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   
 
 
-  ngOnInit(): void { // lädt alle user !!!
+ ngOnInit(): void { // lädt alle user !!!
     this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
@@ -60,7 +60,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    if(this.mainservice.showDirectMessage$){
+    if(this.mainservice.showdirectmessage){
       this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
         this.selectedConvThreadMessage = message;
       })
@@ -72,7 +72,6 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       this.initchanelSubscription();
       this.initRouterSubscription();
       this.loadActualUser();
-      
   }
 
   openThreadForConversationMessage(message: ConversationMessage): void {

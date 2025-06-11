@@ -8,8 +8,8 @@
     </div>
     <div class="body">
         <app-workspace-menu (closeThread)="closeThreadView()" [userArray]="allUsers" [actualUser]="actualUser"></app-workspace-menu>
-        <main *ngIf="(mainservice.showDirectMessage$ | async) === false" class="chat-area">  <router-outlet></router-outlet></main>
-        <app-direct-message-chat *ngIf="mainservice.showDirectMessage$ | async"(openThread)="openThreadForConversationMessage($event)"  (closeThread)="closeThreadView()"></app-direct-message-chat>
+        <main *ngIf="!this.mainservice.showdirectmessage"class="chat-area">  <router-outlet></router-outlet></main>
+        <app-direct-message-chat *ngIf="this.mainservice.showdirectmessage"(openThread)="openThreadForConversationMessage($event)"  (closeThread)="closeThreadView()"></app-direct-message-chat>
         <app-thread *ngIf="selectedThreadMessage || selectedConvThreadMessage" [selectedMessage]="selectedThreadMessage" [selectedConvMessage]="selectedConvThreadMessage"
             (closeThread)="closeThreadView()"></app-thread>
     </div>

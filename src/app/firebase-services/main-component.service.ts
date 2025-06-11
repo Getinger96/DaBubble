@@ -23,8 +23,7 @@ export class MainComponentService {
   public actualUserSubject = new BehaviorSubject<User[]>([])
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
-  private showDirectMessageSubject = new BehaviorSubject<boolean>(false);
-    showDirectMessage$ = this.showDirectMessageSubject.asObservable();
+  showdirectmessage: boolean = false;
   public directmessaeUserNameSubject = new BehaviorSubject<string>('');
   currentusermessageName$ = this.directmessaeUserNameSubject.asObservable();
   public directmessaeUserAvatarSubject = new BehaviorSubject<number>(0);
@@ -74,8 +73,8 @@ export class MainComponentService {
   ngonDestroy() {
     this.unsubList();
   }
-    setShowDirectMessage(value: boolean): void {
-    this.showDirectMessageSubject.next(value);
+     toggleShowDirectMessage() {
+    this.showdirectmessage = !this.showdirectmessage;
   }
    
 
@@ -95,9 +94,10 @@ export class MainComponentService {
     this.directmessaeUserStatusSubject.next(status)
   }
 
-   setDirectmessageuserId(id: string): void {
+    setDirectmessageuserId(id: string): void {
+    console.log('[Service] setDirectmessageuserId aufgerufen mit:', id);
     this.directmessaeUserIdSubject.next(id);
-    this.setShowDirectMessage(true);  // <-- Hier wird showDirectMessage auf true gesetzt
+
     this.getUserDataFromFirebase(id);
   }
 
@@ -118,28 +118,25 @@ export class MainComponentService {
   }
 
   async saveActualUser() {
-    console.log('[Service] saveActualUser startet');
-    try {// 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
+    try {
+      // 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
       let currentUser = await this.getCurrentUser();
-      console.log('[Service] currentUser von Auth:', currentUser);
-
-      if (currentUser) { // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null),  //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
+      if (currentUser) {
+        // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null), 
+        //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
         this.allUsers$
           .pipe(
-
-            filter(users => users.length > 0),
-
-            // Warte, bis mindestens ein Benutzer geladen wurde
+            filter(users => users.length > 0)  // Warte, bis mindestens ein Benutzer geladen wurde
           )
-
-          .subscribe(users => { // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
+          .subscribe(users => {
+            // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
+            console.log('Alle Benutzer:', users);
             this.getActualUser(currentUser.uid);  // Hier kannst du eine Methode aufrufen, um den aktiven Benutzer zu finden
-            console.log('[Service] allUsers vorhanden:', users);
-            console.log('[Service] actualUser gesetzt:', this.actualUser);
           });
-
-      } else {  // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
+      } else {
+        // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
         this.actualUserSubject.next([]);
+        console.log('Kein Benutzer eingeloggt', this.actualUserSubject);
       }
     } catch (error) {
       console.error("Fehler beim Abrufen des Benutzers:", error);

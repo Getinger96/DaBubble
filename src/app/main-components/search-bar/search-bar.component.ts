@@ -152,7 +152,7 @@ export class SearchBarComponent {
   }
 
   openDirectMessageChat(dm: ConversationMessage, close: boolean) {
-  this.mainservice.setShowDirectMessage(true);
+   this.mainservice.showdirectmessage = true
     this.mainHelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(dm.name)
     this.mainservice.setDirectmessageuserId(dm.senderId)
@@ -202,7 +202,7 @@ navigateToDirectMessage(dm: ConversationMessage) {
 }
 
 opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
-this.mainservice.setShowDirectMessage(true);
+ this.mainservice.showdirectmessage = true
   this.mainHelperService.openChannelSection(close)
   this.mainservice.setDirectmessageuserName(name)
   this.mainservice.setDirectmessageuserEmail(email)
@@ -224,7 +224,7 @@ openChannel(isOpen: boolean, name: string, description: string, creator: string,
   this.channelservice.setChannelId(id)
   this.channelservice.setChannelMember(members);
   this.channelservice.setChanneldate(date)
-  this.mainservice.setShowDirectMessage(false);
+   this.mainservice.showdirectmessage = false
   this.userId = this.actualUser[0].id;
   this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
   this.channelMessageService.getChannelId(id)
