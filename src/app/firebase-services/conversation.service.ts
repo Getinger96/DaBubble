@@ -82,7 +82,7 @@ export class ConversationService {
     );
   }
 
-observeSelectedUserChanges() {
+ observeSelectedUserChanges() {
   let unsubscribeListener: (() => void) | null = null;
 
   this.mainservice.directmessaeUserIdSubject.subscribe(
@@ -123,8 +123,7 @@ observeSelectedUserChanges() {
     }
   );
 }
-
-   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
+  async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
     const convRef = collection(this.firestore, 'conversation');
     const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
 
@@ -211,8 +210,8 @@ observeSelectedUserChanges() {
     return convMessages;
   }
 
-  
- listenToMessages(
+
+  listenToMessages(
   conversationId: string,
   callback: (convMessages: ConversationMessage[]) => void
 ): () => void {
@@ -277,7 +276,6 @@ observeSelectedUserChanges() {
 
   return unsubscribe;
 }
-
 
   async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
     const convMessageRef = collection(

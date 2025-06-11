@@ -93,15 +93,7 @@ export class DirectMessageChatComponent {
     this.openThread.emit(message);
   }
 
-  private getPartnerIdFromUrl(): string | null {
-    // 'directmessageid' ist in der aktuellen Route als Parameter
-    const partnerId = this.route.snapshot.paramMap.get('directmessageid');
-    console.log('Partner ID from URL:', partnerId);
-    if (partnerId) {
-      return partnerId;
-    }
-    return null;
-  }
+
 
   loadName() {
     this.mainservice.currentusermessageName$.subscribe(name => {
