@@ -72,6 +72,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       this.initchanelSubscription();
       this.initRouterSubscription();
       this.loadActualUser();
+      
   }
 
   openThreadForConversationMessage(message: ConversationMessage): void {

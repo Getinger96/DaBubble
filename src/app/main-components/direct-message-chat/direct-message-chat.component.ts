@@ -13,6 +13,8 @@ import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ThreadComponent } from '../thread/thread.component';
 import { ActivatedRoute } from '@angular/router';
+import { combineLatest, filter, map, switchMap } from 'rxjs';
+
 
 @Component({
   selector: 'app-direct-message-chat',
@@ -28,12 +30,12 @@ export class DirectMessageChatComponent {
   @Output() currentmessageEmail: string = '';
   @Output() currentmessageAvatar: any;
   @Output() currentmessageStatus: string = '';
-   @Output() currentUserId: string = '';
+  @Output() currentUserId: string = '';
   @Output() overlayvisible: boolean = false;
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
   @ViewChild(ThreadComponent) threadComponent!: ThreadComponent;
-  
+
   actualUser?: string;
   allConversationMessages: ConversationMessage[] = [];
   conversationId: string | null = null;
@@ -59,16 +61,15 @@ export class DirectMessageChatComponent {
   });
 
   private unsubscribeFromMessages?: () => void;
+  private initSub?: Subscription;
 
 
 
-  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef,private route: ActivatedRoute ) {
+  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef, private route: ActivatedRoute) {
 
   }
 
   async ngOnInit(): Promise<void> {
-
-
     this.loadName();
     this.loadAvatar();
     this.loadEmail();
@@ -76,6 +77,9 @@ export class DirectMessageChatComponent {
     this.loadUserId();
     setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0]?.name;
+
+   
+
      await this.initConversation();
 
     // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)
@@ -89,6 +93,15 @@ export class DirectMessageChatComponent {
     this.openThread.emit(message);
   }
 
+  private getPartnerIdFromUrl(): string | null {
+    // 'directmessageid' ist in der aktuellen Route als Parameter
+    const partnerId = this.route.snapshot.paramMap.get('directmessageid');
+    console.log('Partner ID from URL:', partnerId);
+    if (partnerId) {
+      return partnerId;
+    }
+    return null;
+  }
 
   loadName() {
     this.mainservice.currentusermessageName$.subscribe(name => {
@@ -111,9 +124,9 @@ export class DirectMessageChatComponent {
     })
   }
 
-    loadUserId() {
+  loadUserId() {
     this.mainservice.currentusermessagStatus$.subscribe(id => {
-      this.currentUserId= id;
+      this.currentUserId = id;
     })
   }
 
@@ -122,9 +135,9 @@ export class DirectMessageChatComponent {
   }
 
   onEmojiButtonClick(event: MouseEvent) {
-  event.stopPropagation(); // verhindert Auslösung von handleClickOutside
-  this.toggleEmojiBar();
-}
+    event.stopPropagation(); // verhindert Auslösung von handleClickOutside
+    this.toggleEmojiBar();
+  }
   toggleEmojiBar() {
     this.toggleEmoji = !this.toggleEmoji;
     if (this.toggleMemberInChat) {
@@ -143,18 +156,18 @@ export class DirectMessageChatComponent {
 
   }
 
- @HostListener('document:click', ['$event'])
-handleClickOutside(event: MouseEvent) {
-  const target = event.target as HTMLElement;
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
 
-  const clickedInsideEmoji =
-    this.emojiComponent?.nativeElement?.contains(target) ||
-    (target.closest('.emojiWindow') !== null); // sicherstellen, dass auch Kinderelemente zählen
+    const clickedInsideEmoji =
+      this.emojiComponent?.nativeElement?.contains(target) ||
+      (target.closest('.emojiWindow') !== null); // sicherstellen, dass auch Kinderelemente zählen
 
-  if (!clickedInsideEmoji) {
-    this.toggleEmoji = false;
+    if (!clickedInsideEmoji) {
+      this.toggleEmoji = false;
+    }
   }
-}
 
 
 
@@ -193,13 +206,19 @@ handleClickOutside(event: MouseEvent) {
 
     const currentUserId = this.mainservice.actualUser[0]?.id;
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
+
+    if (!currentUserId || !partnerUserId) {
+      console.warn('Fehlende User IDs beim Init:', { currentUserId, partnerUserId });
+      return;
+    }
+
     this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
+    console.log('Lade Konversation mit ID:', this.conversationId);
 
     this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
       this.allConversationMessages = liveMessages;
-
+      this.scrollToBottom();
     });
-    this.scrollToBottom();
   }
 
   async addConversationMessage() {
@@ -216,6 +235,7 @@ handleClickOutside(event: MouseEvent) {
   }
 
   ngOnDestroy(): void {
+    this.initSub?.unsubscribe();
     if (this.unsubscribeFromMessages) {
       this.unsubscribeFromMessages();
     }

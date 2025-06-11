@@ -111,7 +111,7 @@ observeSelectedUserChanges() {
   );
 }
 
-  async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
+   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
     const convRef = collection(this.firestore, 'conversation');
     const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
 
@@ -198,6 +198,7 @@ observeSelectedUserChanges() {
     return convMessages;
   }
 
+  
  listenToMessages(
   conversationId: string,
   callback: (convMessages: ConversationMessage[]) => void
