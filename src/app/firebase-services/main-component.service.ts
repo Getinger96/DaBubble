@@ -20,7 +20,7 @@ export class MainComponentService {
   allUsers: User[] = [];
   private allUsersSubject = new BehaviorSubject<User[]>([]);
   allUsers$ = this.allUsersSubject.asObservable();
-  private actualUserSubject = new BehaviorSubject<User[]>([])
+  public actualUserSubject = new BehaviorSubject<User[]>([])
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
   showdirectmessage: boolean = false;
@@ -33,7 +33,7 @@ export class MainComponentService {
   private directmessaeUserStatusSubject = new BehaviorSubject<string>('');
   currentusermessagStatus$ = this.directmessaeUserStatusSubject.asObservable();
   public directmessaeUserIdSubject = new BehaviorSubject<string>('');
-  currentusermessagId$ = this.directmessaeUserStatusSubject.asObservable();
+  currentusermessagId$ = this.directmessaeUserIdSubject.asObservable();
   private allDirectMessagesSubject = new BehaviorSubject<ConversationMessage[]>([]);
   allDirectMessages$ = this.allDirectMessagesSubject.asObservable();
   public userStatusSubject = new BehaviorSubject<string>('');
