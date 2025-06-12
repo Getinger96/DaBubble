@@ -340,7 +340,7 @@ onCancelEdit() {
     this.loadCurrentUser();
     this.openDialog();
   }
-  async openProfil(userId: string) {
+  async openProfil(userId: string,) {
 
     if (!userId) return;
     await this.getUser(userId);
@@ -396,9 +396,11 @@ onCancelEdit() {
         userId: this.userId,
         userAvatar: this.userAvatar,
       },
-      panelClass: 'another-dialog-position'
+      panelClass: 'another-dialog-position',
+
+      
     });
-    dialogRef.componentInstance.showProfilCard.subscribe(() => {
+     dialogRef.componentInstance.showProfilCard.subscribe(() => {
       dialogRef.close();
     });
   }

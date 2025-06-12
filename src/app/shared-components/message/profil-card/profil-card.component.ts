@@ -52,21 +52,22 @@ export class ProfilCardComponent implements OnInit {
 
   }
 
-
-  
     @HostListener('document:click', ['$event'])
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
   
-    const clickedInside =this.profilcard?.nativeElement.contains(target)
-     
-
-        if (!clickedInside) {
-          this.showProfilCard.emit(false);
+      const clickedInside=
+        this.profilcard?.nativeElement.contains(target)
+  
+  
+      if (!clickedInside) {
+        this.showProfilCard.emit(false);
       }
+  
   
     }
   
+
 
 
     loadActualUser() {
