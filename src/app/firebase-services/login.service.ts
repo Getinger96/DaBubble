@@ -88,12 +88,15 @@ export class LoginService {
   }
 
   async updateStatusByUid(uid: string, newStatus: string): Promise<void> {
-    const user = this.allUsers.find(user => user.uid === uid); // Suche nach dem User mit der entsprechenden UID
+    const user = this.mainservice.allUsers.find(user => user.uid === uid); // Suche nach dem User mit der entsprechenden UID
     if (user) { // Wenn der User gefunden wird, den Status ändern
-      user.status = newStatus;
-      let docRef = this.getSingleDocRef(user.id)
-      await updateDoc(docRef, { status: user.status });
-    } 
+      if (user.status !== newStatus) {
+        user.status = newStatus;
+        let docRef = this.getSingleDocRef(user.id)
+        await updateDoc(docRef, { status: user.status });
+      }
+
+    }
   }
 
   getSingleDocRef(docID: string) {
