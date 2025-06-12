@@ -13,7 +13,7 @@ import { ProfileCardOverlayService } from '../profile-card/profile-card-overlay.
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ThreadComponent } from '../thread/thread.component';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, filter, map, switchMap } from 'rxjs';
+import { combineLatest, filter, map, switchMap,firstValueFrom } from 'rxjs';
 import { User } from '../../interfaces/user.interface';
 
 
@@ -223,30 +223,36 @@ loadRouter(): void {
     this.conversationservice.getOrCreateConversation(user1, user2);
   }
 
-  async initConversation(): Promise<void> {
-    if (this.unsubscribeFromMessages) {
-      this.unsubscribeFromMessages();
-      this.unsubscribeFromMessages = undefined;
-    }
-
-    const currentUserId = this.userId;
-  
-
-    const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
-
-    if (!currentUserId || !partnerUserId) {
-      console.warn('Fehlende User IDs beim Init:', { currentUserId, partnerUserId });
-      return;
-    }
-
-    this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
-    console.log('Lade Konversation mit ID:', this.conversationId);
-
-    this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
-      this.allConversationMessages = liveMessages;
-      this.scrollToBottom();
-    });
+ async initConversation(): Promise<void> {
+  if (this.unsubscribeFromMessages) {
+    this.unsubscribeFromMessages();
+    this.unsubscribeFromMessages = undefined;
   }
+
+  let currentUserId = '';
+
+  if (this.mainservice.actualUser[0]?.id) {
+    currentUserId = this.mainservice.actualUser[0].id;
+  } else {
+    currentUserId = this.userId;
+  }
+
+  const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
+
+  if (!currentUserId || !partnerUserId) {
+    console.warn('Fehlende User IDs beim Init:', { currentUserId, partnerUserId });
+    return;
+  }
+
+  this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
+  console.log('Lade Konversation mit ID:', this.conversationId);
+
+  this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
+    this.allConversationMessages = liveMessages;
+    this.scrollToBottom();
+  });
+}
+
 
   async addConversationMessage() {
     const currentUserId = this.mainservice.actualUser[0].id;
