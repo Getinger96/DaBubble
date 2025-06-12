@@ -315,6 +315,7 @@ export class ConversationService {
     if (messageId) {
       this.getThreadAnswers(messageId);
       this.updateThreadAnswers(messageId);
+      this.updateConvMessageThreadCount(messageId, this.selectedThreadMessageSubject.value?.id || '')
     }
   }
 
@@ -380,6 +381,7 @@ export class ConversationService {
 
       const docRef = await addDoc(convMessageRef, threadAnswer);
       threadAnswer.id = docRef.id;
+      this.updateThreadAnswers(threadToId);
 
       // Update the document with the messageId
       await updateDoc(docRef, { messageId: docRef.id });
@@ -564,33 +566,32 @@ export class ConversationService {
   }
 
 
+  async updateConvMessageThreadCount(messageId: string, conversationId: string) {
+    // Filter replies based on the messageId (which should be conversationmessageId)
+    const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
+    const threadCount = replies.length;
 
-  // async updateConvMessageThreadCount(messageId: string, conversationId: string) {
-  //   // Filter replies based on the messageId (which should be conversationmessageId)
-  //   const replies = this.allMessages.filter(msg => msg.threadTo === messageId);
-  //   const threadCount = replies.length;
+    // Use the current conversationId, not the passed conversationId parameter
+    const currentConversationId = this.conversationId || conversationId;
 
-  //   // Use the current conversationId, not the passed conversationId parameter
-  //   const currentConversationId = this.conversationId || conversationId;
+    // Create the correct document reference
+    const msgRef = doc(this.firestore, 'conversation', currentConversationId, 'messages', messageId);
 
-  //   // Create the correct document reference
-  //   const msgRef = doc(this.firestore, 'conversation', currentConversationId, 'messages', messageId);
+    try {
+      await updateDoc(msgRef, {
+        threadCount: threadCount,
+        isAnswered: threadCount > 0
+      });
 
-  //   try {
-  //     await updateDoc(msgRef, {
-  //       threadCount: threadCount,
-  //       isAnswered: threadCount > 0
-  //     });
-
-  //     console.log(`Updated thread count for message ${messageId}: ${threadCount}`);
-  //   } catch (error) {
-  //     console.error("Error updating thread count:", error, {
-  //       messageId,
-  //       conversationId: currentConversationId,
-  //       threadCount
-  //     });
-  //   }
-  // }
+      console.log(`Updated thread count for message ${messageId}: ${threadCount}`);
+    } catch (error) {
+      console.error("Error updating thread count:", error, {
+        messageId,
+        conversationId: currentConversationId,
+        threadCount
+      });
+    }
+  }
 
   isTimestamp(value: any): value is { toMillis: () => number } {
     return value && typeof value.toMillis === 'function';

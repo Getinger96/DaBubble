@@ -63,6 +63,7 @@ export class ThreadComponent {
   ) {}
 
   ngOnInit(): void {
+
     this.loadChannelId();
     this.loadMembers();
   if ( this.mainService.showdirectmessage ) {
@@ -86,18 +87,23 @@ export class ThreadComponent {
         this.threadAnswers = replies;
       });
 
+      this.initializeCountCheck()
     setTimeout(() => this.scrollToBottom(), 0);
+
 
   }
 
     ngOnChanges(){
-
-        if (this.selectedConvMessage) {
-      this.threadCount$ = typeof this.selectedConvMessage.threadCount === 'number'
-        ? of(this.selectedConvMessage.threadCount)
-        : this.selectedConvMessage.threadCount || this.threadCount$;
-        }
+      this.initializeCountCheck()
       }
+
+    private initializeCountCheck():void{
+          if(this.selectedConvMessage){
+   this.threadCount$ = typeof this.selectedConvMessage.threadCount === 'number'
+      ? of(this.selectedConvMessage.threadCount)
+      : this.selectedConvMessage.threadCount || of(0);
+    }
+    }
 
 
     @HostListener('document:click', ['$event'])

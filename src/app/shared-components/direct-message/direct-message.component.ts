@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, NgModule, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, NgModule, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MessageComponent } from '../message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
@@ -148,9 +148,10 @@ export class DirectMessageComponent {
     }
      this.loadAllMessageInConversation();
      this.loadThreadAnswers();
+     this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
   }
 
-  ngOnChanges(){
+  ngOnChanges(): void {
 
         if (this.messageData) {
   this.initializeReactiveData();
@@ -179,6 +180,8 @@ export class DirectMessageComponent {
         return '';
       })
     );
+this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
+
   }
 
 
@@ -225,6 +228,7 @@ async deleteMessage(){
 
     if (messageDocRef) {
       await deleteDoc(messageDocRef);
+      this.conversationservice.updateConvMessageThreadCount(conversationId, conversationId);
       this.editMessage = false;
       this.showEditPopup = false;
     }
