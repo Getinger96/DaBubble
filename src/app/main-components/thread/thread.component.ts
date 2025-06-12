@@ -67,7 +67,6 @@ export class ThreadComponent {
     this.loadMembers();
   if (this.mainService.showDirectMessage$) {
     this.selectedMessageSubscription = this.conversationService.selectedThreadMessage$.subscribe((message) => {
-      console.log('Selected Conversationmessage updated:', message, message?.threadCount);
       this.selectedConvMessage = message;
       if (message?.id) {
         this.loadConvThreadAnswers();
@@ -75,7 +74,6 @@ export class ThreadComponent {
     });
   } else {
     this.selectedMessageSubscription = this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
-      console.log('Selected message updated:', message);
       this.selectedMessage = message;
       if (message?.messageId) {
         this.loadThreadAnswers();
@@ -86,7 +84,6 @@ export class ThreadComponent {
     this.threadRepliesSubscription =
       this.channelmessageservice.threadReplies$.subscribe((replies) => {
         this.threadAnswers = replies;
-              console.log('Thread replies updated and threadCount:', replies)
       });
 
     setTimeout(() => this.scrollToBottom(), 0);
@@ -171,7 +168,7 @@ loadReaction() {
       message.messageId,
       (reactionMap: any) => {
         this.emojiReactions.set(message.messageId, reactionMap);
-            console.log('this.threadAnswerswerwer', this.emojiReactions.set(message.messageId, reactionMap));
+
       }
       
     );
@@ -237,11 +234,11 @@ loadReaction() {
 loadConvThreadAnswers(): void {
   console.log('Loading thread answers for message:', this.selectedConvMessage);
   
-  if (this.allThreadsSubscription) {
-    this.allThreadsSubscription.unsubscribe();
+  if (this.allConvThreadsSubscription) {
+    this.allConvThreadsSubscription.unsubscribe();
   }
 
-  this.allThreadsSubscription =
+  this.allConvThreadsSubscription =
     this.conversationService.allMessages$.subscribe((messages) => {
       console.log('All messages subscription fired:', messages);
       

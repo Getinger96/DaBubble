@@ -144,11 +144,9 @@ export class ConversationService {
 
     // Falls keine passende Konversation gefunden wurde, neue anlegen
     if (!conversationId) {
-      console.log('No conversation found, creating a new one...');
       const newConv = await addDoc(convRef, {
         user: [currentUserId, partnerUserId] // funktioniert auch für [id, id]
       });
-      console.log('Created new conversation with ID:', newConv.id);
       conversationId = newConv.id;
     }
 
@@ -194,7 +192,6 @@ export class ConversationService {
 
 
     });
-    console.log('Thread Messages for this selected Message:', this.allMessages)
     return convMessages;
   }
 
@@ -203,7 +200,6 @@ export class ConversationService {
   conversationId: string,
   callback: (convMessages: ConversationMessage[]) => void
 ): () => void {
-    console.log('Listening to messages for conversationId:', conversationId);
   const convMessageRef = collection(
     this.firestore,
     'conversation',
@@ -245,11 +241,6 @@ export class ConversationService {
 
     // CRITICAL: Update both arrays with ALL messages!
     this.allMessages = [...liveThreadMessages, ...liveConvMessages];
-    
-    // Log to verify
-    console.log('All messages updated in listener:', this.allMessages);
-    console.log('Thread messages:', liveThreadMessages);
-    console.log('Conversation messages:', liveConvMessages);
     
     // Emit only conversation messages for the main chat display
     this.allConversationMessagesSubject.next(liveConvMessages);
@@ -351,7 +342,6 @@ export class ConversationService {
       (msg) => msg.threadTo === (message.conversationmessageId || message.conversationmessageId)
     );
     const lastAnswer = allAnswers[allAnswers.length - 1];
-    console.log(lastAnswer);
     return lastAnswer;
   }
 
@@ -390,8 +380,6 @@ export class ConversationService {
 
       const docRef = await addDoc(convMessageRef, threadAnswer);
       threadAnswer.id = docRef.id;
-
-      console.log('Thread answer created with ID:', docRef.id);
 
       // Update the document with the messageId
       await updateDoc(docRef, { messageId: docRef.id });
@@ -550,7 +538,6 @@ export class ConversationService {
       // The listenToMessages method will automatically detect the new message
       // and update this.allMessages and this.allConversationMessagesSubject
 
-      console.log('Thread answer created with ID:', docRef.id);
     } catch (error) {
       console.error('Error creating thread answer:', error);
       // You might want to show a user-friendly error message here

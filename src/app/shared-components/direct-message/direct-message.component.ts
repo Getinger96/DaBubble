@@ -146,7 +146,6 @@ export class DirectMessageComponent {
 
       this.messageText = this.messageData.text || this.messageText;
     }
-    console.log('Direct Message:', this.messageData);
      this.loadAllMessageInConversation();
      this.loadThreadAnswers();
   }
@@ -299,7 +298,7 @@ async saveEditedMessage() {
   onReplyClick(): void {
     if (this.messageData) {
       this.replyClicked.emit(this.messageData);
-      console.log('Message data is:', this.messageData)
+
       this.conversationservice.openThread(this.messageData);
       this.loadThreadAnswers();
     } else {
@@ -316,7 +315,7 @@ async saveEditedMessage() {
     this.allThreadsSubscription =
       this.conversationservice.allMessages$.subscribe((messages) => {
         if (this.messageData && this.messageData.id) {
-          const messageId = this.messageData.id;
+          const messageId = this.messageData.conversationmessageId;
           this.threadAnswers = this.conversationservice.getThreadAnswers(messageId);
           this.conversationservice.updateThreadAnswers(messageId);
         }
