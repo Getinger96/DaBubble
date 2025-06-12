@@ -161,33 +161,21 @@ export class MainComponentService {
     }
   }
 
-  getUserDataFromFirebase(id: string): void {
-  console.log('[Service] getUserDataFromFirebase:', id);
-
-  // Pfad MUSS "Users" heißen – Groß/Kleinschreibung beachten!
-  const userRef = doc(this.firestore, `Users/${id}`);
-
-  getDoc(userRef).then(snapshot => {
-    const user = snapshot.data();
-    if (!user) {
-      console.warn('[Service] Kein User mit dieser ID gefunden:', id);
-      return;
+ async getUserDataFromFirebase(userId: string) {
+    const channelDocRef = doc(this.firestore, 'Users', userId);
+    const docSnap = await getDoc(channelDocRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const userStatus = data['status'];
+      const userId = data['id'];
+      const userEmail = data['email'];
+      const userAvatar = data['avatar'];
+      const userName = data['name'];
+      this.userStatusSubject.next(userStatus)
+      this.userSubjectId.next(userId)
+      this.userSubjectEmail.next(userEmail)
+      this.userSubjectAvatar.next(userAvatar)
+      this.userSubjectName.next(userName)
     }
-
-    console.log('[Service] user gefunden:', user);
-
-    /* ------- zentrale Subjects (falls woanders gebraucht) ------- */
-    this.userSubjectName.next(user['name']);
-    this.userSubjectEmail.next(user['email']);
-    this.userSubjectAvatar.next(user['avatar']);
-    this.userStatusSubject.next(user['status']);
-    this.userSubjectId.next(id);
-
-    /* ------- Subjects, die deine Chat-Komponente abonniert ------- */
-    this.directmessaeUserNameSubject.next(user['name']);
-    this.directmessaeUserEmailSubject.next(user['email']);
-    this.directmessaeUserAvatarSubject.next(user['avatar']);
-    this.directmessaeUserStatusSubject.next(user['status']);
-  });
-}
+  }
 }
