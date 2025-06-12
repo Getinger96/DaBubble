@@ -15,11 +15,12 @@ import { ChannelMessageService } from '../../firebase-services/channel-message.s
 import { MainHelperService } from '../../services/main-helper.service';
 import { Member } from '../../interfaces/member.interface';
 import { Router } from '@angular/router';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-workspace-menu',
   standalone: true,
-  imports: [NgIf, DirectMessageUserComponent, CommonModule, FormsModule, MatCheckboxModule, MatRadioModule],
+  imports: [NgIf, DirectMessageUserComponent, CommonModule, FormsModule, MatCheckboxModule, MatRadioModule, SearchBarComponent],
   templateUrl: './workspace-menu.component.html',
   styleUrl: './workspace-menu.component.scss'
 })

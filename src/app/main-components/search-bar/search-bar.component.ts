@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { User } from '../../interfaces/user.interface';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../interfaces/channel.interface';
-import { CommonModule, NgIf, } from '@angular/common';
+import { CommonModule, NgIf, NgStyle, } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Member } from '../../interfaces/member.interface';
 import { Message } from '../../interfaces/message.interface';
@@ -21,13 +21,13 @@ import { collection, getDocs } from '@angular/fire/firestore';
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgStyle],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent {
   private usersSubscription!: Subscription;
-  placeholderSearchBar: string = "Devspace durchsuchen";
+  @Input() placeholderSearchBar: string = "Devspace durchsuchen";
   allUsers: User[] = [];
   channels: Channel[] = [];
   allMessages: ConversationMessage[] = []
@@ -43,6 +43,7 @@ export class SearchBarComponent {
   filteredDirectMessages: any[] = []
   users: User[] = [];
   conversations: Conversation[] = []
+  @Input() mobile: boolean = false;
 
 
 

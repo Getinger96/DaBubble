@@ -1,7 +1,6 @@
-<div class="search-bar">
-  <input [(ngModel)]="searchTerm" (input)="filterResults()" type="text" [placeholder]="placeholderSearchBar">
-  <img src="assets/img/search.svg" alt="search-icon" class="search-icon">
-
+<div class="search-bar" [ngStyle]="{'padding': mobile ? '0px' : '17.5px 45px 17.5px 45px'}">
+  <input [(ngModel)]="searchTerm" (input)="filterResults()" type="text" [ngStyle]="{'font-size': mobile ? '17px' : '24px'}" [placeholder]="placeholderSearchBar">
+  <img [ngStyle]="{'width': mobile ? '32px' : '35px', 'height' : mobile ? '32px' : '35px'}" src="assets/img/search.svg" alt="search-icon" class="search-icon">
 </div>
 
 
