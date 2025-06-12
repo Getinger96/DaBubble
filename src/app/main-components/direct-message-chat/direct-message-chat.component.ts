@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, input, Output, ViewChild } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf, CommonModule } from '@angular/common';
 import { UserCardService } from '../active-user/services/user-card.service';
@@ -14,6 +14,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ThreadComponent } from '../thread/thread.component';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, filter, map, switchMap } from 'rxjs';
+import { User } from '../../interfaces/user.interface';
 
 
 @Component({
@@ -25,6 +26,7 @@ import { combineLatest, filter, map, switchMap } from 'rxjs';
 })
 export class DirectMessageChatComponent {
   @Output() openThread = new EventEmitter<ConversationMessage>();
+   private actualUserSubscription!: Subscription;
   @Output() closeThread = new EventEmitter<void>();
   @Output() currentmessageUser: string = '';
   @Output() currentmessageEmail: string = '';
@@ -35,8 +37,10 @@ export class DirectMessageChatComponent {
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
   @ViewChild(ThreadComponent) threadComponent!: ThreadComponent;
-
+  directmessageid!: string;
   actualUser?: string;
+  actualUserArray: User[] = [];
+  userId: string = '';
   allConversationMessages: ConversationMessage[] = [];
   conversationId: string | null = null;
   newConvMessage: string = '';
@@ -74,6 +78,7 @@ export class DirectMessageChatComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    this.loadRouter();
     this.loadName();
     this.loadAvatar();
     this.loadEmail();
@@ -93,7 +98,28 @@ export class DirectMessageChatComponent {
   }
 
 
+loadRouter(): void {
+  // Lese directmessageid aus der aktuellen Route
+  this.route.paramMap.subscribe(params => {
+    const directmessageid = params.get('directmessageid');
+    if (directmessageid) {
+      this.directmessageid = directmessageid;
+      this.mainservice.setCurrentDirectMessage(this.directmessageid);
+      this.currentUserId = this.directmessageid;
+      console.log('🎯 Aktive directmessageid:', this.directmessageid);
+    }
+  });
+
+  this.route.parent?.paramMap.subscribe(params => {
+    const userId = params.get('id');
+    if (userId) {
+      this.userId = userId;
+      console.log('🎯 Aktive id aus Parent-Route:', this.userId);
+    }
+  });
+}
   
+
 
   onReplyToMessage(message: ConversationMessage) {
     this.openThread.emit(message);
@@ -203,7 +229,9 @@ export class DirectMessageChatComponent {
       this.unsubscribeFromMessages = undefined;
     }
 
-    const currentUserId = this.mainservice.actualUser[0]?.id;
+    const currentUserId = this.userId;
+  
+
     const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
 
     if (!currentUserId || !partnerUserId) {

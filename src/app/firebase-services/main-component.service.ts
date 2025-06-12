@@ -94,7 +94,26 @@ export class MainComponentService {
     this.directmessaeUserStatusSubject.next(status)
   }
 
-    setDirectmessageuserId(id: string): void {
+
+    setCurrentDirectMessage(directMessageId: string) {
+        const directMessageDocRef = doc(this.firestore, 'Users', directMessageId);
+        getDoc(directMessageDocRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                const user = docSnap.data() as User;
+                this.directmessaeUserNameSubject.next(user.name)
+                this.directmessaeUserAvatarSubject.next(user.avatar)
+                this.directmessaeUserEmailSubject.next(user.email)
+                 this.directmessaeUserStatusSubject.next(user.status)
+            } else {
+                console.warn('⚠️ Channel nicht gefunden:', directMessageId);
+            }
+        }).catch(error => {
+            console.error('❌ Fehler beim Laden des Channels:', error);
+        });
+    }
+
+
+  setDirectmessageuserId(id: string): void {
     console.log('[Service] setDirectmessageuserId aufgerufen mit:', id);
     this.directmessaeUserIdSubject.next(id);
 
