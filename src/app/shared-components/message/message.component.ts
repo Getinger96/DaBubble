@@ -15,7 +15,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfileCardOverlayService } from '../../main-components/profile-card/profile-card-overlay.service';
 import { take } from 'rxjs/operators';
-import { doc, updateDoc } from '@angular/fire/firestore';
+import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { EditMessageComponent } from './edit-message/edit-message.component';
 import { MainHelperService } from '../../services/main-helper.service';
@@ -68,6 +68,7 @@ export class MessageComponent implements OnChanges {
   showEmojiPicker: boolean = false;
   showEmojiPickerThread: boolean = false;
   hover = false;
+  showDeletePopup:boolean=false;
 
   currentChannelId?: string
   userId!: string
@@ -275,6 +276,29 @@ async saveEditedMessage() {
     this.showEditPopup = !this.showEditPopup;
   }
 
+  toggleDeletePopup():void{
+this.showDeletePopup=!this.showDeletePopup;
+  }
+
+  async confirmDelete(): Promise<void> {
+  if (!this.messageData) return;
+
+  const channelId = this.messageData.channelId || this.channelID;
+  const messageId = this.messageData.messageId;
+
+  if (channelId && messageId) {
+    const messageDocRef = this.messageService.firestore
+      ? doc(this.messageService.firestore, 'channels', channelId, 'messages', messageId)
+      : null;
+
+    if (messageDocRef) {
+      await deleteDoc(messageDocRef);
+      this.showDeletePopup = false;
+      this.toggleEditPopup()
+      
+    }
+  }
+}
 
 onCancelEdit() {
   this.mainHelperService.showEditMessage = false;

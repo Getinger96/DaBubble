@@ -1,5 +1,3 @@
-
-
 <div class="message-wrapper">
     <div *ngIf="!isInThread && !dateExists" class="message-date-part">
         <div class="date-row"></div>
@@ -10,11 +8,10 @@
 
 
     <div [ngClass]="{'reverse': isOwn && !isInThread,
-            'no-hover-popup': isEditing(threadAnswersId)}"  
-    [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}"
-        class="message">
+            'no-hover-popup': isEditing(threadAnswersId)}"
+        [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}" class="message">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup"
-            [ngClass]="{ 'show': showEmojiPicker}" >
+            [ngClass]="{ 'show': showEmojiPicker}">
 
 
 
@@ -22,16 +19,17 @@
             <img (click)="addEmoji('👍',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
             <img #emojiImg (click)="showEmojiBar()" class="change-color" src="assets/img/add_reaction40.png"
                 alt="react">
-            <img class="change-color" *ngIf="!isThreadRootMessage" src="assets/img/edit.png" alt="edit" (click)="onReplyClick()">
+            <img class="change-color" *ngIf="!isThreadRootMessage" src="assets/img/edit.png" alt="edit"
+                (click)="onReplyClick()">
             <img (click)="toggleEditPopup()" *ngIf="isOwn && !isThreadRootMessage" src="assets/img/dots.png" alt="dots">
         </div>
 
 
-            <div class="editOwnMessage" *ngIf="isOwn && isEditing(threadAnswersId) && mainHelperService.showEditMessage" >
-              <app-edit-message [messageTextEdit]="messageText"  [messageEditId]="editMessageId!"
-              [channelID]="channelID" (cancelEdit)="onCancelEdit()">
-                 </app-edit-message>
-            </div>
+        <div class="editOwnMessage" *ngIf="isOwn && isEditing(threadAnswersId) && mainHelperService.showEditMessage">
+            <app-edit-message [messageTextEdit]="messageText" [messageEditId]="editMessageId!" [channelID]="channelID"
+                (cancelEdit)="onCancelEdit()">
+            </app-edit-message>
+        </div>
 
         <div *ngIf="showEmojiPicker" [ngClass]="{'emojiWindowLeftSide': isOwn}" #emojiComponent class="emojiWindow">
             <emoji-mart set="apple" (emojiClick)="addEmoji($event, channelID, messageData?.messageId)"
@@ -40,19 +38,28 @@
                 [perLine]="7"></emoji-mart>
         </div>
 
-        <div *ngIf="isOwn && showEditPopup && !isThreadRootMessage" class="edit-message" [ngStyle]="isThread ? {'left': '135px'} : {}">
+        <div *ngIf="isOwn && showEditPopup && !isThreadRootMessage" class="edit-message"
+            [ngStyle]="isThread ? {'left': '135px'} : {}">
             <span (click)="overwriteMessage(threadAnswersId)">Nachricht bearbeiten</span>
-            <span> Nachricht löschen</span>
+           <span (click)="toggleDeletePopup()"> Nachricht löschen</span>
         </div>
 
-
-      
+        <div class="delete-popup" *ngIf="showDeletePopup">
+            <div class="delete-popup-content">
+                <p>Möchtest du diese Nachricht wirklich löschen?</p>
+                <div class="popup-buttons">
+                    <button mat-button color="warn" (click)="confirmDelete()">Ja</button>
+                    <button mat-button (click)="toggleDeletePopup()">Nein</button>
+                </div>
+            </div>
+        </div>
 
         <div *ngIf="isThread || isInThread" class="reaction-popup">
             <img #emojiThread (click)="showEmojiBarThread()" src="assets/img/add_reaction40.png" alt="">
 
 
-            <img (click)="toggleEditPopup()" *ngIf="isOwn &&  !isThreadRootMessage" src="assets/img/dots.png" alt="dots">
+            <img (click)="toggleEditPopup()" *ngIf="isOwn &&  !isThreadRootMessage" src="assets/img/dots.png"
+                alt="dots">
         </div>
         <div *ngIf="(isThread || isInThread) && showEmojiPickerThread" [ngClass]="{'emojiWindowLeftSide': isOwn}"
             #emojiThreadMask class="emojiWindowThread">
@@ -61,14 +68,12 @@
                 [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
-  <img 
-     [src]="'assets/img/avatar_' + avatarSrc + '.png'"
-     [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
-                    <div class="message-details" *ngIf="!editMessage">
-            <div class="message-over" ><span class="message-name"
-            (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
-            : null): ( !isThread && messageData?.id? openProfil(messageData!.id): null )"
-            >{{ name }} </span><span class="message-time">{{ time }}
+        <img [src]="'assets/img/avatar_' + avatarSrc + '.png'"
+            [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
+        <div class="message-details" *ngIf="!editMessage">
+            <div class="message-over"><span class="message-name" (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
+            : null): ( !isThread && messageData?.id? openProfil(messageData!.id): null )">{{ name }} </span><span
+                    class="message-time">{{ time }}
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
@@ -105,12 +110,10 @@
 
             </div>
             <div *ngIf="editMessage" class="edit-message-input fontNunito">
-                <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}} [(ngModel)]="editedMessageText"></textarea>
+                <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}
+                    [(ngModel)]="editedMessageText"></textarea>
                 <img src="assets/img/emoji.png" alt="">
                 <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
                 <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
             </div>
         </div>
-
-
-               
