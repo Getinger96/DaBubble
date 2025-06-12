@@ -23,8 +23,7 @@ export class MainComponentService {
   public actualUserSubject = new BehaviorSubject<User[]>([])
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
-  private showDirectMessageSubject = new BehaviorSubject<boolean>(false);
-    showDirectMessage$ = this.showDirectMessageSubject.asObservable();
+  showdirectmessage: boolean = false;
   public directmessaeUserNameSubject = new BehaviorSubject<string>('');
   currentusermessageName$ = this.directmessaeUserNameSubject.asObservable();
   public directmessaeUserAvatarSubject = new BehaviorSubject<number>(0);
@@ -74,8 +73,8 @@ export class MainComponentService {
   ngonDestroy() {
     this.unsubList();
   }
-    setShowDirectMessage(value: boolean): void {
-    this.showDirectMessageSubject.next(value);
+     toggleShowDirectMessage() {
+    this.showdirectmessage = !this.showdirectmessage;
   }
    
 
@@ -95,9 +94,10 @@ export class MainComponentService {
     this.directmessaeUserStatusSubject.next(status)
   }
 
-   setDirectmessageuserId(id: string): void {
+    setDirectmessageuserId(id: string): void {
+    console.log('[Service] setDirectmessageuserId aufgerufen mit:', id);
     this.directmessaeUserIdSubject.next(id);
-    this.setShowDirectMessage(true);  // <-- Hier wird showDirectMessage auf true gesetzt
+
     this.getUserDataFromFirebase(id);
   }
 
@@ -118,28 +118,25 @@ export class MainComponentService {
   }
 
   async saveActualUser() {
-    console.log('[Service] saveActualUser startet');
-    try {// 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
+    try {
+      // 1. Hole den aktuellen Benutzer. Wir warten darauf, dass die Benutzerinfo geladen wird.
       let currentUser = await this.getCurrentUser();
-      console.log('[Service] currentUser von Auth:', currentUser);
-
-      if (currentUser) { // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null),  //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
+      if (currentUser) {
+        // 2. Wenn der Benutzer eingeloggt ist (d.h. "currentUser" ist nicht null), 
+        //    warte darauf, dass alle Benutzer aus der Firestore-Datenbank geladen sind.
         this.allUsers$
           .pipe(
-
-            filter(users => users.length > 0),
-
-            // Warte, bis mindestens ein Benutzer geladen wurde
+            filter(users => users.length > 0)  // Warte, bis mindestens ein Benutzer geladen wurde
           )
-
-          .subscribe(users => { // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
+          .subscribe(users => {
+            // 3. Wenn mindestens ein Benutzer geladen ist, verarbeite den Benutzer, z.B. mit einer Methode.
+            console.log('Alle Benutzer:', users);
             this.getActualUser(currentUser.uid);  // Hier kannst du eine Methode aufrufen, um den aktiven Benutzer zu finden
-            console.log('[Service] allUsers vorhanden:', users);
-            console.log('[Service] actualUser gesetzt:', this.actualUser);
           });
-
-      } else {  // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
+      } else {
+        // 4. Wenn der Benutzer nicht eingeloggt ist, setze den Benutzerstatus auf leer.
         this.actualUserSubject.next([]);
+        console.log('Kein Benutzer eingeloggt', this.actualUserSubject);
       }
     } catch (error) {
       console.error("Fehler beim Abrufen des Benutzers:", error);
@@ -164,33 +161,21 @@ export class MainComponentService {
     }
   }
 
-  getUserDataFromFirebase(id: string): void {
-  console.log('[Service] getUserDataFromFirebase:', id);
-
-  // Pfad MUSS "Users" heißen – Groß/Kleinschreibung beachten!
-  const userRef = doc(this.firestore, `Users/${id}`);
-
-  getDoc(userRef).then(snapshot => {
-    const user = snapshot.data();
-    if (!user) {
-      console.warn('[Service] Kein User mit dieser ID gefunden:', id);
-      return;
+ async getUserDataFromFirebase(userId: string) {
+    const channelDocRef = doc(this.firestore, 'Users', userId);
+    const docSnap = await getDoc(channelDocRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const userStatus = data['status'];
+      const userId = data['id'];
+      const userEmail = data['email'];
+      const userAvatar = data['avatar'];
+      const userName = data['name'];
+      this.userStatusSubject.next(userStatus)
+      this.userSubjectId.next(userId)
+      this.userSubjectEmail.next(userEmail)
+      this.userSubjectAvatar.next(userAvatar)
+      this.userSubjectName.next(userName)
     }
-
-    console.log('[Service] user gefunden:', user);
-
-    /* ------- zentrale Subjects (falls woanders gebraucht) ------- */
-    this.userSubjectName.next(user['name']);
-    this.userSubjectEmail.next(user['email']);
-    this.userSubjectAvatar.next(user['avatar']);
-    this.userStatusSubject.next(user['status']);
-    this.userSubjectId.next(id);
-
-    /* ------- Subjects, die deine Chat-Komponente abonniert ------- */
-    this.directmessaeUserNameSubject.next(user['name']);
-    this.directmessaeUserEmailSubject.next(user['email']);
-    this.directmessaeUserAvatarSubject.next(user['avatar']);
-    this.directmessaeUserStatusSubject.next(user['status']);
-  });
-}
+  }
 }

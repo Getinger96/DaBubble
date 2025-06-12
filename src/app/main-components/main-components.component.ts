@@ -28,7 +28,7 @@ import { ConversationService } from '../firebase-services/conversation.service';
   imports: [SearchBarComponent, ActiveUserComponent, RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, DirectMessageChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
-})  
+})
 
 export class MainComponentsComponent implements OnInit, OnDestroy {
   loadingStatus: boolean = false;
@@ -38,12 +38,15 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   private chanelSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   private routerSubscription!: Subscription;
-  overlayUserCardActive:boolean = false;
+  overlayUserCardActive: boolean = false;
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
-  showdirectmessage:boolean = false;
+  showdirectmessage: boolean = false;
   actualUser: User[] = [];
-  constructor(public messageService: MessageService ,private loadingService: LoadingService, private registerservice: RegisterService, public mainservice:MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService) {
+  private mediaQuery = window.matchMedia('(max-width: 768px)');
+  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService) {
+    this.handleMediaChange(this.mediaQuery);
+    this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
   }
   selectedThreadMessage: Message | null = null;
   selectedConvThreadMessage: ConversationMessage | null = null;
@@ -60,29 +63,28 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    if(this.mainservice.showDirectMessage$){
+    if (this.mainservice.showdirectmessage) {
       this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
         this.selectedConvThreadMessage = message;
       })
     } else {
-        this.channemessageService.selectedThreadMessage$.subscribe((message) => {
-      this.selectedThreadMessage = message;
-    });
+      this.channemessageService.selectedThreadMessage$.subscribe((message) => {
+        this.selectedThreadMessage = message;
+      });
     }
-      this.initchanelSubscription();
-      this.initRouterSubscription();
-      this.loadActualUser();
-      
+    this.initchanelSubscription();
+    this.initRouterSubscription();
+    this.loadActualUser();
   }
 
   openThreadForConversationMessage(message: ConversationMessage): void {
-  this.selectedConvThreadMessage = message;
-  this.showThreadWindow = true;
-  MainComponentsComponent.toggleThreads();
-  this.conversationMessage.openThread(message); //
-}
+    this.selectedConvThreadMessage = message;
+    this.showThreadWindow = true;
+    MainComponentsComponent.toggleThreads();
+    this.conversationMessage.openThread(message); //
+  }
 
-  openThreadForMessage(message: Message):void {
+  openThreadForMessage(message: Message): void {
     this.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = message;
@@ -96,7 +98,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.selectedConvThreadMessage = null;
   }
 
-  static toggleThreads():void {
+  static toggleThreads(): void {
     const threads = document.querySelector('app-thread');
     if (threads) {
       threads.classList.toggle('closed');
@@ -105,18 +107,18 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   }
 
   initchanelSubscription() {
-    this.chanelSubscription = this.mainhelperService.openChannel$.subscribe(open=> {
+    this.chanelSubscription = this.mainhelperService.openChannel$.subscribe(open => {
       if (open) {
         this.showChanelSection = open
       }
-      else{
-        this.showChanelSection=false;
+      else {
+        this.showChanelSection = false;
       }
     })
   }
 
 
-    loadActualUser(){
+  loadActualUser() {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
@@ -140,15 +142,29 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  static toggleWorkspace():void {
+  static toggleWorkspace(): void {
     const workspace = document.querySelector('app-workspace-menu');
     if (workspace) {
       workspace.classList.toggle('closed');
     }
   }
 
+  openWorkspaceMobile() {
+    const workspace = document.querySelector('app-workspace-menu');
+    if (workspace) {
+      workspace.classList.toggle('closed');
+    }
+  }
+
+
+  handleMediaChange(e: MediaQueryListEvent | MediaQueryList) {
+    const workspace = document.querySelector('app-workspace-menu');
+    if (e.matches) {
+      if (workspace) {
+        workspace.classList.toggle('closed');
+      }
+    }
+
+  }
+
 }
-
- 
-  
-

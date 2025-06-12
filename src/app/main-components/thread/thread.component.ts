@@ -65,7 +65,7 @@ export class ThreadComponent {
   ngOnInit(): void {
     this.loadChannelId();
     this.loadMembers();
-  if (this.mainService.showDirectMessage$) {
+  if ( this.mainService.showdirectmessage ) {
     this.selectedMessageSubscription = this.conversationService.selectedThreadMessage$.subscribe((message) => {
       this.selectedConvMessage = message;
       if (message?.id) {

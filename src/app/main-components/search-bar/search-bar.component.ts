@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { User } from '../../interfaces/user.interface';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../interfaces/channel.interface';
-import { CommonModule, NgIf, } from '@angular/common';
+import { CommonModule, NgIf, NgStyle, } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Member } from '../../interfaces/member.interface';
 import { Message } from '../../interfaces/message.interface';
@@ -21,13 +21,13 @@ import { collection, getDocs } from '@angular/fire/firestore';
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgStyle],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent {
   private usersSubscription!: Subscription;
-  placeholderSearchBar: string = "Devspace durchsuchen";
+  @Input() placeholderSearchBar: string = "Devspace durchsuchen";
   allUsers: User[] = [];
   channels: Channel[] = [];
   allMessages: ConversationMessage[] = []
@@ -43,6 +43,7 @@ export class SearchBarComponent {
   filteredDirectMessages: any[] = []
   users: User[] = [];
   conversations: Conversation[] = []
+  @Input() mobile: boolean = false;
 
 
 
@@ -152,7 +153,7 @@ export class SearchBarComponent {
   }
 
   openDirectMessageChat(dm: ConversationMessage, close: boolean) {
-  this.mainservice.setShowDirectMessage(true);
+   this.mainservice.showdirectmessage = true
     this.mainHelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(dm.name)
     this.mainservice.setDirectmessageuserId(dm.senderId)
@@ -202,7 +203,7 @@ navigateToDirectMessage(dm: ConversationMessage) {
 }
 
 opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
-this.mainservice.setShowDirectMessage(true);
+ this.mainservice.showdirectmessage = true
   this.mainHelperService.openChannelSection(close)
   this.mainservice.setDirectmessageuserName(name)
   this.mainservice.setDirectmessageuserEmail(email)
@@ -224,7 +225,7 @@ openChannel(isOpen: boolean, name: string, description: string, creator: string,
   this.channelservice.setChannelId(id)
   this.channelservice.setChannelMember(members);
   this.channelservice.setChanneldate(date)
-  this.mainservice.setShowDirectMessage(false);
+   this.mainservice.showdirectmessage = false
   this.userId = this.actualUser[0].id;
   this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
   this.channelMessageService.getChannelId(id)

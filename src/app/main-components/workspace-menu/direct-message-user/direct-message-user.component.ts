@@ -46,7 +46,7 @@ export class DirectMessageUserComponent implements OnInit {
       return;
     }
    
-    this.mainservice.setShowDirectMessage(true);
+    this.mainservice.showdirectmessage = true
     this.mainhelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(name)
     this.mainservice.setDirectmessageuserEmail(email)

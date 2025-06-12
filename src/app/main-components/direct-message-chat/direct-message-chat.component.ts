@@ -41,7 +41,7 @@ export class DirectMessageChatComponent {
   conversationId: string | null = null;
   newConvMessage: string = '';
   openChannel = this.mainHelperService.openChannel;
-  showDirectMessage$ = this.mainservice.showDirectMessage$;
+  showDirectMessage = this.mainservice.showdirectmessage
   toggleEmoji: boolean = false
   toggleMemberInChat: boolean = false;
 
@@ -74,31 +74,23 @@ export class DirectMessageChatComponent {
   }
 
   async ngOnInit(): Promise<void> {
-  combineLatest([
-    this.mainservice.acutalUser$.pipe(filter(u => u.length > 0)),
-    this.mainservice.directmessaeUserIdSubject.pipe(filter(id => !!id))
-  ]).subscribe(async ([users, partnerId]) => {
-    // 1. eigene User-Daten setzen
-    const me = users[0];
-    this.actualUser = me.name;
-
-    // 2. Felder für Profil-Blende
     this.loadName();
-    this.loadEmail();
     this.loadAvatar();
+    this.loadEmail();
     this.loadStatus();
-    this.loadUserId();   // ACHTUNG: hier currentusermessagId$ benutzen
+    this.loadUserId();
+    setTimeout(() => this.scrollToBottom(), 0);
+    this.actualUser = this.mainservice.actualUser[0]?.name;
 
-    // 3. jetzt Konversation sicher starten
-    await this.initConversation();
-  });
-  this.conversationservice.allMessages$.subscribe(messages => {
-    console.log('Messages received in component:', messages);
-    this.allConversationMessages = messages;
-    this.mainservice.showDirectMessage$.subscribe(value => console.log('showDirectMessage$', value));
-    this.scrollToBottom();
-  });
-}
+   
+
+     await this.initConversation();
+
+    // Reagiere auf Änderungen des Chat-Partners (z. B. wenn du auf anderen User klickst)
+    this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
+      await this.initConversation(); // Lade neue Konversation und Nachrichten
+    });
+  }
 
 
   
