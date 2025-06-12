@@ -21,23 +21,20 @@ export class AuthService {
   constructor(
 
     private router: Router,
-    private firestore: Firestore, private registerservice: RegisterService, private mainservice: MainComponentService, private loginservice: LoginService,private jsonservice:JsonDataService) { }
+    private firestore: Firestore, private registerservice: RegisterService, private mainservice: MainComponentService, private loginservice: LoginService, private jsonservice: JsonDataService) { }
 
   async loginWithGoogle(event: Event) {
     event.preventDefault();
     try {
       const result = await signInWithPopup(this.auth, this.provider);
       this.loginWithGoogleAccountItWorks(result)
-      this.mainservice.saveActualUser();
-      this.mainservice.acutalUser$.subscribe(user => {
-        this.id = user[0].id;
-      });
-      this.timeoutForRoute(this.id)
+
     } catch (error) {
       this.loginWithGoogleAccountError(error);
     }
     return true;
   }
+
 
   timeoutForRoute(id?: string) {
     setTimeout(() => {
@@ -82,7 +79,12 @@ export class AuthService {
       this.mainservice.getActualUser(user.uid);
     } else {
       this.mainservice.getActualUser(user.uid);
-      this.setStatusOnline(user.uid, 'Online')
+      this.setStatusOnline(user.uid, 'Online');
+      this.mainservice.saveActualUser();
+      this.mainservice.acutalUser$.subscribe(user => {
+        this.id = user[0].id;
+      });
+      this.timeoutForRoute(this.id)
     }
   }
 

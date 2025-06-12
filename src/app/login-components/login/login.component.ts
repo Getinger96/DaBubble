@@ -14,7 +14,7 @@ import { IntroComponent } from '../intro/intro.component';
 import { HeaderLogoComponent } from '../header-logo/header-logo.component';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
-import { Subscription } from 'rxjs';
+import { first, Subscription } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -62,19 +62,17 @@ export class LoginComponent implements AfterViewInit {
     }
   }
 
-  showAnimationLogin() {
-    this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
-      if (actualUser.length > 0) {
-        this.actualUser = actualUser;
-      }
-    });
+  async showAnimationLogin() {
+  this.mainservice.acutalUser$.pipe(first(user => user.length > 0)).subscribe(actualUser => {
+    this.actualUser = actualUser;
     this.userId = this.actualUser[0].id;
     this.overlayvisible = true;
     setTimeout(() => {
-      this.overlayvisible = false
+      this.overlayvisible = false;
       this.router.navigate([`/main-components/${this.userId}`]);
-    }, 2000)
-  }
+    }, 2000);
+  });
+}
 
   async guestLogin(event: Event) {
     event.preventDefault();
@@ -103,78 +101,82 @@ export class LoginComponent implements AfterViewInit {
 
   async login(event: Event) {
     await this.authService.loginWithGoogle(event)
+    
     this.showAnimationLogin();
   }
+
+
+
 
   async loginAccount(email: string, password: string, event: Event) {
-    if (!this.inputFieldEmailIsEmpty()) { return; }
-    if (this.checkTheInputFields()) { return; }
-    await this.loginservice.loginUser(email, password, event);
-    if (!this.checkEmail()) { return; }
-    if (!this.checkpasswordInput()) { return; }
-    if (!this.checkEmailAndPassword()) { return; }
-    this.showAnimationLogin();
-  }
+  if (!this.inputFieldEmailIsEmpty()) { return; }
+  if (this.checkTheInputFields()) { return; }
+  await this.loginservice.loginUser(email, password, event);
+  if (!this.checkEmail()) { return; }
+  if (!this.checkpasswordInput()) { return; }
+  if (!this.checkEmailAndPassword()) { return; }
+  this.showAnimationLogin();
+}
 
-  checkTheInputFields() {
-    if (this.emailInput.nativeElement.value.length == 0 && this.passwordInput.nativeElement.value.length == 0) {
-      this.emailFielIsEmpty = false;
-      this.passwordFieldIsEmpty = false;
-      return true;
-    } else {
-      return false;
-    }
+checkTheInputFields() {
+  if (this.emailInput.nativeElement.value.length == 0 && this.passwordInput.nativeElement.value.length == 0) {
+    this.emailFielIsEmpty = false;
+    this.passwordFieldIsEmpty = false;
+    return true;
+  } else {
+    return false;
   }
+}
 
-  checkpasswordInput() {
-    if (this.passwordInput.nativeElement.value.length > 6) {
-      this.passWordLengthIsCorrect = true;
-      return true;
-    } else {
-      this.passWordLengthIsCorrect = false;
-      return false;
-    }
+checkpasswordInput() {
+  if (this.passwordInput.nativeElement.value.length > 6) {
+    this.passWordLengthIsCorrect = true;
+    return true;
+  } else {
+    this.passWordLengthIsCorrect = false;
+    return false;
   }
+}
 
-  checkEmail() {
-    if (this.loginservice.loginIsEmailValide) {
-      this.loginEmailIsCorrect = true;
-      return true;
-    } else {
-      this.loginEmailIsCorrect = false;
-      return false;
-    }
+checkEmail() {
+  if (this.loginservice.loginIsEmailValide) {
+    this.loginEmailIsCorrect = true;
+    return true;
+  } else {
+    this.loginEmailIsCorrect = false;
+    return false;
   }
+}
 
-  checkEmailAndPassword() {
-    if (this.loginservice.loginIsValide) {
-      this.loginEmailAndPasswordAreCorrect = true;
-      return true;
-    } else {
-      this.loginEmailAndPasswordAreCorrect = false;
-      return false;
-    }
+checkEmailAndPassword() {
+  if (this.loginservice.loginIsValide) {
+    this.loginEmailAndPasswordAreCorrect = true;
+    return true;
+  } else {
+    this.loginEmailAndPasswordAreCorrect = false;
+    return false;
   }
+}
 
-  inputFieldEmailIsEmpty() {
-    if (this.emailInput.nativeElement.value.length == 0) {
-      this.emailFielIsEmpty = false;
-      console.log('klappt Email');
-      return false;
-    } else {
-      this.emailFielIsEmpty = true;
-      return true;
-    }
+inputFieldEmailIsEmpty() {
+  if (this.emailInput.nativeElement.value.length == 0) {
+    this.emailFielIsEmpty = false;
+    console.log('klappt Email');
+    return false;
+  } else {
+    this.emailFielIsEmpty = true;
+    return true;
   }
+}
 
-  inputFieldPasswordIsEmpty() {
-    if (this.passwordInput.nativeElement.value.length == 0) {
-      this.passwordFieldIsEmpty = false;
-      this.checkpasswordInput();
-      console.log('klappt Password');
+inputFieldPasswordIsEmpty() {
+  if (this.passwordInput.nativeElement.value.length == 0) {
+    this.passwordFieldIsEmpty = false;
+    this.checkpasswordInput();
+    console.log('klappt Password');
 
-    } else {
-      this.passwordFieldIsEmpty = true;
-    }
+  } else {
+    this.passwordFieldIsEmpty = true;
   }
+}
 }
