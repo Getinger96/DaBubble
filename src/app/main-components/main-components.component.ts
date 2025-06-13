@@ -153,6 +153,9 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     const workspace = document.querySelector('app-workspace-menu');
     if (workspace) {
       workspace.classList.toggle('closed');
+      if (!this.mainservice.showdirectmessage) {
+        this.mainservice.showdirectmessage = true;
+      }
     }
   }
 
