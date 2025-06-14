@@ -3,7 +3,7 @@ import { collection, Firestore, onSnapshot, doc, getDoc } from '@angular/fire/fi
 import { User } from '../interfaces/user.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { BehaviorSubject, filter } from 'rxjs';
+import { BehaviorSubject, filter , Subject} from 'rxjs';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
@@ -20,6 +20,7 @@ export class MainComponentService {
   allUsers: User[] = [];
   private allUsersSubject = new BehaviorSubject<User[]>([]);
   allUsers$ = this.allUsersSubject.asObservable();
+  showThreadWindow: boolean = false;
   public actualUserSubject = new BehaviorSubject<User[]>([])
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
@@ -46,8 +47,10 @@ export class MainComponentService {
   userAvatar$ = this.userSubjectAvatar.asObservable();
   public userSubjectName = new BehaviorSubject<string>('');
   userName$ = this.userSubjectName.asObservable();
-  
-
+  toggleThreadSignal = new Subject<void>();
+  loadActualUser: boolean= false;
+  public userIdSubject = new BehaviorSubject<string>('');
+  userIdActual$ = this.userIdSubject.asObservable();
 
   constructor(private route: ActivatedRoute,
     private router: Router) {
@@ -67,6 +70,7 @@ export class MainComponentService {
       })
       this.allUsers = usersArray;
       this.allUsersSubject.next(this.allUsers);
+
     })
   }
 
@@ -76,7 +80,8 @@ export class MainComponentService {
      toggleShowDirectMessage() {
     this.showdirectmessage = !this.showdirectmessage;
   }
-   
+
+
 
   setDirectmessageuserName(name: string): void {
     this.directmessaeUserNameSubject.next(name)
@@ -116,9 +121,10 @@ export class MainComponentService {
   setDirectmessageuserId(id: string): void {
     console.log('[Service] setDirectmessageuserId aufgerufen mit:', id);
     this.directmessaeUserIdSubject.next(id);
-
     this.getUserDataFromFirebase(id);
   }
+
+ 
 
   setUserObject(obj: any, id: string): User {
     return {
