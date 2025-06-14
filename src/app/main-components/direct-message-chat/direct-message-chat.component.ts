@@ -87,7 +87,10 @@ export class DirectMessageChatComponent {
     setTimeout(() => this.scrollToBottom(), 0);
     this.actualUser = this.mainservice.actualUser[0]?.name;
 
-   
+        await this.initConversation();
+      if (!this.showDirectMessage) {
+      this.showDirectMessage = true
+    }
 
      await this.initConversation();
 

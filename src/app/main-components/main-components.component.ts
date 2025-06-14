@@ -78,14 +78,16 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   }
 
   openThreadForConversationMessage(message: ConversationMessage): void {
+        console.log('Event empfangen:', message);
     this.selectedConvThreadMessage = message;
-    this.showThreadWindow = true;
+    this.mainservice.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
     this.conversationMessage.openThread(message); //
   }
 
   openThreadForMessage(message: Message): void {
-    this.showThreadWindow = true;
+    console.log('Event empfangen:', message);
+   this.mainservice.showThreadWindow
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = message;
     this.channemessageService.openThread(message);
@@ -93,7 +95,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
   public closeThreadView(): void {
     MainComponentsComponent.toggleThreads();
-    this.showThreadWindow = false;
+    this.mainservice.showThreadWindow = false
     this.selectedThreadMessage = null;
     this.selectedConvThreadMessage = null;
   }
@@ -153,6 +155,9 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     const workspace = document.querySelector('app-workspace-menu');
     if (workspace) {
       workspace.classList.toggle('closed');
+      if (!this.mainservice.showdirectmessage) {
+        this.mainservice.showdirectmessage = true;
+      }
     }
   }
 
