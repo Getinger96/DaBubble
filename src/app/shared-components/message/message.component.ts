@@ -168,7 +168,7 @@ export class MessageComponent implements OnChanges {
   }
 
 
-
+ 
 
   onReplyClick(): void {
     if (this.messageData) {
