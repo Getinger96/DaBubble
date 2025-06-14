@@ -98,9 +98,7 @@ export class DirectMessageChatComponent {
     this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
       await this.initConversation(); // Lade neue Konversation und Nachrichten
     });
-    if (this.showDirectMessage==false) {
-      this.showDirectMessage=true
-    }
+   
   }
 
 
