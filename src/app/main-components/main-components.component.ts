@@ -151,15 +151,20 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  openWorkspaceMobile() {
-    const workspace = document.querySelector('app-workspace-menu');
-    if (workspace) {
-      workspace.classList.toggle('closed');
-      if (!this.mainservice.showdirectmessage) {
-        this.mainservice.showdirectmessage = true;
-      }
-    }
+openWorkspaceMobile() {
+  const workspace = document.querySelector('app-workspace-menu');
+  const routerWrapper = document.getElementById('routerOutletWrapper');
+  const directMessage = document.getElementById('directMessageChat');
+  const workspaceIsNowClosed =  workspace?.classList.toggle('closed');
+
+  if (workspaceIsNowClosed) {
+    routerWrapper!.classList.remove('hidden');
+    directMessage?.classList.remove('hidden');
+  } else {
+    routerWrapper?.classList.add('hidden');
+    directMessage?.classList.add('hidden');
   }
+}
 
 
   handleMediaChange(e: MediaQueryListEvent | MediaQueryList) {
@@ -170,6 +175,11 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     }
 
+  }
+
+  closeDirectChatAndChannelchat() {
+    this.mainhelperService.openChannel = false;
+    this.mainservice.showdirectmessage = false
   }
 
 }
