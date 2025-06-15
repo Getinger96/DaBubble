@@ -21,6 +21,7 @@ import { DirectMessageChatComponent } from "./direct-message-chat/direct-message
 import { ChannelMessageService } from '../firebase-services/channel-message.service';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
 import { ConversationService } from '../firebase-services/conversation.service';
+import { ResponsivService } from '../services/responsiv.service';
 
 @Component({
   selector: 'app-main-components',
@@ -44,7 +45,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   showdirectmessage: boolean = false;
   actualUser: User[] = [];
   private mediaQuery = window.matchMedia('(max-width: 768px)');
-  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService) {
+  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
     this.handleMediaChange(this.mediaQuery);
     this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
   }
@@ -155,7 +156,8 @@ openWorkspaceMobile() {
   const workspace = document.querySelector('app-workspace-menu');
   const routerWrapper = document.getElementById('routerOutletWrapper');
   const directMessage = document.getElementById('directMessageChat');
-  const workspaceIsNowClosed =  workspace?.classList.toggle('closed');
+  const workspaceIsNowClosed = workspace?.classList.toggle('closed');
+  this.responsivService.workspace = true;
 
   if (workspaceIsNowClosed) {
     routerWrapper!.classList.remove('hidden');
@@ -172,6 +174,7 @@ openWorkspaceMobile() {
     if (e.matches) {
       if (workspace) {
         workspace.classList.toggle('closed');
+        this.responsivService.workspace = false;
       }
     }
 
