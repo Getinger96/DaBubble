@@ -99,7 +99,7 @@ export class ChannelChatComponent implements OnInit {
 
 
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
-    private route: ActivatedRoute, private mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
+    private route: ActivatedRoute, public mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
     private _eref: ElementRef) { }
 
 
@@ -374,6 +374,11 @@ this.allThreads = filtered
 
     this.channelmessageService.addMessage(this.message, this.currentChannelID, this.currentChannelName);
     this.message.messageText = '';
+  }
+
+
+  toggleMemberInChannel() {
+    this.mainhelperservice.showMemberList = !this.mainhelperservice.showMemberList
   }
 }
 

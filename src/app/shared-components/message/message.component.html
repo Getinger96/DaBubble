@@ -90,7 +90,7 @@
                         (click)="isThread || isInThread ? handleEmojiClick(entry.key) : addEmoji(entry.key, channelID, messageData?.messageId)">
 
                         {{ entry.key }}
-                        <ng-container *ngIf="entry.value.count > 1">
+                        <ng-container *ngIf="entry.value.count > 0">
                             {{ entry.value.count }}
                         </ng-container>
 
