@@ -53,7 +53,8 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserAvatar(avatar)
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
-    this.router.navigateByUrl(`/main-components/${this.actualUser[0].id}/directmessage/${id}`);
+    this.router.navigate(['/main-components/' + this.actualUser[0].id+'/directmessage/'+ id], { replaceUrl: true })
+ 
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeThread.emit();
     

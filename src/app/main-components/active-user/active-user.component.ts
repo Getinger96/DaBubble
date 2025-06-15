@@ -69,7 +69,7 @@ export class ActiveUserComponent implements OnInit {
     this.loginservice.updateStatusByUid(actual,'Offline')
     document.body.style.overflow = 'auto';
     setTimeout(() => {
-      this.router.navigate(['']);
+     this.router.navigate(['/'], { replaceUrl: true });
       }, 1000);
   }
 
