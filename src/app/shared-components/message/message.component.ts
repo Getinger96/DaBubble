@@ -223,7 +223,10 @@ startEdit(messageId: string) {
     });
   }
 
-
+deleteMessage(messageId:string, channelID:string) {
+ this.toggleEditPopup();
+ this.channelmessageService.deleteMessageInFirebase(messageId,channelID)
+}
 
   showEmojiBar() {
     this.showEmojiPicker = !this.showEmojiPicker;
