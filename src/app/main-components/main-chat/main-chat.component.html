@@ -1,64 +1,15 @@
-<div class="main-chat-wrapper">
-    <div class="main-chat-header">
-        <div class="message-group">
-            <div class="actual-group">
-                <span style="font-size: 32px;">#</span><span class="fontNunito">Entwicklerteam</span>
+ <div  class="main-chat-feed">
+            <div class="channel-info">
+                <div>
+                    <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
+                </div>
+                <div class="channel-Info-container">
+
+                    <span class="welcome-span">Willkomen {{this.actualUser[0].name}} erstelle einen Channel !</span>
+
+
+                    <span>erstelle einen Channel Für ein projekt oder Team um dich mit deinen Kollegen austauschen zu
+                        können</span>
+                </div>
             </div>
-            <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
         </div>
-        <div class="actual-group-members">
-            <div class="members-avatar-group">
-                <div class="avatar" style="background-image: url('assets/img/avatar_2_square.png');"></div>
-                <div class="avatar" style="background-image: url('assets/img/avatar_3_square.png');"></div>
-                <div class="avatar" style="background-image: url('assets/img/avatar_4_square.png');"></div>
-            </div>
-            <span class="fontNunito">3</span>
-            <img src="assets/img/add_members.png" alt="">
-        </div>
-    </div>
-    <div class="main-chat-feed" #chatFeed (scroll)="onScroll()">
-        <ng-container class="conversation-chat-feed" *ngIf="!openChannel">
-            <div *ngFor="let convMsg of allConversationMessages">
-                <app-direct-message
-                [messageData]="convMsg"
-                [name]="loadConversationMessageSender(convMsg)"
-                [date]="convMsg.timestamp"
-                [avatarSrc]="loadConversationMessageSenderAvatar(convMsg)"
-                [isOwn]="convMsg.isOwn"
-                [messageText]="convMsg.text"
-                >
-                </app-direct-message>
-            </div>
-        </ng-container>
-        <div *ngIf="openChannel">
-        <app-message *ngFor="let message of allMessages, index as i"
-        [messageData]="message"
-        [date]="message.sendAt"
-        [dateExists]="i > 0 && allMessages[i - 1].sendAt === message.sendAt"
-        [avatarSrc]="message.avatar"
-        [name]="message.name"
-        [time]="message.sendAtTime"
-        [messageText]="message.messageText"
-        [reaction]="message.reaction"
-        [isOwn]="message.isOwn"
-        [isAnswered]="message.isAnswered"
-        [isThread]="message.isThread"
-        [isInThread]="message.isInThread">
-        </app-message>
-        </div>
-    </div>
-    <div class="input-wrapper">
-        <div class="main-chat-message">
-        <textarea *ngIf="!openChannel" [(ngModel)]="newConvMessage" type="text" class="fontNunito" placeholder="Nachricht eingeben" wrap="soft"></textarea>
-        <textarea *ngIf="openChannel" [(ngModel)]="message.messageText" type="text" class="fontNunito" placeholder="Nachricht an #Entwicklerteam" wrap="soft"></textarea>
-        <div class="message-icons">
-            <div>
-            <img src="assets/img/emoji.png" alt="">
-            <img src="assets/img/at.png" alt="">
-            </div>
-            <img *ngIf="!openChannel" (click)="addConversationMessage()" src="assets/img/send.png" alt="">
-            <img *ngIf="openChannel" (click)="addMessage()" src="assets/img/send.png" alt="">
-        </div>
-        </div>
-    </div>
-</div>

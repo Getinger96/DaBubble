@@ -69,7 +69,8 @@
                 </button>
             </div>
 
-            <img class="imgaddMember" (click)="openDialogMembers()" src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
+            <img class="imgaddMember" (click)="openDialogMembers()" src="assets/img/add_members.png"
+                alt="Mitglieder hinzufügen">
         </div>
 
     </div>
@@ -83,42 +84,34 @@
                         date:'dd.MM.yyyy HH:mm'}}</span></span>
                 <span class="welcome-span">Willkomen in eurem privaten Channel!</span>
                 <div class="memberSection">
-                    <span (click)="toggleMemberInChannel();"> Mitglieder  </span> 
-                    </div>
+                    <span (click)="toggleMemberInChannel();"> Mitglieder </span>
+                </div>
                 <div *ngIf="mainhelperservice.showMemberList" class="member-container"><span class="member-span"
                         *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
                 <span> Beschreibung: {{currentChannelDescription}}</span>
             </div>
         </div>
 
-   
 
-<div  >
-        <app-message  *ngFor="let message of allMessages, index as i"
-        [messageData]="message"
-        [date]="message.sendAt"
-        [dateExists]="i > 0 && allMessages[i - 1].sendAt === message.sendAt"
-        [avatarSrc]="message.avatar"
-        [name]="message.name"
-        [time]="message.sendAtTime"
-        [messageText]="message.messageText"
-        [reaction]="message.reaction"
-        [isOwn]="message.isOwn"
-        [isAnswered]="message.isAnswered"
-        [isThread]="message.isThread"
-        [isInThread]="message.isInThread">
-        </app-message>
+
+        <div>
+            <app-message *ngFor="let message of allMessages, index as i" [messageData]="message" [date]="message.sendAt"
+                [dateExists]="i > 0 && allMessages[i - 1].sendAt === message.sendAt" [avatarSrc]="message.avatar"
+                [name]="message.name" [time]="message.sendAtTime" [messageText]="message.messageText"
+                [reaction]="message.reaction" [isOwn]="message.isOwn" [isAnswered]="message.isAnswered"
+                [isThread]="message.isThread" [isInThread]="message.isInThread">
+            </app-message>
         </div>
 
 
     </div>
-     <div *ngIf="!currentChannelName" class="main-chat-feed">
+    <div *ngIf="!currentChannelName" class="main-chat-feed">
         <div class="channel-info">
             <div>
                 <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
             </div>
             <div class="channel-Info-container">
-              
+
                 <span class="welcome-span">Willkomen {{this.actualUser[0].name}} erstelle einen Channel !</span>
                 <div class="member-container"><span class="member-span"
                         *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
@@ -126,7 +119,7 @@
             </div>
         </div>
 
-   
+
 
 
 
@@ -134,31 +127,30 @@
     </div>
 
     <div class="input-wrapper">
-         <ng-container *ngIf="toggleMemberInChat">
-            <app-add-member-channel  #addMemberComponent   [allUsersChannel]="allUsersChannel"
-                [members]="members"    [currentChannelID]="currentChannelID"    (memberSelected)="insertMemberIntoTextarea($event)"
-               ></app-add-member-channel>
-               </ng-container>
+        <ng-container *ngIf="toggleMemberInChat">
+            <app-add-member-channel #addMemberComponent [allUsersChannel]="allUsersChannel" [members]="members"
+                [currentChannelID]="currentChannelID"
+                (memberSelected)="insertMemberIntoTextarea($event)"></app-add-member-channel>
+        </ng-container>
         <div class="main-chat-message">
             <textarea #messageBox [(ngModel)]="message.messageText" type="text" class="fontNunito"
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft"></textarea>
             <div class="message-icons">
 
 
-                   <div  #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
-                    <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 
-                        [totalFrequentLines]="2" [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"   theme="dark"
-                        [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
-                        </div>
+                <div #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
+                    <emoji-mart set="apple" title="Pick your emoji…" emoji="point_up" [totalFrequentLines]="2"
+                        [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"
+                        theme="dark" [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
+                </div>
 
                 <div>
                     <img #emojiImg src="assets/img/emoji.png" alt="" (click)="toggleEmojiBar()">
-                    <img #atImg class="atImg"  #addMemberIcon src="assets/img/at.png" alt="" (click)="openDialogAddMember()">
+                    <img #atImg class="atImg" #addMemberIcon src="assets/img/at.png" alt=""
+                        (click)="openDialogAddMember()">
                 </div>
                 <img (click)="sendmessage()" src="assets/img/send.png" alt="">
             </div>
         </div>
     </div>
 </div>
-
-

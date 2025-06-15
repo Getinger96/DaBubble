@@ -26,7 +26,7 @@ import { ResponsivService } from '../services/responsiv.service';
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, DirectMessageChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent, RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, DirectMessageChatComponent, MainChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })
@@ -45,7 +45,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   showdirectmessage: boolean = false;
   actualUser: User[] = [];
   private mediaQuery = window.matchMedia('(max-width: 768px)');
-  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, private mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
+  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
     this.handleMediaChange(this.mediaQuery);
     this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
   }

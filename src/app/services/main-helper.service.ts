@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class MainHelperService {
-    private showChannel = new BehaviorSubject  < boolean>(false);
+    public showChannel = new BehaviorSubject  < boolean>(false);
     openChannel$ = this.showChannel.asObservable();
     openChannel: boolean = true;
     showEditMessage: boolean = false

@@ -12,13 +12,16 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { authGuard } from './auth/auth.guard';
 import { DirectMessageChatComponent } from './main-components/direct-message-chat/direct-message-chat.component';
 
+
+
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'signUp', component: RegisterComponent },
-  { path: 'intro', component: IntroComponent },
-  { path: 'chooseAvatar', component: ChooseAvatarComponent },
-  { path: 'resetEmail', component: PasswordResetEmailComponent },
-  { path: 'reset', component: PasswortResetComponent },
+  { path: '', component: LoginComponent, canActivate: [authGuard] },
+  { path: 'signUp', component: RegisterComponent, canActivate: [authGuard] },
+  { path: 'intro', component: IntroComponent, canActivate: [authGuard] },
+  { path: 'chooseAvatar', component: ChooseAvatarComponent, canActivate: [authGuard] },
+  { path: 'resetEmail', component: PasswordResetEmailComponent, canActivate: [authGuard] },
+  { path: 'reset', component: PasswortResetComponent, canActivate: [authGuard] },
+
   {
     path: 'main-components/:id',
     component: MainComponentsComponent,
@@ -29,11 +32,13 @@ export const routes: Routes = [
         component: ChannelChatComponent,
       },
       {
-        path:'directmessage/:directmessageid',
-        component:DirectMessageChatComponent,
+        path: 'directmessage/:directmessageid',
+        component: DirectMessageChatComponent,
       }
     ]
   },
+
   { path: 'imprint', component: ImprintComponent },
   { path: 'privacy', component: PrivacyComponent },
 ];
+

@@ -69,7 +69,7 @@ export class LoginComponent implements AfterViewInit {
     this.overlayvisible = true;
     setTimeout(() => {
       this.overlayvisible = false;
-      this.router.navigate([`/main-components/${this.userId}`]);
+      this.router.navigate(['/main-components/' + this.userId], { replaceUrl: true });
     }, 2000);
   });
 }

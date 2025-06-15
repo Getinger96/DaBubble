@@ -194,6 +194,7 @@ export class ChannelChatComponent implements OnInit {
         this.loadCurrentCrator();
         this.loadMembers();
         this.loadDate();
+
       }
     });
   }

@@ -25,6 +25,7 @@ export class MainComponentService {
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
   showdirectmessage: boolean = false;
+  
   public directmessaeUserNameSubject = new BehaviorSubject<string>('');
   currentusermessageName$ = this.directmessaeUserNameSubject.asObservable();
   public directmessaeUserAvatarSubject = new BehaviorSubject<number>(0);
