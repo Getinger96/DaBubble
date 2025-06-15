@@ -82,7 +82,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.selectedConvThreadMessage = message;
     this.mainservice.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
-    this.conversationMessage.openThread(message); //
+    this.conversationMessage.openThread(message);
   }
 
   openThreadForMessage(message: Message): void {
