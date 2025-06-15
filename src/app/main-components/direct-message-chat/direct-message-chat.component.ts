@@ -45,7 +45,6 @@ export class DirectMessageChatComponent {
   conversationId: string | null = null;
   newConvMessage: string = '';
   openChannel = this.mainHelperService.openChannel;
-  showDirectMessage = this.mainservice.showdirectmessage
   toggleEmoji: boolean = false
   toggleMemberInChat: boolean = false;
 
@@ -69,7 +68,7 @@ export class DirectMessageChatComponent {
 
 
 
-  constructor(private mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef, private route: ActivatedRoute) {
+  constructor(public mainservice: MainComponentService, public usercardservice: UserCardService, public conversationservice: ConversationService, private mainHelperService: MainHelperService, public profilecardservice: ProfileCardOverlayService, private _eref: ElementRef, private route: ActivatedRoute) {
  this.route.params.subscribe(p => {
     if (p['directmessageid']) {
       this.mainservice.setDirectmessageuserId(p['directmessageid']);
@@ -88,8 +87,8 @@ export class DirectMessageChatComponent {
     this.actualUser = this.mainservice.actualUser[0]?.name;
 
         await this.initConversation();
-      if (!this.showDirectMessage) {
-      this.showDirectMessage = true
+      if (!this.mainservice.showdirectmessage) {
+      this.mainservice.showdirectmessage= true
     }
 
      await this.initConversation();
@@ -240,6 +239,7 @@ loadRouter(): void {
   } else {
     currentUserId = this.userId;
   }
+  
 
   const partnerUserId = this.mainservice.directmessaeUserIdSubject.value;
 

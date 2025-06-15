@@ -1,6 +1,7 @@
 import { Component, Output } from '@angular/core';
 import { NgClass, NgIf } from '@angular/common';
 import { MainComponentsComponent } from '../main-components.component';
+import { ResponsivService } from '../../services/responsiv.service';
 
 @Component({
   selector: 'app-toggle-webspace-menu',
@@ -17,18 +18,20 @@ export class ToggleWebspaceMenuComponent {
 
   private mediaQuery = window.matchMedia('(max-width: 768px)');
 
- toggleWorkspace(){
+  constructor(public responsivService: ResponsivService) {
+    this.handleMediaChange(this.mediaQuery);
+    this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
+  }
+
+   toggleWorkspace(){
     this.mainComponents.toggleWorkspace();
     if(this.isWorkspaceOpen) {
       this.isWorkspaceOpen = false;
+      this.responsivService.workspace = false;
     } else if(!this.isWorkspaceOpen) {
       this.isWorkspaceOpen = true;
+      this.responsivService.workspace = true;
     }
-  }
-
-  constructor() {
-    this.handleMediaChange(this.mediaQuery);
-    this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
   }
 
 

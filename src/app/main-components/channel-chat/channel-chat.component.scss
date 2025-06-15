@@ -28,6 +28,22 @@
  max-height: 140px !important;
 }
 
+
+.imgaddMember {
+    cursor: pointer;
+}
+
+.memberSection {
+    font-weight: 700;
+    font-size: 18px;
+
+    &:hover {
+        text-decoration: underline; 
+        color: #444DF2;
+        cursor: pointer;
+    }
+}
+
 .main-chat-header {
    
     height: 96px;

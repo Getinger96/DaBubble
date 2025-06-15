@@ -42,7 +42,7 @@
     <div class="message-under">
   <div *ngIf="(threadCount$ | async) as count">
     <div *ngIf="count > 0" class="message-answered">
-      <span class="message-answers">{{ count }} Antworten</span>
+      <span class="message-answers" (click)="onReplyClick()">{{ count }} Antworten </span>
       <span class="message-last-answer">Letzte Antwort {{ lastAnswer$ | async }}</span>
     </div>
   </div>
@@ -57,7 +57,7 @@
                         (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
 
                         {{ entry.key }}
-                        <ng-container *ngIf="entry.value.count > 1">
+                        <ng-container *ngIf="entry.value.count > 0">
                             {{ entry.value.count }}
                         </ng-container>
 

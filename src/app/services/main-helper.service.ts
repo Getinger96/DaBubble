@@ -9,7 +9,7 @@ export class MainHelperService {
     openChannel$ = this.showChannel.asObservable();
     openChannel: boolean = true;
     showEditMessage: boolean = false
-
+    showMemberList: boolean = false
   constructor() { }
 
 

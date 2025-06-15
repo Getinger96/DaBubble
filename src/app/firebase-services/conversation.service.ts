@@ -49,7 +49,8 @@ export class ConversationService {
 
   public threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
-
+  
+  
 
 
   lastAnswer: ConversationMessage | null = null;

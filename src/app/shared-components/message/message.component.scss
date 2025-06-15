@@ -369,8 +369,10 @@ max-height: 80px !important;
 
 .reactions {
     display: flex;
-    gap: 8px;
     margin-top: 4px;
+    max-width: 250px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .reaction {
@@ -466,21 +468,11 @@ max-height: 80px !important;
     background: white;
 }
 
-.delete-popup {
-  position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  z-index: 100;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  top: 50px; // Position je nach Bedarf anpassen
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.popup-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+.reaction {
+   width: 40px;
+    scrollbar-color: #444DF2 ;
+    border: solid 1px ;
+    text-align: left;
+    border-radius: 50px;
+    padding: 2px;
 }

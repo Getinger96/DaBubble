@@ -41,7 +41,7 @@
         <div *ngIf="isOwn && showEditPopup && !isThreadRootMessage" class="edit-message"
             [ngStyle]="isThread ? {'left': '135px'} : {}">
             <span (click)="overwriteMessage(threadAnswersId)">Nachricht bearbeiten</span>
-           <span (click)="toggleDeletePopup()"> Nachricht löschen</span>
+            <span (click)="deleteMessage(threadAnswersId,channelID)" > Nachricht löschen</span>
         </div>
 
         <div class="delete-popup" *ngIf="showDeletePopup">
@@ -77,8 +77,8 @@
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
             <div class="message-under">
-                <div *ngIf="isAnswered" class="message-answered">
-                    <span class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
+                <div *ngIf="isAnswered && threadCount > 0"  class="message-answered " >
+                    <span *ngIf="threadCount >= 0" class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
                     <span class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
                 </div>
                 <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">
@@ -95,7 +95,7 @@
                         (click)="isThread || isInThread ? handleEmojiClick(entry.key) : addEmoji(entry.key, channelID, messageData?.messageId)">
 
                         {{ entry.key }}
-                        <ng-container *ngIf="entry.value.count > 1">
+                        <ng-container *ngIf="entry.value.count > 0">
                             {{ entry.value.count }}
                         </ng-container>
 

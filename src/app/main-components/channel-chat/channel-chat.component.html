@@ -69,7 +69,7 @@
                 </button>
             </div>
 
-            <img (click)="openDialogMembers()" src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
+            <img class="imgaddMember" (click)="openDialogMembers()" src="assets/img/add_members.png" alt="Mitglieder hinzufügen">
         </div>
 
     </div>
@@ -82,9 +82,12 @@
                 <span class="creator-header">{{currentChannelCreator}} <span class="date-span">{{currentChannelDate |
                         date:'dd.MM.yyyy HH:mm'}}</span></span>
                 <span class="welcome-span">Willkomen in eurem privaten Channel!</span>
-                <div class="member-container"><span class="member-span"
+                <div class="memberSection">
+                    <span (click)="toggleMemberInChannel();"> Mitglieder  </span> 
+                    </div>
+                <div *ngIf="mainhelperservice.showMemberList" class="member-container"><span class="member-span"
                         *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
-                <span>{{currentChannelDescription}}</span>
+                <span> Beschreibung: {{currentChannelDescription}}</span>
             </div>
         </div>
 
