@@ -14,6 +14,7 @@ import { ConversationMessage } from '../../interfaces/conversation-message.inter
 import { MainHelperService } from '../../services/main-helper.service';
 
 
+
 @Component({
   selector: 'app-main-chat',
   standalone: true,
@@ -43,7 +44,7 @@ export class MainChatComponent {
   }
 
   async ngOnInit() {
-    
+  
     this.loadActualUser();
     
 
@@ -53,7 +54,10 @@ export class MainChatComponent {
 
     
   }
- 
+
+
+
+
   loadActualUser(){
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {

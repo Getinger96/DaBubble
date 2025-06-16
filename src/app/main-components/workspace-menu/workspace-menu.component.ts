@@ -175,6 +175,7 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChannelMember(members);
     this.channelservice.setChanneldate(date)
    this.mainservice.showdirectmessage = false
+   this.mainservice.showmainchat=false
     this.userId = this.actualUser[0].id;
    this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
     this.channelMessageService.getChannelId(id)

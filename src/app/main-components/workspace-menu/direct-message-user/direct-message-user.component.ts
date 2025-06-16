@@ -45,7 +45,7 @@ export class DirectMessageUserComponent implements OnInit {
       console.warn('actualUser not loaded yet');
       return;
     }
-   
+   this.mainservice.showmainchat=false
     this.mainservice.showdirectmessage = true
     this.mainhelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(name)

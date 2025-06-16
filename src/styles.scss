@@ -12,6 +12,7 @@ body {
   font-family: $font-primary;
   scroll-behavior: smooth;
   box-sizing: border-box;
+   overflow-x: hidden;
 }
 
 .default-background {

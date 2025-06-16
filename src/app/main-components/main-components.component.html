@@ -22,9 +22,10 @@
         <app-workspace-menu (closeThread)="closeThreadView()" [userArray]="allUsers"
             [actualUser]="actualUser"></app-workspace-menu>
         <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage" class="chat-area">
+             <app-main-chat  *ngIf="this.mainservice.showmainchat"></app-main-chat>
             <router-outlet></router-outlet>
         </main>
-     
+    
         <app-direct-message-chat id="directMessageChat" *ngIf="this.mainservice.showdirectmessage"
             (openThread)="openThreadForConversationMessage($event)"
             (closeThread)="closeThreadView()"></app-direct-message-chat>

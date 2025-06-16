@@ -1,10 +1,30 @@
 
+@keyframes slideInFromRight {
+    
+  0% {
+   
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
 
+    transform: translateX(0);
+    opacity: 1;
+  }
+  
+}
+
+:host {
+    overflow: hidden;
+  display: block;
+  animation: slideInFromRight 0.4s ease-out ;
+}
 .main-chat-wrapper{
     width: 100%;
     background-color: #FFFFFF;
     border-radius: 30px;
     height: 100%;
+   
 
 }
 
@@ -79,13 +99,41 @@
     }
 }
 
-.main-chat-feed{
+.main-chat-feed {
+    flex-grow: 1;
     height: calc(100% - 321px);
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    
+   
 }
+
+.channel-info {
+    background-color: rgb(227 218 188);
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+   
+
+
+}
+
+.channel-Info-Img {
+    width: 100px;
+    height: 100px;
+}
+
+.channel-Info-container{
+    display: flex;
+    flex-direction: column;
+    gap: 16px
+}
+
+.welcome-span{
+    font-weight: 700;
+    font-size: 24px;
+}
+
 
 .conversation-chat-feed{
     overflow-y: scroll;

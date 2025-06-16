@@ -77,6 +77,7 @@ export class DirectMessageChatComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    this.mainservice.showmainchat=false
     this.loadRouter();
     this.loadName();
     this.loadAvatar();

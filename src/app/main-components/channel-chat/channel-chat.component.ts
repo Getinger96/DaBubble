@@ -104,7 +104,7 @@ export class ChannelChatComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+this.mainservice.showmainchat=false
     this.loadRouter();
 
     this.loadActualUser();

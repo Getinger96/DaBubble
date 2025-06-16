@@ -25,6 +25,7 @@ export class MainComponentService {
   acutalUser$ = this.actualUserSubject.asObservable();
   private auth = getAuth();
   showdirectmessage: boolean = false;
+  showmainchat:boolean=true
   
   public directmessaeUserNameSubject = new BehaviorSubject<string>('');
   currentusermessageName$ = this.directmessaeUserNameSubject.asObservable();
@@ -56,6 +57,9 @@ export class MainComponentService {
   constructor(private route: ActivatedRoute,
     private router: Router) {
     this.unsubList = this.subList();
+    if (this.showdirectmessage==true) {
+      this.showmainchat=false
+    }
        
   }
 
