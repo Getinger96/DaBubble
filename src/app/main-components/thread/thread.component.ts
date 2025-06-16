@@ -7,7 +7,7 @@ import { MainComponentsComponent } from '../main-components.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { FormsModule } from '@angular/forms';
-import { Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { ChannelService} from '../../firebase-services/channel.service'
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -29,7 +29,7 @@ export class ThreadComponent {
   @Input() time!: Date | string;
   @Input() date!: Date | string;
   @Input() threadReplies: any;
-  threadCount$: Observable<number> = of(0);
+  threadCount$ = new BehaviorSubject<number>(0);  
   @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
@@ -97,13 +97,18 @@ export class ThreadComponent {
       this.initializeCountCheck()
       }
 
-    private initializeCountCheck():void{
-          if(this.selectedConvMessage){
-   this.threadCount$ = typeof this.selectedConvMessage.threadCount === 'number'
-      ? of(this.selectedConvMessage.threadCount)
-      : this.selectedConvMessage.threadCount || of(0);
-    }
-    }
+private initializeCountCheck(): void {
+  if (this.selectedConvMessage) {
+    const count = typeof this.selectedConvMessage.threadCount === 'number'
+      ? this.selectedConvMessage.threadCount
+      : 0;
+    this.threadCount$.next(count);
+  }
+  this.conversationService.updateConvMessageThreadCount(
+    this.selectedConvMessage?.conversationmessageId || '',
+    this.selectedConvMessage?.id || ''
+  );
+}
 
 
     @HostListener('document:click', ['$event'])
@@ -231,6 +236,10 @@ loadReaction() {
             this.selectedMessage.messageId
           );
           this.loadReaction(); 
+                  this.threadCount$.next(this.threadAnswers.length);
+      } else {
+        this.threadAnswers = [];
+        this.threadCount$.next(0);
         };
 
       }
@@ -255,6 +264,7 @@ loadConvThreadAnswers(): void {
         setTimeout(() => {
           this.threadConvAnswers = this.conversationService.getThreadAnswers(messageId);
           console.log('Thread answers found:', this.threadAnswers);
+          this.threadCount$.next(this.threadConvAnswers.length);
         }, 0);
       }
     });
@@ -342,6 +352,23 @@ async sendConvReply(): Promise<void> {
   this.loadConvThreadAnswers();
   this.conversationService.sortAllMessages(this.threadConvAnswers);
   this.scrollToBottom();
+}
+
+  public isSameDate(timestamp1: any, timestamp2: any): boolean {
+  const date1 = this.convertToDate(timestamp1);
+  const date2 = this.convertToDate(timestamp2);
+  
+  return date1.toDateString() === date2.toDateString();
+}
+
+private convertToDate(timestamp: any): Date {
+  if (timestamp instanceof Date) {
+    return timestamp;
+  } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
+    return (timestamp as any).toDate();
+  } else {
+    return new Date(timestamp);
+  }
 }
 
   ngOnDestroy(): void {

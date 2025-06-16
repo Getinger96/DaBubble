@@ -18,12 +18,12 @@
             [selectedMessageId]="selectedMessage.messageId"
             [selectedChannelId]="selectedMessage.channelId"
             [selectedUserId]="selectedMessage.id"
-             [isThreadRootMessage]="true"
+            [isThreadRootMessage]="true"
             >
 
          </app-message>
             <div class="thread-number-of-answers">
-                <span class="fontNunito">{{ selectedMessage.threadCount }} Antworten</span>
+                <span class="fontNunito">{{  threadCount$ | async  }} Antworten</span>
                 <div class="line"></div></div>
         </div>
         <div class="thread-answers" #threadFeed>
@@ -41,6 +41,7 @@
             [channelIdThread]="answer.channelId"
             [threadAnswersId]="answer.messageId"
             [threadAnswersUserId]="answer.id"
+            [dateExists]="i > 0 && isSameDate(threadAnswers[i - 1].timestamp, answer.timestamp)"
         ></app-message>
         </div>
     </div>
@@ -74,6 +75,7 @@
             [isThread]="true"
             [isOwn]="answer.isOwn"
             [emojiReactionsThead]="emojiReactions.get(answer.id)"
+            [dateExists]="i > 0 && isSameDate(threadConvAnswers[i - 1].timestamp, answer.timestamp)"
         ></app-direct-message>
         </div>
     </div>
@@ -104,7 +106,6 @@
 
                 <div>
                     <img #addEmojiImg src="assets/img/emoji.png" alt="emoji" (click)="openEmojiWindow()">
-                    <img #addMemberAtImg src="assets/img/at.png" (click)="openDialogAddMember()" alt="at">
                 </div>
                     <img *ngIf="selectedMessage" src="assets/img/send.png" alt="send" (click)="sendReply()">
                     <img *ngIf="selectedConvMessage" src="assets/img/send.png" alt="send" (click)="sendConvReply()">

@@ -179,6 +179,8 @@ export class WorkspaceMenuComponent {
    this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
     this.channelMessageService.getChannelId(id)
 
+    this.closeThread.emit();
+
   }
 
   addMembers(ngForm: NgForm) {

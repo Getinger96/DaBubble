@@ -11,7 +11,7 @@
         background-color: white;
         padding: 10px 20px;
         display: flex;
-        align-items: center;
+        align-items: center !important;
         justify-content: center;
 
         span {
@@ -34,15 +34,16 @@
 
 
 
-    .edit-message-input {
+    .edit-message-input{
 
         width: calc(100% - 290px);
         display: flex;
         position: relative;
         min-height: 155px;
+        
 
 
-        textarea {
+        textarea{
             border-radius: 20px;
             border: 1px solid #ADB0D9;
             border: none;
@@ -61,7 +62,7 @@
 
 
 
-        button {
+        button{
 
             position: absolute;
             font-size: 18px;
@@ -73,7 +74,7 @@
 
         }
 
-        .close-edit-message {
+        .close-edit-message{
             right: 185px;
             bottom: 20px;
             background: none;
@@ -86,7 +87,7 @@
             }
         }
 
-        .save-edit-message {
+        .save-edit-message{
             position: absolute;
             right: 20px;
             bottom: 20px;
@@ -101,7 +102,7 @@
             }
         }
 
-        img {
+        img{
             position: absolute;
             width: 40px;
             height: 40px;

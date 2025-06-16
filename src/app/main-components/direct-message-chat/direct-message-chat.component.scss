@@ -107,6 +107,10 @@
     border: 1px solid #ADB0D9;
     position: relative;
 
+    &:hover{
+        border: 1px solid #797EF3;
+    }
+
     textarea {
         border: none;
         width: calc(100% - 40px);

@@ -295,4 +295,21 @@ loadRouter(): void {
     }
   }
 
+  public isSameDate(timestamp1: any, timestamp2: any): boolean {
+  const date1 = this.convertToDate(timestamp1);
+  const date2 = this.convertToDate(timestamp2);
+  
+  return date1.toDateString() === date2.toDateString();
+}
+
+private convertToDate(timestamp: any): Date {
+  if (timestamp instanceof Date) {
+    return timestamp;
+  } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
+    return (timestamp as any).toDate();
+  } else {
+    return new Date(timestamp);
+  }
+}
+
 }

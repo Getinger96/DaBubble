@@ -1,5 +1,5 @@
 <div class="message-wrapper">
-    <div *ngIf="!isInThread" class="message-date-part">
+    <div *ngIf="!isInThread && !dateExists" class="message-date-part">
         <div class="date-row"></div>
         <span class="message-date fontNunito">{{ date }}</span>
     </div>
