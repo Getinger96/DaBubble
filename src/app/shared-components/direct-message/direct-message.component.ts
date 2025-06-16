@@ -10,7 +10,7 @@ import { ConversationService } from '../../firebase-services/conversation.servic
 import { FormsModule } from '@angular/forms';
 import { ThreadComponent } from '../../main-components/thread/thread.component';
 import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
-
+import { Message } from '../../interfaces/message.interface';
 @Component({
   selector: 'app-direct-message',
   standalone: true,
@@ -34,7 +34,7 @@ export class DirectMessageComponent {
   @Input() isInThread: boolean | undefined = false;
   @Input() isAnswered: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
-
+  @Input() selectedMessage: ConversationMessage | null = null;
 
 
   @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } };
@@ -53,7 +53,7 @@ export class DirectMessageComponent {
   emojiReactions = new Map<string, { count: number, users: string[] }>();
   allMessages: ConversationMessage[] = [];
   threadAnswers: ConversationMessage[] = [];
-
+  emojiReactionsselect = new Map<string, { count: number, users: string[] }>();
   private allThreadsSubscription!: Subscription;
 
   dateFormatter = new Intl.DateTimeFormat('de-DE', {
@@ -91,10 +91,11 @@ export class DirectMessageComponent {
         this.messageData.conversationmessageId,
         (reactionMap) => {
           this.emojiReactions = reactionMap;
-          console.log(this.emojiReactions);
+          console.log('emojiReactions',this.emojiReactions, this.selectedMessage);
 
         }
       );
+
 
 
       let dateObj: Date;

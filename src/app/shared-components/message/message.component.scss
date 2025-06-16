@@ -331,7 +331,7 @@
     z-index: 100;
     position: absolute;
     right:  30px;
-    bottom: 20px;
+    bottom: 50px;
     width: max-content;
  
 }
@@ -369,11 +369,17 @@ max-height: 80px !important;
 
 .reactions {
     display: flex;
+    gap: 10px;
+}
+
+.reactionsThread {
+     display: flex;
     margin-top: 4px;
     max-width: 250px;
     flex-wrap: wrap;
     gap: 10px;
 }
+
 
 .reaction {
   position: relative;
@@ -469,10 +475,10 @@ max-height: 80px !important;
 }
 
 .reaction {
-   width: 40px;
+     width: 52px;
     scrollbar-color: #444DF2 ;
     border: solid 1px ;
-    text-align: left;
+  text-align: center;
     border-radius: 50px;
     padding: 2px;
 }

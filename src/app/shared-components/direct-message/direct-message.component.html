@@ -41,7 +41,7 @@
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
     <div class="message-under">
   <div *ngIf="(threadCount$ | async) as count">
-    <div *ngIf="count > 0" class="message-answered">
+    <div *ngIf="count > 0 && !isInThread" class="message-answered">
       <span class="message-answers" (click)="onReplyClick()">{{ count }} Antworten </span>
       <span class="message-last-answer">Letzte Antwort {{ lastAnswer$ | async }}</span>
     </div>
@@ -51,8 +51,8 @@
            src="assets/img/add_reaction40.png" alt="">
     </div>
 </div>
-            <div class="reactions">
-                <ng-container *ngFor="let entry of (  emojiReactions) | keyvalue">
+            <div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
+                <ng-container *ngFor="let entry of (emojiReactions) | keyvalue">
                     <span class="reaction"
                         (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
 

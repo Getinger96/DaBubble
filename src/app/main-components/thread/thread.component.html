@@ -49,6 +49,7 @@
         <div class="thread-feed" *ngIf="selectedConvMessage">
         <div class="thread-message">
          <app-direct-message
+            [messageData]="selectedConvMessage"
             [avatarSrc]="selectedConvMessage.avatar"
             [name]="selectedConvMessage.name"
             [time]="this.formatTime(selectedConvMessage.timestamp)"
@@ -76,6 +77,7 @@
             [isOwn]="answer.isOwn"
             [emojiReactionsThead]="emojiReactions.get(answer.id)"
             [dateExists]="i > 0 && isSameDate(threadConvAnswers[i - 1].timestamp, answer.timestamp)"
+            [selectedMessage]="selectedConvMessage"
         ></app-direct-message>
         </div>
     </div>
