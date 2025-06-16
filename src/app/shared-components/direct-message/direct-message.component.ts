@@ -34,10 +34,10 @@ export class DirectMessageComponent {
   @Input() isInThread: boolean | undefined = false;
   @Input() isAnswered: boolean | undefined = false;
   @Input() lastAnswerDate!: string;
-  
-  
 
-  @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } }; 
+
+
+  @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } };
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
@@ -76,6 +76,10 @@ export class DirectMessageComponent {
 
   ) { }
 
+  /**
+   * Angular lifecycle hook that runs on component initialization.
+   * Initializes message data, loads reactions, sets up user info, and loads thread answers.
+   */
   ngOnInit(): void {
     if (this.messageData) {
       const timestamp = this.messageData.timestamp;
@@ -127,7 +131,6 @@ export class DirectMessageComponent {
         }
       });
 
-      // Get last answer for thread display
       const lastAnswer = this.conversationservice.getLastAnswer(
         this.messageData
       );
@@ -141,38 +144,42 @@ export class DirectMessageComponent {
         this.lastAnswerDate = '';
       }
 
-            // Initialize reactive observables
       this.initializeReactiveData();
-
       this.messageText = this.messageData.text || this.messageText;
     }
-     this.loadAllMessageInConversation();
-     this.loadThreadAnswers();
-     this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
+    this.loadAllMessageInConversation();
+    this.loadThreadAnswers();
+    this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
   }
 
+   /**
+   * Angular lifecycle hook that runs when input properties change.
+   * Re-initializes reactive data if messageData is present.
+   */
   ngOnChanges(): void {
 
-        if (this.messageData) {
-  this.initializeReactiveData();
+    if (this.messageData) {
+      this.initializeReactiveData();
     } else {
       console.log('no Message Data')
     }
   }
 
-   private initializeReactiveData(): void {
+  /**
+   * Initializes reactive observables for thread count and last answer.
+   * Updates the thread count for the current message.
+   */
+  private initializeReactiveData(): void {
     if (!this.messageData) return;
 
-    // Set up threadCount$ observable
     this.threadCount$ = typeof this.messageData.threadCount === 'number'
       ? of(this.messageData.threadCount)
       : this.messageData.threadCount || of(0);
 
-    // Set up lastAnswer$ observable that reacts to thread changes
     this.lastAnswer$ = this.conversationservice.allMessages$.pipe(
       map(() => {
         if (!this.messageData) return '';
-        
+
         const lastAnswer = this.conversationservice.getLastAnswer(this.messageData);
         if (lastAnswer && lastAnswer.timestamp) {
           return this.formatTimestamp(lastAnswer.timestamp);
@@ -180,20 +187,24 @@ export class DirectMessageComponent {
         return '';
       })
     );
-this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
-
+    this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
   }
 
-
-  // Load all messages in conversation
+   /**
+   * Loads all messages in the current conversation and assigns them to allMessages.
+   * Subscribes to allMessages$ observable from the conversation service.
+   */
   loadAllMessageInConversation() {
     this.conversationservice.allMessages$.subscribe((messages) => {
       this.allMessages = messages;
     });
-    console.log('this.allMessages',this.allMessages);
-    
+    console.log('this.allMessages', this.allMessages);
   }
 
+   /**
+   * Angular lifecycle hook that runs after the component's view has been fully initialized.
+   * Sets the isOwn property based on the senderId and actual user.
+   */
   ngAfterViewInit(): void {
     if (this.messageData && this.maincomponentservice.actualUser[0]) {
       setTimeout(() => {
@@ -204,80 +215,111 @@ this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversa
     }
   }
 
-
-
+  /**
+   * Toggles the visibility of the edit popup for editing a message.
+   */
   toggleEditPopup() {
     this.showEditPopup = !this.showEditPopup;
   }
 
-overwriteMessage() {
-  this.toggleEditPopup();
-  this.showEditPopup = false;
-  this.editMessage = true;
-  this.editedMessageText = this.messageText; // Initialize with current text
-}
+  /**
+   * Prepares the component for editing the message text.
+   * Opens the edit popup and initializes the editedMessageText property.
+   */
+  overwriteMessage() {
+    this.toggleEditPopup();
+    this.showEditPopup = false;
+    this.editMessage = true;
+    this.editedMessageText = this.messageText;
+  }
 
-async deleteMessage(){
-  const conversationId = this.conversationId;
-  const conversationmessageId = this.conversationmessageid;
+  /**
+   * Deletes the current message from Firestore and updates the thread count.
+   * Closes the edit popup after deletion.
+   */
+  async deleteMessage() {
+    const conversationId = this.conversationId;
+    const conversationmessageId = this.conversationmessageid;
 
     if (conversationId && conversationmessageId) {
-    const messageDocRef = this.conversationservice.firestore
-      ? doc(this.conversationservice.firestore, 'conversation', conversationId, 'messages', conversationmessageId)
-      : null;
+      const messageDocRef = this.conversationservice.firestore
+        ? doc(this.conversationservice.firestore, 'conversation', conversationId, 'messages', conversationmessageId)
+        : null;
 
-    if (messageDocRef) {
-      await deleteDoc(messageDocRef);
-      this.conversationservice.updateConvMessageThreadCount(conversationId, conversationId);
-      this.editMessage = false;
-      this.showEditPopup = false;
+      if (messageDocRef) {
+        await deleteDoc(messageDocRef);
+        this.conversationservice.updateConvMessageThreadCount(conversationId, conversationId);
+        this.editMessage = false;
+        this.showEditPopup = false;
+      }
     }
   }
-}
 
-async saveEditedMessage() {
-  if (!this.messageData || !this.editedMessageText.trim()) return;
+  /**
+   * Saves the edited message text to Firestore and updates the local messageText.
+   * Closes the edit popup after saving.
+   */
+  async saveEditedMessage() {
+    if (!this.messageData || !this.editedMessageText.trim()) return;
 
-  // Update in Firestore
-  const conversationId = this.conversationId;
-  const conversationmessageId = this.conversationmessageid;
-  const newText = this.editedMessageText.trim();
+    const conversationId = this.conversationId;
+    const conversationmessageId = this.conversationmessageid;
+    const newText = this.editedMessageText.trim();
 
-  if (conversationId && conversationmessageId) {
-    const messageDocRef = this.conversationservice.firestore
-      ? doc(this.conversationservice.firestore, 'conversation', conversationId, 'messages', conversationmessageId)
-      : null;
+    if (conversationId && conversationmessageId) {
+      const messageDocRef = this.conversationservice.firestore
+        ? doc(this.conversationservice.firestore, 'conversation', conversationId, 'messages', conversationmessageId)
+        : null;
 
-    if (messageDocRef) {
-      await updateDoc(messageDocRef, { text: newText });
-      this.messageText = newText;
-      this.editMessage = false;
-      this.showEditPopup = false;
+      if (messageDocRef) {
+        await updateDoc(messageDocRef, { text: newText });
+        this.messageText = newText;
+        this.editMessage = false;
+        this.showEditPopup = false;
+      }
     }
   }
-}
 
+  /**
+   * Closes the edit popup and exits edit mode.
+   */
   closeEditPopup() {
     this.editMessage = false;
     this.showEditPopup = false;
   }
 
-
+  /**
+   * Adds an emoji reaction to the current message.
+   * @param event The emoji event or emoji string.
+   * @param conversationId The ID of the conversation.
+   * @param conversationmessagId The ID of the message.
+   */
   addEmoji(event: any, conversationId: string, conversationmessagId: string) {
     const emoji = event.emoji?.native || event;
     if (!conversationmessagId) return;
     this.conversationservice.addEmojiInMessage(emoji, conversationId, conversationmessagId);
   }
 
+  /**
+   * Toggles the visibility of the emoji picker bar.
+   */
   showEmojiBar() {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
 
+  /**
+   * Handles the emoji button click event and prevents event bubbling.
+   * @param event The mouse event.
+   */
   onEmojiButtonClick(event: MouseEvent) {
     event.stopPropagation(); // verhindert Auslösung von handleClickOutside
     this.showEmojiBar();
   }
 
+  /**
+   * Handles clicks outside the emoji picker and closes it if necessary.
+   * @param event The mouse event.
+   */
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -288,17 +330,16 @@ async saveEditedMessage() {
       (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
 
     console.log('this.emojiComponent?', this.emojiComponent);
-
-
-
-
-
+    
     if (!clickedInsideEmoji) {
       this.showEmojiPicker = false;
     }
   }
 
-  // Thread functionality
+  /**
+   * Emits the replyClicked event and opens the thread for the current message.
+   * Loads thread answers for the message.
+   */
   onReplyClick(): void {
     if (this.messageData) {
       this.replyClicked.emit(this.messageData);
@@ -310,7 +351,10 @@ async saveEditedMessage() {
     }
   }
 
-
+  /**
+   * Loads thread answers for the current message and updates the threadAnswers array.
+   * Subscribes to allMessages$ observable from the conversation service.
+   */
   loadThreadAnswers(): void {
     if (this.allThreadsSubscription) {
       this.allThreadsSubscription.unsubscribe();
@@ -326,6 +370,11 @@ async saveEditedMessage() {
       });
   }
 
+  /**
+   * Formats a timestamp into a human-readable date and time string.
+   * @param timestamp The timestamp to format.
+   * @returns The formatted date and time string.
+   */
   private formatTimestamp(timestamp: any): string {
     let dateObj: Date;
     if (timestamp instanceof Date) {
@@ -342,6 +391,10 @@ async saveEditedMessage() {
     );
   }
 
+  /**
+   * Angular lifecycle hook that runs when the component is destroyed.
+   * Unsubscribes from the allThreadsSubscription to prevent memory leaks.
+   */
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {
       this.allThreadsSubscription.unsubscribe();

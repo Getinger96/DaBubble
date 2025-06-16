@@ -1,30 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  addDoc,
-  collection,
-  doc,
-  Firestore,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-  where,
-  QuerySnapshot,
-  DocumentData,
-  deleteDoc,
-  getDoc,
-  docData,
-  collectionData,
-} from '@angular/fire/firestore';
+import {addDoc,collection,doc,Firestore,getDocs,onSnapshot,orderBy,query,updateDoc,where,QuerySnapshot,DocumentData,deleteDoc,getDoc,docData} from '@angular/fire/firestore';
 import { Conversation } from '../interfaces/conversation.interface';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
 import { BehaviorSubject, from, timestamp } from 'rxjs';
 import { MainComponentService } from './main-component.service';
-import { User } from '../interfaces/user.interface';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { JsonDataService } from './json-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -56,26 +38,44 @@ export class ConversationService {
   lastAnswer: ConversationMessage | null = null;
   messageId?: string;
 
-  constructor(private mainservice: MainComponentService) {
+  constructor(private mainservice: MainComponentService, private jsonService: JsonDataService) {
     this.observeSelectedUserChanges();
     if (this.conversationId) {
       this.getInitialConvMessages(this.conversationId);
     }
   }
 
-  getConversationById(
-    conversationId: string
-  ): Observable<Conversation | undefined> {
+  /**
+   * Retrieves a conversation by its unique identifier as an observable.
+   *
+   * @param conversationId - The unique ID of the conversation to retrieve.
+   * @returns An Observable that emits the Conversation instance if found, or `undefined` if not found or if the ID is invalid.
+   */
+  getConversationById(conversationId: string): Observable<Conversation | undefined> {
     if (!conversationId) return of(undefined);
-    const conversationDocRef = doc(
-      this.firestore,
-      `conversations/${conversationId}`
+    const conversationDocRef = doc(this.firestore,`conversations/${conversationId}`
     );
     return docData(conversationDocRef).pipe(
       map((c) => (c ? new Conversation(c as Conversation) : undefined))
     );
   }
 
+  /**
+   * Observes changes to the selected user for direct messaging and manages the conversation state accordingly.
+   *
+   * - Subscribes to changes in the selected user ID from `mainservice.directmessaeUserIdSubject`.
+   * - When the selected user changes:
+   *   - Logs the new user ID.
+   *   - Retrieves the current user ID.
+   *   - If either user ID is missing, exits early.
+   *   - Closes the current thread, resets messages and last answer.
+   *   - Unsubscribes from any previous message listener.
+   *   - Retrieves or creates a conversation between the current user and the selected user.
+   *   - Sets up a real-time listener for messages in the conversation, updating the state when messages change.
+   *
+   * @remarks
+   * This method ensures that only one message listener is active at a time and that the conversation state is kept in sync with the selected user.
+   */
   observeSelectedUserChanges() {
     let unsubscribeListener: (() => void) | null = null;
 
@@ -110,11 +110,18 @@ export class ConversationService {
     );
   }
 
+  /**
+   * Retrieves an existing conversation between the current user and a partner user,
+   * or creates a new one if none exists. Handles both self-chat (user chatting with themselves)
+   * and normal two-user conversations.
+   *
+   * @param currentUserId - The ID of the current user.
+   * @param partnerUserId - The ID of the partner user to chat with.
+   * @returns A promise that resolves to the conversation ID.
+   */
   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
     const convRef = collection(this.firestore, 'conversation');
-    const snapshot = await getDocs(
-      query(convRef, where('user', 'array-contains', currentUserId))
-    );
+    const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
 
     let conversationId: string | null = null;
 
@@ -155,13 +162,19 @@ export class ConversationService {
     return conversationId;
   }
 
+  /**
+   * Retrieves the initial set of messages for a given conversation, ordered by timestamp.
+   * 
+   * @param conversationId - The unique identifier of the conversation to fetch messages from.
+   * @returns A promise that resolves to an array of conversation messages, excluding thread messages.
+   * 
+   * @remarks
+   * - Messages that are threads are pushed to `this.allMessages` and not included in the returned array.
+   * - Each message object includes metadata such as sender information, timestamp, and thread status.
+   * - The `isOwn` property is set based on whether the message was sent by the current user.
+   */
   async getInitialConvMessages(conversationId: string): Promise<any[]> {
-    const convMessagesRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages'
-    );
+    const convMessagesRef = collection(this.firestore,'conversation',conversationId,'messages');
     const q = query(convMessagesRef, orderBy('timestamp'));
     const snapshot = await getDocs(q);
     const convMessages: any[] = [];
@@ -193,16 +206,22 @@ export class ConversationService {
     return convMessages;
   }
 
-  listenToMessages(
-    conversationId: string,
-    callback: (convMessages: ConversationMessage[]) => void
-  ): () => void {
-    const convMessageRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages'
-    );
+  /**
+   * Subscribes to real-time updates of messages within a specific conversation.
+   * 
+   * Sets up a Firestore listener on the messages collection for the given conversation ID,
+   * orders messages by their timestamp, and processes incoming message snapshots.
+   * Separates thread messages from regular conversation messages, updates internal state,
+   * and invokes the provided callback with the latest conversation messages.
+   * 
+   * Also updates thread answers if a thread message is currently selected.
+   * 
+   * @param conversationId - The unique identifier of the conversation to listen to.
+   * @param callback - A function to be called with the updated array of conversation messages whenever changes occur.
+   * @returns A function to unsubscribe from the Firestore listener.
+   */
+  listenToMessages(conversationId: string, callback: (convMessages: ConversationMessage[]) => void): () => void {
+    const convMessageRef = collection(this.firestore,'conversation',conversationId,'messages');
     const q = query(convMessageRef, orderBy('timestamp'));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -246,19 +265,22 @@ export class ConversationService {
     return unsubscribe;
   }
 
-  async sendMessage(
-    conversationId: string,
-    senderId: string,
-    text: string,
-    name: string,
-    avatar: number
-  ) {
-    const convMessageRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages'
-    );
+  /**
+   * Sends a message to a specific conversation in Firestore.
+   *
+   * @param conversationId - The unique identifier of the conversation to which the message will be sent.
+   * @param senderId - The unique identifier of the user sending the message.
+   * @param text - The content of the message to be sent.
+   * @param name - The display name of the sender.
+   * @param avatar - The avatar identifier or index associated with the sender.
+   * @returns A promise that resolves to the unique identifier of the newly created message document.
+   *
+   * @remarks
+   * This method creates a new message document in the 'messages' subcollection of the specified conversation.
+   * After the document is created, it updates the document with its own generated ID as `conversationmessageId`.
+   */
+  async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
+    const convMessageRef = collection(this.firestore, 'conversation', conversationId,'messages');
     const docRef = await addDoc(convMessageRef, {
       id: conversationId,
       senderId,
@@ -277,18 +299,39 @@ export class ConversationService {
     return conversationmessageId;
   }
 
+  /**
+   * Retrieves the ID of the currently active user.
+   *
+   * @returns The ID of the actual user if available; otherwise, `undefined`.
+   */
   getActualUser() {
     return this.mainservice?.actualUser[0]?.id;
   }
 
+  /**
+   * Retrieves the name of the currently active user from the main service.
+   *
+   * @returns {string | undefined} The name of the actual user if available; otherwise, `undefined`.
+   */
   getActualUserName() {
     return this.mainservice?.actualUser[0]?.name;
   }
 
+  /**
+   * Retrieves the currently selected user's ID from the main service.
+   *
+   * @returns The user ID of the clicked user as stored in the `directmessaeUserIdSubject`'s current value.
+   */
   getClickedUser() {
     return this.mainservice.directmessaeUserIdSubject.value;
   }
 
+  /**
+   * Sorts an array of `ConversationMessage` objects in-place by their `timestamp` property in ascending order.
+   * If a message does not have a `timestamp`, it is treated as `0`.
+   *
+   * @param messageArray - The array of `ConversationMessage` objects to be sorted.
+   */
   sortAllMessages(messageArray: ConversationMessage[]): void {
     messageArray.sort((a, b) => {
       const timestampA = a.timestamp || 0;
@@ -297,12 +340,23 @@ export class ConversationService {
     });
   }
 
+  /**
+   * Opens a thread for the given conversation message.
+   * 
+   * This method performs the following actions:
+   * - Sets the selected thread message.
+   * - Logs the selected thread message subject to the console.
+   * - Shows the thread UI by updating the relevant subject.
+   * - If the message has a valid `conversationmessageId`, it:
+   *   - Retrieves the thread answers for the message.
+   *   - Subscribes to updates for the thread answers.
+   *   - Updates the thread count for the conversation message.
+   *
+   * @param message - The conversation message for which to open the thread.
+   */
   openThread(message: ConversationMessage) {
     this.selectedThreadMessageSubject.next(message);
-    console.log(
-      'Selected Thread Message is',
-      this.selectedThreadMessageSubject
-    );
+    console.log('Selected Thread Message is', this.selectedThreadMessageSubject);
     this.showThreadSubject.next(true);
     const messageId = message.conversationmessageId;
     if (messageId) {
@@ -315,11 +369,25 @@ export class ConversationService {
     }
   }
 
+  /**
+   * Closes the currently open thread in the conversation view.
+   * 
+   * This method hides the thread UI by emitting `false` to `showThreadSubject`
+   * and clears the currently selected thread message by emitting `null` to
+   * `selectedThreadMessageSubject`.
+   */
   closeThread() {
     this.showThreadSubject.next(false);
     this.selectedThreadMessageSubject.next(null);
   }
 
+  /**
+   * Retrieves all messages that are answers to a specific thread, sorts them,
+   * updates the `lastAnswer` property with the most recent answer, and returns the list.
+   *
+   * @param id - The unique identifier of the thread to retrieve answers for.
+   * @returns An array of `ConversationMessage` objects that are answers to the specified thread.
+   */
   getThreadAnswers(id: string): ConversationMessage[] {
     const threadAnswers = this.allMessages.filter((msg) => msg.threadTo === id);
     this.sortAllMessages(threadAnswers);
@@ -328,12 +396,29 @@ export class ConversationService {
     return threadAnswers;
   }
 
+  /**
+   * Updates the list of thread answers for a given thread identifier.
+   *
+   * Filters all messages to find those that belong to the specified thread,
+   * sorts the filtered replies, and emits the updated list to the threadAnswersSubject.
+   *
+   * @param threadTo - The identifier of the thread to retrieve answers for.
+   */
   updateThreadAnswers(threadTo: string) {
     const replies = this.allMessages.filter((msg) => msg.threadTo === threadTo);
     this.sortAllMessages(replies);
     this.threadAnswersSubject.next(replies);
   }
 
+  /**
+   * Retrieves the last answer message in the conversation thread related to the given message.
+   *
+   * Filters all messages to find those that are replies to the specified message,
+   * then returns the most recent one (i.e., the last in the filtered list).
+   *
+   * @param message - The conversation message for which to find the last answer.
+   * @returns The last answer message in the thread, or `undefined` if there are no answers.
+   */
   getLastAnswer(message: ConversationMessage): ConversationMessage | undefined {
     const allAnswers = this.allMessages.filter(
       (msg) =>
@@ -344,10 +429,20 @@ export class ConversationService {
     return lastAnswer;
   }
 
+  /**
+   * Adds a new answer to a thread within a conversation.
+   *
+   * This method creates a new `ConversationMessage` as a thread answer, associates it with the specified thread,
+   * and stores it in the Firestore database under the current conversation. After adding the message,
+   * it updates the thread answers and sets the message ID in the document.
+   *
+   * @param messageText - The text content of the thread answer message.
+   * @param threadToId - The ID of the message to which this answer is threaded.
+   * @returns A promise that resolves when the thread answer has been added and updated in Firestore.
+   */
   async addThreadAnswer(
     messageText: string,
     threadToId: string,
-    selectedMessage: ConversationMessage
   ) {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
@@ -369,12 +464,7 @@ export class ConversationService {
     };
 
     if (this.conversationId) {
-      const convMessageRef = collection(
-        this.firestore,
-        'conversation',
-        this.conversationId,
-        'messages'
-      );
+      const convMessageRef = collection(this.firestore,'conversation',this.conversationId,'messages');
       const docRef = await addDoc(convMessageRef, threadAnswer);
       threadAnswer.id = docRef.id;
       this.updateThreadAnswers(threadToId);
@@ -382,11 +472,14 @@ export class ConversationService {
     }
   }
 
-  addEmojiInMessage(
-    emoji: any,
-    conversationId: string,
-    conversationmessageaId: string
-  ) {
+  /**
+   * Adds an emoji reaction to a specific message within a conversation.
+   *
+   * @param emoji - The emoji object or identifier to be added as a reaction.
+   * @param conversationId - The unique identifier of the conversation containing the message.
+   * @param conversationmessageaId - The unique identifier of the message to which the emoji reaction will be added.
+   */
+  addEmojiInMessage(emoji: any, conversationId: string, conversationmessageaId: string) {
     this.saveEmojiInFirebaseReaction(
       emoji,
       conversationId,
@@ -394,20 +487,25 @@ export class ConversationService {
     );
   }
 
+  /**
+   * Adds or removes an emoji reaction for a specific message in a conversation in Firebase.
+   * 
+   * If the current user has already reacted to the message with the same emoji, the reaction is removed.
+   * Otherwise, a new reaction is added. After updating the reactions, the method updates the emoji count
+   * for the message.
+   * 
+   * @param emoji - The emoji to react with.
+   * @param conversationId - The ID of the conversation containing the message.
+   * @param conversationmessageaId - The ID of the message to react to.
+   * @returns A promise that resolves when the operation is complete.
+   */
   async saveEmojiInFirebaseReaction(
     emoji: any,
     conversationId: string,
     conversationmessageaId: string
   ) {
     const actualUser = this.getActualUserName();
-    const reactionsRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages',
-      conversationmessageaId,
-      'reactions'
-    );
+    const reactionsRef = collection(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId, 'reactions');
     const q = query(
       reactionsRef,
       where('reactedFrom', '==', actualUser),
@@ -425,7 +523,7 @@ export class ConversationService {
     }
     const docRef = await addDoc(
       reactionsRef,
-      this.reactionJson(emoji, actualUser)
+      this.jsonService.reactionJson(emoji, actualUser)
     );
     await updateDoc(docRef, { id: docRef.id });
     const emojiQuery = query(reactionsRef, where('emoji', '==', emoji));
@@ -439,6 +537,19 @@ export class ConversationService {
     );
   }
 
+  /**
+   * Deletes the first reaction document from a message in a conversation.
+   *
+   * @param existingReactions - A QuerySnapshot containing the existing reaction documents for the message.
+   * @param conversationId - The ID of the conversation containing the message.
+   * @param conversationmessageaId - The ID of the message from which the reaction should be deleted.
+   * 
+   * @remarks
+   * This method deletes only the first reaction found in the provided QuerySnapshot.
+   * If no reactions exist, this method will throw an error.
+   * 
+   * @throws Will log an error to the console if the deletion fails.
+   */
   async deleteReaction(
     existingReactions: QuerySnapshot<DocumentData, DocumentData>,
     conversationId: string,
@@ -446,15 +557,7 @@ export class ConversationService {
   ) {
     const reactionDoc = existingReactions.docs[0];
     const reactionId = reactionDoc.id;
-    const reactionDocRef = doc(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages',
-      conversationmessageaId,
-      'reactions',
-      reactionId
-    );
+    const reactionDocRef = doc(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId, 'reactions', reactionId);
     try {
       await deleteDoc(reactionDocRef);
     } catch (error) {
@@ -462,27 +565,25 @@ export class ConversationService {
     }
   }
 
-  reactionJson(emoji: any, actualUser: string) {
-    return {
-      emoji: emoji,
-      reactedFrom: actualUser,
-      createdAt: new Date(),
-    };
-  }
-
+  /**
+   * Saves or updates the count of a specific emoji reaction for a message in a Firebase conversation.
+   *
+   * Retrieves the message document from Firestore, updates the emoji count for the specified emoji,
+   * and writes the updated emoji counts back to the document.
+   *
+   * @param emoji - The emoji to be saved or updated (can be any type, typically a string or emoji object).
+   * @param conversationId - The ID of the conversation containing the message.
+   * @param conversationmessageaId - The ID of the message within the conversation.
+   * @param count - The new count for the specified emoji.
+   * @returns A promise that resolves when the emoji count has been updated in Firestore.
+   */
   async saveEmojiInFirebaseMessage(
     emoji: any,
     conversationId: string,
     conversationmessageaId: string,
     count: number
   ) {
-    const messageDocRef = doc(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages',
-      conversationmessageaId
-    );
+    const messageDocRef = doc(this.firestore,'conversation', conversationId, 'messages', conversationmessageaId);
     const messageDocSnap = await getDoc(messageDocRef);
 
     this.emojiCountsList = {};
@@ -496,6 +597,20 @@ export class ConversationService {
     await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
   }
 
+  /**
+   * Subscribes to real-time updates of reactions for a specific message within a conversation.
+   *
+   * @param conversationId - The ID of the conversation containing the message.
+   * @param conversationmessageaId - The ID of the message for which to retrieve reactions.
+   * @param callback - A function invoked with a map of reactions, where each key is an emoji and the value contains the count and list of user IDs who reacted.
+   * @returns An unsubscribe function to stop listening for updates.
+   *
+   * @remarks
+   * This method listens for changes in the 'reactions' subcollection of a message document in Firestore.
+   * The callback receives a `Map` where each key is an emoji string, and the value is an object with:
+   *   - `count`: The number of times the emoji was used as a reaction.
+   *   - `users`: An array of user IDs who reacted with that emoji.
+   */
   getReactionsForMessage(
     conversationId: string,
     conversationmessageaId: string,
@@ -503,14 +618,7 @@ export class ConversationService {
       reactionMap: Map<string, { count: number; users: string[] }>
     ) => void
   ) {
-    const reactionsRef = collection(
-      this.firestore,
-      'conversation',
-      conversationId,
-      'messages',
-      conversationmessageaId,
-      'reactions'
-    );
+    const reactionsRef = collection(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId, 'reactions');
 
     return onSnapshot(reactionsRef, (snapshot) => {
       const reactionMap = new Map<string, { count: number; users: string[] }>();
@@ -535,10 +643,18 @@ export class ConversationService {
     });
   }
 
-  async addConvThreadAnswer(
-    messageText: string,
-    parentMessage: ConversationMessage
-  ): Promise<void> {
+  /**
+   * Adds a new thread answer message to an existing conversation thread in Firestore.
+   *
+   * This method creates a new `ConversationMessage` as a thread answer to the specified parent message,
+   * associates it with the current user, and stores it in the Firestore database under the current conversation.
+   * After adding the message, it updates the document to include its generated Firestore ID.
+   *
+   * @param messageText - The text content of the thread answer message.
+   * @param parentMessage - The parent `ConversationMessage` to which this answer is being added as a thread.
+   * @returns A promise that resolves when the thread answer has been successfully added and updated in Firestore.
+   */
+  async addConvThreadAnswer(messageText: string, parentMessage: ConversationMessage): Promise<void> {
     const userId = this.getActualUser();
     const user = this.mainservice.actualUser[0];
 
@@ -547,7 +663,6 @@ export class ConversationService {
       return;
     }
 
-    // Create the thread answer object
     const threadAnswer: ConversationMessage = {
       senderId: userId,
       name: user.name,
@@ -565,50 +680,34 @@ export class ConversationService {
     };
 
     try {
-      const convMessageRef = collection(
-        this.firestore,
-        'conversation',
-        this.conversationId,
-        'messages'
-      );
-
-      // Add to Firestore
+      const convMessageRef = collection(this.firestore,'conversation',this.conversationId,'messages');
       const docRef = await addDoc(convMessageRef, threadAnswer);
-
-      // Update the Firestore doc with its own ID
       await updateDoc(docRef, { conversationmessageId: docRef.id });
-
-      // DON'T manually update local arrays - let the listener handle it!
-      // The listenToMessages method will automatically detect the new message
-      // and update this.allMessages and this.allConversationMessagesSubject
     } catch (error) {
       console.error('Error creating thread answer:', error);
-      // You might want to show a user-friendly error message here
     }
   }
 
-
-  async updateConvMessageThreadCount(
-    messageId: string,
-    conversationId: string
-  ) {
-    // Filter replies based on the messageId (which should be conversationmessageId)
+  /**
+   * Updates the thread count and answered status for a specific message within a conversation.
+   *
+   * This method filters all messages to find replies to the given message, calculates the thread count,
+   * and updates the corresponding message document in Firestore with the new thread count and
+   * whether the message has been answered (i.e., has at least one reply).
+   *
+   * @param messageId - The ID of the message whose thread count should be updated.
+   * @param conversationId - The ID of the conversation containing the message.
+   * @returns A promise that resolves when the Firestore document has been updated.
+   *
+   * @throws Will log an error to the console if the Firestore update fails.
+   */
+  async updateConvMessageThreadCount(messageId: string, conversationId: string) {
     const replies = this.allMessages.filter(
       (msg) => msg.threadTo === messageId
     );
     const threadCount = replies.length;
-
-    // Use the current conversationId, not the passed conversationId parameter
     const currentConversationId = this.conversationId || conversationId;
-
-    // Create the correct document reference
-    const msgRef = doc(
-      this.firestore,
-      'conversation',
-      currentConversationId,
-      'messages',
-      messageId
-    );
+    const msgRef = doc(this.firestore, 'conversation', currentConversationId, 'messages', messageId);
 
     try {
       await updateDoc(msgRef, {
@@ -628,10 +727,27 @@ export class ConversationService {
     }
   }
 
+  /**
+   * Type guard to check if a given value is a Firestore Timestamp-like object.
+   *
+   * Determines if the provided value has a `toMillis` method, which is commonly
+   * used to identify Firestore Timestamp objects.
+   *
+   * @param value - The value to check.
+   * @returns True if the value has a `toMillis` function, otherwise false.
+   */
   isTimestamp(value: any): value is { toMillis: () => number } {
     return value && typeof value.toMillis === 'function';
   }
 
+  /**
+   * Loads all direct messages from the Firestore 'conversation' collection and their respective 'messages' subcollections.
+   * 
+   * For each conversation, retrieves all messages, constructs `ConversationMessage` objects, and filters out messages that are threads.
+   * The resulting list of messages is sorted by timestamp in ascending order and emitted via the `allConversationMessagesSubject`.
+   * 
+   * @returns {Promise<void>} A promise that resolves when all messages have been loaded and emitted.
+   */
   async loadAllDirectMessages(): Promise<void> {
     const conversationsRef = collection(this.firestore, 'conversation');
     const snapshot = await getDocs(conversationsRef);
@@ -640,12 +756,7 @@ export class ConversationService {
 
     for (const convDoc of snapshot.docs) {
       const convId = convDoc.id;
-      const messagesRef = collection(
-        this.firestore,
-        'conversation',
-        convId,
-        'messages'
-      );
+      const messagesRef = collection(this.firestore, 'conversation', convId, 'messages');
       const messagesSnapshot = await getDocs(messagesRef);
 
       messagesSnapshot.forEach((docSnap) => {
@@ -674,7 +785,6 @@ export class ConversationService {
       });
     }
 
-    // Sortieren
     allMessages.sort((a, b) => {
       const timeA = this.isTimestamp(a.timestamp)
         ? a.timestamp.toMillis()
