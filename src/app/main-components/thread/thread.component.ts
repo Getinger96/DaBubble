@@ -32,6 +32,7 @@ export class ThreadComponent {
   threadCount$ = new BehaviorSubject<number>(0);  
   @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
+  @Output() checkWidthTrigger = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   private allConvThreadsSubscription!: Subscription;
@@ -89,7 +90,7 @@ export class ThreadComponent {
 
       this.initializeCountCheck()
     setTimeout(() => this.scrollToBottom(), 0);
-
+      this.checkWidthTrigger.emit();
 
   }
 
@@ -123,6 +124,11 @@ private initializeCountCheck(): void {
       this.toggleMemberInThread = false;
     }
        
+  }
+
+
+  checkwidth() {
+
   }
 
 

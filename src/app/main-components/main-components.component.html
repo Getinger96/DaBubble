@@ -26,11 +26,13 @@
             <router-outlet></router-outlet>
         </main>
     
-        <app-direct-message-chat id="directMessageChat" *ngIf="this.mainservice.showdirectmessage"
+        <app-direct-message-chat  [hidden]="!this.mainservice.showdirectmessage" id="directMessageChat" *ngIf="this.mainservice.showdirectmessage"
             (openThread)="openThreadForConversationMessage($event)"
             (closeThread)="closeThreadView()"></app-direct-message-chat>
-        <app-thread *ngIf="selectedThreadMessage || selectedConvThreadMessage" [selectedMessage]="selectedThreadMessage"
-            [selectedConvMessage]="selectedConvThreadMessage" (closeThread)="closeThreadView()"></app-thread>
+           
+        <app-thread id="threads" *ngIf="selectedThreadMessage || selectedConvThreadMessage" [selectedMessage]="selectedThreadMessage"
+            [selectedConvMessage]="selectedConvThreadMessage" (closeThread)="closeThreadView()"  (checkWidthTrigger)="checkWidth()"></app-thread>
+           
     </div>
     <app-toggle-webspace-menu></app-toggle-webspace-menu>
 </section>

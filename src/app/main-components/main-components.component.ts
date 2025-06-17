@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,HostListener } from '@angular/core';
 import { SearchBarComponent } from '../main-components/search-bar/search-bar.component';
 import { ActiveUserComponent } from './active-user/active-user.component';
 import { WorkspaceMenuComponent } from './workspace-menu/workspace-menu.component';
@@ -76,7 +76,15 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.initchanelSubscription();
     this.initRouterSubscription();
     this.loadActualUser();
+    this.checkWidth()
   }
+
+
+ @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkWidth()
+  }
+
 
   openThreadForConversationMessage(message: ConversationMessage): void {
         console.log('Event empfangen:', message);
@@ -99,6 +107,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.mainservice.showThreadWindow = false
     this.selectedThreadMessage = null;
     this.selectedConvThreadMessage = null;
+    this.openChannelAndDirectMessage()
   }
 
   static toggleThreads(): void {
@@ -152,6 +161,22 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  openChannelAndDirectMessage() {
+  const routerWrapper = document.getElementById('routerOutletWrapper');
+  const directMessage = document.getElementById('directMessageChat');
+
+  if (routerWrapper) {
+    routerWrapper!.classList.remove('hidden');
+  }
+
+  if (directMessage) {
+      directMessage!.classList.remove('hidden');
+  }
+
+  }
+
+
 openWorkspaceMobile() {
   const workspace = document.querySelector('app-workspace-menu');
   const routerWrapper = document.getElementById('routerOutletWrapper');
@@ -167,6 +192,59 @@ openWorkspaceMobile() {
     directMessage?.classList.add('hidden');
   }
 }
+
+  checkWidth() {
+    const width = window.innerWidth;
+      const threadsHtml = document.getElementById('threads');
+    if (width <= 1400) {
+        this.checkThreadIsOpenOrChannelChat()
+         this.checkThreadIsDirectChat()
+    } else {
+      this.removeThreadsIsOpenChannel()
+      this.removeThreadsIsOpenDirectMessage();
+    }
+  }
+
+  checkThreadIsOpenOrChannelChat() {
+    const routerWrapper = document.getElementById('routerOutletWrapper');
+    const threadsHtml = document.getElementById('threads');
+    if (routerWrapper && !routerWrapper.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
+        routerWrapper?.classList.add('hidden');
+        threadsHtml?.classList.add('showThreadSideLarge');
+   
+}
+  }
+
+
+  checkThreadIsDirectChat() {
+    const directMessage = document.getElementById('directMessageChat');
+    const threadsHtml = document.getElementById('threads');
+    const routerWrapper = document.getElementById('routerOutletWrapper');
+    if (routerWrapper && !routerWrapper.classList.contains('hidden') || directMessage && !directMessage.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
+        directMessage?.classList.add('hidden');
+        threadsHtml?.classList.add('showThreadSideLarge');
+        routerWrapper?.classList.add('hidden');
+  }
+}
+
+  removeThreadsIsOpenChannel() {
+    const routerWrapper = document.getElementById('routerOutletWrapper');
+    const threadsHtml = document.getElementById('threads');
+
+    routerWrapper?.classList.remove('hidden');
+    threadsHtml?.classList.remove('showThreadSideLarge');
+    
+  }
+
+
+   removeThreadsIsOpenDirectMessage() {
+  const directMessage = document.getElementById('directMessageChat');
+    const threadsHtml = document.getElementById('threads');
+
+    directMessage?.classList.remove('hidden');
+    threadsHtml?.classList.remove('showThreadSideLarge');
+    
+  }
 
 
   handleMediaChange(e: MediaQueryListEvent | MediaQueryList) {
