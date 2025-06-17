@@ -1,12 +1,14 @@
 import { Injectable, inject, } from '@angular/core';
-import { Firestore, deleteDoc, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, deleteDoc, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot, arrayUnion } from '@angular/fire/firestore';
 import { getAuth, deleteUser, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider, sendPasswordResetEmail, reauthenticateWithCredential, updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
-import { Channel } from '../interfaces/channel.interface';
+import { ChannelMember} from '../interfaces/ChannelMember.interface';
 import { Observable, pipe } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,7 @@ export class RegisterService {
   name?: string;
   userEmailExist?: boolean = false
 
-  constructor(private route: ActivatedRoute,private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.oobCode = params['oobCode'];
     });
@@ -78,18 +80,52 @@ export class RegisterService {
     }
   }
 
+  getChannelRef() {
+    return collection(this.firestore, 'Channels');
+  }
+
+  async addUserToChannel(channelId: string, user: ChannelMember): Promise<void> {
+    const channelRef = doc(this.firestore, `Channels/${channelId}`);
+
+    const memberData = {
+      id: user.id,
+      name: user.name,
+      status: user.status || 'Offline',
+      avatar: user.avatar || 0,
+    };
+
+    try {
+      await updateDoc(channelRef, {
+        members: arrayUnion(memberData)
+      });
+      console.log('Mitglied erfolgreich zum Channel hinzugefügt.');
+    } catch (error) {
+      console.error('Fehler beim Hinzufügen des Mitglieds zum Channel:', error);
+    }
+  }
+
   async addInFirebase(item: User, uid: string) {
     return addDoc(this.getUserRef(), this.userJson(item, uid)).then(async docRef => {
       this.id = docRef.id;
       this.uid = uid;
 
+
       await updateDoc(docRef, { id: docRef.id });
+
+      const channelId = 'BLDNqmQQWm4Qqv4NLNbv'; // oder dynamisch setzen
+      await this.addUserToChannel(channelId, {
+        id: docRef.id,
+        name: item.name,
+        status: 'Online',
+        avatar: item.avatar || 0,
+      });
+
       return docRef.id;
     }).catch(error => {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });
   }
-
+ 
   userJson(item: User, uid: string) {
     return {
       name: item.name,
@@ -147,7 +183,7 @@ export class RegisterService {
 
   resetPassword(newPasswort: any, confirmedPasswort: any): void {
     if (this.oobCode && newPasswort === confirmedPasswort) {
-     
+
       const auth = getAuth(); // Passwort nur zurücksetzen, wenn der oobCode vorhanden und die Passwörter übereinstimmen
       confirmPasswordReset(auth, this.oobCode, newPasswort)
         .then(() => {

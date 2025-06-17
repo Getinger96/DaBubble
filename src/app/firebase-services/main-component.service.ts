@@ -57,9 +57,7 @@ export class MainComponentService {
   constructor(private route: ActivatedRoute,
     private router: Router) {
     this.unsubList = this.subList();
-    if (this.showdirectmessage==true) {
-      this.showmainchat=false
-    }
+    
        
   }
 
