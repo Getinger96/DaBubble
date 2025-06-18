@@ -105,26 +105,7 @@
 
 
     </div>
-    <div *ngIf="!currentChannelName" class="main-chat-feed">
-        <div class="channel-info">
-            <div>
-                <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
-            </div>
-            <div class="channel-Info-container">
-
-                <span class="welcome-span">Willkomen {{this.actualUser[0].name}} erstelle einen Channel !</span>
-                <div class="member-container"><span class="member-span"
-                        *ngFor="let member of members "><span>&#64;</span>{{member.name}}</span></div>
-                <span>{{currentChannelDescription}}</span>
-            </div>
-        </div>
-
-
-
-
-
-
-    </div>
+  
 
     <div class="input-wrapper">
         <ng-container *ngIf="toggleMemberInChat">
