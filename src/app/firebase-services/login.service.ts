@@ -64,10 +64,7 @@ export class LoginService {
       id = user[0].id;
     });
 
-    setTimeout(() => {
-      this.overlayvisible = false;
-      this.router.navigate(['/main-components/' + id]);
-    }, 3000);
+   
   }
 
   getUserRef() {

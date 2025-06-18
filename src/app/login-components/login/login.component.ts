@@ -14,7 +14,7 @@ import { IntroComponent } from '../intro/intro.component';
 import { HeaderLogoComponent } from '../header-logo/header-logo.component';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { LoginService } from '../../firebase-services/login.service';
-import { first, Subscription } from 'rxjs';
+import { first, firstValueFrom, Subscription } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -63,15 +63,20 @@ export class LoginComponent implements AfterViewInit {
   }
 
   async showAnimationLogin() {
-  this.mainservice.acutalUser$.pipe(first(user => user.length > 0)).subscribe(actualUser => {
+  try {
+    const actualUser = await firstValueFrom(this.mainservice.acutalUser$.pipe(first(user => user.length > 0)));
     this.actualUser = actualUser;
     this.userId = this.actualUser[0].id;
     this.overlayvisible = true;
-    setTimeout(() => {
-      this.overlayvisible = false;
-      this.router.navigate(['/main-components/' + this.userId], { replaceUrl: true });
-    }, 2000);
-  });
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    this.overlayvisible = false;
+    console.log('loginIsValide before navigate:', this.loginservice.loginIsValide);
+    this.router.navigate(['/main-components/' + this.userId + '/channel/BLDNqmQQWm4Qqv4NLNbv'], { replaceUrl: true });
+  } catch (error) {
+    console.error('Fehler beim Laden des Users:', error);
+  }
 }
 
   async guestLogin(event: Event) {

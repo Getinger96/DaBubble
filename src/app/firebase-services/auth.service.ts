@@ -36,11 +36,7 @@ export class AuthService {
   }
 
 
-  timeoutForRoute(id?: string) {
-    setTimeout(() => {
-      this.router.navigate(['/main-components/' + id]);
-    }, 3000);
-  }
+  
 
   async loginWithGoogleAccountItWorks(result: any) {
     const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -84,7 +80,7 @@ export class AuthService {
       this.mainservice.acutalUser$.subscribe(user => {
         this.id = user[0].id;
       });
-      this.timeoutForRoute(this.id)
+      
     }
   }
 
