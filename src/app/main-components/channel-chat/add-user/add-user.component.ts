@@ -49,13 +49,14 @@ export class AddUserComponent implements OnInit {
     }
     console.log('this.data.allUsersChannel', this.data.allUsers);
     this.memberList.push(user)
+    this.filterUserList = this.filterUserList.filter(u => u.id !== user.id);
     console.log('this.data.members', this.data.members);
     console.log('this.data.members', this.data.members);
   }
 
 
   filterNewUser() {
-
+      this.newUserList = [];
     for (let index = 0; index < this.data.allUsers.length; index++) {
       const user = this.data.allUsers[index];
       console.log('user, ', user);
@@ -74,6 +75,7 @@ export class AddUserComponent implements OnInit {
     this.newUserList.push(member)
    await this.channelService.updateNewMembersInFirebase(this.memberList, this.data.currentChannelID);
     this.filterNewUser();
+    this.filterUsers();
   }
 
 
@@ -101,6 +103,8 @@ export class AddUserComponent implements OnInit {
       this.filterUserList.sort((a, b) => a.name.localeCompare(b.name));
         console.log('this.filterUserList', this.filterUserList);
       
+    } else {
+       this.filterUserList = [];
     }
 
 
