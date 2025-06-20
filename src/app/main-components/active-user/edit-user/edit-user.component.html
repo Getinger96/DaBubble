@@ -2,17 +2,17 @@
     <div class="content">
         <div class="head">
             <p>Dein Profil bearbeiten</p>
-            <img (click)="usercardservice.overlayEditUserActive = false; resetName()" src="assets/img/close.png" alt="close">
+            <img  (click)="usercardservice.overlayEditUserActive = false; resetName()" src="assets/img/close.png" alt="close">
         </div>
         <div class="avatar">
-            <img class="userimg" (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditChangAvatar = true;"  src="assets/img/avatar_{{ actualUserUserCard[0]?.avatar  }}_square.png" alt="avatar">
+            <img [ngClass]="{'noEditng': this.usercardservice.email === 'guest@gmail.com'}" class="userimg" (click)="usercardservice.overlayUserCardActive = false; usercardservice.overlayEditChangAvatar = true;"  src="assets/img/avatar_{{ actualUserUserCard[0]?.avatar  }}_square.png" alt="avatar">
         </div>
         <div class="name">
             <div class="name-head">
                 <img src="assets/img/account_circle.svg" alt="profil-icon">
                 <p>Vollständiger Name</p>
             </div>
-        <input type="text" [(ngModel)]="usercardservice.changedName" [placeholder]="usercardservice.name">
+        <input   [disabled]="usercardservice.email === 'guest@gmail.com'"  [ngClass]="{'noEditng': this.usercardservice.email === 'guest@gmail.com'}" type="text" [(ngModel)]="usercardservice.changedName" [placeholder]="usercardservice.name">
         </div>
         <div class="button-container">
             <button (click)="usercardservice.overlayEditUserActive = false; usercardservice.overlayUserCardActive = true; resetName()"class="cancel">Abbrechen</button>
