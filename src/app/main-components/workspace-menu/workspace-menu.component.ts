@@ -36,6 +36,7 @@ export class WorkspaceMenuComponent {
   @Input() userArray!: User[];
   @Input() actualUser!: User[];
   @Output() closeThread = new EventEmitter<void>();
+  @Output() toggleWorkspace = new EventEmitter<void>();
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];
@@ -179,9 +180,16 @@ export class WorkspaceMenuComponent {
     this.userId = this.actualUser[0].id;
    this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
     this.channelMessageService.getChannelId(id)
-
     this.closeThread.emit();
+   const width = window.innerWidth;
+    if (width <= 768) {
+      this.toggleWorkspace.emit();
+    }
+  }
 
+  
+  toggleWorkspaceDirectuser () {
+           this.toggleWorkspace.emit();
   }
 
   addMembers(ngForm: NgForm) {

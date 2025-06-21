@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { NgClass, NgIf } from '@angular/common';
 import { MainComponentsComponent } from '../main-components.component';
 import { ResponsivService } from '../../services/responsiv.service';
@@ -15,7 +15,7 @@ export class ToggleWebspaceMenuComponent {
   mainComponents = MainComponentsComponent;
   isWorkspaceOpen: boolean = true;
   mobile: boolean = false;
-
+  @Output() closeToggleWorkspace  = new EventEmitter<boolean>();
   private mediaQuery = window.matchMedia('(max-width: 768px)');
 
   constructor(public responsivService: ResponsivService) {

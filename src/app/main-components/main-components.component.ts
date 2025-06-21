@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy,HostListener, AfterViewInit,ViewChild,ElementRef } from '@angular/core';
 import { SearchBarComponent } from '../main-components/search-bar/search-bar.component';
 import { ActiveUserComponent } from './active-user/active-user.component';
 import { WorkspaceMenuComponent } from './workspace-menu/workspace-menu.component';
@@ -31,7 +31,7 @@ import { ResponsivService } from '../services/responsiv.service';
   styleUrl: './main-components.component.scss'
 })
 
-export class MainComponentsComponent implements OnInit, OnDestroy {
+export class MainComponentsComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingStatus: boolean = false;
   allUsers: User[] = [];
   private loadingSubscription!: Subscription;
@@ -39,11 +39,14 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   private chanelSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   private routerSubscription!: Subscription;
+  @ViewChild('routerWrapper') routerWrapperRef?: ElementRef;
+  @ViewChild('directMessage') directMessageRef?: ElementRef;
   overlayUserCardActive: boolean = false;
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
   showdirectmessage: boolean = false;
   actualUser: User[] = [];
+  workspaceIsOpen :boolean = false
   private mediaQuery = window.matchMedia('(max-width: 768px)');
   constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
     this.handleMediaChange(this.mediaQuery);
@@ -76,14 +79,38 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.initchanelSubscription();
     this.initRouterSubscription();
     this.loadActualUser();
-    this.checkWidth()
+    this.checkWidth();
+    this.checkWidthWorkspace();
   }
 
+
+ngAfterViewInit(): void {
+  // Einfach etwas warten, bis DOM da ist, dann Methoden ausführen
+  setTimeout(() => {
+    this.checkWidth();
+    this.checkWidthWorkspace();
+    this.showOrHideRouterElements();
+  }, 100);
+}
 
  @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.checkWidth()
+    this.checkWidthWorkspace();
   }
+
+  showOrHideRouterElements() {
+  const routerWrapper = document.getElementById('routerOutletWrapper');
+  const directMessage = document.getElementById('directMessageChat');
+
+  if (window.innerWidth <= 768) {
+    routerWrapper?.classList.add('hidden');
+    directMessage?.classList.add('hidden');
+  } else {
+    routerWrapper?.classList.remove('hidden');
+    directMessage?.classList.remove('hidden');
+  }
+}
 
 
   openThreadForConversationMessage(message: ConversationMessage): void {
@@ -100,6 +127,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = message;
     this.channemessageService.openThread(message);
+       this.openChannelAndDirectMessage()
   }
 
   public closeThreadView(): void {
@@ -173,6 +201,19 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   if (directMessage) {
       directMessage!.classList.remove('hidden');
   }
+  }
+
+
+  checkWidthWorkspace() {
+  const routerWrapper = document.getElementById('routerOutletWrapper');
+  const directMessage = document.getElementById('directMessageChat');
+
+  const width = window.innerWidth
+
+  if (width <= 768) {
+        routerWrapper!.classList.add('hidden');
+        directMessage!.classList.add('hidden');
+  }
 
   }
 
@@ -220,7 +261,7 @@ openWorkspaceMobile() {
     const directMessage = document.getElementById('directMessageChat');
     const threadsHtml = document.getElementById('threads');
     const routerWrapper = document.getElementById('routerOutletWrapper');
-    if (routerWrapper && !routerWrapper.classList.contains('hidden') || directMessage && !directMessage.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
+    if (this.mainservice.showThreadWindow && routerWrapper && routerWrapper && !routerWrapper.classList.contains('hidden') || directMessage && !directMessage.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
         directMessage?.classList.add('hidden');
         threadsHtml?.classList.add('showThreadSideLarge');
         routerWrapper?.classList.add('hidden');

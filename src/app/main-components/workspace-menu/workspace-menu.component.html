@@ -158,10 +158,10 @@
                 <img src="assets/img/account_circle.svg" alt="account-icon">
                 <h4>Direktnachrichten</h4>
             </div>
-        </div>
+        </div> toggleWorkspaceDirectuser
         <nav *ngIf="openDirectMessages" class="direct-messages">
             <app-direct-message-user (closeThread)="closeThread.emit()"
-                [userArray]="userArray"></app-direct-message-user>
+                [userArray]="userArray" (toggleWorkspaceDirectuser)="toggleWorkspaceDirectuser()"></app-direct-message-user>
         </nav>
     </div>
     <svg class="new-chat" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">

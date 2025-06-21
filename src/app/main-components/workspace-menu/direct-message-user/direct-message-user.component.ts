@@ -25,6 +25,7 @@ export class DirectMessageUserComponent implements OnInit {
   @Input() ownAccount!: boolean;
   @Input() userArray: User[] = [];
   @Output() closeThread = new EventEmitter<void>();
+   @Output() toggleWorkspaceDirectuser = new EventEmitter<void>();
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   private directMessageChatComponent!: DirectMessageChatComponent;
@@ -57,8 +58,15 @@ export class DirectMessageUserComponent implements OnInit {
  
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeThread.emit();
+  const width = window.innerWidth;
+    if (width <= 768) {
+       this.toggleWorkspaceDirectuser.emit();
+    }
+ 
     
   }
+
+
 
   loadActualUser() {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
