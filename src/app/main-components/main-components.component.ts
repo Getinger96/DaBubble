@@ -31,7 +31,7 @@ import { ResponsivService } from '../services/responsiv.service';
   styleUrl: './main-components.component.scss'
 })
 
-export class MainComponentsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MainComponentsComponent implements OnInit, OnDestroy {
   loadingStatus: boolean = false;
   allUsers: User[] = [];
   private loadingSubscription!: Subscription;
@@ -80,38 +80,26 @@ export class MainComponentsComponent implements OnInit, OnDestroy, AfterViewInit
     this.initRouterSubscription();
     this.loadActualUser();
     this.checkWidth();
-    this.checkWidthWorkspace();
   }
 
 
-ngAfterViewInit(): void {
-  // Einfach etwas warten, bis DOM da ist, dann Methoden ausführen
-  setTimeout(() => {
-    this.checkWidth();
-    this.checkWidthWorkspace();
-    this.showOrHideRouterElements();
-  }, 100);
-}
 
  @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.checkWidth()
-    this.checkWidthWorkspace();
   }
 
-  showOrHideRouterElements() {
-  const routerWrapper = document.getElementById('routerOutletWrapper');
-  const directMessage = document.getElementById('directMessageChat');
 
-  if (window.innerWidth <= 768) {
-    routerWrapper?.classList.add('hidden');
-    directMessage?.classList.add('hidden');
-  } else {
-    routerWrapper?.classList.remove('hidden');
-    directMessage?.classList.remove('hidden');
-  }
+
+
+get shouldHideRouter() {
+ if (window.innerWidth <= 768) {
+ return true
+ } else {
+  return false
+ }
+
 }
-
 
   openThreadForConversationMessage(message: ConversationMessage): void {
         console.log('Event empfangen:', message);
@@ -193,6 +181,7 @@ ngAfterViewInit(): void {
   openChannelAndDirectMessage() {
   const routerWrapper = document.getElementById('routerOutletWrapper');
   const directMessage = document.getElementById('directMessageChat');
+  
 
   if (routerWrapper) {
     routerWrapper!.classList.remove('hidden');
@@ -205,33 +194,48 @@ ngAfterViewInit(): void {
 
 
   checkWidthWorkspace() {
-  const routerWrapper = document.getElementById('routerOutletWrapper');
-  const directMessage = document.getElementById('directMessageChat');
-
-  const width = window.innerWidth
-
-  if (width <= 768) {
-        routerWrapper!.classList.add('hidden');
-        directMessage!.classList.add('hidden');
+      const width = window.innerWidth
+    if (!this.mainservice.showdirectmessage) {
+     const main = document.querySelector('main');
+        if (width <= 768) {
+          main!.classList.add('hidden');
+        }
+    }
+    
+    if (this.mainservice.showdirectmessage) {
+    const directMessage = document.querySelector('app-direct-message-chat')
+        if (width <= 768) {
+          directMessage!.classList.add('hidden');
+        }
+    }
+  
   }
 
+  closeThreadViewAfterWorkspaceIsOpen() {
+    MainComponentsComponent.toggleThreads();
+    this.mainservice.showThreadWindow = false
+    this.selectedThreadMessage = null;
+    this.selectedConvThreadMessage = null;
   }
 
 
 openWorkspaceMobile() {
+    setTimeout(() => {
   const workspace = document.querySelector('app-workspace-menu');
-  const routerWrapper = document.getElementById('routerOutletWrapper');
   const directMessage = document.getElementById('directMessageChat');
+    const routerWrapper = document.getElementById('routerOutletWrapper');
   const workspaceIsNowClosed = workspace?.classList.toggle('closed');
   this.responsivService.workspace = true;
 
   if (workspaceIsNowClosed) {
-    routerWrapper!.classList.remove('hidden');
     directMessage?.classList.remove('hidden');
+    routerWrapper?.classList.remove('hidden');
   } else {
-    routerWrapper?.classList.add('hidden');
     directMessage?.classList.add('hidden');
+    routerWrapper?.classList.add('hidden');
+    this.closeThreadViewAfterWorkspaceIsOpen();
   }
+    },0);
 }
 
   checkWidth() {
@@ -249,10 +253,11 @@ openWorkspaceMobile() {
   checkThreadIsOpenOrChannelChat() {
     const routerWrapper = document.getElementById('routerOutletWrapper');
     const threadsHtml = document.getElementById('threads');
+    const workspace = document.querySelector('app-workspace-menu');
     if (routerWrapper && !routerWrapper.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
         routerWrapper?.classList.add('hidden');
         threadsHtml?.classList.add('showThreadSideLarge');
-   
+        workspace?.classList.add('closed');
 }
   }
 
@@ -261,10 +266,12 @@ openWorkspaceMobile() {
     const directMessage = document.getElementById('directMessageChat');
     const threadsHtml = document.getElementById('threads');
     const routerWrapper = document.getElementById('routerOutletWrapper');
+    const workspace = document.querySelector('app-workspace-menu');
     if (this.mainservice.showThreadWindow && routerWrapper && routerWrapper && !routerWrapper.classList.contains('hidden') || directMessage && !directMessage.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
         directMessage?.classList.add('hidden');
         threadsHtml?.classList.add('showThreadSideLarge');
         routerWrapper?.classList.add('hidden');
+        workspace?.classList.add('closed');
   }
 }
 

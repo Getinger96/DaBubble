@@ -37,6 +37,7 @@ export class WorkspaceMenuComponent {
   @Input() actualUser!: User[];
   @Output() closeThread = new EventEmitter<void>();
   @Output() toggleWorkspace = new EventEmitter<void>();
+  @Output() toggleWorkspaceChannel = new EventEmitter<void>();
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];
@@ -183,11 +184,13 @@ export class WorkspaceMenuComponent {
     this.closeThread.emit();
    const width = window.innerWidth;
     if (width <= 768) {
-      this.toggleWorkspace.emit();
+    this.toggleWorkspace.emit();
     }
   }
 
-  
+ 
+
+
   toggleWorkspaceDirectuser () {
            this.toggleWorkspace.emit();
   }

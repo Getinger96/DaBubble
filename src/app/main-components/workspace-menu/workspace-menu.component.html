@@ -158,7 +158,7 @@
                 <img src="assets/img/account_circle.svg" alt="account-icon">
                 <h4>Direktnachrichten</h4>
             </div>
-        </div> toggleWorkspaceDirectuser
+        </div> 
         <nav *ngIf="openDirectMessages" class="direct-messages">
             <app-direct-message-user (closeThread)="closeThread.emit()"
                 [userArray]="userArray" (toggleWorkspaceDirectuser)="toggleWorkspaceDirectuser()"></app-direct-message-user>

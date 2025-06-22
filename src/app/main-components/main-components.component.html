@@ -22,12 +22,12 @@
 
         <app-workspace-menu (closeThread)="closeThreadView()" [userArray]="allUsers"
             [actualUser]="actualUser" (toggleWorkspace)="openWorkspaceMobile()" ></app-workspace-menu>
-        <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage" class="chat-area">
+        <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage" [ngClass]="{ 'hidden': shouldHideRouter }" class="chat-area">
           
             <router-outlet></router-outlet>
         </main>
     
-        <app-direct-message-chat       #directMessage   id="directMessageChat" [hidden]="!this.mainservice.showdirectmessage"  *ngIf="this.mainservice.showdirectmessage"
+        <app-direct-message-chat  [ngClass]="{ 'hidden': shouldHideRouter }"      #directMessage   id="directMessageChat" [hidden]="!this.mainservice.showdirectmessage"  *ngIf="this.mainservice.showdirectmessage"
             (openThread)="openThreadForConversationMessage($event)"
             (closeThread)="closeThreadView()"></app-direct-message-chat>
            
