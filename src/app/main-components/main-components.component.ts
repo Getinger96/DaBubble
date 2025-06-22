@@ -93,7 +93,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
 
 get shouldHideRouter() {
- if (window.innerWidth <= 768) {
+ if (window.matchMedia('(max-width: 768px)').matches) {
  return true
  } else {
   return false
@@ -197,14 +197,14 @@ get shouldHideRouter() {
       const width = window.innerWidth
     if (!this.mainservice.showdirectmessage) {
      const main = document.querySelector('main');
-        if (width <= 768) {
+        if (window.matchMedia('(max-width: 768px)').matches) {
           main!.classList.add('hidden');
         }
     }
     
     if (this.mainservice.showdirectmessage) {
     const directMessage = document.querySelector('app-direct-message-chat')
-        if (width <= 768) {
+        if (window.matchMedia('(max-width: 768px)').matches) {
           directMessage!.classList.add('hidden');
         }
     }

@@ -183,7 +183,7 @@ export class WorkspaceMenuComponent {
     this.channelMessageService.getChannelId(id)
     this.closeThread.emit();
    const width = window.innerWidth;
-    if (width <= 768) {
+    if (window.matchMedia('(max-width: 768px)').matches|| window.innerHeight <= 1024 ) {
     this.toggleWorkspace.emit();
     }
   }
