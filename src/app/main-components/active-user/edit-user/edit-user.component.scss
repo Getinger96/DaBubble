@@ -11,6 +11,29 @@
     width: 400px;
     height: 500px;
     padding: 45px 40px 45px 40px;
+
+    
+    @media (max-width: 500px) {
+        width: 320px;
+        height: 500px;
+        padding: 20px 20px 20px 20px;
+        box-sizing: border-box;
+        top: 95px;
+    }
+
+
+        @media (max-width: 450px) {
+        top: 0;
+        bottom: 0;
+        left: 30px;
+    }
+
+
+         @media (max-width: 350px) {
+            left: 10px;
+            width: 300px;
+    }
+
     >.content {
         display: flex;
         flex-direction: column;
@@ -26,6 +49,11 @@
                 font-family: $font-primary;
                 font-weight: 700;
                 font-size: 24px;
+
+                  @media (max-width: 500px) {
+               font-size: 20px;
+
+                }
             }
             >img {
                 width: 24px;
@@ -39,6 +67,12 @@
                 border-radius: 50%;
                 width: 200px;
                 height: 200px;
+
+                     @media (max-width: 500px) {
+                width: 160px;
+                height: 160px;
+
+                }
             }
         }
         >.name {
@@ -61,6 +95,11 @@
                     font-family: $font-primary;
                     font-weight: 700;
                     font-size: 20px;
+
+                          @media (max-width: 500px) {
+                            font-size: 18px;
+
+                }
                 }
             }
             >input {
@@ -101,6 +140,12 @@
                 font-size: 18px;
                 border-radius: 30px;
                 padding: 12px 25px 12px 25px;
+
+
+                    @media (max-width: 500px) {
+                    padding: 10px 20px 12px 20px;
+                    font-size: 16px;        
+                }
             }
             >.cancel {
                 color: #444DF2;

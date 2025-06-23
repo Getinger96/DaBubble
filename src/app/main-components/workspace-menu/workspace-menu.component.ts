@@ -183,7 +183,7 @@ export class WorkspaceMenuComponent {
     this.channelMessageService.getChannelId(id)
     this.closeThread.emit();
    const width = window.innerWidth;
-    if (window.matchMedia('(max-width: 768px)').matches|| window.innerHeight <= 1024 ) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
     this.toggleWorkspace.emit();
     }
   }
@@ -226,8 +226,18 @@ export class WorkspaceMenuComponent {
     this.channelservice.addMembersToChannel(channelId, members);
   }
 
- isUserInChannel(channel: Channel): boolean {
-  return channel.members.some(member => member.id === this.actualUser[0].id);
+isUserInChannel(channel: any): boolean {
+  const guestChannelId = 'BLDNqmQQWm4Qqv4NLNbv';
+
+  if (this.isUserGuest()) {
+    return channel.id === guestChannelId;
+  }
+
+  return channel.members?.some((m: any) => m.name === this.actualUser[0].name);
 }
 
+isUserGuest(){
+  return this.actualUser[0].email === 'guest@gmail.com'
+
+}
 }
