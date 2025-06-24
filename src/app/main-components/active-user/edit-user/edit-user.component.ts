@@ -19,4 +19,12 @@ export class EditUserComponent {
 resetName() {
   this.usercardservice.changedName = this.usercardservice.name;
 }
+
+openChangeAvarCard() {
+
+  if (this.usercardservice.email !== 'guest@gmail.com') {
+  this.usercardservice.overlayUserCardActive = false;
+  this.usercardservice.overlayEditChangAvatar = true;
+  }
+}
 }

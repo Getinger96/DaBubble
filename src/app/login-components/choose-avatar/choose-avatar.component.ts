@@ -17,20 +17,23 @@ import { RouterModule } from '@angular/router';
 export class ChooseAvatarComponent {
 
   avatarImgNumber: number = 1;
+  registerName: string= '';
 
 
   constructor(public registerservice: RegisterService) {
-
+     this.registerName = this.registerservice.name || localStorage.getItem('registerName') || '';
   }
   avatarSelection(imgNumber: number) {
     this.avatarImgNumber = imgNumber;
   }
 
   SelectAvatarImg() {
-    this.registerservice.updateUserAvatar(this.avatarImgNumber)
+    this.registerservice.updateUserAvatar(this.avatarImgNumber, this.registerName)
   }
 
   async deleteUser() {
     await this.registerservice.deleteUserFirebase()
   }
+
+ 
 }

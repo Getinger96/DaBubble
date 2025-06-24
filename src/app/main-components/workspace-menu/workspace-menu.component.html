@@ -139,9 +139,9 @@
         </div>
         <nav *ngIf="openChannels" class="channels-menu">
             <ng-container *ngFor="let channel of channels">
-                <div *ngIf="isUserInChannel(channel)" class="channel">
+                <div *ngIf="isUserInChannel(channel)" class="channel"  (click)="openChannel(true, channel.name, channel.description, channel.creator, channel.id, channel.members, channel.date)">
                     <p># <span
-                            (click)="openChannel(true, channel.name, channel.description, channel.creator, channel.id, channel.members, channel.date)">
+                            >
                             {{ channel.name }}
                         </span></p>
                 </div>

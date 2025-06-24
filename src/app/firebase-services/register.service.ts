@@ -1,5 +1,5 @@
 import { Injectable, inject, } from '@angular/core';
-import { Firestore, deleteDoc, collection, addDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot, arrayUnion } from '@angular/fire/firestore';
+import { Firestore, deleteDoc, collection, addDoc,getDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot, arrayUnion } from '@angular/fire/firestore';
 import { getAuth, deleteUser, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider, sendPasswordResetEmail, reauthenticateWithCredential, updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
 import { ChannelMember} from '../interfaces/ChannelMember.interface';
@@ -72,6 +72,7 @@ export class RegisterService {
       }
       const user = userCredential.user;
       this.name = item.name;
+      localStorage.setItem('registerName',  this.name );
       this.addInFirebase(item, user.uid);
       this.router.navigate(['/chooseAvatar']);
       return true
@@ -107,6 +108,7 @@ export class RegisterService {
   async addInFirebase(item: User, uid: string) {
     return addDoc(this.getUserRef(), this.userJson(item, uid)).then(async docRef => {
       this.id = docRef.id;
+      localStorage.setItem('registerId',  this.id );
       this.uid = uid;
 
 
@@ -117,7 +119,7 @@ export class RegisterService {
         id: docRef.id,
         name: item.name,
         status: 'Online',
-        avatar: item.avatar || 0,
+        avatar: item.avatar || 1,
       });
 
       return docRef.id;
@@ -133,7 +135,7 @@ export class RegisterService {
       passwort: item.passwort,
       id: '',
       uid: uid,
-      avatar: null,
+      avatar: 1,
       status: 'Offline'
     };
   }
@@ -150,17 +152,37 @@ export class RegisterService {
     };
   }
 
-  async updateUserAvatar(avatar: number) {
+  async updateUserAvatar(avatar: number, name:string) {
     try {
       if (!this.id) {
-        throw new Error("Fehler: Benutzer-ID nicht gesetzt!");
+          this.id = localStorage.getItem('registerId') ||  ''
       }
       const userRef = doc(this.firestore, "Users", this.id);// Verwende setDoc, um sicherzustellen, dass das Dokument existiert oder erstellt wird
       await updateDoc(userRef, { avatar: avatar });
+      await this.updateDocInMainChannel(avatar,name)
       this.router.navigate(['/']);
     } catch (error) {
       console.error("Fehler beim Aktualisieren des Avatars:", error);
     }
+  }
+
+
+  async updateDocInMainChannel(avatar: number,name:string ) {
+    const channelId = 'BLDNqmQQWm4Qqv4NLNbv'; 
+    const channelRef = doc(this.firestore, `Channels/${channelId}`);
+    const channSnap = await getDoc(channelRef);
+    const data = channSnap.data();
+    const members = data?.['members'];
+
+     for (let i = 0; i < members.length; i++) {
+    if (members[i].name === name && members[i].avatar === 1) {
+      members[i].avatar = avatar; 
+      break; 
+    }
+    
+  }
+
+    await updateDoc(channelRef, { members });
   }
 
   getUserRef() { // Funktion, um die Referenz auf die Firestore-Sammlung 'Users' zu bekommensetUserObject

@@ -49,8 +49,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   workspaceIsOpen :boolean = false
   private mediaQuery = window.matchMedia('(max-width: 768px)');
   constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
-    this.handleMediaChange(this.mediaQuery);
-    this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
+
   }
   selectedThreadMessage: Message | null = null;
   selectedConvThreadMessage: ConversationMessage | null = null;
@@ -93,7 +92,8 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
 
 get shouldHideRouter() {
- if (window.matchMedia('(max-width: 768px)').matches) {
+  const workspace = document.querySelector('app-workspace-menu');
+ if (window.matchMedia('(max-width: 768px)').matches && !workspace!.classList.contains('closed')) {
  return true
  } else {
   return false
@@ -257,7 +257,7 @@ openWorkspaceMobile() {
     if (routerWrapper && !routerWrapper.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
         routerWrapper?.classList.add('hidden');
         threadsHtml?.classList.add('showThreadSideLarge');
-        workspace?.classList.add('closed');
+    
 }
   }
 
@@ -271,7 +271,7 @@ openWorkspaceMobile() {
         directMessage?.classList.add('hidden');
         threadsHtml?.classList.add('showThreadSideLarge');
         routerWrapper?.classList.add('hidden');
-        workspace?.classList.add('closed');
+   
   }
 }
 
@@ -295,16 +295,7 @@ openWorkspaceMobile() {
   }
 
 
-  handleMediaChange(e: MediaQueryListEvent | MediaQueryList) {
-    const workspace = document.querySelector('app-workspace-menu');
-    if (e.matches) {
-      if (workspace) {
-        workspace.classList.toggle('closed');
-        this.responsivService.workspace = false;
-      }
-    }
 
-  }
 
   closeDirectChatAndChannelchat() {
     this.mainhelperService.openChannel = false;
