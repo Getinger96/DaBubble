@@ -33,7 +33,7 @@
 .message {
   width: 100%;
   display: flex;
-  padding-top: 40px;
+  padding-top: 10px;
   padding-bottom: 10px;
   position: relative;
 
@@ -62,7 +62,7 @@
     .reaction-popup {
         position: absolute;
         right: 43px;
-        top: 10px;
+        top:-18px;
         display: none;
         align-items: center;
         justify-content: center;
@@ -139,7 +139,6 @@
 
         width: calc(100% - 290px);
         display: flex;
-        position: relative;
         min-height: 155px;
 
 
@@ -160,11 +159,28 @@
             }
         }
 
+                >div{
+            height: fit-content;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 10px;
+            justify-content: space-between;
+            gap: 4%;
+            right: 20px;
+            left: 20px;
+        }
+
+        .edit-buttons{
+            display: flex;
+            gap: 8px;
+        }
+
+
 
 
         button {
 
-            position: absolute;
             font-size: 18px;
             font-weight: 700;
             padding: 12px 25px;
@@ -175,9 +191,7 @@
         }
 
         .close-edit-message {
-            right: 185px;
-            bottom: 20px;
-            background: none;
+            background: white;
             color: #444DF2;
             transition: 0.1s;
 
@@ -188,9 +202,6 @@
         }
 
         .save-edit-message {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
             background-color: #444DF2;
             color: white;
 
@@ -203,13 +214,14 @@
         }
 
         img {
-            position: absolute;
-            width: 40px;
-            height: 40px;
             padding: 0 !important;
             left: 20px;
             bottom: 20px;
             cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
         }
 
 
@@ -219,7 +231,7 @@
     img {
         width: 70px;
         height: 70px;
-        padding: 10px 30px 0 45px;
+        padding: 10px 45px 0 30px;
     }
 
     span {
@@ -310,6 +322,7 @@
                     padding: 5px 10px;
                     border: 1px solid #ADB0D9;
                     border-radius: 20px;
+                    font-size: 16px;
                 }
             }
         }
@@ -369,7 +382,6 @@ max-height: 80px !important;
 
 .reactions {
     display: flex;
-    gap: 10px;
 }
 
 .reactionsThread {
@@ -377,7 +389,6 @@ max-height: 80px !important;
     margin-top: 4px;
     max-width: 250px;
     flex-wrap: wrap;
-    gap: 10px;
 }
 
 
@@ -475,10 +486,56 @@ max-height: 80px !important;
 }
 
 .reaction {
-     width: 52px;
     scrollbar-color: #444DF2 ;
     border: solid 1px ;
   text-align: center;
     border-radius: 50px;
     padding: 2px;
 }
+
+$breakpoint-tablet: 768px;
+$breakpoint-phone: 460px;
+
+@media (max-width: $breakpoint-tablet) {
+    .like-icon, .check-icon, .react-icon {
+        display: none;
+    }
+
+    .edit-message{
+        left: 85px !important;
+    }
+
+    .edit-buttons{
+        flex-direction: column-reverse;
+    }
+
+    .edit-message-input{
+        width: calc(100% - 200px) !important;
+
+        >div{
+            align-items: end;
+        }
+
+        button{
+            font-size: 16px;
+            padding: 10px 23px;
+        }
+    }
+}
+
+@media (max-width: $breakpoint-phone) {
+    .message-over{
+        gap: 0 !important;
+        height: auto !important;
+        flex-direction: column !important;
+        text-align: end;
+        align-self: end;
+    }
+
+    .message{
+        img {
+            padding: 10px 30px 0 30px;
+        }
+    }
+}
+

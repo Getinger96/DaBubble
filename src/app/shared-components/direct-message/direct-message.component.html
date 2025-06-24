@@ -16,11 +16,11 @@
         <div *ngIf="!editMessage && !isInThread" class="reaction-popup" [ngClass]="{ 'show': showEmojiPicker }">
 
             <img (click)="addEmoji('✅', this.conversationId,this.conversationmessageid)" src="assets/img/check_40.png"
-                alt="check">
+                alt="check" class="check-icon">
             <img (click)="addEmoji('👍', this.conversationId,this.conversationmessageid)" src="assets/img/like.png"
-                alt="like">
+                alt="like" class="like-icon" >
             <img #emojiImg (click)="onEmojiButtonClick($event)" class="change-color" src="assets/img/add_reaction40.png"
-                alt="react">
+                alt="react" class="react-icon">
             <img *ngIf="isOwn" (click)="toggleEditPopup()" src="assets/img/dots.png" alt="dots">
             <div *ngIf="isOwn && showEditPopup" class="edit-message"
                 [ngStyle]="isOwn ? {'left': '175px','top':'25px'} : {}">
@@ -47,11 +47,7 @@
     </div>
   </div>
       <div *ngIf="!isAnswered" class="message-not-answered">
-      <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
-           src="assets/img/add_reaction40.png" alt="">
-    </div>
-</div>
-            <div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
+        <div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
                 <ng-container *ngFor="let entry of (emojiReactions) | keyvalue">
                     <span class="reaction"
                         (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
@@ -71,12 +67,22 @@
                 </ng-container>
 
             </div>
+      <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
+           src="assets/img/add_reaction40.png" alt="">
+    </div>
+</div>
         </div>
     <div *ngIf="editMessage" class="edit-message-input fontNunito">
-        <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
-        <img src="assets/img/emoji.png" alt="">
-        <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
-        <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
+        <textarea type="text" class="fontNunito" wrap="soft" rows="3" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
+        <div class="controls-container">
+            <img src="assets/img/emoji.png" alt="">
+            <div class="edit-buttons">
+                <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
+                <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
+            </div>
+            
+        </div>
+
     </div>
     </div>
 

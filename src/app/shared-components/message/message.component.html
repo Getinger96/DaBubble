@@ -15,13 +15,13 @@
 
 
 
-            <img (click)="addEmoji('✅',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check">
-            <img (click)="addEmoji('👍',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like">
-            <img #emojiImg (click)="showEmojiBar()" class="change-color" src="assets/img/add_reaction40.png"
-                alt="react">
+            <img (click)="addEmoji('✅',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check" class="check-icon">
+            <img (click)="addEmoji('👍',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like" class="like-icon">
+            <img #emojiImg (click)="showEmojiBar()" class="change-color" src="assets/img/add_reaction40.png" alt="react" class="react-icon">
+            <img (click)="toggleEditPopup()" *ngIf="isOwn && !isThreadRootMessage" src="assets/img/dots.png" alt="dots">
             <img class="change-color" *ngIf="!isThreadRootMessage" src="assets/img/edit.png" alt="edit"
                 (click)="onReplyClick()">
-            <img (click)="toggleEditPopup()" *ngIf="isOwn && !isThreadRootMessage" src="assets/img/dots.png" alt="dots">
+            
         </div>
 
 
@@ -68,7 +68,7 @@
                 [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
-        <img [src]="'assets/img/avatar_' + avatarSrc + '.png'"
+        <img class="avatar-pic" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
             [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
         <div class="message-details" *ngIf="!editMessage">
             <div class="message-over"><span class="message-name" (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
@@ -112,8 +112,12 @@
             <div *ngIf="editMessage" class="edit-message-input fontNunito">
                 <textarea type="text" class="fontNunito" wrap="soft" placeholder={{messageText}}
                     [(ngModel)]="editedMessageText"></textarea>
-                <img src="assets/img/emoji.png" alt="">
-                <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
-                <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
+                    <div class="controls-container">
+                        <img src="assets/img/emoji.png" alt="">
+                        <div class="edit-buttons">
+                            <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
+                            <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>
+                        </div>
+                    </div>
             </div>
         </div>

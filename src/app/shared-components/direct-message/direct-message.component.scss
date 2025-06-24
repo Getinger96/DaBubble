@@ -33,7 +33,6 @@
     }
 
     .reactions {
-    gap: 10px;
     max-width: 700px;
     flex-wrap: wrap;
 }
@@ -43,12 +42,10 @@
     margin-top: 4px;
     max-width: 250px;
     flex-wrap: wrap;
-    gap: 10px;
 }
 
 
 .reaction {
-    width: 64px;
     scrollbar-color: #444DF2;
     border: solid 1px;
     text-align: center;
@@ -77,8 +74,8 @@
 
         width: calc(100% - 290px);
         display: flex;
-        position: relative;
         min-height: 155px;
+        position: relative;
         
 
 
@@ -99,24 +96,39 @@
             }
         }
 
+        .controls-container {
+            height: fit-content;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 10px;
+            justify-content: space-between;
+            gap: 4%;
+            right: 20px;
+            left: 20px;
+        }
+
+        .edit-buttons{
+            display: flex;
+            gap: 8px;
+        }
+
 
 
         button{
 
-            position: absolute;
             font-size: 18px;
             font-weight: 700;
             padding: 12px 25px;
             border: 1px solid #797EF3;
             border-radius: 50px;
             cursor: pointer;
+            height: fit-content;
 
         }
 
         .close-edit-message{
-            right: 185px;
-            bottom: 20px;
-            background: none;
+            background: white;
             color: #444DF2;
             transition: 0.1s;
 
@@ -127,9 +139,6 @@
         }
 
         .save-edit-message{
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
             background-color: #444DF2;
             color: white;
 
@@ -142,14 +151,76 @@
         }
 
         img{
-            position: absolute;
-            width: 40px;
-            height: 40px;
             padding: 0 !important;
             left: 20px;
             bottom: 20px;
             cursor: pointer;
+            margin-right: auto;
+            background: white;
+            border-radius: 50%;
         }
 
 
     }
+
+$breakpoint-tablet: 768px;
+$breakpoint-phone: 460px;
+
+@media (max-width: $breakpoint-tablet) {
+    .like-icon, .check-icon, .react-icon {
+        display: none;
+    }
+
+    .edit-message{
+        left: 40px !important;
+    }
+
+    .edit-buttons{
+        flex-direction: column-reverse;
+    }
+
+    .edit-message-input{
+        width: calc(100% - 200px) !important;
+
+        .controls-container{
+            align-items: end !important;
+            overflow: hidden;
+            pointer-events: none;
+           
+        }
+
+        .edit-buttons{
+             transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button{
+            pointer-events: auto;
+            font-size: 16px;
+            padding: 10px 23px;
+        }
+
+        img{
+            pointer-events: auto;
+        }
+
+         &:focus-within .edit-buttons {
+        transform: translateX(120%);
+        }
+    }
+}
+
+@media (max-width: $breakpoint-phone) {
+    .message-over{
+        height: auto !important;
+        flex-direction: column !important;
+        text-align: end;
+        align-self: end;
+    }
+
+    .message{
+        img {
+            padding: 10px 30px 0 30px;
+        }
+    }
+}
