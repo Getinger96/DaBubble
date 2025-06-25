@@ -140,6 +140,7 @@
         width: calc(100% - 290px);
         display: flex;
         min-height: 155px;
+        position: relative;
 
 
         textarea {
@@ -159,7 +160,7 @@
             }
         }
 
-                >div{
+                .controls-container{
             height: fit-content;
             display: flex;
             align-items: center;
@@ -187,6 +188,7 @@
             border: 1px solid #797EF3;
             border-radius: 50px;
             cursor: pointer;
+            height: fit-content;
 
         }
 
@@ -222,6 +224,7 @@
             height: 40px;
             border-radius: 50%;
             background: white;
+            margin-right: auto;
         }
 
 
@@ -512,14 +515,35 @@ $breakpoint-phone: 460px;
     .edit-message-input{
         width: calc(100% - 200px) !important;
 
-        >div{
-            align-items: end;
+        .controls-container{
+            align-items: end !important;
+            overflow: hidden;
+            pointer-events: none;
+           
+        }
+
+        .edit-buttons{
+             transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
         }
 
         button{
+            pointer-events: auto;
             font-size: 16px;
             padding: 10px 23px;
         }
+
+        img{
+            pointer-events: auto;
+        }
+
+         &:focus-within .edit-buttons {
+        transform: translateX(120%);
+        }
+    }
+
+    .message-answered{
+        padding-left: 10px;
     }
 }
 
