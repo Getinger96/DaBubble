@@ -385,6 +385,11 @@
     bottom: 0;
 }
 
+.openArrow {
+    transform: rotate(-90deg);
+    transition: transform 0.5s ease;
+}
+
 @media (max-width: 768px) {
     .channel-menu {
         .head {
