@@ -183,6 +183,7 @@ export class WorkspaceMenuComponent {
    this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
     this.channelMessageService.getChannelId(id)
     this.closeThread.emit();
+    this.mainHelperService.openNewChat =false;
    const width = window.innerWidth;
     if (window.matchMedia('(max-width: 768px)').matches) {
     this.toggleWorkspace.emit();
@@ -194,6 +195,13 @@ export class WorkspaceMenuComponent {
 
   toggleWorkspaceDirectuser () {
            this.toggleWorkspace.emit();
+  }
+
+
+
+  openWorkspaceToNewCompoment() {
+    this.toggleWorkspace.emit();
+    
   }
 
   addMembers(ngForm: NgForm) {

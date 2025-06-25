@@ -305,7 +305,7 @@ openWorkspaceMobile() {
   }
 
   toggleOpenNewChat(value: boolean) {
-    this.openNewChat =true;
+    this.mainhelperService.openNewChat =true;
   }
 
 }

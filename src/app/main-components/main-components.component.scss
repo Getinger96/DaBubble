@@ -115,12 +115,20 @@
     }
 
 
-    app-direct-message-chat {
+    app-direct-message-chat { 
       height: 100%;
       width: 52%;
       transition: width 0.3s ease;
       flex-grow: 1;
     }
+app-new-chat { 
+      height: 100%;
+      width: 52%;
+      transition: width 0.3s ease;
+      flex-grow: 1;
+    }
+
+    
 
     app-thread {
       height: 100%;

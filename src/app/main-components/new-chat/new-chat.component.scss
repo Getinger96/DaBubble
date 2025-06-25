@@ -1,5 +1,13 @@
 @import './../../../styles.scss';
 
+
+section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .main-chat-wrapper {
     width: 100%;               /* Sicherstellen, dass der Wrapper die gesamte Breite einnimmt */
     height: 100%;              /* Volle Höhe */
@@ -217,18 +225,12 @@ app-add-member-channel  {
 
 
 .overlay-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Grau, halbtransparent */
-    z-index: 1000;
-    overflow-y: hidden;
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 30px;
 
 
 }
@@ -472,8 +474,6 @@ app-show-user {
     }
   }
 
-
-
   .atImg {
     position: relative;
   }
@@ -495,5 +495,6 @@ app-show-user {
     >button {
         border: none; 
         cursor: pointer;
+        background: none;
     }
   }
