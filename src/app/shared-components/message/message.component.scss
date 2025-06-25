@@ -479,14 +479,18 @@ max-height: 80px !important;
 }
 
 .editOwnMessage {
-    position: absolute;
-    left: 30px;
-    top: 0px;
-    bottom: 0px;
-    width: 90%;
-    z-index: 999;
-    background: white;
+        width: calc(100% - 155px);
+        display: flex;
+        min-height: 155px;
+        position: relative;
+        justify-content: end;
 }
+
+.app-edit-message{
+    width: calc(100% - 155px);
+}
+
+
 
 .reaction {
     scrollbar-color: #444DF2 ;

@@ -7,7 +7,7 @@
     </div>
 
 
-    <div [ngClass]="{'reverse': isOwn && !isInThread,
+    <div [ngClass]="{'reverse': isOwn && !mainHelperService.showEditMessage,
             'no-hover-popup': isEditing(threadAnswersId)}"
         [ngStyle]="editMessage ? {'background-color':'#ECEFFF'} : {}" class="message">
         <div *ngIf="!isThread && !isInThread && !editMessage" class="reaction-popup"
@@ -27,7 +27,7 @@
 
         <div class="editOwnMessage" *ngIf="isOwn && isEditing(threadAnswersId) && mainHelperService.showEditMessage">
             <app-edit-message [messageTextEdit]="messageText" [messageEditId]="editMessageId!" [channelID]="channelID"
-                (cancelEdit)="onCancelEdit()">
+                (cancelEdit)="onCancelEdit()" class="app-edit-message">
             </app-edit-message>
         </div>
 

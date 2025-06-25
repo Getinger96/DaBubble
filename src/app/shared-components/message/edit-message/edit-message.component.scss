@@ -1,29 +1,36 @@
 .main-chat-message {
-    height: 145px;
-    border-radius: 20px;
-    border: 1px solid #ADB0D9;
-    position: relative;
+        width: 100%;
+        display: flex;
+        min-height: 155px;
+        position: relative;
 
     textarea {
-        border: none;
-        width: calc(100% - 40px);
-        padding: 20px 20px;
-        height: calc(100% - 100px);
-        background-color: transparent;
-        resize: none;
+            border-radius: 20px;
+            border: 1px solid #ADB0D9;
+            border: none;
+            width: 100%;
+            padding: 20px 20px;
+            resize: none;
 
-        &:focus {
-            outline: none;
-        }
+            &:focus {
+                outline: none;
+            }
+
+            &:hover {
+                border: 1px solid #797EF3;
+            }
     }
 
     .message-icons {
-        position: absolute;
-        width: calc(100% - 40px);
-        bottom: 20px;
-        left: 20px;
-        display: flex;
-        justify-content: space-between;
+             height: fit-content;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 10px;
+            justify-content: space-between;
+            gap: 4%;
+            right: 20px;
+            left: 20px;
 
         img {
             width: 40px;
@@ -32,6 +39,18 @@
         }
 
     }
+
+    button{
+
+            font-size: 18px;
+            font-weight: 700;
+            padding: 12px 25px;
+            border: 1px solid #797EF3;
+            border-radius: 50px;
+            cursor: pointer;
+            height: fit-content;
+
+        }
 }
 
 
@@ -49,31 +68,24 @@ div {
 display: flex;
 gap: 25px;
         .close-edit-message {
-            background: white;
+          background: white;
             color: #444DF2;
-            border-radius: 50px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: 1px solid rgb(68, 77, 242);
-            cursor: pointer;
-
+            transition: 0.1s;
 
             &:hover {
                 background-color: #444DF2;
                 color: white;
             }
-          
         
     }
 
 
 
         .save-edit-message {
-            border-radius: 50px;
-            padding: 10px 20px;
-            font-size: 16px;
             background-color: #444DF2;
             color: white;
+
+            transition: 0.1s;
 
             &:hover {
                 color: #444DF2;
@@ -93,4 +105,57 @@ gap: 25px;
     position: absolute;
     bottom: 125px;
     width: max-content;
+}
+
+$breakpoint-tablet: 768px;
+$breakpoint-phone: 460px;
+
+@media (max-width: $breakpoint-tablet) {
+
+    .edit-buttons{
+        flex-direction: column-reverse;
+    }
+
+    .main-chat-message{
+        .message-icons{
+            align-items: end !important;
+            overflow: hidden;
+            pointer-events: none;
+           
+        }
+
+        .edit-buttons{
+             transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button{
+            pointer-events: auto;
+            font-size: 16px;
+            padding: 10px 23px;
+        }
+
+        img{
+            pointer-events: auto;
+        }
+
+         &:focus-within .edit-buttons {
+        transform: translateX(120%);
+        }
+    }
+}
+
+@media (max-width: $breakpoint-phone) {
+    .message-over{
+        height: auto !important;
+        flex-direction: column !important;
+        text-align: end;
+        align-self: end;
+    }
+
+    .message{
+        img {
+            padding: 10px 30px 0 30px;
+        }
+    }
 }
