@@ -130,7 +130,7 @@
     <div class="channels">
         <div class="head-channels">
             <div class="head-left">
-                <img class="toggle-channel-menu" (click)="toggleChannels()" src="assets/img/arrow_drop_down.svg"
+                <img class="toggle-channel-menu" [ngClass]="{ 'openArrow': !openChannels }" (click)="toggleChannels()" src="assets/img/arrow_drop_down.svg"
                     alt="open-channels">
                 <img src="assets/img/workspaces.svg" alt="workspaces">
                 <h4>Channels</h4>
@@ -152,7 +152,7 @@
     </div>
     <div class="direct-messages-menu">
         <div class="head-direct-messages">
-            <img class="toggle-direct-messages-menu" (click)="toggleDirectMessages()"
+            <img class="toggle-direct-messages-menu" (click)="toggleDirectMessages()" [ngClass]="{ 'openArrow': !openDirectMessages }"
                 src="assets/img/arrow_drop_down.svg" alt="open-direct-messages">
             <div class="headline-direct-messages">
                 <img src="assets/img/account_circle.svg" alt="account-icon">
