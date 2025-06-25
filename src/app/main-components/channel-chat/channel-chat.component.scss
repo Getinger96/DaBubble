@@ -472,8 +472,6 @@ app-show-user {
     }
   }
 
-
-
   .atImg {
     position: relative;
   }
@@ -495,5 +493,6 @@ app-show-user {
     >button {
         border: none; 
         cursor: pointer;
+        background: none;
     }
   }
