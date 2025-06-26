@@ -122,10 +122,10 @@
             <img src="assets/img/Workspace logo.svg" alt="channel-icon">
             <h3>Devspace</h3>
         </div>
-        <a href=""><img src="assets/img/edit_square.svg" alt="edit"></a>
+        <img src="assets/img/edit_square.svg" alt="edit" (click)="openNewChat()">
     </div>
     <div class="mobile">
-        <app-search-bar placeholderSearchBar="Gehe zu..." [mobile]="true"></app-search-bar>
+        <app-search-bar placeholderSearchBar="Gehe zu..." [mobile]="true" (toggleWorkspace)="openWorkspaceToNewCompoment()"></app-search-bar>
     </div>
     <div class="channels">
         <div class="head-channels">

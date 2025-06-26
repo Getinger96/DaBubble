@@ -13,6 +13,7 @@ import { ThreadComponent } from '../../thread/thread.component';
 import { ConversationService } from '../../../firebase-services/conversation.service';
 import { MainComponentsComponent } from '../../main-components.component';
 
+
 @Component({
   selector: 'app-direct-message-user',
   standalone: true,
@@ -55,7 +56,7 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
     this.router.navigate(['/main-components/' + this.actualUser[0].id+'/directmessage/'+ id], { replaceUrl: true })
- 
+    this.mainhelperService.openNewChat =false;
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeThread.emit();
   const width = window.innerWidth;

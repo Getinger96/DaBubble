@@ -11,6 +11,7 @@ import { ImprintComponent } from './imprint/imprint.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { authGuard } from './auth/auth.guard';
 import { DirectMessageChatComponent } from './main-components/direct-message-chat/direct-message-chat.component';
+import { NewChatComponent } from './main-components/new-chat/new-chat.component';
 
 
 
@@ -34,6 +35,10 @@ export const routes: Routes = [
       {
         path: 'directmessage/:directmessageid',
         component: DirectMessageChatComponent,
+      },
+      {
+         path: 'newchat/:id',
+        component: NewChatComponent,
       }
     ]
   },

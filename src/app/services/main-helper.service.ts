@@ -10,6 +10,7 @@ export class MainHelperService {
     openChannel: boolean = true;
     showEditMessage: boolean = false
     showMemberList: boolean = false
+    openNewChat:boolean =false
   constructor() { }
 
 

@@ -38,6 +38,7 @@ export class WorkspaceMenuComponent {
   @Output() closeThread = new EventEmitter<void>();
   @Output() toggleWorkspace = new EventEmitter<void>();
   @Output() toggleWorkspaceChannel = new EventEmitter<void>();
+  @Output() toggleOpenNewChat = new EventEmitter<boolean>();
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];
@@ -182,6 +183,7 @@ export class WorkspaceMenuComponent {
    this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
     this.channelMessageService.getChannelId(id)
     this.closeThread.emit();
+    this.mainHelperService.openNewChat =false;
    const width = window.innerWidth;
     if (window.matchMedia('(max-width: 768px)').matches) {
     this.toggleWorkspace.emit();
@@ -193,6 +195,13 @@ export class WorkspaceMenuComponent {
 
   toggleWorkspaceDirectuser () {
            this.toggleWorkspace.emit();
+  }
+
+
+
+  openWorkspaceToNewCompoment() {
+    this.toggleWorkspace.emit();
+    
   }
 
   addMembers(ngForm: NgForm) {
@@ -239,5 +248,10 @@ isUserInChannel(channel: any): boolean {
 isUserGuest(){
   return this.actualUser[0].email === 'guest@gmail.com'
 
+}
+
+
+openNewChat() {
+this.toggleOpenNewChat.emit(true);
 }
 }

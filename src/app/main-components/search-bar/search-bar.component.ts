@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RegisterService } from '../../firebase-services/register.service';
 import { ChannelService } from '../../firebase-services/channel.service';
 import { MainComponentService } from '../../firebase-services/main-component.service';
@@ -44,7 +44,7 @@ export class SearchBarComponent {
   users: User[] = [];
   conversations: Conversation[] = []
   @Input() mobile: boolean = false;
-
+  @Output() toggleWorkspace = new EventEmitter<void>();
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
@@ -90,6 +90,13 @@ export class SearchBarComponent {
     this.conversations = snapshot.docs.map(docSnap => new Conversation(docSnap.data()));
 
   }
+
+
+  toggleWorkspaceToChat () {
+           this.toggleWorkspace.emit();
+  }
+
+
   loadActualUser() {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
@@ -160,6 +167,10 @@ export class SearchBarComponent {
     this.mainservice.directmessaeUserIdSubject.next(dm.name);
     this.searchTerm = '';
     this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${dm.conversationmessageId}`);
+    if (window.matchMedia('(max-width: 768px)').matches) {
+       this.toggleWorkspaceToChat();
+    }
+  
   }
 
 
@@ -200,6 +211,7 @@ navigateToDirectMessage(dm: ConversationMessage) {
     user.email,
     user.status
   );
+  
 }
 
 opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
@@ -213,7 +225,9 @@ opendirectmessage(id: string, name: string, close: boolean, avatar: number, emai
   this.mainservice.directmessaeUserIdSubject.next(id);
   this.searchTerm = '';
   this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
-
+   if (window.matchMedia('(max-width: 768px)').matches) {
+       this.toggleWorkspaceToChat();
+    }
 }
 
 
@@ -230,6 +244,9 @@ openChannel(isOpen: boolean, name: string, description: string, creator: string,
   this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
   this.channelMessageService.getChannelId(id)
   this.searchTerm = '';
+  if (window.matchMedia('(max-width: 768px)').matches) {
+       this.toggleWorkspaceToChat();
+    }
 }
 
 navigateToMessage(message: Message) {
@@ -260,6 +277,7 @@ navigateToMessage(message: Message) {
   } else if (message.isInThread) {
     this.channelMessageService.openThread(message);
   }
+ 
 }
 
 }

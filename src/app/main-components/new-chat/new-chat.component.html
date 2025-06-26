@@ -1,0 +1,66 @@
+<section>
+
+
+
+
+
+
+<div class="main-chat-wrapper">
+    <div class="main-chat-header">
+        <div  class="message-group">
+            <div class="actual-group">
+                <img src="assets/img/tag.png" alt=""><span class="fontNunito"></span>
+            </div>
+            <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
+        </div>
+        <div  class="actual-group-members">
+            <div >
+                <div class="members-avatar-group" >
+                    <div class="avatar"
+                       >
+                    </div>
+                </div>
+            </div>
+
+            <div class="openDialog" >
+                <button type="button">
+                    <span class="fontNunito"></span>
+                </button>
+            </div>
+
+            <img class="imgaddMember"  src="assets/img/add_members.png"
+                alt="Mitglieder hinzufügen">
+        </div>
+
+    </div>
+
+    <div  class="main-chat-feed">
+    
+
+       </div>
+    <div class="input-wrapper">
+        <ng-container>
+       
+        </ng-container>
+        <div class="main-chat-message">
+            <textarea #messageBox  type="text" class="fontNunito"
+                placeholder="Nachricht an #" wrap="soft"></textarea>
+            <div class="message-icons">
+
+
+                <div #emojiComponent class="emojiWindow">
+         
+                </div>
+
+                <div>
+                    <img #emojiImg src="assets/img/emoji.png" alt="" >
+                    <img #atImg class="atImg" #addMemberIcon src="assets/img/at.png" alt=""
+                        >
+                </div>
+                <img  src="assets/img/send.png" alt="">
+            </div>
+        </div>
+    </div>
+    </div>
+
+</section>

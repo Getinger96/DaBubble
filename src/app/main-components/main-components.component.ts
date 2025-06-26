@@ -22,11 +22,12 @@ import { ChannelMessageService } from '../firebase-services/channel-message.serv
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
 import { ConversationService } from '../firebase-services/conversation.service';
 import { ResponsivService } from '../services/responsiv.service';
+import { NewChatComponent } from "./new-chat/new-chat.component";
 
 @Component({
   selector: 'app-main-components',
   standalone: true,
-  imports: [SearchBarComponent, ActiveUserComponent, RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, DirectMessageChatComponent, MainChatComponent],
+  imports: [SearchBarComponent, ActiveUserComponent, RouterModule, WorkspaceMenuComponent, ThreadComponent, HeaderComponent, ToggleWebspaceMenuComponent, NgIf, CommonModule, DirectMessageChatComponent, MainChatComponent, NewChatComponent],
   templateUrl: './main-components.component.html',
   styleUrl: './main-components.component.scss'
 })
@@ -45,6 +46,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
   showdirectmessage: boolean = false;
+  openNewChat:boolean = false
   actualUser: User[] = [];
   workspaceIsOpen :boolean = false
   private mediaQuery = window.matchMedia('(max-width: 768px)');
@@ -300,6 +302,10 @@ openWorkspaceMobile() {
   closeDirectChatAndChannelchat() {
     this.mainhelperService.openChannel = false;
     this.mainservice.showdirectmessage = false
+  }
+
+  toggleOpenNewChat(value: boolean) {
+    this.mainhelperService.openNewChat =true;
   }
 
 }
