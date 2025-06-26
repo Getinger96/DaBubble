@@ -167,12 +167,12 @@ $breakpoint-tablet: 768px;
 $breakpoint-phone: 460px;
 
 @media (max-width: $breakpoint-tablet) {
-    .like-icon, .check-icon, .react-icon {
+    .like-icon, .check-icon {
         display: none;
     }
 
     .edit-message{
-        left: 40px !important;
+        left: 85px !important;
     }
 
     .edit-buttons{
@@ -211,6 +211,11 @@ $breakpoint-phone: 460px;
 }
 
 @media (max-width: $breakpoint-phone) {
+    .edit-message-input{
+        width: 90% !important;
+        margin-right: 5%;
+    }
+
     .message-over{
         height: auto !important;
         flex-direction: column !important;
@@ -220,7 +225,8 @@ $breakpoint-phone: 460px;
 
     .message{
         img {
-            padding: 10px 30px 0 30px;
+            padding: 10px 16px 0 16px;
         }
     }
 }
+

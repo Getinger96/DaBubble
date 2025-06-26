@@ -19,6 +19,7 @@ import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { EditMessageComponent } from './edit-message/edit-message.component';
 import { MainHelperService } from '../../services/main-helper.service';
+import { ResponsivService } from '../../services/responsiv.service';
 @Component({
   selector: 'app-message',
   standalone: true,
@@ -84,7 +85,7 @@ export class MessageComponent implements OnChanges {
  editMessageId: string | null = null;
 
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService,
-    public mainHelperService: MainHelperService
+    public mainHelperService: MainHelperService, public responsiveService : ResponsivService
   ) {
 
   }

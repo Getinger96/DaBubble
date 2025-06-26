@@ -6,3 +6,11 @@ $font-secondary : 'Figtree', sans-serif;
       max-width: 1440px;
       flex-grow: 1;
     }
+
+  app-main-components{
+    @media (max-width:768px) {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;  
+    }
+  }

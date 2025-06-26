@@ -1,21 +1,37 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResponsivService {
 
-  private mediaQuery = window.matchMedia('(max-width: 768px)');
+  private mediaQueryTablet = window.matchMedia('(max-width: 768px)');
+  private mediaQueryMobile = window.matchMedia('(max-width: 480px)');
   isResponsiv: boolean = false;
+  isMobile: boolean = false;
   workspace: boolean = true;
 
-  constructor() {
-    this.handleMediaChange(this.mediaQuery);
-    this.mediaQuery.addEventListener('change', this.handleMediaChange.bind(this));
+  constructor(private appRef: ApplicationRef) {
+    this.handleMediaChange(this.mediaQueryTablet);
+    this.handleMobileChange(this.mediaQueryMobile);
+    this.mediaQueryTablet.addEventListener('change', this.handleMediaChange.bind(this));
+    this.mediaQueryMobile.addEventListener('change', this.handleMobileChange.bind(this));
   }
 
   handleMediaChange(e: MediaQueryListEvent | MediaQueryList) {
-    console.log('unter 768px');
+    this.isResponsiv = e.matches;
+    this.appRef.tick();
+    if (e.matches) {
+      console.log('unter 768px');
+    }
+  }
+
+  handleMobileChange(e: MediaQueryListEvent | MediaQueryList) {
+    this.isMobile = e.matches;
+    this.appRef.tick();
+    if (e.matches) {
+      console.log('unter 480px');
+    }
   }
 
 }

@@ -34,7 +34,7 @@
 
 
 
-        <img [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
+        <img  *ngIf="!responsiveService.isMobile || !editMessage"  [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details" *ngIf="!editMessage">
             <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }}
                     Uhr</span></div>
@@ -43,7 +43,7 @@
   <div *ngIf="(threadCount$ | async) as count">
     <div *ngIf="count > 0 && !isInThread" class="message-answered">
       <span class="message-answers" (click)="onReplyClick()">{{ count }} Antworten </span>
-      <span class="message-last-answer">Letzte Antwort {{ lastAnswer$ | async }}</span>
+      <span *ngIf="!responsiveService.isMobile" class="message-last-answer">Letzte Antwort {{ lastAnswer$ | async }}</span>
     </div>
   </div>
       <div *ngIf="!isAnswered" class="message-not-answered">
@@ -67,7 +67,7 @@
                 </ng-container>
 
             </div>
-      <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
+      <img *ngIf="!isInThread" #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
            src="assets/img/add_reaction40.png" alt="">
     </div>
 </div>
@@ -75,7 +75,7 @@
     <div *ngIf="editMessage" class="edit-message-input fontNunito">
         <textarea type="text" class="fontNunito" wrap="soft" rows="3" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
         <div class="controls-container">
-            <img src="assets/img/emoji.png" alt="">
+            <img #emojiImg (click)="onEmojiButtonClick($event)" src="assets/img/emoji.png" alt="">
             <div class="edit-buttons">
                 <button class="close-edit-message fontNunito" (click)="closeEditPopup()">Abbrechen</button>
                 <button class="save-edit-message fontNunito" (click)="saveEditedMessage()">Speichern</button>

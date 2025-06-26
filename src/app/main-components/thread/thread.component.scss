@@ -7,12 +7,20 @@
     flex-direction: column;
     transition: 0.2s;
 
+    @media (max-width:768px) {
+        border-radius: 0;
+    }
+
     .thread-header{
         height: 96px;
         box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        @media (max-width:768px) {
+            height: 60px;
+        }
 
         .thread-group{
             display: flex;
@@ -117,6 +125,11 @@
                 min-height: 25px;
                 padding-left: 33px;
                 padding-right: 33px;
+                
+                @media (max-width: 768px) {
+                    padding-left: 21px;
+                    padding-right: 21px;
+                }
 
                 span{
                     width: 35%;

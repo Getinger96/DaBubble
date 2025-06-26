@@ -68,7 +68,7 @@
                 [autoFocus]="true" [showPreview]="false" theme="dark" [perLine]="7"></emoji-mart>
         </div>
 
-        <img class="avatar-pic" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
+        <img *ngIf="!responsiveService.isMobile || !editMessage"  class="avatar-pic" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
             [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
         <div class="message-details" *ngIf="!editMessage">
             <div class="message-over"><span class="message-name" (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
@@ -79,12 +79,12 @@
             <div class="message-under">
                 <div *ngIf="isAnswered && threadCount > 0"  class="message-answered " >
                     <span *ngIf="threadCount >= 0" class="message-answers" (click)="onReplyClick()">{{ threadCount }} Antworten</span>
-                    <span class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
+                    <span *ngIf="!responsiveService.isMobile" class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
                 </div>
                 <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">
                     <!--<div class="reaction"><img src="assets/img/rocket.png" alt=""><span>1</span></div>
                     <div class="reaction"><img src="assets/img/check.png" alt=""><span>1</span></div>-->
-                    <img #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
+                    <img *ngIf="!isInThread" #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
                         src="assets/img/add_reaction40.png" alt="">
                 </div>
             </div>

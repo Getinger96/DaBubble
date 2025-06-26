@@ -188,3 +188,25 @@
 }
 
 
+ @media (max-width: 768px) {
+    .main-chat-wrapper{
+        border-radius: 0;
+    }
+        
+    }
+
+ @media (max-width: 480px) {
+    .intro{
+        padding: 0 16px;
+    }
+    .intro-head{
+        img{
+        width: 88px;
+        height: 88px;
+        }
+   
+    }
+        
+    }
+
+

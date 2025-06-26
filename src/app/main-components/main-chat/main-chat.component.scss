@@ -24,6 +24,8 @@
     background-color: #FFFFFF;
     border-radius: 30px;
     height: 100%;
+
+   
    
 
 }
@@ -185,6 +187,17 @@ padding: 38px 35px 40px 35px;
     }
 }
 
+ @media (max-width: 768px) {
+    .main-chat-wrapper{
+        border-radius: 0;
+    }
+        
+    }
 
+@media (max-width: 480px) {
+    .main-chat-header{
+        height: 78px;
+    }
+}
 
 

@@ -392,6 +392,9 @@
 
 @media (max-width: 768px) {
     .channel-menu {
+        width: unset;
+        border-radius: 0;
+
         .head {
             display: none;
         }
@@ -401,5 +404,12 @@
     }
     .new-chat {
         display: block;
+    }
+}
+
+@media (max-width:480px) {
+    .channel-menu{
+        padding: 16px 12px;
+        height: calc(100% - 32px);
     }
 }

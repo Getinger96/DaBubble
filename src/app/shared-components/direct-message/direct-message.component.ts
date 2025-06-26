@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ThreadComponent } from '../../main-components/thread/thread.component';
 import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { Message } from '../../interfaces/message.interface';
+import { ResponsivService } from '../../services/responsiv.service';
 @Component({
   selector: 'app-direct-message',
   standalone: true,
@@ -73,6 +74,7 @@ export class DirectMessageComponent {
     private messageservice: MessageService,
     private maincomponentservice: MainComponentService,
     private conversationservice: ConversationService,
+    public responsiveService: ResponsivService
 
   ) { }
 
@@ -229,7 +231,6 @@ export class DirectMessageComponent {
    */
   overwriteMessage() {
     this.toggleEditPopup();
-    this.showEditPopup = false;
     this.editMessage = true;
     this.editedMessageText = this.messageText;
   }
@@ -251,7 +252,7 @@ export class DirectMessageComponent {
         await deleteDoc(messageDocRef);
         this.conversationservice.updateConvMessageThreadCount(conversationId, conversationId);
         this.editMessage = false;
-        this.showEditPopup = false;
+        this.toggleEditPopup();
       }
     }
   }
@@ -276,7 +277,7 @@ export class DirectMessageComponent {
         await updateDoc(messageDocRef, { text: newText });
         this.messageText = newText;
         this.editMessage = false;
-        this.showEditPopup = false;
+        this.toggleEditPopup();
       }
     }
   }
