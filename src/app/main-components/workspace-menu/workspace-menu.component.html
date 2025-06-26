@@ -125,7 +125,7 @@
         <img src="assets/img/edit_square.svg" alt="edit" (click)="openNewChat()">
     </div>
     <div class="mobile">
-        <app-search-bar placeholderSearchBar="Gehe zu..." [mobile]="true" (toggleWorkspace)="openWorkspaceToNewCompoment()"></app-search-bar>
+        <app-search-bar placeholderSearchBar="Gehe zu..." [mobile]="true" (toggleWorkspace)="openWorkspaceToNewCompoment()"  (messageNavigated)="onMessageNavigatedFromMobile()"></app-search-bar>
     </div>
     <div class="channels">
         <div class="head-channels">

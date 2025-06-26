@@ -50,6 +50,7 @@ export class WorkspaceMenuComponent {
   channels: Channel[] = [];
   userId?: string;
    private actualUserSubscription!: Subscription;
+   @Output() messageNavigated = new EventEmitter<void>();
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
@@ -197,7 +198,10 @@ export class WorkspaceMenuComponent {
            this.toggleWorkspace.emit();
   }
 
-
+onMessageNavigatedFromMobile() {
+   console.log('WorkspaceComponent: forwarding messageNavigated');
+  this.messageNavigated.emit(); // ➜ sendet das Event nach außen zur MainComponent
+}
 
   openWorkspaceToNewCompoment() {
     this.toggleWorkspace.emit();

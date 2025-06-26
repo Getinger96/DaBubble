@@ -16,6 +16,7 @@ import { ConversationMessage } from '../../interfaces/conversation-message.inter
 import { ConversationService } from '../../firebase-services/conversation.service';
 import { Conversation } from '../../interfaces/conversation.interface';
 import { collection, getDocs } from '@angular/fire/firestore';
+import { MessageService } from '../../firebase-services/message.service';
 
 
 @Component({
@@ -45,10 +46,11 @@ export class SearchBarComponent {
   conversations: Conversation[] = []
   @Input() mobile: boolean = false;
   @Output() toggleWorkspace = new EventEmitter<void>();
+  @Output() messageNavigated = new EventEmitter<void>();
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
-    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router, private conversationserice: ConversationService
+    private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router, private conversationserice: ConversationService, private messageService: MessageService
   ) {
 
 
@@ -92,8 +94,8 @@ export class SearchBarComponent {
   }
 
 
-  toggleWorkspaceToChat () {
-           this.toggleWorkspace.emit();
+  toggleWorkspaceToChat() {
+    this.toggleWorkspace.emit();
   }
 
 
@@ -160,7 +162,7 @@ export class SearchBarComponent {
   }
 
   openDirectMessageChat(dm: ConversationMessage, close: boolean) {
-   this.mainservice.showdirectmessage = true
+    this.mainservice.showdirectmessage = true
     this.mainHelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(dm.name)
     this.mainservice.setDirectmessageuserId(dm.senderId)
@@ -168,116 +170,135 @@ export class SearchBarComponent {
     this.searchTerm = '';
     this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${dm.conversationmessageId}`);
     if (window.matchMedia('(max-width: 768px)').matches) {
-       this.toggleWorkspaceToChat();
+      this.toggleWorkspaceToChat();
     }
-  
+
   }
 
 
 
-navigateToDirectMessage(dm: ConversationMessage) {
-  if (!this.userId) return;
+  navigateToDirectMessage(dm: ConversationMessage) {
+    if (!this.userId) return;
 
-  // Finde die passende Conversation
-  const conversation = this.conversations.find(conv =>
-    conv.id?.includes(dm.id)
-  );
+    // Finde die passende Conversation
+    const conversation = this.conversations.find(conv =>
+      conv.id?.includes(dm.id)
+    );
 
-  if (!conversation) {
-    console.warn('Keine passende Konversation gefunden');
-    return;
-  }
-
-  // Versuche den anderen Nutzer zu finden, oder nimm dich selbst
-  let otherUserId = conversation.users.find(uid => uid !== this.userId);
-
-  if (!otherUserId) {
-    // Wenn kein anderer gefunden wurde, handelt es sich wohl um eine Selbst-Notiz
-    otherUserId = this.userId;
-  }
-
-  const user = this.allUsers.find(u => u.id === otherUserId);
-
-  if (!user) {
-    console.warn('User zu Direktnachricht nicht gefunden');
-    return;
-  }
-
-  this.opendirectmessage(
-    user.id!,
-    user.name,
-    false,
-    user.avatar,
-    user.email,
-    user.status
-  );
-  
-}
-
-opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
- this.mainservice.showdirectmessage = true
-  this.mainHelperService.openChannelSection(close)
-  this.mainservice.setDirectmessageuserName(name)
-  this.mainservice.setDirectmessageuserEmail(email)
-  this.mainservice.setDirectmessageuserAvatar(avatar)
-  this.mainservice.setDirectmessageuserStatus(status)
-  this.mainservice.setDirectmessageuserId(id)
-  this.mainservice.directmessaeUserIdSubject.next(id);
-  this.searchTerm = '';
-  this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
-   if (window.matchMedia('(max-width: 768px)').matches) {
-       this.toggleWorkspaceToChat();
+    if (!conversation) {
+      console.warn('Keine passende Konversation gefunden');
+      return;
     }
-}
 
+    // Versuche den anderen Nutzer zu finden, oder nimm dich selbst
+    let otherUserId = conversation.users.find(uid => uid !== this.userId);
 
-openChannel(isOpen: boolean, name: string, description: string, creator: string, id: string, members: Member[], date: string) {
-  this.mainHelperService.openChannelSection(isOpen);
-  this.channelservice.setChannelName(name);
-  this.channelservice.setChannelDescription(description);
-  this.channelservice.setChannelcreator(creator);
-  this.channelservice.setChannelId(id)
-  this.channelservice.setChannelMember(members);
-  this.channelservice.setChanneldate(date)
-   this.mainservice.showdirectmessage = false
-  this.userId = this.actualUser[0].id;
-  this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
-  this.channelMessageService.getChannelId(id)
-  this.searchTerm = '';
-  if (window.matchMedia('(max-width: 768px)').matches) {
-       this.toggleWorkspaceToChat();
+    if (!otherUserId) {
+      // Wenn kein anderer gefunden wurde, handelt es sich wohl um eine Selbst-Notiz
+      otherUserId = this.userId;
     }
-}
 
-navigateToMessage(message: Message) {
-  const userId = this.actualUser[0]?.id;
-  if (!userId) return;
+    const user = this.allUsers.find(u => u.id === otherUserId);
 
-  this.searchTerm = '';
-
-  const channel = this.channels.find(c => c.id === message.channelId);
-  if (!channel) return;
-
-  this.openChannel(
-    true,
-    channel.name,
-    channel.description,
-    channel.creator,
-    channel.id,
-    channel.members,
-    channel.date
-  );
-
-  // Thread öffnen, falls nötig
-  if (message.isThread && message.threadTo) {
-    const originalMessage = this.channelMessageService.allMessages.find(msg => msg.messageId === message.threadTo);
-    if (originalMessage) {
-      this.channelMessageService.openThread(originalMessage);
+    if (!user) {
+      console.warn('User zu Direktnachricht nicht gefunden');
+      return;
     }
-  } else if (message.isInThread) {
-    this.channelMessageService.openThread(message);
+
+    this.opendirectmessage(
+      user.id!,
+      user.name,
+      false,
+      user.avatar,
+      user.email,
+      user.status
+    );
+    if (dm.isThread && dm.threadTo) {
+      const originalMessage = this.conversationserice.allMessages.find(msg => msg['messageId'] === dm.threadTo);
+      if (originalMessage) {
+        this.conversationserice.openThread(originalMessage);
+
+      }
+    } else if (dm.isInThread) {
+      this.conversationserice.openThread(dm);
+
+    }
+    setTimeout(() => {
+      this.messageNavigated.emit();
+      console.log('SearchBar: messageNavigated emitted');
+    }, 0);
+
   }
- 
-}
+
+  opendirectmessage(id: string, name: string, close: boolean, avatar: number, email: string, status: string) {
+    this.mainservice.showdirectmessage = true
+    this.mainHelperService.openChannelSection(close)
+    this.mainservice.setDirectmessageuserName(name)
+    this.mainservice.setDirectmessageuserEmail(email)
+    this.mainservice.setDirectmessageuserAvatar(avatar)
+    this.mainservice.setDirectmessageuserStatus(status)
+    this.mainservice.setDirectmessageuserId(id)
+    this.mainservice.directmessaeUserIdSubject.next(id);
+    this.searchTerm = '';
+    this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      this.toggleWorkspaceToChat();
+    }
+  }
+
+
+  openChannel(isOpen: boolean, name: string, description: string, creator: string, id: string, members: Member[], date: string) {
+    this.mainHelperService.openChannelSection(isOpen);
+    this.channelservice.setChannelName(name);
+    this.channelservice.setChannelDescription(description);
+    this.channelservice.setChannelcreator(creator);
+    this.channelservice.setChannelId(id)
+    this.channelservice.setChannelMember(members);
+    this.channelservice.setChanneldate(date)
+    this.mainservice.showdirectmessage = false
+    this.userId = this.actualUser[0].id;
+    this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
+    this.channelMessageService.getChannelId(id)
+    this.searchTerm = '';
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      this.toggleWorkspaceToChat();
+    }
+  }
+
+  navigateToMessage(message: Message) {
+    const userId = this.actualUser[0]?.id;
+    if (!userId) return;
+
+    this.searchTerm = '';
+
+    const channel = this.channels.find(c => c.id === message.channelId);
+    if (!channel) return;
+
+    this.openChannel(
+      true,
+      channel.name,
+      channel.description,
+      channel.creator,
+      channel.id,
+      channel.members,
+      channel.date
+    );
+
+    // Thread öffnen, falls nötig
+    if (message.isThread && message.threadTo) {
+      const originalMessage = this.channelMessageService.allMessages.find(msg => msg.messageId === message.threadTo);
+      if (originalMessage) {
+        this.channelMessageService.openThread(originalMessage);
+
+      }
+    } else if (message.isInThread) {
+      this.channelMessageService.openThread(message);
+
+    }
+    setTimeout(() => {
+      this.messageNavigated.emit();
+      console.log('SearchBar: messageNavigated emitted');
+    }, 0);
+  }
 
 }
