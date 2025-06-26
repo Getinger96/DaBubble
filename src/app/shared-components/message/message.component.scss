@@ -309,6 +309,7 @@
             .message-not-answered {
                 display: flex;
                 align-items: center;
+                margin-right: 10px;
 
                 img {
                     width: 34px;
@@ -384,6 +385,7 @@ max-height: 80px !important;
 
 .reactions {
     display: flex;
+    gap: 8px;
 }
 
 .reactionsThread {
@@ -391,13 +393,13 @@ max-height: 80px !important;
     margin-top: 4px;
     max-width: 250px;
     flex-wrap: wrap;
+    
 }
 
 
 .reaction {
   position: relative;
   display: inline-block;
-  margin-right: 8px;
   cursor: pointer;
 }
 
@@ -436,6 +438,7 @@ max-height: 80px !important;
 
     .message-not-answered {
         justify-content: end;
+        margin-left: 10px;
     }
 
     .message-answered {
