@@ -22,7 +22,7 @@
 
         <app-workspace-menu (closeThread)="closeThreadView()" (messageNavigated)="checkWidth()" [userArray]="allUsers"
             [actualUser]="actualUser" (toggleWorkspace)="openWorkspaceMobile()" (toggleOpenNewChat)="toggleOpenNewChat($event)" ></app-workspace-menu>
-        <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage" [ngClass]="{ 'hidden': shouldHideRouter }" [ngClass]="{ 'hidden': this.mainhelperService.openNewChat }"  class="chat-area">
+        <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage" [ngClass]="{ 'hidden': shouldHideRouter || this.mainhelperService.openNewChat }" class="chat-area">
           
             <router-outlet></router-outlet>
         </main>

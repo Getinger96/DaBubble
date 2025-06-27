@@ -94,7 +94,7 @@
 
 
 
-        <div>
+        <div class="messages-container">
             <app-message *ngFor="let message of allMessages, index as i" [messageData]="message" [date]="message.sendAt"
                 [dateExists]="i > 0 && allMessages[i - 1].sendAt === message.sendAt" [avatarSrc]="message.avatar"
                 [name]="message.name" [time]="message.sendAtTime" [messageText]="message.messageText"

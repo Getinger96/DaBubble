@@ -1,5 +1,12 @@
 @import './../../../styles.scss';
 
+:host {
+  // styles here affect the <app-channel-chat> element itself
+  max-width: 1440px;
+  flex-grow: 1;
+  height: 100%;
+}
+
 .main-chat-wrapper {
     width: 100%;               /* Sicherstellen, dass der Wrapper die gesamte Breite einnimmt */
     height: 100%;              /* Volle Höhe */
@@ -7,7 +14,7 @@
     flex-direction: column;    /* Stellt sicher, dass die Inhalte vertikal gestapelt werden */
     background-color: white;
     border-radius: 30px;
-      
+    min-height: 0; // Add this to allow proper flex shrinking
 }
 
 .emojiWindow {
@@ -28,6 +35,16 @@
  max-height: 140px !important;
 }
 
+.messages-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; // or flex-start if you want messages at top
+    min-height: 200px; // Add a minimum height
+    height: 100%; // Try this
+    overflow-y: auto; // Allow scrolling if needed
+    padding: 16px 0;
+}
 
 .imgaddMember {
     cursor: pointer;
@@ -46,6 +63,7 @@
 
 .main-chat-header {
    
+    flex-shrink: 0; // Add this to prevent header from shrinking
     height: 96px;
     box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -115,12 +133,12 @@
 }
 
 .main-chat-feed {
-    flex-grow: 1;
-    height: calc(100% - 321px);
+    flex: 1; // Change from flex-grow: 1 to flex: 1
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto; // Change from scroll to auto
+    min-height: 0; // Add this
 }
 
 .input-wrapper {
@@ -406,7 +424,7 @@ app-show-user {
     padding: 16px;
     display: flex;
     gap: 16px;
-   
+   flex-shrink: 0; // Add this to prevent it from shrinking too much
 
 
 }

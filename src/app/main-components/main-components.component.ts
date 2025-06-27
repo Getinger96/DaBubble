@@ -297,8 +297,6 @@ openWorkspaceMobile() {
   }
 
 
-
-
   closeDirectChatAndChannelchat() {
     this.mainhelperService.openChannel = false;
     this.mainservice.showdirectmessage = false
