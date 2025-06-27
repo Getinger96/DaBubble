@@ -179,11 +179,11 @@
 
     display: flex;
     flex-direction: column;
-    width: 872px;
+    width: 100%;
     height: 539px;
-    background-color: aliceblue;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 0px;
+    background-color: white;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 30px;
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
     box-sizing: border-box;
@@ -217,6 +217,10 @@
     justify-content: center;
     align-items: center;
 
+    form{
+        width: 45%;
+    }
+
 
 }
 
@@ -227,16 +231,15 @@
 
 .input-channel-name-container {
 
-    width: 100%;
-    padding: 8px;
+    padding: 18px 20px;
     border-radius: 30px;
-    border: 1px solid #535AF1;
+    border: 1px solid #ADB0D9;
     display: flex;
 
     >input {
         width: 100%;
         border: none;
-        background-color: #f0f8ff;
+        background-color: white;
         &:focus {
             outline: none;
         }
@@ -245,15 +248,14 @@
 
 .input-channel-description-container {
 
-    width: 100%;
-    padding: 8px;
+    padding: 18px 20px;
     border-radius: 30px;
-    border: 1px solid #535AF1;
+    border: 1px solid #ADB0D9;
 
     >input {
         width: 100%;
         border: none;
-        background-color: #f0f8ff;
+        background-color: white;
         &:focus {
             outline: none;
         }
@@ -265,10 +267,10 @@
     justify-content: end;
 
     >input {
-        background-color: #535AF1;
-        border: 1px solid #535AF1;
+        background-color: #444DF2;
+        border: 1px solid #444DF2;
         color: white;
-        padding: 8px;
+        padding: 12px 25px;
         border-radius: 30px;
         font-size: 18px;
 
@@ -405,11 +407,33 @@
     .new-chat {
         display: block;
     }
+
+    .overlay-bg{
+        form{
+            width: 75%;
+        }
+    }
 }
 
 @media (max-width:480px) {
     .channel-menu{
         padding: 16px 12px;
         height: calc(100% - 32px);
+    }
+
+        .overlay-bg{
+        form{
+            width: 100%;
+            height: 100%;
+
+            .profile-dialog{
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            justify-content: unset;
+            padding: 40px 20px;
+            gap: 25px;
+            }
+        }
     }
 }
