@@ -1,45 +1,56 @@
 <section>
-
-
-
-
-
-
-<div class="main-chat-wrapper">
+  <div class="main-chat-wrapper">
     <div class="main-chat-header">
-        <h1> Neue Nachricht</h1>
-  
-        <div class="searchUserOrChannel">
-
-            <input [(ngModel)]="searchInput" (input)="searchChannelOrUser()" type="text" placeholder="An: #channel, oder @jemand oder E-Mail Adresse">
-
-        </div>
-
-
+      <h1>Neue Nachricht</h1>
+      <div class="searchUserOrChannel">
+        <input
+          [(ngModel)]="searchInput"
+          (input)="searchChannelOrUser()"
+          type="text"
+          placeholder="An: #channel, oder @jemand oder E-Mail Adresse"
+        />
+      </div>
     </div>
 
-    <div  class="main-chat-feed">
-    
+    <div *ngIf="searchInput" class="searchlist">
+      <div class="channel-container" *ngIf="filteredChannels.length > 0">
+        <div *ngFor="let channel of filteredChannels" class="channel-entry"  (click)="selectChannel(channel)">
+          #{{ channel.name }}
+        </div>
+      </div>
 
-       </div>
+      <div class="user-container" *ngIf="filteredUsers.length > 0">
+        <div *ngFor="let user of filteredUsers" class="user-entry" (click)="selectUser(user)">
+          {{ '@' + user.name }}
+        </div>
+      </div>
+
+      <div *ngIf="filteredUsers.length === 0 && filteredChannels.length === 0">
+        <p>Keine Ergebnisse gefunden.</p>
+      </div>
+    </div>
+
+
+
+    <div class="main-chat-feed">
+    </div>
+
     <div class="input-wrapper">
-     
-        <div class="main-chat-message">
-            <textarea #messageBox  type="text" class="fontNunito"
-                placeholder="Nachricht an #" wrap="soft"></textarea>
-            <div class="message-icons">
-
-
-               
-                <div>
-                    <img #emojiImg src="assets/img/emoji.png" alt="" >
-                    <img #atImg class="atImg" #addMemberIcon src="assets/img/at.png" alt=""
-                        >
-                </div>
-                <img  src="assets/img/send.png" alt="">
-            </div>
+      <div class="main-chat-message">
+        <textarea
+         [(ngModel)]="message.messageText"
+          class="fontNunito"
+            [placeholder]="'Nachricht an ' + (selectedReceiver || '...')"
+          wrap="soft"
+        ></textarea>
+        <div class="message-icons">
+          <div>
+            <img #emojiImg src="assets/img/emoji.png" alt="" />
+            <img #atImg class="atImg" #addMemberIcon src="assets/img/at.png" alt="" />
+          </div>
+          <img src="assets/img/send.png" alt="" (click)="saveMessage()" />
         </div>
+      </div>
     </div>
-    </div>
-
+  </div>
 </section>

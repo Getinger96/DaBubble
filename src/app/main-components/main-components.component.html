@@ -27,7 +27,7 @@
             <router-outlet></router-outlet>
         </main>
 
-        <app-new-chat class="chat-area" [ngClass]="{ 'hidden': !this.mainhelperService.openNewChat }"></app-new-chat>
+        <app-new-chat class="chat-area" (toggleOpenNewChatToMainCompoment)="openWorkspaceMobile()" [ngClass]="{ 'hidden': !this.mainhelperService.openNewChat }" ></app-new-chat>
     
         <app-direct-message-chat  [ngClass]="{ 'hidden': shouldHideRouter }"      #directMessage   id="directMessageChat" [hidden]="!this.mainservice.showdirectmessage"  *ngIf="this.mainservice.showdirectmessage"
             (openThread)="openThreadForConversationMessage($event)" [ngClass]="{ 'hidden': this.mainhelperService.openNewChat }" 

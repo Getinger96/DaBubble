@@ -1,5 +1,7 @@
 @import './../../../styles.scss';
-
+ * {
+    scrollbar-width: none !important;
+ }
 
 section {
     width: 100%;
@@ -41,10 +43,9 @@ section {
 
 .main-chat-header {
     height: 160px;
-    box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    padding: 25px;
+    padding: 20px 25px 5px;
     box-sizing: border-box;
 
 
@@ -74,6 +75,74 @@ section {
 
 }
         
+
+
+.searchlist {
+    margin-top: 0;
+    margin-left: 30px;
+    border: 1px solid #444DF2;
+    padding: 15px 20px;
+    border-radius: 30px;
+    width: 90%;
+    max-height: 400px;
+    overflow-y: scroll;
+
+}
+
+
+.channel-container{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+
+     > .channel-entry {
+      font-size: 20px;
+    font-weight: 400;
+    font-family: "Nunito", sans-serif;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 30px;
+    height: 25px;
+
+    &:hover {
+     background-color: rgba(60, 0, 255, 0.05);
+
+        }
+
+
+
+     }
+
+    }
+
+
+    .user-container{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+
+     > .user-entry {
+      font-size: 20px;
+    font-weight: 400;
+    font-family: "Nunito", sans-serif;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 30px;
+    height: 25px;
+
+    &:hover {
+     background-color: rgba(60, 0, 255, 0.05);
+
+        }
+
+
+
+     }
+
+    }
+
     
 
 
