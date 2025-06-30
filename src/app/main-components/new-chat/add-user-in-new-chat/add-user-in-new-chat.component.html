@@ -1,0 +1,20 @@
+<div class="addMemberDialog">
+  <ng-container *ngIf="allUsers.length > 0; else noMember">
+    <div class="users" *ngFor="let user of allUsers">
+      <div class="profile" (click)="addUserInChat(user)">
+        <span></span>
+        <div class="avatarImages">
+          <img class="avatar" src="assets/img/avatar_{{user.avatar}}.png" alt="avatar">
+          <img class="status" src="assets/img/{{user.status}}.svg" alt="status">
+        </div>
+        <div class="username">
+          <p class="name">{{ user.name }}</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noMember>
+    <p>Sie sind das einzige Mitglied</p>
+  </ng-template>
+</div>

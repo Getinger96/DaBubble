@@ -8,11 +8,12 @@
           (input)="searchChannelOrUser()"
           type="text"
           placeholder="An: #channel, oder @jemand oder E-Mail Adresse"
+          #inputFieldSearchbar
         />
       </div>
     </div>
 
-    <div *ngIf="searchInput" class="searchlist">
+    <div *ngIf="searchInput && showSearchBar" class="searchlist"   #searchList>
       <div class="channel-container" *ngIf="filteredChannels.length > 0">
         <div *ngFor="let channel of filteredChannels" class="channel-entry"  (click)="selectChannel(channel)">
           #{{ channel.name }}
@@ -40,15 +41,39 @@
         <textarea
          [(ngModel)]="message.messageText"
           class="fontNunito"
-            [placeholder]="'Nachricht an ' + (selectedReceiver || '...')"
+            [placeholder]="'Nachricht an ' +  (selectedReceiver || '...')"
           wrap="soft"
         ></textarea>
+
+
+            <ng-container *ngIf="toggleUserInChat">
+        <app-add-user-in-new-chat #addUserCompoment [allUsers]="allUsers"  (memberSelected)="insertUserIntoTextarea($event)"></app-add-user-in-new-chat>
+         </ng-container>     
+
+
         <div class="message-icons">
+
+                 <div #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
+                    <emoji-mart set="apple" title="Pick your emoji…" emoji="point_up" [totalFrequentLines]="2"
+                        [showSingleCategory]="true" [emojiTooltip]="false" [autoFocus]="true" [showPreview]="true"
+                        theme="dark" [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
+                </div>
+
+
+
+
           <div>
-            <img #emojiImg src="assets/img/emoji.png" alt="" />
-            <img #atImg class="atImg" #addMemberIcon src="assets/img/at.png" alt="" />
+            <img #emojiImg src="assets/img/emoji.svg" alt=""  (click)="toggleEmojiBar()"
+                    (mouseenter)="emojiImg.src='assets/img/emoji_purple.svg'"
+                    (mouseleave)="emojiImg.src='assets/img/emoji.svg'">
+            <img #atImg class="atImg" #addMemberIcon src="assets/img/at.svg" alt="" (click)="openDialogAddMember()"
+                        (mouseenter)="atImg.src='assets/img/at_purple.svg'"
+                        (mouseleave)="atImg.src='assets/img/at.svg'">
+            
           </div>
-          <img src="assets/img/send.png" alt="" (click)="saveMessage()" />
+          <img #send src="assets/img/send.svg" alt="" (click)="saveMessage()"
+                (mouseenter)="send.src='assets/img/send_hover.svg'"
+                (mouseleave)="send.src='assets/img/send.svg'">
         </div>
       </div>
     </div>
