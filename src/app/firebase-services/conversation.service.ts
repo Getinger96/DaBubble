@@ -1,5 +1,5 @@
-import { inject, Injectable, OnDestroy } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where, QuerySnapshot, DocumentData, deleteDoc, getDoc, docData } from '@angular/fire/firestore';
+import { inject, Injectable } from '@angular/core';
+import {addDoc,collection,doc,Firestore,getDocs,onSnapshot,orderBy,query,updateDoc,where,QuerySnapshot,DocumentData,deleteDoc,getDoc,docData} from '@angular/fire/firestore';
 import { Conversation } from '../interfaces/conversation.interface';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
 import { BehaviorSubject, from, timestamp } from 'rxjs';
@@ -12,16 +12,19 @@ import { JsonDataService } from './json-data.service';
   providedIn: 'root',
 })
 
-export class ConversationService implements OnDestroy {
-  private messageUnsubscribers: (() => void)[] = [];
+export class ConversationService {
 
+  firestore: Firestore = inject(Firestore);
   emojiCountsList: { [emoji: string]: number } = {};
-  private allConversationsSubject = new BehaviorSubject<Conversation[]>([]);
-  public allConversations$ = this.allConversationsSubject.asObservable();
+  allConversations: Conversation[] = [];
+  allMessages: ConversationMessage[] = []; // Add this array to store all messages
   conversationId: string | undefined;
-  public allConversationMessagesSubject = new BehaviorSubject<ConversationMessage[]>([]);
-  public allMessages$ = this.allConversationMessagesSubject.asObservable();
-  public allMessages: ConversationMessage[] = [];
+
+  public allConversationMessagesSubject = new BehaviorSubject<
+    ConversationMessage[]
+  >([]);
+  allMessages$ = this.allConversationMessagesSubject.asObservable();
+
   private selectedThreadMessageSubject =
     new BehaviorSubject<ConversationMessage | null>(null);
   selectedThreadMessage$ = this.selectedThreadMessageSubject.asObservable();
@@ -35,7 +38,7 @@ export class ConversationService implements OnDestroy {
   lastAnswer: ConversationMessage | null = null;
   messageId?: string;
 
-  constructor(private mainservice: MainComponentService, private jsonService: JsonDataService, public firestore: Firestore,) {
+  constructor(private mainservice: MainComponentService, private jsonService: JsonDataService) {
     this.observeSelectedUserChanges();
     if (this.conversationId) {
       this.getInitialConvMessages(this.conversationId);
@@ -50,7 +53,7 @@ export class ConversationService implements OnDestroy {
    */
   getConversationById(conversationId: string): Observable<Conversation | undefined> {
     if (!conversationId) return of(undefined);
-    const conversationDocRef = doc(this.firestore, `conversations/${conversationId}`
+    const conversationDocRef = doc(this.firestore,`conversations/${conversationId}`
     );
     return docData(conversationDocRef).pipe(
       map((c) => (c ? new Conversation(c as Conversation) : undefined))
@@ -117,38 +120,48 @@ export class ConversationService implements OnDestroy {
    * @returns A promise that resolves to the conversation ID.
    */
   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
-  const convRef = collection(this.firestore, 'conversation');
+    const convRef = collection(this.firestore, 'conversation');
+    const snapshot = await getDocs(query(convRef, where('user', 'array-contains', currentUserId)));
 
-  // 1. Nutzer-IDs alphabetisch sortieren für Konsistenz
-  const sortedUsers = [currentUserId, partnerUserId].sort();
+    let conversationId: string | null = null;
 
-  // 2. Alle vorhandenen Conversations holen
-  const snapshot = await getDocs(convRef);
+    snapshot.forEach((docSnap) => {
+      const users = docSnap.data()['user'];
+      const id = docSnap.id;
 
-  // 3. Prüfen, ob Conversation mit genau diesen beiden Nutzern bereits existiert
-  const existingConv = snapshot.docs.find((docSnap) => {
-    const users = docSnap.data()['user'];
-    return (
-      Array.isArray(users) &&
-      users.length === 2 &&
-      [...users].sort().toString() === sortedUsers.toString()
-    );
-  });
+      if (currentUserId === partnerUserId) {
+        // Prüfen auf doppelten Self-Chat-Eintrag
+        if (
+          users.length === 2 &&
+          users[0] === currentUserId &&
+          users[1] === partnerUserId
+        ) {
+          conversationId = id;
+        }
+      } else {
+        // Normalfall: Zwei verschiedene User
+        if (
+          users.includes(currentUserId.trim()) &&
+          users.includes(partnerUserId.trim()) &&
+          users.length === 2
+        ) {
+          conversationId = id;
+        }
+      }
+    });
 
-  // 4. Falls vorhanden → ID zurückgeben
-  if (existingConv) {
-    this.conversationId = existingConv.id;
-    return existingConv.id;
+    // Falls keine passende Konversation gefunden wurde, neue anlegen
+    if (!conversationId) {
+      const newConv = await addDoc(convRef, {
+        user: [currentUserId, partnerUserId], // funktioniert auch für [id, id]
+      });
+      conversationId = newConv.id;
+    }
+
+    this.conversationId = conversationId;
+    return conversationId;
   }
 
-  // 5. Falls nicht vorhanden → neue Conversation anlegen
-  const newConv = await addDoc(convRef, {
-    user: sortedUsers, // konsistente Speicherung
-  });
-
-  this.conversationId = newConv.id;
-  return newConv.id;
-}
   /**
    * Retrieves the initial set of messages for a given conversation, ordered by timestamp.
    * 
@@ -161,7 +174,7 @@ export class ConversationService implements OnDestroy {
    * - The `isOwn` property is set based on whether the message was sent by the current user.
    */
   async getInitialConvMessages(conversationId: string): Promise<any[]> {
-    const convMessagesRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+    const convMessagesRef = collection(this.firestore,'conversation',conversationId,'messages');
     const q = query(convMessagesRef, orderBy('timestamp'));
     const snapshot = await getDocs(q);
     const convMessages: any[] = [];
@@ -208,7 +221,7 @@ export class ConversationService implements OnDestroy {
    * @returns A function to unsubscribe from the Firestore listener.
    */
   listenToMessages(conversationId: string, callback: (convMessages: ConversationMessage[]) => void): () => void {
-    const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+    const convMessageRef = collection(this.firestore,'conversation',conversationId,'messages');
     const q = query(convMessageRef, orderBy('timestamp'));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -267,7 +280,7 @@ export class ConversationService implements OnDestroy {
    * After the document is created, it updates the document with its own generated ID as `conversationmessageId`.
    */
   async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
-    const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+    const convMessageRef = collection(this.firestore, 'conversation', conversationId,'messages');
     const docRef = await addDoc(convMessageRef, {
       id: conversationId,
       senderId,
@@ -451,7 +464,7 @@ export class ConversationService implements OnDestroy {
     };
 
     if (this.conversationId) {
-      const convMessageRef = collection(this.firestore, 'conversation', this.conversationId, 'messages');
+      const convMessageRef = collection(this.firestore,'conversation',this.conversationId,'messages');
       const docRef = await addDoc(convMessageRef, threadAnswer);
       threadAnswer.id = docRef.id;
       this.updateThreadAnswers(threadToId);
@@ -570,7 +583,7 @@ export class ConversationService implements OnDestroy {
     conversationmessageaId: string,
     count: number
   ) {
-    const messageDocRef = doc(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId);
+    const messageDocRef = doc(this.firestore,'conversation', conversationId, 'messages', conversationmessageaId);
     const messageDocSnap = await getDoc(messageDocRef);
 
     this.emojiCountsList = {};
@@ -667,7 +680,7 @@ export class ConversationService implements OnDestroy {
     };
 
     try {
-      const convMessageRef = collection(this.firestore, 'conversation', this.conversationId, 'messages');
+      const convMessageRef = collection(this.firestore,'conversation',this.conversationId,'messages');
       const docRef = await addDoc(convMessageRef, threadAnswer);
       await updateDoc(docRef, { conversationmessageId: docRef.id });
     } catch (error) {
@@ -735,102 +748,55 @@ export class ConversationService implements OnDestroy {
    * 
    * @returns {Promise<void>} A promise that resolves when all messages have been loaded and emitted.
    */
-  loadAllDirectMessagesLive(): void {
+  async loadAllDirectMessages(): Promise<void> {
     const conversationsRef = collection(this.firestore, 'conversation');
+    const snapshot = await getDocs(conversationsRef);
 
-    // Haupt-Listener für alle Conversations
-    const convUnsub = onSnapshot(
-      conversationsRef,
-      (conversationSnapshot) => {
-        this.clearMessageListeners(); // Alte Message-Listener entfernen
-        this.allMessages = [];        // Messages zurücksetzen
+    let allMessages: ConversationMessage[] = [];
 
-        const conversations: Conversation[] = conversationSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            users: data['user'], // 🔁 hier umbenennen!
-                         // alle anderen Felder wie vorher
-          } as Conversation;
-        });
+    for (const convDoc of snapshot.docs) {
+      const convId = convDoc.id;
+      const messagesRef = collection(this.firestore, 'conversation', convId, 'messages');
+      const messagesSnapshot = await getDocs(messagesRef);
 
-        this.allConversationsSubject.next(conversations); // ✅ Conversations updaten
+      messagesSnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const isOwn = data['senderId'] === this.getActualUser();
 
-        // Jetzt für jede Conversation auch die Messages laden
-        conversationSnapshot.forEach((conversationDoc) => {
-          const convId = conversationDoc.id;
-          const messagesRef = collection(this.firestore, 'conversation', convId, 'messages');
+        const message: ConversationMessage = {
+          id: data['id'],
+          name: data['name'],
+          avatar: data['avatar'],
+          threadCount: data['threadCount'],
+          senderId: data['senderId'],
+          text: data['text'],
+          timestamp: data['timestamp'],
+          isThread: data['isThread'],
+          isInThread: data['isInThread'],
+          threadTo: data['threadTo'],
+          isOwn: isOwn,
+          conversationmessageId: docSnap.id,
+          isAnswered: data['isAnswered'],
+        };
 
-          const msgUnsub = onSnapshot(
-            messagesRef,
-            (messagesSnapshot) => {
-              // Entferne alte Messages dieser Conversation
-              this.allMessages = this.allMessages.filter(msg => msg['conversationId'] !== convId);
+        if (!message.isThread) {
+          allMessages.push(message);
+        }
+      });
+    }
 
-              const newMessages: ConversationMessage[] = [];
+    allMessages.sort((a, b) => {
+      const timeA = this.isTimestamp(a.timestamp)
+        ? a.timestamp.toMillis()
+        : new Date(a.timestamp).getTime();
 
-              messagesSnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const isOwn = data['senderId'] === this.getActualUser();
+      const timeB = this.isTimestamp(b.timestamp)
+        ? b.timestamp.toMillis()
+        : new Date(b.timestamp).getTime();
 
-                const message: ConversationMessage = {
-                  id: data['id'],
-                  name: data['name'],
-                  avatar: data['avatar'],
-                  threadCount: data['threadCount'],
-                  senderId: data['senderId'],
-                  text: data['text'],
-                  timestamp: data['timestamp'],
-                  isThread: data['isThread'],
-                  isInThread: data['isInThread'],
-                  threadTo: data['threadTo'],
-                  isOwn: isOwn,
-                  conversationId: convId,
-                  conversationmessageId: docSnap.id,
-                  isAnswered: data['isAnswered'],
-                };
+      return timeA - timeB;
+    });
 
-                newMessages.push(message);
-              });
-
-              // Neue Messages hinzufügen und sortieren
-              this.allMessages = [...this.allMessages, ...newMessages];
-
-              this.allMessages.sort((a, b) => {
-                const timeA = this.isTimestamp(a.timestamp)
-                  ? a.timestamp.toMillis()
-                  : new Date(a.timestamp).getTime();
-                const timeB = this.isTimestamp(b.timestamp)
-                  ? b.timestamp.toMillis()
-                  : new Date(b.timestamp).getTime();
-                return timeA - timeB;
-              });
-
-              // ✅ Subject aktualisieren
-              this.allConversationMessagesSubject.next([...this.allMessages]);
-            },
-            (err) => {
-              console.error(`❌ Fehler beim Messages-Snapshot für ${convId}:`, err);
-            }
-          );
-
-          this.messageUnsubscribers.push(msgUnsub);
-        });
-      },
-      (error) => {
-        console.error('❌ Fehler beim Conversation-Snapshot:', error);
-      }
-    );
-
-    this.messageUnsubscribers.push(convUnsub);
+    this.allConversationMessagesSubject.next(allMessages);
   }
-  private clearMessageListeners(): void {
-    this.messageUnsubscribers.forEach(unsub => unsub());
-    this.messageUnsubscribers = [];
-  }
-  ngOnDestroy(): void {
-    this.clearMessageListeners();
-  }
-
-
 }

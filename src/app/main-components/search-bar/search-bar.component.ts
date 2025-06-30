@@ -47,7 +47,6 @@ export class SearchBarComponent {
   @Input() mobile: boolean = false;
   @Output() toggleWorkspace = new EventEmitter<void>();
   @Output() messageNavigated = new EventEmitter<void>();
-  private subscription!: Subscription;
 
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
@@ -59,24 +58,6 @@ export class SearchBarComponent {
 
 
   async ngOnInit(): Promise<void> {
-    console.log('ngOnInit aufgerufen!');
-
-    this.subscription = this.conversationserice.allConversationMessagesSubject.subscribe((messages) => {
-      this.allMessages = messages;
-      this.filterResults(); // Immer neu filtern wenn neue Messages kommen
-    });
-
-    this.conversationserice.allConversations$.subscribe((convs) => {
-      this.conversations = convs;
-      console.log('Conversations:', this.conversations);
-    });
-
-    this.conversationserice.loadAllDirectMessagesLive();
-
-
-
-
-
 
 
 
@@ -102,6 +83,13 @@ export class SearchBarComponent {
       this.channelMessages = messages;
     });
 
+    this.conversationserice.loadAllDirectMessages();
+    this.conversationserice.allMessages$.subscribe(messages => {
+      this.directMessages = messages;
+    });
+    const convRef = collection(this.conversationserice.firestore, 'conversation');
+    const snapshot = await getDocs(convRef);
+    this.conversations = snapshot.docs.map(docSnap => new Conversation(docSnap.data()));
 
   }
 
@@ -156,7 +144,7 @@ export class SearchBarComponent {
         msg.messageText?.toLowerCase().includes(term)
       );
 
-      this.filteredDirectMessages = this.allMessages.filter(msg =>
+      this.filteredDirectMessages = this.directMessages.filter(msg =>
         msg.text?.toLowerCase().includes(term)
       );
     }
@@ -164,7 +152,14 @@ export class SearchBarComponent {
   }
 
 
+  // Load all messages in conversation
+  loadAllMessageInConversation() {
+    this.conversationserice.allMessages$.subscribe((messages) => {
+      this.allMessages = messages;
+    });
+    console.log('this.allMessages', this.allMessages);
 
+  }
 
   openDirectMessageChat(dm: ConversationMessage, close: boolean) {
     this.mainservice.showdirectmessage = true
@@ -218,15 +213,14 @@ export class SearchBarComponent {
       user.email,
       user.status
     );
-    if (dm.threadTo) {
+    if (dm.isThread && dm.threadTo) {
       const originalMessage = this.conversationserice.allMessages.find(msg => msg['messageId'] === dm.threadTo);
-      if (!originalMessage) {
-
-        this.conversationserice.openThread(dm);
-      } else {
+      if (originalMessage) {
         this.conversationserice.openThread(originalMessage);
-      }
 
+      }
+    } else if (dm.isInThread) {
+      this.conversationserice.openThread(dm);
 
     }
     setTimeout(() => {
@@ -305,9 +299,6 @@ export class SearchBarComponent {
       this.messageNavigated.emit();
       console.log('SearchBar: messageNavigated emitted');
     }, 0);
-  }
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
   }
 
 }
