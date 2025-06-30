@@ -51,7 +51,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   workspaceIsOpen :boolean = false
   private mediaQuery = window.matchMedia('(max-width: 768px)');
   constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
-
+  
   }
   selectedThreadMessage: Message | null = null;
   selectedConvThreadMessage: ConversationMessage | null = null;
@@ -59,6 +59,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void { // lädt alle user !!!
+    this.checkWidth();
     this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
@@ -80,7 +81,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.initchanelSubscription();
     this.initRouterSubscription();
     this.loadActualUser();
-    this.checkWidth();
+    
   }
 
 

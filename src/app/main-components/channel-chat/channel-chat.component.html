@@ -126,11 +126,17 @@
                 </div>
 
                 <div>
-                    <img #emojiImg src="assets/img/emoji.png" alt="" (click)="toggleEmojiBar()">
-                    <img #atImg class="atImg" #addMemberIcon src="assets/img/at.png" alt=""
-                        (click)="openDialogAddMember()">
+                    <img #emojiImg src="assets/img/emoji.svg" alt="" (click)="toggleEmojiBar()"
+                    (mouseenter)="emojiImg.src='assets/img/emoji_purple.svg'"
+                    (mouseleave)="emojiImg.src='assets/img/emoji.svg'">
+                    <img #atImg class="atImg" #addMemberIcon src="assets/img/at.svg" alt=""
+                        (click)="openDialogAddMember()"
+                        (mouseenter)="atImg.src='assets/img/at_purple.svg'"
+                        (mouseleave)="atImg.src='assets/img/at.svg'">
                 </div>
-                <img (click)="sendmessage()" src="assets/img/send.png" alt="">
+                <img #sendChannel (click)="sendmessage()" src="assets/img/send.svg" alt=""
+                (mouseenter)="sendChannel.src='assets/img/send_hover.svg'"
+                (mouseleave)="sendChannel.src='assets/img/send.svg'">
             </div>
         </div>
     </div>
