@@ -61,10 +61,14 @@
                         [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
                         </div> 
                 <div>
-                   <img src="assets/img/emoji.png" alt="" (click)="onEmojiButtonClick($event)">
+                   <img #directEmoji src="assets/img/emoji.svg" alt="" (click)="onEmojiButtonClick($event)"
+                   (mouseenter)="directEmoji.src='assets/img/emoji_purple.svg'"
+                   (mouseleave)="directEmoji.src='assets/img/emoji.svg'">
                    
                 </div>
-                <img (click)="addConversationMessage()" src="assets/img/send.png" alt="">
+                <img #sendDirect (click)="addConversationMessage()" src="assets/img/send.svg" alt=""
+                (mouseenter)="sendDirect.src='assets/img/send_hover.svg'"
+                (mouseleave)="sendDirect.src='assets/img/send.svg'">
             </div>
         </div>
     </div>

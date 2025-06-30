@@ -129,13 +129,19 @@
     </div>
     <div class="channels">
         <div class="head-channels">
-            <div class="head-left">
-                <img class="toggle-channel-menu" [ngClass]="{ 'openArrow': !openChannels }" (click)="toggleChannels()" src="assets/img/arrow_drop_down.svg"
+            <div class="head-left"
+                (mouseenter)="chCircle.src='assets/img/workspaces_purple.svg'; toggleChannel.src='assets/img/arrow_drop_down_purple.svg'"
+                (mouseleave)="chCircle.src='assets/img/workspaces.svg'; toggleChannel.src='assets/img/arrow_drop_down.svg'" 
+                (click)="toggleChannels()">
+                <img #toggleChannel class="toggle-channel-menu" [ngClass]="{ 'openArrow': !openChannels }" src="assets/img/arrow_drop_down.svg"
                     alt="open-channels">
-                <img src="assets/img/workspaces.svg" alt="workspaces">
+                <img #chCircle src="assets/img/workspaces.svg" alt="workspaces">
                 <h4>Channels</h4>
             </div>
-            <div class="add-img" (click)="openOverlay()"><img src="assets/img/add.svg" alt="add"></div>
+            <div  class="add-img" (click)="openOverlay()"
+            (mouseenter)="addCh.src='assets/img/add_purple.svg'"
+            (mouseleave)="addCh.src='assets/img/add.svg'">
+                <img #addCh src="assets/img/add.svg" alt="add"></div>
         </div>
         <nav *ngIf="openChannels" class="channels-menu">
             <ng-container *ngFor="let channel of channels">
@@ -146,16 +152,21 @@
                         </span></p>
                 </div>
             </ng-container>
-            <div (click)="openOverlay()" class="add-channel"><img src="assets/img/add_circle.svg"
+            <div (click)="openOverlay()" class="add-channel"
+            (mouseenter)="createChannel.src='assets/img/add_circle_purple.svg'"
+            (mouseleave)="createChannel.src='assets/img/add_circle.svg'">
+                <img #createChannel src="assets/img/add_circle.svg"
                     alt="add-channel">Channel hinzufügen</div>
         </nav>
     </div>
     <div class="direct-messages-menu">
-        <div class="head-direct-messages">
-            <img class="toggle-direct-messages-menu" (click)="toggleDirectMessages()" [ngClass]="{ 'openArrow': !openDirectMessages }"
+        <div class="head-direct-messages" (click)="toggleDirectMessages()">
+            <img #toggleDirect class="toggle-direct-messages-menu"  [ngClass]="{ 'openArrow': !openDirectMessages }"
                 src="assets/img/arrow_drop_down.svg" alt="open-direct-messages">
-            <div class="headline-direct-messages">
-                <img src="assets/img/account_circle.svg" alt="account-icon">
+            <div class="headline-direct-messages"
+                (mouseenter)="circle.src='assets/img/account_circle_purple.svg'; toggleDirect.src='assets/img/arrow_drop_down_purple.svg'"
+                (mouseleave)="circle.src='assets/img/account_circle.svg'; toggleDirect.src='assets/img/arrow_drop_down.svg'">
+                <img #circle src="assets/img/account_circle.svg" alt="account-icon">
                 <h4>Direktnachrichten</h4>
             </div>
         </div> 
