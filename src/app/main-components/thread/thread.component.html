@@ -107,10 +107,17 @@
                 <div class="imgChat">
 
                 <div>
-                    <img #addEmojiImg src="assets/img/emoji.png" alt="emoji" (click)="openEmojiWindow()">
+                    <img #addEmojiImg src="assets/img/emoji.svg" alt="emoji" (click)="openEmojiWindow()"
+                               (mouseenter)="addEmojiImg.src='assets/img/emoji_purple.svg'"
+                               (mouseleave)="addEmojiImg.src='assets/img/emoji.svg'">
                 </div>
-                    <img *ngIf="selectedMessage" src="assets/img/send.png" alt="send" (click)="sendReply()">
-                    <img *ngIf="selectedConvMessage" src="assets/img/send.png" alt="send" (click)="sendConvReply()">
+                    <img #send *ngIf="selectedMessage" src="assets/img/send.svg" alt="send" (click)="sendReply()"
+                                            (mouseenter)="send.src='assets/img/send_hover.svg'"
+                                            (mouseleave)="send.src='assets/img/send.svg'">
+                    
+                    <img #sendConvMessage *ngIf="selectedConvMessage" src="assets/img/send.svg" alt="send" (click)="sendConvReply()"
+                                            (mouseenter)="sendConvMessage.src='assets/img/send_hover.svg'"
+                                            (mouseleave)="sendConvMessage.src='assets/img/send.svg'">
 
 
 
