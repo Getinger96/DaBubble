@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,HostListener, AfterViewInit,ViewChild,ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { SearchBarComponent } from '../main-components/search-bar/search-bar.component';
 import { ActiveUserComponent } from './active-user/active-user.component';
 import { WorkspaceMenuComponent } from './workspace-menu/workspace-menu.component';
@@ -16,7 +16,7 @@ import { User } from '../interfaces/user.interface';
 import { MessageService } from '../firebase-services/message.service';
 import { Message } from '../interfaces/message.interface';
 import { MainComponentService } from '../firebase-services/main-component.service';
-import { Router, NavigationStart,RouterModule } from '@angular/router';
+import { Router, NavigationStart, RouterModule } from '@angular/router';
 import { DirectMessageChatComponent } from "./direct-message-chat/direct-message-chat.component";
 import { ChannelMessageService } from '../firebase-services/channel-message.service';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
@@ -46,16 +46,18 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   showChanelSection: boolean = false
   showThreadWindow: boolean = false;
   showdirectmessage: boolean = false;
-  openNewChat:boolean = false
+  openNewChat: boolean = false
   actualUser: User[] = [];
-  workspaceIsOpen :boolean = false
-  private mediaQuery = window.matchMedia('(max-width: 768px)');
-  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
-  
-  }
+  workspaceIsOpen: boolean = false
   selectedThreadMessage: Message | null = null;
   selectedConvThreadMessage: ConversationMessage | null = null;
+  @ViewChild('threadRef') threadRef?: ElementRef;
+  private mediaQuery = window.matchMedia('(max-width: 768px)');
+  constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
+
+  }
   
+
 
 
   ngOnInit(): void { // lädt alle user !!!
@@ -69,40 +71,39 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       }
     });
     //lädt der aktuell clicked Message
-    if (this.mainservice.showdirectmessage) {
-      this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
-        this.selectedConvThreadMessage = message;
-      })
-    } else {
-      this.channemessageService.selectedThreadMessage$.subscribe((message) => {
-        this.selectedThreadMessage = message;
-      });
-    }
+    this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
+      this.selectedConvThreadMessage = message;
+      console.log('[DirectMessage] Thread wurde gesetzt:', message);
+    });
+    this.channemessageService.selectedThreadMessage$.subscribe((message) => {
+      this.selectedThreadMessage = message;
+      console.log('[Channel] Thread wurde gesetzt:', message);
+    });
     this.initchanelSubscription();
     this.initRouterSubscription();
     this.loadActualUser();
-    
+
   }
 
 
 
- @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.checkWidth()
   }
 
 
+ 
 
+  get shouldHideRouter() {
+    const workspace = document.querySelector('app-workspace-menu');
+    if (window.matchMedia('(max-width: 768px)').matches && !workspace!.classList.contains('closed')) {
+      return true
+    } else {
+      return false
+    }
 
-get shouldHideRouter() {
-  const workspace = document.querySelector('app-workspace-menu');
- if (window.matchMedia('(max-width: 768px)').matches && !workspace!.classList.contains('closed')) {
- return true
- } else {
-  return false
- }
-
-}
+  }
 
   openThreadForConversationMessage(message: ConversationMessage): void {
         console.log('Event empfangen:', message);
@@ -182,71 +183,71 @@ get shouldHideRouter() {
 
 
   openChannelAndDirectMessage() {
-  const routerWrapper = document.getElementById('routerOutletWrapper');
-  const directMessage = document.getElementById('directMessageChat');
-  
+    const routerWrapper = document.getElementById('routerOutletWrapper');
+    const directMessage = document.getElementById('directMessageChat');
 
-  if (routerWrapper) {
-    routerWrapper!.classList.remove('hidden');
-  }
 
-  if (directMessage) {
+    if (routerWrapper) {
+      routerWrapper!.classList.remove('hidden');
+    }
+
+    if (directMessage) {
       directMessage!.classList.remove('hidden');
-  }
+    }
   }
 
 
   checkWidthWorkspace() {
-      const width = window.innerWidth
+    const width = window.innerWidth
     if (!this.mainservice.showdirectmessage) {
-     const main = document.querySelector('main');
-        if (window.matchMedia('(max-width: 768px)').matches) {
-          main!.classList.add('hidden');
-        }
+      const main = document.querySelector('main');
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        main!.classList.add('hidden');
+      }
     }
-    
+
     if (this.mainservice.showdirectmessage) {
-    const directMessage = document.querySelector('app-direct-message-chat')
-        if (window.matchMedia('(max-width: 768px)').matches) {
-          directMessage!.classList.add('hidden');
-        }
+      const directMessage = document.querySelector('app-direct-message-chat')
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        directMessage!.classList.add('hidden');
+      }
     }
-  
+
   }
 
   closeThreadViewAfterWorkspaceIsOpen() {
-    MainComponentsComponent.toggleThreads();
+    this.showThreadWindow = false;
     this.mainservice.showThreadWindow = false
     this.selectedThreadMessage = null;
     this.selectedConvThreadMessage = null;
   }
 
 
-openWorkspaceMobile() {
+  openWorkspaceMobile() {
     setTimeout(() => {
-  const workspace = document.querySelector('app-workspace-menu');
-  const directMessage = document.getElementById('directMessageChat');
-    const routerWrapper = document.getElementById('routerOutletWrapper');
-  const workspaceIsNowClosed = workspace?.classList.toggle('closed');
-  this.responsivService.workspace = true;
+      const workspace = document.querySelector('app-workspace-menu');
+      const directMessage = document.getElementById('directMessageChat');
+      const routerWrapper = document.getElementById('routerOutletWrapper');
+      const workspaceIsNowClosed = workspace?.classList.toggle('closed');
+      this.responsivService.workspace = true;
 
-  if (workspaceIsNowClosed) {
-    directMessage?.classList.remove('hidden');
-    routerWrapper?.classList.remove('hidden');
-  } else {
-    directMessage?.classList.add('hidden');
-    routerWrapper?.classList.add('hidden');
-    this.closeThreadViewAfterWorkspaceIsOpen();
+      if (workspaceIsNowClosed) {
+        directMessage?.classList.remove('hidden');
+        routerWrapper?.classList.remove('hidden');
+      } else {
+        directMessage?.classList.add('hidden');
+        routerWrapper?.classList.add('hidden');
+        this.closeThreadViewAfterWorkspaceIsOpen();
+      }
+    }, 0);
   }
-    },0);
-}
 
   checkWidth() {
     const width = window.innerWidth;
-      const threadsHtml = document.getElementById('threads');
+    const threadsHtml = document.getElementById('threads');
     if (width <= 1400) {
-        this.checkThreadIsOpenOrChannelChat()
-         this.checkThreadIsDirectChat()
+      this.checkThreadIsOpenOrChannelChat()
+      this.checkThreadIsDirectChat()
     } else {
       this.removeThreadsIsOpenChannel()
       this.removeThreadsIsOpenDirectMessage();
@@ -257,11 +258,11 @@ openWorkspaceMobile() {
     const routerWrapper = document.getElementById('routerOutletWrapper');
     const threadsHtml = document.getElementById('threads');
     const workspace = document.querySelector('app-workspace-menu');
-    if (routerWrapper && !routerWrapper.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
-        routerWrapper?.classList.add('hidden');
-        threadsHtml?.classList.add('showThreadSideLarge');
-    
-}
+    if (routerWrapper && !routerWrapper.classList.contains('hidden') && threadsHtml && !threadsHtml.classList.contains('closed')) {
+      routerWrapper?.classList.add('hidden');
+      threadsHtml?.classList.add('showThreadSideLarge');
+
+    }
   }
 
 
@@ -270,13 +271,13 @@ openWorkspaceMobile() {
     const threadsHtml = document.getElementById('threads');
     const routerWrapper = document.getElementById('routerOutletWrapper');
     const workspace = document.querySelector('app-workspace-menu');
-    if (this.mainservice.showThreadWindow && routerWrapper && routerWrapper && !routerWrapper.classList.contains('hidden') || directMessage && !directMessage.classList.contains('hidden') && threadsHtml &&  !threadsHtml.classList.contains('closed')) {
-        directMessage?.classList.add('hidden');
-        threadsHtml?.classList.add('showThreadSideLarge');
-        routerWrapper?.classList.add('hidden');
-   
+    if (this.mainservice.showThreadWindow && routerWrapper && routerWrapper && !routerWrapper.classList.contains('hidden') || directMessage && !directMessage.classList.contains('hidden') && threadsHtml && !threadsHtml.classList.contains('closed')) {
+      directMessage?.classList.add('hidden');
+      threadsHtml?.classList.add('showThreadSideLarge');
+      routerWrapper?.classList.add('hidden');
+
+    }
   }
-}
 
   removeThreadsIsOpenChannel() {
     const routerWrapper = document.getElementById('routerOutletWrapper');
@@ -284,17 +285,17 @@ openWorkspaceMobile() {
 
     routerWrapper?.classList.remove('hidden');
     threadsHtml?.classList.remove('showThreadSideLarge');
-    
+
   }
 
 
-   removeThreadsIsOpenDirectMessage() {
-  const directMessage = document.getElementById('directMessageChat');
+  removeThreadsIsOpenDirectMessage() {
+    const directMessage = document.getElementById('directMessageChat');
     const threadsHtml = document.getElementById('threads');
 
     directMessage?.classList.remove('hidden');
     threadsHtml?.classList.remove('showThreadSideLarge');
-    
+
   }
 
 
@@ -304,7 +305,7 @@ openWorkspaceMobile() {
   }
 
   toggleOpenNewChat(value: boolean) {
-    this.mainhelperService.openNewChat =true;
+    this.mainhelperService.openNewChat = true;
   }
 
 }

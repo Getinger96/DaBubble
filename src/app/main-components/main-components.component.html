@@ -21,21 +21,26 @@
     <div class="body" >
 
         <app-workspace-menu (closeThread)="closeThreadView()" (messageNavigated)="checkWidth()" [userArray]="allUsers"
-            [actualUser]="actualUser" (toggleWorkspace)="openWorkspaceMobile()" (toggleOpenNewChat)="toggleOpenNewChat($event)" ></app-workspace-menu>
-        <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage" [ngClass]="{ 'hidden': shouldHideRouter || this.mainhelperService.openNewChat }" class="chat-area">
-          
+            [actualUser]="actualUser" (toggleWorkspace)="openWorkspaceMobile()"
+            (toggleOpenNewChat)="toggleOpenNewChat($event)"></app-workspace-menu>
+        <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage"
+            [ngClass]="{ 'hidden': shouldHideRouter || this.mainhelperService.openNewChat }" class="chat-area">
+
             <router-outlet></router-outlet>
         </main>
 
-        <app-new-chat class="chat-area" (toggleOpenNewChatToMainCompoment)="openWorkspaceMobile()" [ngClass]="{ 'hidden': !this.mainhelperService.openNewChat }" ></app-new-chat>
-    
-        <app-direct-message-chat  [ngClass]="{ 'hidden': shouldHideRouter }"      #directMessage   id="directMessageChat" [hidden]="!this.mainservice.showdirectmessage"  *ngIf="this.mainservice.showdirectmessage"
-            (openThread)="openThreadForConversationMessage($event)" [ngClass]="{ 'hidden': this.mainhelperService.openNewChat }" 
+        <app-new-chat class="chat-area" (toggleOpenNewChatToMainCompoment)="openWorkspaceMobile()"
+            [ngClass]="{ 'hidden': !this.mainhelperService.openNewChat }"></app-new-chat>
+
+        <app-direct-message-chat [ngClass]="{ 'hidden': shouldHideRouter }" #directMessage id="directMessageChat"
+            [hidden]="!this.mainservice.showdirectmessage" *ngIf="this.mainservice.showdirectmessage"
+            (openThread)="openThreadForConversationMessage($event)"
+            [ngClass]="{ 'hidden': this.mainhelperService.openNewChat }"
             (closeThread)="closeThreadView()"></app-direct-message-chat>
            
         <app-thread id="threads" *ngIf="selectedThreadMessage || selectedConvThreadMessage" [selectedMessage]="selectedThreadMessage"
             [selectedConvMessage]="selectedConvThreadMessage" (closeThread)="closeThreadView()"  (checkWidthTrigger)="checkWidth()" ></app-thread>
            
     </div>
-    <app-toggle-webspace-menu ></app-toggle-webspace-menu>
+    <app-toggle-webspace-menu></app-toggle-webspace-menu>
 </section>

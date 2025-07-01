@@ -203,6 +203,8 @@ onMessageNavigatedFromMobile() {
   this.messageNavigated.emit(); // ➜ sendet das Event nach außen zur MainComponent
 }
 
+
+
   openWorkspaceToNewCompoment() {
     this.toggleWorkspace.emit();
     

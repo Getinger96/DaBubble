@@ -658,7 +658,7 @@ export class ConversationService implements OnDestroy {
       text: messageText,
       timestamp: new Date(),
       isThread: true,
-      isInThread: false,
+      isInThread: true,
       threadTo: parentMessage.conversationmessageId,
       id: parentMessage.id,
       conversationmessageId: '',
