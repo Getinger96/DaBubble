@@ -195,10 +195,27 @@ export class ChannelService {
 
                 // Channel-Dokument mit ID aktualisieren
                 await updateDoc(docref, { id: docref.id });
-
+               // await this.addCreatorInMemberList(this.id)
                 // Jetzt die Subcollection "messages" erstellen (mit einer ersten Nachricht)
                 return docref;
             });
+        
+    }
+
+
+   async addCreatorInMemberList(id:string) {
+        const channelDocRef = doc(this.firestore, 'Channels', id );
+        const channelDocSnap = await getDoc(channelDocRef);
+
+          if (channelDocSnap.exists()) {
+            const data = channelDocSnap.data();
+            const actualUserJson =this.jsonservice.actulaUserList(this.actualUser[0])
+
+                 await updateDoc(channelDocRef, {
+                members:actualUserJson
+        });
+            }               
+
     }
 
     async addsubcolecctiontoChannel(docref: string) {

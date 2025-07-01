@@ -11,6 +11,7 @@ export class MainHelperService {
     showEditMessage: boolean = false
     showMemberList: boolean = false
     openNewChat:boolean =false
+    openThreadSeachBar:boolean =false
   constructor() { }
 
 

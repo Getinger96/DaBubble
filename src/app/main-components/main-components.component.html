@@ -29,16 +29,15 @@
             <router-outlet></router-outlet>
         </main>
 
-        <app-new-chat class="chat-area" (toggleOpenNewChatToMainCompoment)="openWorkspaceMobile()"
-            [ngClass]="{ 'hidden': !this.mainhelperService.openNewChat }"></app-new-chat>
+        <app-new-chat id="newChat" class="chat-area" (toggleOpenNewChatToMainCompoment)="openWorkspaceMobile()"
+            [ngClass]="{ 'hidden': !this.mainhelperService.openNewChat || shouldHideRouter }"></app-new-chat>
 
-        <app-direct-message-chat [ngClass]="{ 'hidden': shouldHideRouter }" #directMessage id="directMessageChat"
+        <app-direct-message-chat [ngClass]="{ 'hidden': shouldHideRouter || this.mainhelperService.openNewChat  }" #directMessage id="directMessageChat"
             [hidden]="!this.mainservice.showdirectmessage" *ngIf="this.mainservice.showdirectmessage"
             (openThread)="openThreadForConversationMessage($event)"
-            [ngClass]="{ 'hidden': this.mainhelperService.openNewChat }"
-            (closeThread)="closeThreadView()"></app-direct-message-chat>
+            (closeThread)="closeThreadView()" ></app-direct-message-chat>
            
-        <app-thread id="threads" *ngIf="selectedThreadMessage || selectedConvThreadMessage" [selectedMessage]="selectedThreadMessage"
+        <app-thread id="threads" *ngIf="selectedThreadMessage || selectedConvThreadMessage || this.mainhelperService.openThreadSeachBar" [selectedMessage]="selectedThreadMessage"
             [selectedConvMessage]="selectedConvThreadMessage" (closeThread)="closeThreadView()"  (checkWidthTrigger)="checkWidth()" ></app-thread>
            
     </div>

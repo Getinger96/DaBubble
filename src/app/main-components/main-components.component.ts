@@ -113,6 +113,10 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.conversationMessage.openThread(message);
   }
 
+  checkWidhtDirectMessage() {
+    
+  }
+
   openThreadForMessage(message: Message): void {
     console.log('Event empfangen:', message);
    this.mainservice.showThreadWindow
@@ -223,24 +227,38 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   }
 
 
-  openWorkspaceMobile() {
-    setTimeout(() => {
-      const workspace = document.querySelector('app-workspace-menu');
-      const directMessage = document.getElementById('directMessageChat');
-      const routerWrapper = document.getElementById('routerOutletWrapper');
-      const workspaceIsNowClosed = workspace?.classList.toggle('closed');
-      this.responsivService.workspace = true;
+openWorkspaceMobile() {
+  setTimeout(() => {
+    const workspace = document.querySelector('app-workspace-menu');
+    const isClosed = workspace?.classList.toggle('closed');
+    this.responsivService.workspace = true;
+    this.toggleVisibleSections(isClosed);
+  }, 0);
+}
 
-      if (workspaceIsNowClosed) {
-        directMessage?.classList.remove('hidden');
-        routerWrapper?.classList.remove('hidden');
-      } else {
-        directMessage?.classList.add('hidden');
-        routerWrapper?.classList.add('hidden');
-        this.closeThreadViewAfterWorkspaceIsOpen();
-      }
-    }, 0);
+private toggleVisibleSections(isClosed: boolean | undefined) {
+  const showNewChat = this.mainhelperService.openNewChat;
+  const showDirectMessage = this.mainservice.showdirectmessage;
+  const newChat = document.getElementById('newChat');
+  const directMessage = document.getElementById('directMessageChat');
+  const routerWrapper = document.getElementById('routerOutletWrapper');
+  if (isClosed) {
+
+    newChat?.classList.toggle('hidden', !showNewChat);
+    directMessage?.classList.toggle('hidden', !showDirectMessage || showNewChat);
+    routerWrapper?.classList.toggle('hidden', showDirectMessage || showNewChat);
+    if (!showNewChat && !showDirectMessage) {
+      routerWrapper?.classList.remove('hidden');
+    }
+    if (!showNewChat) {
+      this.mainhelperService.openNewChat = false;
+    }
+  } else {
+    [newChat, directMessage, routerWrapper].forEach(el => el?.classList.add('hidden'));
+    this.closeThreadViewAfterWorkspaceIsOpen();
   }
+}
+
 
   checkWidth() {
     const width = window.innerWidth;
@@ -257,6 +275,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   checkThreadIsOpenOrChannelChat() {
     const routerWrapper = document.getElementById('routerOutletWrapper');
     const threadsHtml = document.getElementById('threads');
+    const newChat = document.getElementById('newChat');
     const workspace = document.querySelector('app-workspace-menu');
     if (routerWrapper && !routerWrapper.classList.contains('hidden') && threadsHtml && !threadsHtml.classList.contains('closed')) {
       routerWrapper?.classList.add('hidden');
@@ -282,20 +301,28 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   removeThreadsIsOpenChannel() {
     const routerWrapper = document.getElementById('routerOutletWrapper');
     const threadsHtml = document.getElementById('threads');
+    const newChat = document.getElementById('newChat');
+
+    if (newChat && newChat.classList.contains('hidden')) {
 
     routerWrapper?.classList.remove('hidden');
     threadsHtml?.classList.remove('showThreadSideLarge');
 
+
+    }
   }
 
 
   removeThreadsIsOpenDirectMessage() {
     const directMessage = document.getElementById('directMessageChat');
     const threadsHtml = document.getElementById('threads');
+    const newChat = document.getElementById('newChat');
 
+    if (newChat && newChat.classList.contains('hidden')) {
     directMessage?.classList.remove('hidden');
     threadsHtml?.classList.remove('showThreadSideLarge');
 
+    }        
   }
 
 
@@ -306,6 +333,10 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
   toggleOpenNewChat(value: boolean) {
     this.mainhelperService.openNewChat = true;
+
+     if (window.matchMedia('(max-width: 768px)').matches) {
+       this.openWorkspaceMobile();
+      }
   }
 
 }

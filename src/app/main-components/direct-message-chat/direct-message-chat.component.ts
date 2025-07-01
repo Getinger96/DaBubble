@@ -27,6 +27,7 @@ import { User } from '../../interfaces/user.interface';
 export class DirectMessageChatComponent {
   @Output() openThread = new EventEmitter<ConversationMessage>();
   @Output() closeThread = new EventEmitter<void>();
+  @Output() checkWidthDirectMessage = new EventEmitter<boolean>();
   @Output() currentmessageUser: string = '';
   @Output() currentmessageEmail: string = '';
   @Output() currentmessageAvatar: any;
@@ -99,7 +100,12 @@ export class DirectMessageChatComponent {
     this.mainservice.directmessaeUserIdSubject.subscribe(async (newPartnerId) => {
       await this.initConversation(); // Lade neue Konversation und Nachrichten
     });
+
   }
+
+
+
+  
 
     /**
    * Loads directmessageid and userId from the current route and parent route.

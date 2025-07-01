@@ -218,7 +218,7 @@ export class SearchBarComponent {
       user.email,
       user.status
     );
-    if (dm.isInThread) {
+    if (dm.isThread) {
       const originalMessage = this.conversationserice.allMessages.find(msg => msg['messageId'] === dm.threadTo);
       if (!originalMessage) {
 
@@ -279,6 +279,7 @@ export class SearchBarComponent {
 
     const channel = this.channels.find(c => c.id === message.channelId);
     if (!channel) return;
+   
 
     this.openChannel(
       true,

@@ -75,4 +75,15 @@ export class JsonDataService {
 
     }
   }
+
+
+  actulaUserList(actualUser: User) {
+ return {
+    id: actualUser.id,
+    name: actualUser.name,
+    avatar: actualUser.avatar,
+    status: actualUser.status
+
+    }
+  }
 }

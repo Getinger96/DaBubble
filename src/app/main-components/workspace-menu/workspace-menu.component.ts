@@ -38,7 +38,8 @@ export class WorkspaceMenuComponent {
   @Output() closeThread = new EventEmitter<void>();
   @Output() toggleWorkspace = new EventEmitter<void>();
   @Output() toggleWorkspaceChannel = new EventEmitter<void>();
-  @Output() toggleOpenNewChat = new EventEmitter<boolean>();
+  @Output() toggleOpenNewChat = new EventEmitter<boolean>(); 
+  @Output() toggleNewChat = new EventEmitter<boolean>(); 
   channel: Channel = new Channel();
   selectedOption: string = '';
   allUsers: User[] = [];
@@ -259,5 +260,7 @@ isUserGuest(){
 
 openNewChat() {
 this.toggleOpenNewChat.emit(true);
+
+
 }
 }
