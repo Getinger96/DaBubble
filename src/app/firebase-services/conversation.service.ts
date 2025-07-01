@@ -365,7 +365,7 @@ export class ConversationService implements OnDestroy {
    */
   closeThread() {
     this.showThreadSubject.next(false);
-    this.selectedThreadMessageSubject.next(null);
+    
   }
 
   /**
