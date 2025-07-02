@@ -134,7 +134,7 @@ checkTheInputFields() {
 }
 
 checkpasswordInput() {
-  if (this.passwordInput.nativeElement.value.length > 6) {
+  if (this.passwordInput.nativeElement.value.length >= 6) {
     this.passWordLengthIsCorrect = true;
     return true;
   } else {
