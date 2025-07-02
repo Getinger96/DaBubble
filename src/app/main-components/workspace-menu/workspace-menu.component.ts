@@ -52,7 +52,7 @@ export class WorkspaceMenuComponent {
   userId?: string;
    private actualUserSubscription!: Subscription;
    @Output() messageNavigated = new EventEmitter<void>();
-
+  visibleChannels: Channel[] = [];
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
     private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router
@@ -73,6 +73,7 @@ export class WorkspaceMenuComponent {
     this.channelservice.channels$.subscribe(channels => {
       this.channels = channels;
       console.log('Channels in Component:', this.channels);
+      this.updateVisibleChannels(); // wichtig
     });
 
 
@@ -83,15 +84,19 @@ export class WorkspaceMenuComponent {
 
   filterUsers() {
     const term = this.searchTerm.toLowerCase();
+    const currentUserId = this.actualUser[0]?.id;
     this.filteredUsers = this.allUsers
       .filter(user =>
         user.name.toLowerCase().includes(term)
       )
       .filter(user =>
         !this.selectedUsers.includes(user)
-      );
-
+      )
+      .filter(user => user.id !== currentUserId)
+      
+      
     this.sortUsers();
+
   }
 
   selectUser(user: any) {
@@ -241,15 +246,23 @@ onMessageNavigatedFromMobile() {
   addSpecificMembersToChannel(channelId: string, members: { id: string, name: string, avatar: number }[]) {
     this.channelservice.addMembersToChannel(channelId, members);
   }
-
-isUserInChannel(channel: any): boolean {
+updateVisibleChannels() {
   const guestChannelId = 'BLDNqmQQWm4Qqv4NLNbv';
 
-  if (this.isUserGuest()) {
-    return channel.id === guestChannelId;
-  }
+  if (!this.actualUser || this.actualUser.length === 0) return;
 
-  return channel.members?.some((m: any) => m.name === this.actualUser[0].name);
+  if (this.isUserGuest()) {
+    this.visibleChannels = this.channels.filter(channel => channel.id === guestChannelId);
+  } else {
+    const userName = this.actualUser[0].name;
+    const userId = this.actualUser[0].id;
+  this.visibleChannels = this.channels.filter(channel =>
+  Array.isArray(channel.members) &&
+  channel.members.some((m: any) => m.name === userName && m.id === userId)
+    );
+  }
+  console.log('this.visibleChannels', this.visibleChannels);
+  
 }
 
 isUserGuest(){

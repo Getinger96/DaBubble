@@ -35,7 +35,7 @@ export class ChannelService {
     currentChannelId$ = this.channelIdSubject.asObservable();
     private channelDateSubject = new BehaviorSubject<string>('');
     currentChannelDate$ = this.channelDateSubject.asObservable();
-
+    
 
     constructor(private route: ActivatedRoute, private registerservice: RegisterService, private mainservice: MainComponentService, private jsonservice: JsonDataService) {
         this.unsubChannel = this.subChannelList()
@@ -195,7 +195,7 @@ export class ChannelService {
 
                 // Channel-Dokument mit ID aktualisieren
                 await updateDoc(docref, { id: docref.id });
-               // await this.addCreatorInMemberList(this.id)
+                await this.addCreatorInMemberList(this.id)
                 // Jetzt die Subcollection "messages" erstellen (mit einer ersten Nachricht)
                 return docref;
             });
@@ -212,7 +212,7 @@ export class ChannelService {
             const actualUserJson =this.jsonservice.actulaUserList(this.actualUser[0])
 
                  await updateDoc(channelDocRef, {
-                members:actualUserJson
+                members:[actualUserJson] 
         });
             }               
 
@@ -259,10 +259,23 @@ export class ChannelService {
 
     async addMembersToChannel(channelId: string, members: { id: string, name: string, avatar: number }[]) {
         const channelDocRef = doc(this.firestore, 'Channels', channelId);
-        await updateDoc(channelDocRef, {
-            members: members
-        });
+          const channelDocSnap = await getDoc(channelDocRef);
+          let currentMembers: { id: string, name: string, avatar: number }[] = [];
+            if (channelDocSnap.exists()) {
+            currentMembers = channelDocSnap.data()['members'] || [];
+             }
+            const updatedMembers = [...currentMembers];
+            members.forEach(newMember => {
+        if (!updatedMembers.some(m => m.id === newMember.id)) {
+         updatedMembers.push(newMember);
+     }
+  });
+
+  await updateDoc(channelDocRef, {
+    members: updatedMembers
+  });
     }
+
 
     async updateNewMembersInFirebase(userList: any[], currentChannelID: string) {
         try {

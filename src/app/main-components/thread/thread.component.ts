@@ -105,10 +105,15 @@ private initializeCountCheck(): void {
       : 0;
     this.threadCount$.next(count);
   }
+  if (this.mainService.showdirectmessage) {
+    
+  
   this.conversationService.updateConvMessageThreadCount(
     this.selectedConvMessage?.conversationmessageId || '',
     this.selectedConvMessage?.id || ''
   );
+
+}
 }
 
 
