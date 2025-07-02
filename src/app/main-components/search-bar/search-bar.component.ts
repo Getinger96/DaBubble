@@ -122,13 +122,14 @@ export class SearchBarComponent {
   }
 
   filterResults() {
+    console.log('🧪 filterResults aufgerufen mit:', this.searchTerm);
     const term = this.searchTerm.toLowerCase().trim();
 
     this.filteredUsers = [];
     this.filteredChannels = [];
     this.filteredMessages = [];
     this.filteredDirectMessages = [];
-
+console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
     if (!term) return;
 
     if (term.startsWith('@')) {

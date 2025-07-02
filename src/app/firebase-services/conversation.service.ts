@@ -25,10 +25,11 @@ export class ConversationService implements OnDestroy {
   private selectedThreadMessageSubject =
     new BehaviorSubject<ConversationMessage | null>(null);
   selectedThreadMessage$ = this.selectedThreadMessageSubject.asObservable();
-
+  private messageMap = new Map<string, ConversationMessage[]>(); // convId → messages
   public showThreadSubject = new BehaviorSubject<boolean>(false);
   showThread$ = this.showThreadSubject.asObservable();
-
+private selectedConversationMessagesSubject = new BehaviorSubject<ConversationMessage[]>([]);
+public selectedConversationMessages$ = this.selectedConversationMessagesSubject.asObservable();
   public threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
 
@@ -84,7 +85,7 @@ export class ConversationService implements OnDestroy {
         if (!partnerUserId || !currentUserId) return;
 
         this.closeThread();
-        this.allMessages = [];
+        
         this.lastAnswer = null;
 
         if (unsubscribeListener) {
@@ -117,38 +118,38 @@ export class ConversationService implements OnDestroy {
    * @returns A promise that resolves to the conversation ID.
    */
   async getOrCreateConversation(currentUserId: string, partnerUserId: string) {
-  const convRef = collection(this.firestore, 'conversation');
+    const convRef = collection(this.firestore, 'conversation');
 
-  // 1. Nutzer-IDs alphabetisch sortieren für Konsistenz
-  const sortedUsers = [currentUserId, partnerUserId].sort();
+    // 1. Nutzer-IDs alphabetisch sortieren für Konsistenz
+    const sortedUsers = [currentUserId, partnerUserId].sort();
 
-  // 2. Alle vorhandenen Conversations holen
-  const snapshot = await getDocs(convRef);
+    // 2. Alle vorhandenen Conversations holen
+    const snapshot = await getDocs(convRef);
 
-  // 3. Prüfen, ob Conversation mit genau diesen beiden Nutzern bereits existiert
-  const existingConv = snapshot.docs.find((docSnap) => {
-    const users = docSnap.data()['user'];
-    return (
-      Array.isArray(users) &&
-      users.length === 2 &&
-      [...users].sort().toString() === sortedUsers.toString()
-    );
-  });
+    // 3. Prüfen, ob Conversation mit genau diesen beiden Nutzern bereits existiert
+    const existingConv = snapshot.docs.find((docSnap) => {
+      const users = docSnap.data()['user'];
+      return (
+        Array.isArray(users) &&
+        users.length === 2 &&
+        [...users].sort().toString() === sortedUsers.toString()
+      );
+    });
 
-  // 4. Falls vorhanden → ID zurückgeben
-  if (existingConv) {
-    this.conversationId = existingConv.id;
-    return existingConv.id;
+    // 4. Falls vorhanden → ID zurückgeben
+    if (existingConv) {
+      this.conversationId = existingConv.id;
+      return existingConv.id;
+    }
+
+    // 5. Falls nicht vorhanden → neue Conversation anlegen
+    const newConv = await addDoc(convRef, {
+      user: sortedUsers, // konsistente Speicherung
+    });
+
+    this.conversationId = newConv.id;
+    return newConv.id;
   }
-
-  // 5. Falls nicht vorhanden → neue Conversation anlegen
-  const newConv = await addDoc(convRef, {
-    user: sortedUsers, // konsistente Speicherung
-  });
-
-  this.conversationId = newConv.id;
-  return newConv.id;
-}
   /**
    * Retrieves the initial set of messages for a given conversation, ordered by timestamp.
    * 
@@ -241,8 +242,8 @@ export class ConversationService implements OnDestroy {
           liveConvMessages.push(message);
         }
       });
-      this.allMessages = [...liveThreadMessages, ...liveConvMessages];
-      this.allConversationMessagesSubject.next(liveConvMessages);
+      const combinedMessages = [...liveThreadMessages, ...liveConvMessages];
+      this.selectedConversationMessagesSubject.next(combinedMessages);
       const selectedMessage = this.selectedThreadMessageSubject.value;
       if (selectedMessage && selectedMessage.conversationmessageId) {
         this.updateThreadAnswers(selectedMessage.conversationmessageId);
@@ -365,7 +366,7 @@ export class ConversationService implements OnDestroy {
    */
   closeThread() {
     this.showThreadSubject.next(false);
-    
+
   }
 
   /**
@@ -738,92 +739,84 @@ export class ConversationService implements OnDestroy {
   loadAllDirectMessagesLive(): void {
     const conversationsRef = collection(this.firestore, 'conversation');
 
-    // Haupt-Listener für alle Conversations
-    const convUnsub = onSnapshot(
-      conversationsRef,
-      (conversationSnapshot) => {
-        this.clearMessageListeners(); // Alte Message-Listener entfernen
-        this.allMessages = [];        // Messages zurücksetzen
+    const convUnsub = onSnapshot(conversationsRef, (conversationSnapshot) => {
+      this.clearMessageListeners(); // ja – Listener entfernen
+      this.messageMap.clear();      // ✅ NUR den Map-CACHE leeren, nicht sofort allMessages
 
-        const conversations: Conversation[] = conversationSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            users: data['user'], // 🔁 hier umbenennen!
-                         // alle anderen Felder wie vorher
-          } as Conversation;
+      const conversations: Conversation[] = conversationSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          users: data['user'],
+        } as Conversation;
+      });
+
+      this.allConversationsSubject.next(conversations);
+
+      // Für jede Conversation Nachrichten laden
+      conversationSnapshot.forEach((conversationDoc) => {
+        const convId = conversationDoc.id;
+        const messagesRef = collection(this.firestore, 'conversation', convId, 'messages');
+
+        const msgUnsub = onSnapshot(messagesRef, (messagesSnapshot) => {
+          const newMessages: ConversationMessage[] = [];
+
+          messagesSnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const isOwn = data['senderId'] === this.getActualUser();
+
+            const message: ConversationMessage = {
+              id: data['id'],
+              name: data['name'],
+              avatar: data['avatar'],
+              threadCount: data['threadCount'],
+              senderId: data['senderId'],
+              text: data['text'],
+              timestamp: data['timestamp'],
+              isThread: data['isThread'],
+              isInThread: data['isInThread'],
+              threadTo: data['threadTo'],
+              isOwn: isOwn,
+              conversationId: convId,
+              conversationmessageId: docSnap.id,
+              isAnswered: data['isAnswered'],
+            };
+
+            newMessages.push(message);
+          });
+
+          // Sortieren
+          newMessages.sort((a, b) => {
+            const timeA = this.isTimestamp(a.timestamp)
+              ? a.timestamp.toMillis()
+              : new Date(a.timestamp).getTime();
+            const timeB = this.isTimestamp(b.timestamp)
+              ? b.timestamp.toMillis()
+              : new Date(b.timestamp).getTime();
+            return timeA - timeB;
+          });
+
+          // 🔁 Map aktualisieren
+          this.messageMap.set(convId, newMessages);
+
+          // 🔁 allMessages neu zusammensetzen
+          this.allMessages = Array.from(this.messageMap.values()).flat();
+
+          // ✅ Subject updaten
+          this.allConversationMessagesSubject.next([...this.allMessages]);
+        }, (err) => {
+          console.error(`❌ Fehler beim Messages-Snapshot für ${convId}:`, err);
         });
 
-        this.allConversationsSubject.next(conversations); // ✅ Conversations updaten
-
-        // Jetzt für jede Conversation auch die Messages laden
-        conversationSnapshot.forEach((conversationDoc) => {
-          const convId = conversationDoc.id;
-          const messagesRef = collection(this.firestore, 'conversation', convId, 'messages');
-
-          const msgUnsub = onSnapshot(
-            messagesRef,
-            (messagesSnapshot) => {
-              // Entferne alte Messages dieser Conversation
-              this.allMessages = this.allMessages.filter(msg => msg['conversationId'] !== convId);
-
-              const newMessages: ConversationMessage[] = [];
-
-              messagesSnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const isOwn = data['senderId'] === this.getActualUser();
-
-                const message: ConversationMessage = {
-                  id: data['id'],
-                  name: data['name'],
-                  avatar: data['avatar'],
-                  threadCount: data['threadCount'],
-                  senderId: data['senderId'],
-                  text: data['text'],
-                  timestamp: data['timestamp'],
-                  isThread: data['isThread'],
-                  isInThread: data['isInThread'],
-                  threadTo: data['threadTo'],
-                  isOwn: isOwn,
-                  conversationId: convId,
-                  conversationmessageId: docSnap.id,
-                  isAnswered: data['isAnswered'],
-                };
-
-                newMessages.push(message);
-              });
-
-              // Neue Messages hinzufügen und sortieren
-              this.allMessages = [...this.allMessages, ...newMessages];
-
-              this.allMessages.sort((a, b) => {
-                const timeA = this.isTimestamp(a.timestamp)
-                  ? a.timestamp.toMillis()
-                  : new Date(a.timestamp).getTime();
-                const timeB = this.isTimestamp(b.timestamp)
-                  ? b.timestamp.toMillis()
-                  : new Date(b.timestamp).getTime();
-                return timeA - timeB;
-              });
-
-              // ✅ Subject aktualisieren
-              this.allConversationMessagesSubject.next([...this.allMessages]);
-            },
-            (err) => {
-              console.error(`❌ Fehler beim Messages-Snapshot für ${convId}:`, err);
-            }
-          );
-
-          this.messageUnsubscribers.push(msgUnsub);
-        });
-      },
-      (error) => {
-        console.error('❌ Fehler beim Conversation-Snapshot:', error);
-      }
-    );
+        this.messageUnsubscribers.push(msgUnsub);
+      });
+    }, (error) => {
+      console.error('❌ Fehler beim Conversation-Snapshot:', error);
+    });
 
     this.messageUnsubscribers.push(convUnsub);
   }
+
   private clearMessageListeners(): void {
     this.messageUnsubscribers.forEach(unsub => unsub());
     this.messageUnsubscribers = [];

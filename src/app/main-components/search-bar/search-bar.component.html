@@ -1,5 +1,5 @@
 <div class="search-bar" [ngStyle]="{'padding': mobile ? '8px 24px' : '17.5px 45px 17.5px 45px', 'border': mobile ? '1px solid #ADB0D9' : 'none'}">
-  <input [(ngModel)]="searchTerm" (input)="filterResults()" type="text" [ngStyle]="{'font-size': mobile ? '17px' : '24px'}" [placeholder]="placeholderSearchBar">
+  <input [(ngModel)]="searchTerm" (ngModelChange)="filterResults()" type="text" [ngStyle]="{'font-size': mobile ? '17px' : '24px'}" [placeholder]="placeholderSearchBar">
   <img [ngStyle]="{'width': mobile ? '32px' : '35px', 'height' : mobile ? '32px' : '35px'}" src="assets/img/search.svg" alt="search-icon" class="search-icon">
 </div>
 
