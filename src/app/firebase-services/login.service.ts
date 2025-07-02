@@ -17,6 +17,7 @@ export class LoginService {
   private auth = getAuth();
   loginIsValide: boolean = true
   overlayvisible: boolean = false
+  loginoverlay:boolean=false
   allUsers: User[] = [];
 
 

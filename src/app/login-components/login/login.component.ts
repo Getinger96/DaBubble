@@ -44,6 +44,9 @@ export class LoginComponent implements AfterViewInit {
 
   constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
     private mainservice: MainComponentService, private loginservice: LoginService) {
+      if (this.loginservice.loginoverlay==false) {
+        this.overlayvisible=false;
+      }
   }
 
   ngAfterViewInit(): void {

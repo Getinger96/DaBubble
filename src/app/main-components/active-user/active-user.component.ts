@@ -72,6 +72,7 @@ export class ActiveUserComponent implements OnInit {
     setTimeout(() => {
      this.router.navigate(['/'], { replaceUrl: true });
      this.mainservice.showmainchat=true;
+    
       }, 1000);
   }
 
