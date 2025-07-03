@@ -116,7 +116,7 @@
                 (memberSelected)="insertMemberIntoTextarea($event)"></app-add-member-channel>
         </ng-container>
         <div class="main-chat-message">
-            <textarea #messageBox [(ngModel)]="message.messageText" type="text" class="fontNunito"
+            <textarea #messageBox [(ngModel)]="message.messageText" type="text" class="fontNunito" (input)="openQuickMenu()"
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft"></textarea>
             <div class="message-icons">
 

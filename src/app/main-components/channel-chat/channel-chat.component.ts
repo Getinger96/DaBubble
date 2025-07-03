@@ -75,6 +75,10 @@ export class ChannelChatComponent implements OnInit {
   toggleEmoji: boolean = false
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
+
+  showUserList: boolean = false;
+  showChannelList: boolean = false;
+  
   message: Message = {
     id: '',
     messageId: '',
@@ -97,16 +101,13 @@ export class ChannelChatComponent implements OnInit {
 
 
 
-
-
-
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
     private route: ActivatedRoute, public mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
     private _eref: ElementRef) { }
 
 
   ngOnInit(): void {
-this.mainservice.showmainchat=false
+    this.mainservice.showmainchat=false
     this.loadRouter();
 
     this.loadActualUser();
@@ -115,6 +116,21 @@ this.mainservice.showmainchat=false
 
   }
 
+  openQuickMenu() {
+    const text = this.message.messageText;
+    if (text.endsWith('@')) {
+      this.showUserList = true;
+      this.showChannelList = false;
+      console.log('@')
+    } else if (text.endsWith('#')) {
+      this.showChannelList = true;
+      this.showUserList = false;
+      console.log('#');
+    } else {
+      this.showUserList = false;
+      this.showChannelList = false;
+    }
+  }
 
 
   loadAllUser() {
