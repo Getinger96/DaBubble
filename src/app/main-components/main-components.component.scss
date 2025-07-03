@@ -131,6 +131,7 @@
       width: 52%;
       transition: width 0.3s ease;
       flex-grow: 1;
+      max-width: 1920px;
     }
 app-new-chat { 
       height: 100%;
