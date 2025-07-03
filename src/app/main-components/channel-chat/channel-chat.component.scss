@@ -187,9 +187,11 @@ button {
     background-color: #535AF1;
     border: 1px solid #535AF1;
     color: white;
-    padding: 8px;
-    border-radius: 30px;
+    padding: 12px 25px;
+    border-radius: 25px;
     font-size: 18px;
+    font-weight: 700;
+    font-family: 'Nunito';
 
 }
 
@@ -205,11 +207,11 @@ app-add-member-channel  {
 
     display: flex;
     flex-direction: column;
-    width: 872px;
+    max-width: 872px;
     height: 539px;
-    background-color: aliceblue;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 0px;
+    background-color: white;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 30px;
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
     box-sizing: border-box;
@@ -217,7 +219,7 @@ app-add-member-channel  {
     flex: 1;
     padding: 40px;
     justify-content: space-around;
-    gap: 18px;
+    gap: 20px;
     opacity: 0;
     font-family: $font-primary;
     font-weight: 700;
@@ -256,12 +258,11 @@ app-add-member-channel  {
 
 .input-channel-name-container {
 
-    width: 100%;
-    padding: 8px;
+    
+    padding: 18px 20px;
     border-radius: 30px;
-    border: 1px solid #535AF1;
+    border: 1px solid #ADB0D9;
     display: flex;
-    background-color: #f0f8ff;
     >input {
         width: 100%;
         border: none;
@@ -274,11 +275,9 @@ app-add-member-channel  {
 
 .input-channel-description-container {
 
-    width: 100%;
-    padding: 8px;
+    padding: 18px 20px;
     border-radius: 30px;
-    border: 1px solid #535AF1;
-    background-color: #f0f8ff;
+    border: 1px solid #ADB0D9;
     >input {
         width: 100%;
         border: none;
@@ -297,9 +296,11 @@ app-add-member-channel  {
         background-color: #535AF1;
         border: 1px solid #535AF1;
         color: white;
-        padding: 8px;
-        border-radius: 30px;
+        padding: 12px 25px;
+        border-radius: 25px;
         font-size: 18px;
+        font-weight: 700;
+        font-family: 'Nunito';
 
 
     }
@@ -325,10 +326,16 @@ app-add-member-channel  {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    border: 1px solid #535AF1;
-    border-radius: 30px;
+    border: 1px solid #ADB0D9;
+    border-radius: 20px;
     padding: 16px;
 }
+
+.focus{
+    border: none !important;
+}
+
+
 
 
 
@@ -336,9 +343,8 @@ app-add-member-channel  {
 .dialog-description {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    border: 1px solid #535AF1;
-    border-radius: 30px;
+    border: 1px solid #ADB0D9;
+    border-radius: 20px;
     padding: 16px;
 
 
@@ -353,12 +359,15 @@ app-add-member-channel  {
 .channel-description-Container {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 20px;
 
 }
 
 .edit-span {
     color: #535AF1;
     cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .current-Name {
@@ -372,12 +381,21 @@ app-add-member-channel  {
 .current-Creator {
 
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 400;
     color: #535AF1;
 }
 
+.dialog-divider{
+    height: 1px;
+    width: 100%;
+    background-color: #ADB0D9;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    align-self: center;
+
+}
+
 .creator-container {
-    margin-top: 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -516,5 +534,86 @@ app-show-user {
     .main-chat-wrapper{
         border-radius: 0;
     }
+
+    .main-chat-header{
+        .message-group{
+            padding-left: 16px;
+        }
+
+        .actual-group-members{
+            padding-right: 16px;
+            >div{
+                display: none;
+            }
+        }
+    }
+
+    .overlay-bg{
+        form{
+            width: 75%;
+        }
+    }
+
+    .profile-dialog{
+        width: 100%;
+    }
         
     }
+
+@media (max-width:480px) {
+    .overlay-bg{
+        form{
+        width: 100%;
+        height: 100%;  
+        }
+    }
+
+    .profile-dialog{
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        padding: 0;
+        gap: 25px;
+        justify-content: unset;
+    }
+
+    .dialog-Headline{
+        box-shadow: 0px 2px 10px 0px #00000014;
+        padding-top: 46.5px;
+
+        span{
+            padding-bottom: 16.5px;
+            margin-left: 16px;
+        }
+
+        img{
+            margin-right: 16px;
+        }
+    }
+
+    .dialog-name{
+        margin: 0 16px;
+    }
+
+    .dialog-description{
+        margin: 0 16px;
+    }
+
+    .button-container{
+        margin: 0 16px;
+    }
+
+    .main-chat-header{
+        height: 60px;   
+
+        .actualf-group{
+        span{
+        font-size: 20px !important;
+        }
+    }
+    }
+
+    .input-wrapper{
+        padding: 10px 16px 30px 16px;
+    }
+}

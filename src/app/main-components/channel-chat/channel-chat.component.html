@@ -7,7 +7,7 @@
                 <span>#{{currentChannelName}}</span>
                 <img src="assets/img/close.png" alt="" (click)="closeOverlay()">
             </div>
-            <div class="dialog-name">
+            <div class="dialog-name" [ngClass]="{'focus': editName}">
                 <div class="channel-name-Container">
                     <span>Channel-Name</span>
                     <span *ngIf="!editName" class="edit-span" (click)="startEditName()">Bearbeiten</span>
@@ -16,11 +16,11 @@
                 <span *ngIf="!editName" class="current-Name">#{{currentChannelName}}</span>
                 <div *ngIf="editName" class="input-channel-name-container">
                     <img src="assets/img/tag-grey.png" alt="">
-                    <input [(ngModel)]="currentChannelName" type="text" name="name"
+                    <input #nameInputField [(ngModel)]="currentChannelName" type="text" name="name"
                         placeholder=" z.B Kooperationsprojekte" #name="ngModel" required>
                 </div>
             </div>
-            <div class="dialog-description">
+            <div class="dialog-description" [ngClass]="{'focus': editDescription}">
                 <div class="channel-description-Container">
                     <span>Beschreibung</span>
                     <span *ngIf="!editDescription" class="edit-span" (click)="startEditDescription()">Bearbeiten</span>
@@ -28,17 +28,19 @@
                 </div>
                 <span *ngIf="!editDescription" class="current-Description">{{currentChannelDescription}}</span>
                 <div *ngIf="editDescription" class="input-channel-description-container">
-                    <input [(ngModel)]="currentChannelDescription" type="text" name="description" id=""
+                    <input #descriptionInputField [(ngModel)]="currentChannelDescription" type="text" name="description" id=""
                         placeholder="Dein Text hier" #description="ngModel" required>
                 </div>
+                <div class="dialog-divider"></div>
                 <div class="creator-container">
                     <span>Erstellt von</span>
                     <span class="current-Creator">{{currentChannelCreator}}</span>
                 </div>
             </div>
             <div class="button-container">
-                <button (click)="deleteChannel()" class="delete-Button">Channel Löschen</button>
-                <input [disabled]="" type="submit" value="Erstellen">
+                <button *ngIf="currentChannelCreator != actualUser[0].name" (click)="deleteChannel()" class="delete-Button">Channel Verlassen</button>
+                <button *ngIf="currentChannelCreator === actualUser[0].name" (click)="deleteChannel()" class="delete-Button">Channel Löschen</button>
+                <input [disabled]="" type="submit" value="Speichern">
             </div>
         </div>
     </form>

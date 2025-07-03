@@ -95,7 +95,7 @@
        @media (max-width: 768px) {
         justify-content: center;
         gap: 0;
-        padding-top: 20px;
+        padding-top: 15px;
 
     }
 
@@ -178,6 +178,12 @@ app-new-chat {
     cursor: pointer;
   }
 
+  .mobile-container{
+    img{
+      height: 50px;
+    }
+  }
+
   .main-content{
 
     padding: 0;
@@ -186,9 +192,10 @@ app-new-chat {
     gap: 0;
     }
 
+
     .main-head-wrapper{
       width: unset;
-      padding-top: 20px;
+      padding-top: 15px;
       padding-left: 24px;
       padding-right: 24px;
     }
@@ -198,7 +205,6 @@ app-new-chat {
 
 }
 
-
 .hidden {
   display: none !important;
 }
@@ -207,4 +213,10 @@ app-new-chat {
 .showThreadSideLarge {
       width: 100% !important;
     max-width: 100% !important;
+}
+
+@media (max-width:480px) {
+  .main-head-wrapper{
+
+  }
 }

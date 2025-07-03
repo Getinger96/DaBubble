@@ -50,6 +50,8 @@ export class ChannelChatComponent implements OnInit {
   @ViewChild('atImg') atImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('nameInputField') nameInputField!: ElementRef<HTMLInputElement>;
+  @ViewChild('descriptionInputField') descriptionInputField!: ElementRef<HTMLInputElement>;
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   allUsers: User[] = [];
@@ -157,7 +159,6 @@ this.mainservice.showmainchat=false
 
 
   openDialogAddMember() {
-
     this.toggleMemberInChat = !this.toggleMemberInChat;
     if (this.toggleEmoji) {
       this.toggleEmoji = false
@@ -282,6 +283,9 @@ this.allThreads = filtered
 
   startEditName() {
     this.editName = true
+    setTimeout(() => {
+    this.nameInputField.nativeElement.focus();
+  });
   }
 
   saveName() {
@@ -290,6 +294,9 @@ this.allThreads = filtered
 
   startEditDescription() {
     this.editDescription = true
+    setTimeout(() => {
+    this.descriptionInputField.nativeElement.focus();
+  });
   }
 
   saveDescription() {
@@ -377,10 +384,11 @@ this.allThreads = filtered
     this.message.messageText = '';
   }
 
-
   toggleMemberInChannel() {
     this.mainhelperservice.showMemberList = !this.mainhelperservice.showMemberList
   }
+
+
 }
 
 

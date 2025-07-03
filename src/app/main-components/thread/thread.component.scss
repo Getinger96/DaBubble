@@ -18,10 +18,6 @@
         justify-content: space-between;
         align-items: center;
 
-        @media (max-width:768px) {
-            height: 60px;
-        }
-
         .thread-group{
             display: flex;
             justify-content: center;
@@ -56,10 +52,11 @@
     }
 
     .thread-feed{
-        height: calc(100% - 321px);
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        
         
     }
 
@@ -69,6 +66,7 @@
         gap: 16px;
         overflow-x: hidden;
         overflow-y: scroll;
+        margin-top: auto;
         
     }
 
@@ -172,4 +170,25 @@ app-add-member-to-thread  {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+@media (max-width:480px){
+        .thread-header{
+
+        .thread-group{
+        padding-left: 16px !important;
+        }
+
+        img{
+        padding-right: 16px;
+        }
+    }
+
+    .thread-input-wrapper{
+        padding: 10px 16px 30px 16px !important;
+    }
+
+    .close{
+        padding-right: 16px !important;
+    }
 }
