@@ -82,33 +82,72 @@
                     <span *ngIf="!responsiveService.isMobile" class="message-last-answer">Letzte Antwort {{lastAnswerDate}}</span>
                 </div>
                 <div *ngIf="!isAnswered && !isInThread" class="message-not-answered">
-                    <!--<div class="reaction"><img src="assets/img/rocket.png" alt=""><span>1</span></div>
-                    <div class="reaction"><img src="assets/img/check.png" alt=""><span>1</span></div>-->
+                    <div class="reactions" [ngClass]="{'reactionsThread': isThread || isInThread}">
+    <!-- Mobile: first 7 emojis, Desktop: first 20 emojis -->
+    <ng-container *ngFor="let entry of (isThread || isInThread ? emojiReactionsThead : emojiReactions) | keyvalue; let i = index">
+        <span *ngIf="showAllEmojis || i < 7" 
+              class="reaction mobile-visible"
+              (click)="isThread || isInThread ? handleEmojiClick(entry.key) : addEmoji(entry.key, channelID, messageData?.messageId)">
+
+            {{ entry.key }}
+            <ng-container *ngIf="entry.value.count > 0">
+                {{ entry.value.count }}
+            </ng-container>
+
+            <!-- Tooltip mit dynamischem Text -->
+            <div class="reaction-tooltip">
+                {{ entry.value.users.join(', ') }}
+                {{ entry.value.users.length === 1 ? 'hat reagiert' : 'haben reagiert' }}
+            </div>
+        </span>
+        
+        <!-- Desktop: show 8-20 emojis -->
+        <span *ngIf="(showAllEmojis || i < 20) && i >= 7" 
+              class="reaction desktop-visible"
+              (click)="isThread || isInThread ? handleEmojiClick(entry.key) : addEmoji(entry.key, channelID, messageData?.messageId)">
+
+            {{ entry.key }}
+            <ng-container *ngIf="entry.value.count > 0">
+                {{ entry.value.count }}
+            </ng-container>
+
+            <!-- Tooltip mit dynamischem Text -->
+            <div class="reaction-tooltip">
+                {{ entry.value.users.join(', ') }}
+                {{ entry.value.users.length === 1 ? 'hat reagiert' : 'haben reagiert' }}
+            </div>
+        </span>
+    </ng-container>
+
+    <ng-container *ngIf="(isThread || isInThread ? emojiReactionsThead : emojiReactions) | keyvalue as emojiList">
+    <!-- Show more button for mobile (when more than 7) -->
+    <span *ngIf="emojiList.length > 7 && !showAllEmojis"
+            class="reaction more-button mobile-visible"
+            (click)="showAllEmojis = !showAllEmojis">
+        +{{ emojiList.length - 7 }} weitere
+    </span>
+
+    <!-- Show more button for desktop (when more than 20) -->
+    <span *ngIf="emojiList.length > 20 && !showAllEmojis"
+            class="reaction more-button desktop-visible"
+            (click)="showAllEmojis = !showAllEmojis">
+        +{{ emojiList.length - 20 }} weitere
+    </span>
+
+    <!-- Show less button -->
+    <span *ngIf="showAllEmojis && emojiList.length > 7"
+            class="reaction less-button"
+            (click)="showAllEmojis = !showAllEmojis">
+        Weniger anzeigen
+    </span>
+    </ng-container>
+    </div>
+                   
                     <img *ngIf="!isInThread" #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
                         src="assets/img/add_reaction40.png" alt="">
                 </div>
             </div>
-            <div class="reactions" [ngClass]="{'reactionsThread': isThread || isInThread}">
-                <ng-container
-                    *ngFor="let entry of (isThread || isInThread ? emojiReactionsThead : emojiReactions) | keyvalue">
-                    <span class="reaction"
-                        (click)="isThread || isInThread ? handleEmojiClick(entry.key) : addEmoji(entry.key, channelID, messageData?.messageId)">
 
-                        {{ entry.key }}
-                        <ng-container *ngIf="entry.value.count > 0">
-                            {{ entry.value.count }}
-                        </ng-container>
-
-                        <!-- Tooltip mit dynamischem Text -->
-                        <div class="reaction-tooltip">
-                            {{ entry.value.users.join(', ') }}
-                            {{ entry.value.users.length === 1 ? 'hat reagiert' : 'haben reagiert' }}
-                        </div>
-                    </span>
-
-                </ng-container>
-
-            </div>
     <div *ngIf="editMessage" class="edit-message-input fontNunito">
         <textarea type="text" class="fontNunito" wrap="soft" rows="3" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
         <div class="controls-container">

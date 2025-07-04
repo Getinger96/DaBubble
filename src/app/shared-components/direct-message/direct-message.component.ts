@@ -43,6 +43,7 @@ export class DirectMessageComponent {
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
 
+  showAllEmojis: boolean = false;
   threadCount$: Observable<number> = of(0);
   lastAnswer$: Observable<string> = of('');
   showEmojiPicker: boolean = false;

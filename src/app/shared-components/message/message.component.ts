@@ -83,6 +83,7 @@ export class MessageComponent implements OnChanges {
   profileCardKey = '';
   editedMessageText: string = '';
  editMessageId: string | null = null;
+ showAllEmojis: boolean = false;
 
   constructor(private messageService: MessageService, private channelmessageService: ChannelMessageService, private channelService: ChannelService, private mainService: MainComponentService, public profilecardservice: ProfileCardOverlayService,
     public mainHelperService: MainHelperService, public responsiveService : ResponsivService
