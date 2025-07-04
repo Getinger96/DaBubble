@@ -382,10 +382,12 @@ app-add-member-channel  {
 
 .current-Name {
     font-weight: 300;
+    overflow: hidden;
 }
 
 .current-Description {
     font-weight: 300;
+    overflow: hidden;
 }
 
 .current-Creator {
@@ -617,6 +619,7 @@ app-show-user {
 
     .dialog-name{
         margin: 0 16px;
+        overflow: hidden;
     }
 
     .dialog-description{
