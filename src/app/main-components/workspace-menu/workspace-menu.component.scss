@@ -16,6 +16,11 @@
         align-items: center;
         justify-content: space-between;
         gap: 25px;
+        >img{
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
         >div {
             display: flex;
             align-items: center;

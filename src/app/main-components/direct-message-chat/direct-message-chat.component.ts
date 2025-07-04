@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, input, Output, viewChild, ViewChild } from '@angular/core';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { NgIf, CommonModule } from '@angular/common';
 import { UserCardService } from '../active-user/services/user-card.service';
@@ -37,6 +37,8 @@ export class DirectMessageChatComponent {
   @ViewChild('chatFeed') private chatFeed!: ElementRef;
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>;
   @ViewChild(ThreadComponent) threadComponent!: ThreadComponent;
+  @ViewChild('directMessageBox') directMessageBox!: ElementRef<HTMLTextAreaElement>;
+  
   directmessageid!: string;
   actualUser?: string;
   actualUserArray: User[] = [];
@@ -87,7 +89,9 @@ export class DirectMessageChatComponent {
     this.loadStatus();
     this.loadUserId();
     setTimeout(() => this.scrollToBottom(), 0);
-    this.actualUser = this.mainservice.actualUser[0]?.name;
+    setTimeout(() => this.focusOnInput(), 0);
+    
+    
 
     await this.initConversation();
     if (!this.mainservice.showdirectmessage) {
@@ -103,9 +107,13 @@ export class DirectMessageChatComponent {
 
   }
 
+    focusOnInput(){
+      setTimeout(() => {
+    this.directMessageBox.nativeElement.focus();
+  });
+  }
 
 
-  
 
     /**
    * Loads directmessageid and userId from the current route and parent route.
@@ -119,6 +127,7 @@ export class DirectMessageChatComponent {
         this.mainservice.setCurrentDirectMessage(this.directmessageid);
         this.currentUserId = this.directmessageid;
         console.log('🎯 Aktive directmessageid:', this.directmessageid);
+        this.focusOnInput();
       }
     });
 
@@ -244,6 +253,7 @@ export class DirectMessageChatComponent {
   openOverlay() {
     this.overlayvisible = true
   }
+
 
     /**
    * Angular lifecycle hook that runs after the component's view has been checked.

@@ -53,7 +53,7 @@
     </div>
     <div class="input-wrapper">
         <div class="main-chat-message">
-            <textarea [(ngModel)]="newConvMessage" type="text" class="fontNunito" placeholder="Nachricht hier eingeben" wrap="soft"></textarea>
+            <textarea #directMessageBox [(ngModel)]="newConvMessage" type="text" class="fontNunito" placeholder="Nachricht hier eingeben" wrap="soft"></textarea>
             <div class="message-icons">
                   <div  #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
                     <emoji-mart set="apple"  title="Pick your emoji…" emoji="point_up" 

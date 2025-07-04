@@ -106,7 +106,8 @@ export class ChannelChatComponent implements OnInit {
 
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
     private route: ActivatedRoute, public mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
-    private _eref: ElementRef, public responsiveService: ResponsivService) { }
+    private _eref: ElementRef, public responsiveService: ResponsivService) {
+     }
 
 
   ngOnInit(): void {
@@ -115,9 +116,8 @@ export class ChannelChatComponent implements OnInit {
 
     this.loadActualUser();
     this.loadAllUser();
-
-
   }
+
 
   openQuickMenu() {
     const text = this.message.messageText;
@@ -216,6 +216,7 @@ export class ChannelChatComponent implements OnInit {
         this.loadCurrentCrator();
         this.loadMembers();
         this.loadDate();
+        this.focusOnInput();
 
       }
     });
@@ -247,8 +248,6 @@ export class ChannelChatComponent implements OnInit {
       this.currentChannelDescription = description;
     });
   }
-
-
 
 
   loadMembers() {
@@ -292,12 +291,13 @@ this.allThreads = filtered
   addEmoji(event: any) {
     const emoji = event.emoji.native;
     console.log('emoji', emoji);
-
-
     this.message.messageText += emoji;
+  }
 
-
-
+  focusOnInput(){
+      setTimeout(() => {
+    this.messageBox.nativeElement.focus();
+  });
   }
 
 

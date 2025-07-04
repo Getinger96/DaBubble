@@ -122,7 +122,9 @@
             <img src="assets/img/Workspace logo.svg" alt="channel-icon">
             <h3>Devspace</h3>
         </div>
-        <img src="assets/img/edit_square.svg" alt="edit" (click)="openNewChat()">
+        <img #newChat src="assets/img/edit_square.svg" alt="edit" (click)="openNewChat()"
+        (mouseenter)="newChat.src='assets/img/edit_square_purple.svg'"
+        (mouseleave)="newChat.src='assets/img/edit_square.svg'">
     </div>
     <div class="mobile">
         <app-search-bar placeholderSearchBar="Gehe zu..." [mobile]="true" (toggleWorkspace)="openWorkspaceToNewCompoment()"  (messageNavigated)="onMessageNavigatedFromMobile()"></app-search-bar>

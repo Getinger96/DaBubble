@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { NgIf, CommonModule } from '@angular/common';
 import { User } from '../../../interfaces/user.interface';
 import { RegisterService } from '../../../firebase-services/register.service';
@@ -26,10 +26,10 @@ export class DirectMessageUserComponent implements OnInit {
   @Input() ownAccount!: boolean;
   @Input() userArray: User[] = [];
   @Output() closeThread = new EventEmitter<void>();
-   @Output() toggleWorkspaceDirectuser = new EventEmitter<void>();
+  @Output() toggleWorkspaceDirectuser = new EventEmitter<void>();
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
-  private directMessageChatComponent!: DirectMessageChatComponent;
+  @ViewChild(DirectMessageChatComponent) directMessageChatComponent!: DirectMessageChatComponent;
   constructor(private registerservice: RegisterService, private loadingService: LoadingService, private mainservice: MainComponentService, private mainhelperService: MainHelperService, private mainComponent: MainComponentsComponent,private router: Router) {
   
   }
@@ -59,12 +59,11 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainhelperService.openNewChat =false;
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeThread.emit();
+   
   const width = window.innerWidth;
     if (width <= 768) {
        this.toggleWorkspaceDirectuser.emit();
     }
- 
-    
   }
 
 
