@@ -123,6 +123,14 @@
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft" autofocus></textarea>
             <div class="message-icons">
 
+                @if (this.showChannelList) {
+                    <div class="channel-quick-menu">
+                        <div class="channel-list">
+                            
+                        </div>
+                    </div>
+                }
+
 
                 <div #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">
                     <emoji-mart set="apple" title="Pick your emoji…" emoji="point_up" [totalFrequentLines]="2"

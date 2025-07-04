@@ -78,8 +78,7 @@ export class ChannelChatComponent implements OnInit {
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
 
-  showUserList: boolean = false;
-  showChannelList: boolean = false;
+  showChannelList: boolean = true;
   isChannelInfoVisible = false;
   
   message: Message = {
@@ -122,15 +121,15 @@ export class ChannelChatComponent implements OnInit {
   openQuickMenu() {
     const text = this.message.messageText;
     if (text.endsWith('@')) {
-      this.showUserList = true;
+      this.toggleMemberInChat = true;
       this.showChannelList = false;
       console.log('@')
     } else if (text.endsWith('#')) {
       this.showChannelList = true;
-      this.showUserList = false;
+      this.toggleMemberInChat = false;
       console.log('#');
     } else {
-      this.showUserList = false;
+      this.toggleMemberInChat = false;
       this.showChannelList = false;
     }
   }
