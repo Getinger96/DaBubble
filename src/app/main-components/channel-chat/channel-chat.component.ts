@@ -78,7 +78,7 @@ export class ChannelChatComponent implements OnInit {
   openChannel = this.mainhelperservice.openChannel;
   allConversationMessages: ConversationMessage[] = [];
 
-  showChannelList: boolean = true;
+  showChannelList: boolean = false;
   isChannelInfoVisible = false;
   
   message: Message = {
