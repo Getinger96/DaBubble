@@ -145,10 +145,9 @@
         </div>
         <nav *ngIf="openChannels" class="channels-menu">
             <ng-container *ngFor="let channel of visibleChannels">
-                <div  class="channel"  (click)="openChannel(true, channel.name, channel.description, channel.creator, channel.id, channel.members, channel.date)">
-                    <p># <span
-                            >
-                            {{ channel.name }}
+                <div class="channel"  (click)="openChannel(true, channel.name, channel.description, channel.creator, channel.id, channel.members, channel.date)">
+                    <p># <span>
+                            {{ returnChannelName(channel.name) }}
                         </span></p>
                 </div>
             </ng-container>

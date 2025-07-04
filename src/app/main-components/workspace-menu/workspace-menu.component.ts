@@ -184,21 +184,26 @@ export class WorkspaceMenuComponent {
     this.channelservice.setChannelId(id)
     this.channelservice.setChannelMember(members);
     this.channelservice.setChanneldate(date)
-   this.mainservice.showdirectmessage = false
-   this.mainservice.showmainchat=false
+    this.mainservice.showdirectmessage = false
+    this.mainservice.showmainchat=false
     this.userId = this.actualUser[0].id;
-   this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
+    this.router.navigate(['/main-components/' + this.userId+'/channel/'+ id], { replaceUrl: true })
     this.channelMessageService.getChannelId(id)
     this.closeThread.emit();
     this.mainHelperService.openNewChat =false;
-   const width = window.innerWidth;
+    const width = window.innerWidth;
     if (window.matchMedia('(max-width: 768px)').matches) {
     this.toggleWorkspace.emit();
     }
   }
 
  
-
+  returnChannelName(name: string): string {
+    if (name.length > 13) {
+      return name.slice(0, 13) + ' ...';
+    }
+    return name;
+  }
 
   toggleWorkspaceDirectuser () {
            this.toggleWorkspace.emit();
