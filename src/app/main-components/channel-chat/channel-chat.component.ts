@@ -25,6 +25,7 @@ import { DirectMessageComponent } from '../../shared-components/direct-message/d
 import { MessageComponent } from '../../shared-components/message/message.component';
 import { MessageService } from '../../firebase-services/message.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { ResponsivService } from '../../services/responsiv.service';
 
 
 @Component({
@@ -52,6 +53,7 @@ export class ChannelChatComponent implements OnInit {
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('nameInputField') nameInputField!: ElementRef<HTMLInputElement>;
   @ViewChild('descriptionInputField') descriptionInputField!: ElementRef<HTMLInputElement>;
+  @ViewChild('channelInfo') channelInfo!: ElementRef<HTMLDivElement>;
   members: Member[] = [];
   @Input() allUsersChannel: User[] = [];
   allUsers: User[] = [];
@@ -78,6 +80,7 @@ export class ChannelChatComponent implements OnInit {
 
   showUserList: boolean = false;
   showChannelList: boolean = false;
+  isChannelInfoVisible = false;
   
   message: Message = {
     id: '',
@@ -103,7 +106,7 @@ export class ChannelChatComponent implements OnInit {
 
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
     private route: ActivatedRoute, public mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
-    private _eref: ElementRef) { }
+    private _eref: ElementRef, public responsiveService: ResponsivService) { }
 
 
   ngOnInit(): void {
@@ -163,7 +166,9 @@ export class ChannelChatComponent implements OnInit {
 
   }
 
-
+  toggleChannelInfo() {
+    this.isChannelInfoVisible = !this.isChannelInfoVisible;
+  }
 
   toggleEmojiBar() {
     this.toggleEmoji = !this.toggleEmoji;
@@ -355,11 +360,7 @@ this.allThreads = filtered
   insertMemberIntoTextarea(member: Member) {
     const insertText = `@${member.name} `;
     this.message.messageText += insertText;
-
   }
-
-
-
 
 
   closeOverlay() {

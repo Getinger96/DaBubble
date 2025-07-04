@@ -70,7 +70,7 @@
         justify-content: center;
         align-items: center;
         padding-left: 45px;
-        gap: 18px;
+        gap: 10px;
 
         img {
             width: 30px;
@@ -78,8 +78,14 @@
         }
 
         .arrow_down {
+            cursor: pointer;
             width: 14px;
             height: 8.19px;
+        }
+
+        .info{
+            width: 14px;
+            cursor: pointer;
         }
 
         .actual-group {
@@ -438,13 +444,27 @@ app-show-user {
 }
 
 .channel-info {
-    background-color: rgb(227 218 188);
-    padding: 16px;
+    background-color: #F6F1E9;
     display: flex;
     gap: 16px;
    flex-shrink: 0; // Add this to prevent it from shrinking too much
 
+  transition: all 0.4s ease;
+}
 
+.hidden{
+    padding: 0;
+    overflow: hidden;
+  opacity: 0;
+  max-height: 0;
+  transform: scaleY(0.95);
+}
+
+.show {
+    padding: 16px;
+    opacity: 1;
+  max-height: 800px;
+  transform: scaleY(1);
 }
 
 .channel-Info-Img {
@@ -610,7 +630,7 @@ app-show-user {
     .main-chat-header{
         height: 60px;   
 
-        .actualf-group{
+        .actual-group{
         span{
         font-size: 20px !important;
         }

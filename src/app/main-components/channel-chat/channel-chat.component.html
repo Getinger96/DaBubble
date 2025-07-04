@@ -50,11 +50,12 @@
 
 <div class="main-chat-wrapper">
     <div class="main-chat-header">
-        <div *ngIf="currentChannelName" (click)="openoverlay()" class="message-group">
+        <div *ngIf="currentChannelName" class="message-group">
             <div class="actual-group">
                 <img src="assets/img/tag.png" alt=""><span class="fontNunito">{{currentChannelName}}</span>
             </div>
-            <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="">
+            <img class="info" src="assets/img/info.svg" (click)="toggleChannelInfo()">
+            <img class="arrow_down" src="assets/img/keyboard_arrow_down.svg" alt="" (click)="openoverlay()">
         </div>
         <div *ngIf="currentChannelName" class="actual-group-members">
             <div *ngFor="let member of members.slice(0,3)">
@@ -77,7 +78,9 @@
 
     </div>
     <div *ngIf="currentChannelName" class="main-chat-feed">
-        <div class="channel-info">
+        <div #channelInfo class="channel-info" 
+        [class.show]="isChannelInfoVisible"
+        [class.hidden]="!isChannelInfoVisible">
             <div>
                 <img class="channel-Info-Img" src="../../../assets/img/Logo.png" alt="">
             </div>
