@@ -8,7 +8,7 @@ $font-secondary : 'Figtree', sans-serif;
     }
 
   app-main-components{
-    @media (max-width:768px) {
+    @media (max-width:900px) {
       display: flex;
       flex-direction: column;
       height: 100vh;  

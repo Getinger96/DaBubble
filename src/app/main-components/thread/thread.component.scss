@@ -7,7 +7,7 @@
     flex-direction: column;
     transition: 0.2s;
 
-    @media (max-width:768px) {
+    @media (max-width: 900px) {
         border-radius: 0;
     }
 
@@ -124,7 +124,7 @@
                 padding-left: 33px;
                 padding-right: 33px;
                 
-                @media (max-width: 768px) {
+                @media (max-width: 900px) {
                     padding-left: 21px;
                     padding-right: 21px;
                 }

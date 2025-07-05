@@ -519,13 +519,13 @@ max-height: 80px !important;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .mobile-visible.more-button {
     display: none !important;
   }
 }
 
-$breakpoint-tablet: 768px;
+$breakpoint-tablet: 900px;
 $breakpoint-phone: 460px;
 
 @media (max-width: $breakpoint-tablet) {

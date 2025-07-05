@@ -25,6 +25,7 @@
     flex-shrink: 0;
     width: 100%;
     max-width: 2280px;
+    position: relative;
 
     
     >.devspace-mobile{ 
@@ -35,6 +36,13 @@
         margin: 0;
         padding: 0;
       }
+    }
+
+    >app-search-bar{
+    position: absolute;
+    left: 385px;
+    width: 45%;
+    max-width: 989px;
     }
 
   }
