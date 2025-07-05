@@ -123,7 +123,6 @@ export class ChannelChatComponent implements OnInit {
     if (text.endsWith('@')) {
       this.toggleMemberInChat = true;
       this.showChannelList = false;
-      console.log('@')
     } else if (text.endsWith('#')) {
       this.showChannelList = true;
       this.toggleMemberInChat = false;
@@ -357,7 +356,11 @@ this.allThreads = filtered
 
 
   insertMemberIntoTextarea(member: Member) {
-    const insertText = `@${member.name} `;
+    const text = this.message.messageText;
+    let insertText = `@${member.name} `;
+    if (text.startsWith('@')) {
+      insertText = member.name + ' ';
+    }
     this.message.messageText += insertText;
   }
 
