@@ -7,7 +7,7 @@
   height: 100vh; // Change from calc(100vh - 130px) to 100vh
   box-sizing: border-box; // Add this
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     height: 100vh; // Change from calc(100vh - 100px) to 100vh
   }
 
@@ -92,7 +92,7 @@
     }
 
 
-       @media (max-width: 768px) {
+       @media (max-width: 900px) {
         justify-content: center;
         gap: 0;
         padding-top: 15px;
@@ -106,7 +106,7 @@
       transition: width 0.3s ease;
 
 
-          @media (max-width: 768px) {
+          @media (max-width: 900px) {
            max-width: 100%;
 
     }
@@ -167,7 +167,7 @@ app-new-chat {
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .main-content >.main-head-wrapper  > .main-head > app-search-bar, app-header {
     display: none;
   }

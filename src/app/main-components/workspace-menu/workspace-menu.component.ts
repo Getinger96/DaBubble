@@ -192,7 +192,7 @@ export class WorkspaceMenuComponent {
     this.closeThread.emit();
     this.mainHelperService.openNewChat =false;
     const width = window.innerWidth;
-    if (window.matchMedia('(max-width: 768px)').matches) {
+    if (window.matchMedia('(max-width: 900px)').matches) {
     this.toggleWorkspace.emit();
     }
   }

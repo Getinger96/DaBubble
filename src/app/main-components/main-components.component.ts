@@ -52,7 +52,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   selectedThreadMessage: Message | null = null;
   selectedConvThreadMessage: ConversationMessage | null = null;
   @ViewChild('threadRef') threadRef?: ElementRef;
-  private mediaQuery = window.matchMedia('(max-width: 768px)');
+  private mediaQuery = window.matchMedia('(max-width: 900px)');
   constructor(public messageService: MessageService, private loadingService: LoadingService, private registerservice: RegisterService, public mainservice: MainComponentService, public mainhelperService: MainHelperService, private router: Router, private channemessageService: ChannelMessageService, private conversationMessage: ConversationService, public responsivService: ResponsivService) {
 
   }
@@ -97,7 +97,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
   get shouldHideRouter() {
     const workspace = document.querySelector('app-workspace-menu');
-    if (window.matchMedia('(max-width: 768px)').matches && !workspace!.classList.contains('closed')) {
+    if (window.matchMedia('(max-width: 900px)').matches && !workspace!.classList.contains('closed')) {
       return true
     } else {
       return false
@@ -205,14 +205,14 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     const width = window.innerWidth
     if (!this.mainservice.showdirectmessage) {
       const main = document.querySelector('main');
-      if (window.matchMedia('(max-width: 768px)').matches) {
+      if (window.matchMedia('(max-width: 900px)').matches) {
         main!.classList.add('hidden');
       }
     }
 
     if (this.mainservice.showdirectmessage) {
       const directMessage = document.querySelector('app-direct-message-chat')
-      if (window.matchMedia('(max-width: 768px)').matches) {
+      if (window.matchMedia('(max-width: 900px)').matches) {
         directMessage!.classList.add('hidden');
       }
     }
@@ -334,7 +334,7 @@ private toggleVisibleSections(isClosed: boolean | undefined) {
   toggleOpenNewChat(value: boolean) {
     this.mainhelperService.openNewChat = true;
 
-     if (window.matchMedia('(max-width: 768px)').matches) {
+     if (window.matchMedia('(max-width: 900px)').matches) {
        this.openWorkspaceMobile();
       }
   }

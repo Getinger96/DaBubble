@@ -61,7 +61,7 @@ export class DirectMessageUserComponent implements OnInit {
     this.closeThread.emit();
    
   const width = window.innerWidth;
-    if (width <= 768) {
+    if (width <= 900) {
        this.toggleWorkspaceDirectuser.emit();
     }
   }
