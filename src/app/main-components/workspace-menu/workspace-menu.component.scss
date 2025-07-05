@@ -380,8 +380,11 @@
 
 .selected-tags {
     display: flex;
+    flex-direction: row;
     gap: 5px;
     margin-bottom: 5px;
+    overflow-x: auto;
+    width: 100%;
 }
 
 .tag {
