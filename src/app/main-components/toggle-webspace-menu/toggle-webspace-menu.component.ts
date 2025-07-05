@@ -16,7 +16,7 @@ export class ToggleWebspaceMenuComponent {
   isWorkspaceOpen: boolean = true;
   mobile: boolean = false;
   @Output() closeToggleWorkspace  = new EventEmitter<boolean>();
-  private mediaQuery = window.matchMedia('(max-width: 768px)');
+  private mediaQuery = window.matchMedia('(max-width: 900px)');
 
   constructor(public responsivService: ResponsivService) {
     this.handleMediaChange(this.mediaQuery);

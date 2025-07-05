@@ -268,7 +268,7 @@ addMessageInChannel(channel:any, channelId:string, channelName: string) {
     this.mainHelperService.openNewChat =false
     this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
     this.channelMessageService.getChannelId(id)
-       if (window.matchMedia('(max-width: 768px)').matches) {
+       if (window.matchMedia('(max-width: 900px)').matches) {
       this.toggleToMainCompoments();
     }
 

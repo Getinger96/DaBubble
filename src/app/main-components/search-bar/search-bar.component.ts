@@ -175,7 +175,7 @@ console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
     this.mainservice.directmessaeUserIdSubject.next(dm.name);
     this.searchTerm = '';
     this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${dm.conversationmessageId}`);
-    if (window.matchMedia('(max-width: 768px)').matches) {
+    if (window.matchMedia('(max-width: 900px)').matches) {
       this.toggleWorkspaceToChat();
     }
 
@@ -248,7 +248,7 @@ console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
     this.mainservice.directmessaeUserIdSubject.next(id);
     this.searchTerm = '';
     this.router.navigateByUrl(`/main-components/${this.userId}/directmessage/${id}`);
-    if (window.matchMedia('(max-width: 768px)').matches) {
+    if (window.matchMedia('(max-width: 900px)').matches) {
       this.toggleWorkspaceToChat();
     }
   }
@@ -267,7 +267,7 @@ console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
     this.router.navigateByUrl(`/main-components/${this.userId}/channel/${id}`);
     this.channelMessageService.getChannelId(id)
     this.searchTerm = '';
-    if (window.matchMedia('(max-width: 768px)').matches) {
+    if (window.matchMedia('(max-width: 900px)').matches) {
       this.toggleWorkspaceToChat();
     }
   }
