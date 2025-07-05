@@ -101,18 +101,24 @@ export class DirectMessageComponent {
 
 
 
-      let dateObj: Date;
+      let dateObj: Date | null = null;
 
       if (timestamp instanceof Date) {
         dateObj = timestamp;
       } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
         dateObj = (timestamp as any).toDate();
-      } else {
+      } else if (timestamp) {
         dateObj = new Date(timestamp);
       }
 
-      this.date = this.dateFormatter.format(dateObj);
-      this.time = this.timeFormatter.format(dateObj);
+      if (dateObj && !isNaN(dateObj.getTime())) {
+        this.date = this.dateFormatter.format(dateObj);
+        this.time = this.timeFormatter.format(dateObj);
+      } else {
+        this.date = '';
+        this.time = '';
+        console.warn('Invalid timestamp for message:', this.messageData);
+      }
 
       this.maincomponentservice.currentusermessagAvatar$.subscribe((avatar) => {
         if (
