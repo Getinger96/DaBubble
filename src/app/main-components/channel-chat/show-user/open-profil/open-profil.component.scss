@@ -23,6 +23,12 @@
     border-radius: 50px !important;
     gap: 20px;
 
+
+    @media (max-width:1000px) {
+     width: 300px;
+    height: 510px;
+    }
+
 }
 
 .container-Header{
@@ -31,6 +37,11 @@
     justify-content: space-between;
     >span{
         font-size: 48px;
+
+
+           @media (max-width:1000px) {
+            font-size: 34px;
+    }
     }
     >img{
         cursor: pointer;
@@ -40,11 +51,22 @@
 .container-img{
     display: flex;
     justify-content: center;
+
+    >img {
+          @media (max-width:1000px) {
+        width: 170px;
+    }
+    }
 }
 
 .container-Name{
     >span{
-        font-size: 48px
+        font-size: 48px;
+
+                @media (max-width:1000px) {
+            font-size: 34px;
+    }
+        
     }
 }
 
@@ -57,6 +79,10 @@
     }
     >span{
         font-size: 28px;
+
+           @media (max-width:1000px) {
+            font-size: 25px;
+    }
     }
 }
 
