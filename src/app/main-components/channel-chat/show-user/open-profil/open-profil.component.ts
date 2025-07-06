@@ -1,4 +1,4 @@
-import { Component,inject, Inject } from '@angular/core';
+import { Component,inject, Inject, Input, OnInit, Output,EventEmitter  } from '@angular/core';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule, } from '@angular/material/card';  
@@ -16,29 +16,50 @@ import { User } from '../../../../interfaces/user.interface';
   templateUrl: './open-profil.component.html',
   styleUrl: './open-profil.component.scss'
 })
-export class OpenProfilComponent {
-
-    userAvatar: number;
-  userEmail: string;
-  userName: string;
-  userStatus: string;
-  userId: string;
+export class OpenProfilComponent implements OnInit {
+  @Input() user: User | null = null;
+  userAvatar: number = 0;
+  userEmail: string = '';
+  userName: string = '';
+  userStatus: string = '';
+  userId: string = '';
+  @Output() userCard = new EventEmitter<void>();
+  @Output() closeCard = new EventEmitter<void>();
   firestore: Firestore = inject(Firestore);
 
-constructor(@Inject(MAT_DIALOG_DATA) public data: User, public dialogRef: MatDialogRef<OpenProfilComponent>) {
-this.userAvatar = data.avatar;
-this.userEmail = data.email;
-this.userName = data.name; 
-this.userStatus = data.status;
-this.userId = data.id;
 
+  constructor(public mainHelperService: MainHelperService, public mainServie: MainComponentService) {}
+
+  ngOnInit(): void {
+    if (this.user) {
+      this.userAvatar = this.user.avatar;
+      this.userEmail = this.user.email;
+      this.userName = this.user.name;
+      this.userStatus = this.user.status;
+      this.userId = this.user.id;
+    }
+  }
+
+
+
+closeprofilcard() {
+this.mainHelperService.showProfilCard = false 
+this.userCard.emit();
 }
 
 
-    closeDialog() {
-    this.dialogRef.close();
-  }
+   opendirectChat(id: string,name: string, close: boolean, avatar: number, email: string, status: string) {
 
+    this.mainServie.showdirectmessage = true
+    this.mainHelperService.openChannelSection(close)
+    this.mainServie.setDirectmessageuserName(name)
+    this.mainServie.setDirectmessageuserEmail(email)
+    this.mainServie.setDirectmessageuserAvatar(avatar)
+    this.mainServie.setDirectmessageuserStatus(status)
+    this.mainServie.setDirectmessageuserId(id)
+   this.mainHelperService.showProfilCard = false 
+   this.closeCard.emit();
+  }
 
   
 

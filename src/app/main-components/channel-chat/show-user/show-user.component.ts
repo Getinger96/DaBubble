@@ -8,10 +8,11 @@ import { Member } from '../../../interfaces/member.interface';
 import { OpenProfilComponent } from './open-profil/open-profil.component';
 import { collection, doc, Firestore, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { MainHelperService } from '../../../services/main-helper.service';
+import { ProfileCardOverlayService } from '../../profile-card/profile-card-overlay.service';
 @Component({
   selector: 'app-show-user',
   standalone: true,
-  imports: [MatCardModule, CommonModule,],
+  imports: [MatCardModule, CommonModule, OpenProfilComponent],
   templateUrl: './show-user.component.html',
   styleUrl: './show-user.component.scss'
 })
@@ -19,9 +20,11 @@ export class ShowUserComponent implements OnInit {
   @Output() addMemberClicked = new EventEmitter<void>();
   @Output() openProfil = new EventEmitter<void>();
   firestore: Firestore = inject(Firestore);
+selectedUser: User | null = null;
 
   readonly dialog = inject(MatDialog);
-  constructor(  public dialogRef: MatDialogRef<ShowUserComponent>, @Inject(MAT_DIALOG_DATA) public data: { allUsersChannel: User[], members: Member[],  }, public mainHelperService : MainHelperService) {
+  constructor(  public dialogRef: MatDialogRef<ShowUserComponent>, @Inject(MAT_DIALOG_DATA) public data: { allUsersChannel: User[], members: Member[],  }, public mainHelperService : MainHelperService,
+   public profileCardOverlayService: ProfileCardOverlayService) {
  
   }
 
@@ -59,20 +62,17 @@ export class ShowUserComponent implements OnInit {
 
 async openProfilCard(member: Member) {
   let user = await this.getDataFormFirebase(member);
-  
-  const dialogRef = this.dialog.open(OpenProfilComponent, {
-    data: {
-      id: member.id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      status: user.status
-    } as User, 
-    
-    panelClass: 'another-dialog-position',
-  });
+  this.selectedUser = {
+    id: member.id,
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar,
+    status: user.status,
+    uid: '', 
+    passwort: ''
+  };
+  this.mainHelperService.showProfilCard = true;
 }
-
 
 async getDataFormFirebase(member:Member) {
 const userId = member.id
@@ -86,6 +86,11 @@ return {
   status: userData!['status'],
 }
 
+}
+
+
+reloadSelectedUser() {
+   this.selectedUser = null;
 }
 
 

@@ -1,6 +1,6 @@
 
 
-<div class="allUser" *ngIf="this.mainHelperService.showProfilCard ">
+<div class="allUser">
 
 <mat-card appearance="outlined">
     <mat-card-content>
@@ -29,3 +29,6 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+
+<app-open-profil *ngIf="mainHelperService.showProfilCard && selectedUser" [user]="selectedUser"  (userCard)="reloadSelectedUser()" (closeCard)="closeDialog()"></app-open-profil>

@@ -1,10 +1,8 @@
 <div  class="overlay-bg">
-    <mat-card appearance="outlined">
-    <mat-card-content>
     <div class="profile-Container" #profilcard>
         <div class="container-Header">
             <span>Profil</span>
-            <img (click)="closeDialog()" src="assets/img/close.png" alt="close">
+            <img  src="assets/img/close.png" alt="close" (click)="closeprofilcard()"> 
         </div>
         <div class="container-img">
             <img  src="assets/img/avatar_large_{{ userAvatar }}.png" alt="avatar">
@@ -27,9 +25,8 @@
         </div>
 
         <div class="button-container">
-            <button   class="button">Nachricht senden</button>
+            <button (click)="opendirectChat(userId, userName, false, userAvatar, userEmail, userStatus)"   class="button">Nachricht senden</button>
         </div>
     </div>
-        </mat-card-content>
-  </mat-card>
+
 </div>
