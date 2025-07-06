@@ -202,7 +202,6 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
 
   checkWidthWorkspace() {
-    const width = window.innerWidth
     if (!this.mainservice.showdirectmessage) {
       const main = document.querySelector('main');
       if (window.matchMedia('(max-width: 900px)').matches) {
@@ -270,6 +269,7 @@ private toggleVisibleSections(isClosed: boolean | undefined) {
       this.removeThreadsIsOpenChannel()
       this.removeThreadsIsOpenDirectMessage();
     }
+    this.checkwidthForThreads()
   }
 
   checkThreadIsOpenOrChannelChat() {
@@ -297,6 +297,24 @@ private toggleVisibleSections(isClosed: boolean | undefined) {
 
     }
   }
+
+
+checkwidthForThreads() {
+  const directMessage = document.getElementById('directMessageChat');
+  const threadsHtml = document.getElementById('threads');
+  const routerWrapper = document.getElementById('routerOutletWrapper');
+  const workspace = document.querySelector('app-workspace-menu');
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  if (isMobile) {
+    const threadsVisible = threadsHtml && !threadsHtml.classList.contains('hidden');
+    const directMessageHidden = directMessage && directMessage.classList.contains('hidden');
+    const routerHidden = routerWrapper && routerWrapper.classList.contains('hidden')
+
+    if (threadsVisible && (directMessageHidden || routerHidden)) {
+      workspace?.classList.add('closed');
+    }
+  }
+}
 
   removeThreadsIsOpenChannel() {
     const routerWrapper = document.getElementById('routerOutletWrapper');
