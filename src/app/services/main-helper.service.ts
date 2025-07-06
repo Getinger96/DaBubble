@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,8 @@ export class MainHelperService {
     showMemberList: boolean = false
     openNewChat:boolean =false
     openThreadSeachBar:boolean =false
+    focusDirectMessage$ = new Subject<void>();
+    focusChannelMessage$ = new Subject<void>();
   constructor() { }
 
 
@@ -26,6 +28,8 @@ this.setChannel(openChannel)
 setChannel(openChannel: boolean) {
   return this.openChannel = openChannel;
 }
+
+
 
 
 }

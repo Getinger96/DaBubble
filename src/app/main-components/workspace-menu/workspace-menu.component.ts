@@ -195,6 +195,7 @@ export class WorkspaceMenuComponent {
     if (window.matchMedia('(max-width: 900px)').matches) {
     this.toggleWorkspace.emit();
     }
+    this.mainHelperService.focusChannelMessage$.next();
   }
 
  

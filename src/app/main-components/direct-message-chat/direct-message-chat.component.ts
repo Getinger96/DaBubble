@@ -17,6 +17,7 @@ import { combineLatest, filter, map, switchMap, firstValueFrom } from 'rxjs';
 import { User } from '../../interfaces/user.interface';
 
 
+
 @Component({
   selector: 'app-direct-message-chat',
   standalone: true,
@@ -263,6 +264,9 @@ export class DirectMessageChatComponent {
     if (!this.scrolled) {
       this.scrollToBottom();
     }
+        this.mainHelperService.focusDirectMessage$.subscribe(() => {
+    setTimeout(() => this.directMessageBox?.nativeElement.focus());
+  });
   }
 
    /**

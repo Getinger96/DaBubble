@@ -59,6 +59,7 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainhelperService.openNewChat =false;
     console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeThread.emit();
+    this.mainhelperService.focusDirectMessage$.next();
    
   const width = window.innerWidth;
     if (width <= 900) {

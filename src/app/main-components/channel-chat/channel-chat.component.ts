@@ -80,6 +80,7 @@ export class ChannelChatComponent implements OnInit {
 
   showChannelList: boolean = false;
   isChannelInfoVisible = false;
+  shouldFocusMessageBox = false;
   
   message: Message = {
     id: '',
@@ -115,7 +116,18 @@ export class ChannelChatComponent implements OnInit {
 
     this.loadActualUser();
     this.loadAllUser();
+    this.mainhelperservice.focusChannelMessage$.subscribe(() => {
+    this.shouldFocusMessageBox = true;
+  });
   }
+
+ngAfterViewChecked() {
+  if (this.shouldFocusMessageBox && this.messageBox) {
+    this.messageBox.nativeElement.focus();
+    this.shouldFocusMessageBox = false;
+  }
+}
+
 
 
   openQuickMenu() {
@@ -214,7 +226,6 @@ export class ChannelChatComponent implements OnInit {
         this.loadCurrentCrator();
         this.loadMembers();
         this.loadDate();
-        this.focusOnInput();
 
       }
     });
@@ -290,12 +301,6 @@ this.allThreads = filtered
     const emoji = event.emoji.native;
     console.log('emoji', emoji);
     this.message.messageText += emoji;
-  }
-
-  focusOnInput(){
-      setTimeout(() => {
-    this.messageBox.nativeElement.focus();
-  });
   }
 
 

@@ -149,7 +149,7 @@
             </div>
 
     <div *ngIf="editMessage" class="edit-message-input fontNunito">
-        <textarea type="text" class="fontNunito" wrap="soft" rows="3" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
+        <textarea #channelMessageBox type="text" class="fontNunito" wrap="soft" rows="3" placeholder={{messageText}}  [(ngModel)]="editedMessageText"></textarea>
         <div class="controls-container">
             <img src="assets/img/emoji.png" alt="">
             <div class="edit-buttons">

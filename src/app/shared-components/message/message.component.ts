@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef, HostListener, SimpleChanges, input, OnInit, inject, viewChild } from '@angular/core';
 import { MessageService } from '../../firebase-services/message.service';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -57,6 +57,7 @@ export class MessageComponent implements OnChanges {
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiThreadMask') emojiThreadMask!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiThread') emojiThread!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('channelMessageBox') channelMessageBox! : ElementRef<HTMLTextAreaElement>
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
   allMessages: Message[] = []
@@ -133,6 +134,12 @@ export class MessageComponent implements OnChanges {
 
 
   }
+
+  ngAfterViewInit() {
+  this.mainHelperService.focusDirectMessage$.subscribe(() => {
+    setTimeout(() => this.channelMessageBox?.nativeElement.focus());
+  });
+}
 
   loadAllMessageInChannel() {
     this.channelmessageService.allMessages$.subscribe(Message => {

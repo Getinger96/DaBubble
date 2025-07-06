@@ -12,6 +12,7 @@ import { ThreadComponent } from '../../main-components/thread/thread.component';
 import { deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { Message } from '../../interfaces/message.interface';
 import { ResponsivService } from '../../services/responsiv.service';
+import { MainHelperService } from '../../services/main-helper.service';
 @Component({
   selector: 'app-direct-message',
   standalone: true,
@@ -76,7 +77,8 @@ export class DirectMessageComponent {
     private messageservice: MessageService,
     private maincomponentservice: MainComponentService,
     private conversationservice: ConversationService,
-    public responsiveService: ResponsivService
+    public responsiveService: ResponsivService,
+    private mainHelperService: MainHelperService
 
   ) { }
 
@@ -222,10 +224,11 @@ export class DirectMessageComponent {
         this.isOwn =
           this.messageData?.senderId ===
           this.maincomponentservice.actualUser[0].id;
-
-
       }, 0);
     }
+    this.mainHelperService.focusDirectMessage$.subscribe(() => {
+    setTimeout(() => this.directInput?.nativeElement.focus());
+  });
   }
 
   /**
