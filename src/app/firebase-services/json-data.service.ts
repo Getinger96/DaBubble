@@ -72,10 +72,8 @@ export class JsonDataService {
       creator: creator,
       description: item.description,
       date: date
-
     }
   }
-
 
   actulaUserList(actualUser: User) {
  return {
@@ -83,7 +81,6 @@ export class JsonDataService {
     name: actualUser.name,
     avatar: actualUser.avatar,
     status: actualUser.status
-
     }
   }
 }

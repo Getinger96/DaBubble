@@ -1,8 +1,8 @@
 import { Injectable, inject, } from '@angular/core';
-import { Firestore, deleteDoc, collection, addDoc,getDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot, arrayUnion } from '@angular/fire/firestore';
+import { Firestore, deleteDoc, collection, addDoc, getDoc, doc, updateDoc, setDoc, query, where, getDocs, onSnapshot, arrayUnion } from '@angular/fire/firestore';
 import { getAuth, deleteUser, onAuthStateChanged, confirmPasswordReset, createUserWithEmailAndPassword, signInWithPopup, getRedirectResult, GoogleAuthProvider, AuthProvider, sendPasswordResetEmail, reauthenticateWithCredential, updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from '../interfaces/user.interface';
-import { ChannelMember} from '../interfaces/ChannelMember.interface';
+import { ChannelMember } from '../interfaces/ChannelMember.interface';
 import { Observable, pipe } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, BehaviorSubject } from 'rxjs';
@@ -72,7 +72,7 @@ export class RegisterService {
       }
       const user = userCredential.user;
       this.name = item.name;
-      localStorage.setItem('registerName',  this.name );
+      localStorage.setItem('registerName', this.name);
       this.addInFirebase(item, user.uid);
       this.router.navigate(['/chooseAvatar']);
       return true
@@ -99,7 +99,6 @@ export class RegisterService {
       await updateDoc(channelRef, {
         members: arrayUnion(memberData)
       });
-      console.log('Mitglied erfolgreich zum Channel hinzugefügt.');
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Mitglieds zum Channel:', error);
     }
@@ -108,9 +107,8 @@ export class RegisterService {
   async addInFirebase(item: User, uid: string) {
     return addDoc(this.getUserRef(), this.userJson(item, uid)).then(async docRef => {
       this.id = docRef.id;
-      localStorage.setItem('registerId',  this.id );
+      localStorage.setItem('registerId', this.id);
       this.uid = uid;
-
 
       await updateDoc(docRef, { id: docRef.id });
 
@@ -127,7 +125,7 @@ export class RegisterService {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });
   }
- 
+
   userJson(item: User, uid: string) {
     return {
       name: item.name,
@@ -152,36 +150,33 @@ export class RegisterService {
     };
   }
 
-  async updateUserAvatar(avatar: number, name:string) {
+  async updateUserAvatar(avatar: number, name: string) {
     try {
       if (!this.id) {
-          this.id = localStorage.getItem('registerId') ||  ''
+        this.id = localStorage.getItem('registerId') || ''
       }
       const userRef = doc(this.firestore, "Users", this.id);// Verwende setDoc, um sicherzustellen, dass das Dokument existiert oder erstellt wird
       await updateDoc(userRef, { avatar: avatar });
-      await this.updateDocInMainChannel(avatar,name)
+      await this.updateDocInMainChannel(avatar, name)
       this.router.navigate(['/']);
     } catch (error) {
       console.error("Fehler beim Aktualisieren des Avatars:", error);
     }
   }
 
-
-  async updateDocInMainChannel(avatar: number,name:string ) {
-    const channelId = 'BLDNqmQQWm4Qqv4NLNbv'; 
+  async updateDocInMainChannel(avatar: number, name: string) {
+    const channelId = 'BLDNqmQQWm4Qqv4NLNbv';
     const channelRef = doc(this.firestore, `Channels/${channelId}`);
     const channSnap = await getDoc(channelRef);
     const data = channSnap.data();
     const members = data?.['members'];
 
-     for (let i = 0; i < members.length; i++) {
-    if (members[i].name === name && members[i].avatar === 1) {
-      members[i].avatar = avatar; 
-      break; 
+    for (let i = 0; i < members.length; i++) {
+      if (members[i].name === name && members[i].avatar === 1) {
+        members[i].avatar = avatar;
+        break;
+      }
     }
-    
-  }
-
     await updateDoc(channelRef, { members });
   }
 

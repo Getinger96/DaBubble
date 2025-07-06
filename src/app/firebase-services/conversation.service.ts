@@ -28,8 +28,8 @@ export class ConversationService implements OnDestroy {
   private messageMap = new Map<string, ConversationMessage[]>(); // convId → messages
   public showThreadSubject = new BehaviorSubject<boolean>(false);
   showThread$ = this.showThreadSubject.asObservable();
-private selectedConversationMessagesSubject = new BehaviorSubject<ConversationMessage[]>([]);
-public selectedConversationMessages$ = this.selectedConversationMessagesSubject.asObservable();
+  private selectedConversationMessagesSubject = new BehaviorSubject<ConversationMessage[]>([]);
+  public selectedConversationMessages$ = this.selectedConversationMessagesSubject.asObservable();
   public threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
 
@@ -79,13 +79,10 @@ public selectedConversationMessages$ = this.selectedConversationMessagesSubject.
 
     this.mainservice.directmessaeUserIdSubject.subscribe(
       async (partnerUserId) => {
-        console.log('Selected user changed:', partnerUserId);
         const currentUserId = this.getActualUser();
 
         if (!partnerUserId || !currentUserId) return;
-
         this.closeThread();
-        
         this.lastAnswer = null;
 
         if (unsubscribeListener) {
@@ -344,7 +341,6 @@ public selectedConversationMessages$ = this.selectedConversationMessagesSubject.
    */
   openThread(message: ConversationMessage) {
     this.selectedThreadMessageSubject.next(message);
-    console.log('Selected Thread Message is', this.selectedThreadMessageSubject);
     this.showThreadSubject.next(true);
     const messageId = message.conversationmessageId;
     if (messageId) {
@@ -623,7 +619,6 @@ public selectedConversationMessages$ = this.selectedConversationMessagesSubject.
         const current = reactionMap.get(emoji)!;
         current.count += 1;
         current.users.push(user);
-        console.log('current', current);
       });
 
       callback(reactionMap);
@@ -703,9 +698,6 @@ public selectedConversationMessages$ = this.selectedConversationMessagesSubject.
         isAnswered: threadCount > 0,
       });
 
-      console.log(
-        `Updated thread count for message ${messageId}: ${threadCount}`
-      );
     } catch (error) {
       console.error('Error updating thread count:', error, {
         messageId,
@@ -824,6 +816,4 @@ public selectedConversationMessages$ = this.selectedConversationMessagesSubject.
   ngOnDestroy(): void {
     this.clearMessageListeners();
   }
-
-
 }

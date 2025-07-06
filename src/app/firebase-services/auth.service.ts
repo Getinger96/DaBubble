@@ -35,9 +35,6 @@ export class AuthService {
     return true;
   }
 
-
-  
-
   async loginWithGoogleAccountItWorks(result: any) {
     const credential = GoogleAuthProvider.credentialFromResult(result);
     if (credential) {
@@ -69,18 +66,18 @@ export class AuthService {
     const userExists = await this.loginservice.checkIfUserExists(user.email);
 
     if (!userExists) {
-      console.log('➕ Benutzer existiert NICHT – wird neu erstellt.');
       let newUser = this.jsonservice.newUserWithGoogleMail(user);
       this.addInFirebaseGoogleMailUser(newUser, user.uid);
       this.mainservice.getActualUser(user.uid);
     } else {
       this.mainservice.getActualUser(user.uid);
       this.setStatusOnline(user.uid, 'Online');
+     
       this.mainservice.saveActualUser();
       this.mainservice.acutalUser$.subscribe(user => {
         this.id = user[0].id;
+         this.loginservice.updateStatusInChannels(this.id,'Online')
       });
-      
     }
   }
 
@@ -98,9 +95,8 @@ export class AuthService {
   addInFirebaseGoogleMailUser(item: User, id: string) {
     return addDoc(this.registerservice.getUserRef(), this.jsonservice.userJsonGoogleMail(item, id)).then(async docRef => {
       this.id = docRef.id;
-      console.log("Benutzer gespeichert mit ID:", docRef.id);  // Automatisch generierte ID
       await updateDoc(docRef, { id: docRef.id });
-      return docRef.id;  // Gibt die automatisch generierte ID zurück
+      return docRef.id; 
     }).catch(error => {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     });

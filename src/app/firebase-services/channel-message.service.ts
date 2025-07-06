@@ -167,7 +167,6 @@ export class ChannelMessageService {
     }
   }
 
-
   async addThreadAnswer(messageText: string, threadToId: string, selectedMessage: Message) {
     const user = this.mainservice.actualUser[0];
     const { sendAt, sendAtTime } = this.getFormattedDateTime();
@@ -271,45 +270,41 @@ export class ChannelMessageService {
     }
   }
 
+  async deleteMessageInFirebase(messageId: string, channelID: string) {
+    try {
+      const messageRefDoc = doc(this.firestore, 'Channels', channelID, 'messages', messageId);
+      const messageDocSnap = await getDoc(messageRefDoc);
+      let messageData = messageDocSnap.data();
 
- async deleteMessageInFirebase(messageId:string, channelID:string) {
-          try {
-          const messageRefDoc = doc(this.firestore, 'Channels', channelID, 'messages', messageId);
-          const messageDocSnap = await getDoc(messageRefDoc);
-          let messageData = messageDocSnap.data();
-
-          if (messageData?.['isThread'] === true) {
-            let messageDataThreadTo = messageData?.['threadTo']
-            this.updatethreadCount(messageDataThreadTo, channelID);
-          }
-
-          console.log('messageData',messageData);
-          await deleteDoc(messageRefDoc)
-          this.subList(channelID)
-          } catch (error) {
-            
-          }
+      if (messageData?.['isThread'] === true) {
+        let messageDataThreadTo = messageData?.['threadTo']
+        this.updatethreadCount(messageDataThreadTo, channelID);
       }
 
-async updatethreadCount(messageDataThreadTo: string, channelID: string) {
-  const messagesRef = collection(this.firestore, 'Channels', channelID, 'messages');
-  const q = query(messagesRef, where('messageId', '==', messageDataThreadTo));
-  const querySnapshot = await getDocs(q);
+      await deleteDoc(messageRefDoc)
+      this.subList(channelID)
+    } catch (error) {
 
-  if (!querySnapshot.empty) {
-    const docSnap = querySnapshot.docs[0];
-    const messageData = docSnap.data();
-    console.log('messageData:', messageData);
-    // Beispiel: Feld updaten
-    const currentCount = messageData['threadCount'];
-    await updateDoc(docSnap.ref, {
-      threadCount: currentCount - 1,
-    });
-  } else {
-    console.log('Kein Dokument gefunden mit messageId:', messageDataThreadTo);
+    }
   }
-}
 
+  async updatethreadCount(messageDataThreadTo: string, channelID: string) {
+    const messagesRef = collection(this.firestore, 'Channels', channelID, 'messages');
+    const q = query(messagesRef, where('messageId', '==', messageDataThreadTo));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const docSnap = querySnapshot.docs[0];
+      const messageData = docSnap.data();
+      // Beispiel: Feld updaten
+      const currentCount = messageData['threadCount'];
+      await updateDoc(docSnap.ref, {
+        threadCount: currentCount - 1,
+      });
+    } else {
+      console.log('Kein Dokument gefunden mit messageId:', messageDataThreadTo);
+    }
+  }
 
   async saveEmojiInFirebaseMessage(emoji: any, channelID: string, messageID: string, count: number) {
     const messageDocRef = doc(this.firestore, 'Channels', channelID, 'messages', messageID);
@@ -322,7 +317,7 @@ async updatethreadCount(messageDataThreadTo: string, channelID: string) {
     this.emojiCountsList[emoji] = count;
     await updateDoc(messageDocRef, { emojiCounts: this.emojiCountsList });
   }
-  
+
   async loadAllMessagesFromAllChannels() {
     const channelsSnapshot = await getDocs(collection(this.firestore, 'Channels'));
     const allMessages: Message[] = [];

@@ -66,8 +66,11 @@ export class ActiveUserComponent implements OnInit {
 
   logOut(){
     let actual = this.actualUser[0].uid
+    let actualID=this.actualUser[0].id
+    
     
     this.loginservice.updateStatusByUid(actual,'Offline')
+    this.loginservice.updateStatusInChannels(actualID, 'Offline');
     document.body.style.overflow = 'auto';
     setTimeout(() => {
      this.router.navigate(['/'], { replaceUrl: true });

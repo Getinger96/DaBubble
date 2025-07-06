@@ -5,6 +5,7 @@ import { MainComponentService } from './main-component.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../interfaces/user.interface';
 import { RegisterService } from './register.service';
+import { ChannelMember } from '../interfaces/ChannelMember.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,8 +56,8 @@ export class LoginService {
   }
 
   private async handleUserAuthState(user: any) {
-    console.log('✅ Benutzerstatus bestätigt:', user, user.uid);
     this.updateStatusByUid(user.uid, 'Online');
+       await this.updateStatusInChannels(user.id, 'Online');
     this.mainservice.saveActualUser();
     this.mainservice.getActualUser(user.uid);
 
@@ -64,8 +65,6 @@ export class LoginService {
     this.mainservice.acutalUser$.subscribe(user => {
       id = user[0].id;
     });
-
-   
   }
 
   getUserRef() {
@@ -93,11 +92,34 @@ export class LoginService {
         let docRef = this.getSingleDocRef(user.id)
         await updateDoc(docRef, { status: user.status });
       }
-
     }
   }
 
   getSingleDocRef(docID: string) {
     return doc(collection(this.firestore, 'Users'), docID);
+  }
+
+ async updateStatusInChannels(id: string, newStatus: string): Promise<void> {
+    const channelsRef = collection(this.firestore, 'Channels');
+    const allChannelsSnapshot = await getDocs(channelsRef);
+
+    const channelsToUpdate: { id: string; members: ChannelMember[] }[] = [];
+
+    allChannelsSnapshot.forEach(channelDoc => {
+      const data = channelDoc.data();
+      const members = data['members'] as ChannelMember[];
+      if (!Array.isArray(members)) return;
+
+      const memberIndex = members.findIndex(m => m.id === id);
+      if (memberIndex > -1 && members[memberIndex].status !== newStatus) {
+        members[memberIndex].status = newStatus;
+        channelsToUpdate.push({ id: channelDoc.id, members });
+      }
+    });
+
+    for (const channel of channelsToUpdate) {
+      const channelDocRef = doc(this.firestore, 'Channels', channel.id);
+      await updateDoc(channelDocRef, { members: channel.members });
+    }
   }
 }
