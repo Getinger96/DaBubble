@@ -1,4 +1,6 @@
-<div class="allUser">
+
+
+<div class="allUser" *ngIf="this.mainHelperService.showProfilCard ">
 
 <mat-card appearance="outlined">
     <mat-card-content>
@@ -8,7 +10,7 @@
             <img class="closeIcon" src="assets/img/close.png" alt="" (click)="closeDialog()">
             </div>
             <div class="users">
-                <div class="profile" *ngFor="let member of data.members">
+                <div class="profile" *ngFor="let member of data.members" (click)="openProfilCard(member)">
                     <div class="avatarImages">
                     <img  class="avatar" src="assets/img/avatar_{{member.avatar}}.png" alt="avatar">
                     <img class="status" src="assets/img/{{member.status}}.svg" alt="status">

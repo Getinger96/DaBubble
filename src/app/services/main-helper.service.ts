@@ -14,6 +14,7 @@ export class MainHelperService {
     openThreadSeachBar:boolean =false
     focusDirectMessage$ = new Subject<void>();
     focusChannelMessage$ = new Subject<void>();
+    showProfilCard: boolean = true
   constructor() { }
 
 

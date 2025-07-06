@@ -337,7 +337,10 @@ this.allThreads = filtered
     });
 
     dialogRef.componentInstance.addMemberClicked.subscribe(() => {
-      this.openDialogMembers();
+
+      setTimeout(() => {
+        this.openDialogMembers();
+      }, 50);
     });
   }
 

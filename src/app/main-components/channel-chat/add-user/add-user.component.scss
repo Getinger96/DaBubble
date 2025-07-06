@@ -18,39 +18,65 @@ body::-webkit-scrollbar {
     height: 550px;
   }
 
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-right: 50px;
+  border: solid 1px black;
+  border-radius: 20px;
+  max-width: 200px;
+  overflow-y: auto;
+  max-height: 350px;
+  overflow-x: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: #444df2 transparent;
 
-  .users {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding-right: 50px;
-    border: solid 1px black;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #444df2;
     border-radius: 20px;
-    max-width: 200px;
-    overflow-y: auto;
-    max-height:350px;
-    overflow-x: hidden !important;
-    scrollbar-width: thin;
-    scrollbar-color: #444df2 transparent;
-  
+  }
+
+  @media (max-width: 500px) {
+    max-height: 250px;
+    scrollbar-width: none; 
+    overflow-y: scroll;
+
     &::-webkit-scrollbar {
-      width: 6px;
+      display: none; 
     }
-  
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-  
+
     &::-webkit-scrollbar-thumb {
-      background-color: #444df2;
-      border-radius: 20px;
+      background-color: transparent; 
     }
   }
+}
+
   h1 {
     font-size: 2rem;
     font-weight: 600;
     color: #000;
     margin: 0;
+
+          @media (max-width: 1000px) { 
+               font-size: 26px;
+
+     }
+
+
+       @media (max-width: 500px) { 
+              font-size: 22px;
+
+     }
+    
   }
   .profile {
     display: flex;
@@ -83,10 +109,22 @@ body::-webkit-scrollbar {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+
+
+      @media (max-width: 500px) { 
+                padding: 0px;
+
+      }
   }
 
   .closeIcon {
     margin-bottom: 50px;
+
+
+       @media (max-width: 500px) { 
+                margin-bottom: 70px;
+
+      }
   }
 
 
@@ -144,6 +182,12 @@ body::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     padding-left: 30px;
+
+  
+          @media (max-width: 500px) { 
+                  padding-left: 10px;
+
+     }
   }
 
   p {
@@ -269,5 +313,30 @@ body::-webkit-scrollbar {
   right: 6%;
   width: 430px;
   height: 600px;
+           @media (max-width: 1000px) { 
+            width: 380px;
+            height: 500px;
+
+     }
+
+
+          @media (max-width: 900px) { 
+          top: 18%;
+          right: 5%;
+
+
+     }
+
+        @media (max-width: 500px) { 
+         width: 350px;
+        height: 440px;
+
+     }
+
+
+          @media (max-width: 480px) { 
+              top: 15%;
+              right: 10%;
+     }
 }
 

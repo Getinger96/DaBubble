@@ -29,6 +29,12 @@
     font-weight: 600;
     color: #000;
     margin: 0;
+
+
+       @media (max-width: 1000px) { 
+               font-size: 26px;
+
+     }
   }
   .profile {
     display: flex;
@@ -93,4 +99,11 @@
   right: 6%;
   width: 430px;
   height: 600px;
+
+
+          @media (max-width: 1000px) { 
+            width: 380px;
+            height: 500px;
+
+     }
 }

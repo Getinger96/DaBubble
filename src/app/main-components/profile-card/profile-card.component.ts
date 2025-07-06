@@ -1,7 +1,7 @@
 import { NgClass, NgIf, CommonModule, } from '@angular/common';
 import { Component, Input, Output, EventEmitter,  OnChanges, SimpleChanges, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ProfileCardOverlayService } from './profile-card-overlay.service';
-
+import { collection, doc, Firestore, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 @Component({
   selector: 'app-profile-card',
   standalone: true,
