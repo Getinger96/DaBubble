@@ -42,6 +42,7 @@ export class DirectMessageComponent {
   @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('directInput') directInput!: ElementRef<HTMLTextAreaElement>
 
   showAllEmojis: boolean = false;
   threadCount$: Observable<number> = of(0);
@@ -221,6 +222,8 @@ export class DirectMessageComponent {
         this.isOwn =
           this.messageData?.senderId ===
           this.maincomponentservice.actualUser[0].id;
+
+
       }, 0);
     }
   }
@@ -398,6 +401,10 @@ export class DirectMessageComponent {
       ' ' +
       this.dateFormatter.format(dateObj)
     );
+  }
+
+  public putFocusOnInput(){
+    this.directInput.nativeElement.focus();
   }
 
   /**
