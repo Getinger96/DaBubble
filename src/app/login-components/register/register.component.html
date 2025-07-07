@@ -45,6 +45,8 @@
 
             <span *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen und Nachnamen
                 ein</span>
+                 <span *ngIf="userNameAlreadyExist" class="validation-text"> Dieser Name ist vergeben. Gib bitte einen anderen an.
+            </span>
 
             <div class="input-containers" (focusin)="divfocusmail('email',true)"
                 [ngClass]="{'borderPurple':borderVisibleMail, 'empty-input-Name':!user.email && email.touched}"

@@ -23,6 +23,7 @@ export class RegisterService {
   uid?: string;
   name?: string;
   userEmailExist?: boolean = false
+  userNameExist?: boolean = false
 
   constructor(private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
@@ -63,23 +64,60 @@ export class RegisterService {
     }
   }
 
-  async addNewUser(item: User, event: Event) {
+  async checkIfUserNameExistsBeforeRegistration(item: User) {
     try {
-      event.preventDefault();
-      const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
-      if (!await this.checkIfUserExistsBeforeRegistration(item)) {
-        return false;
+      let userQuery = query(this.getUserRef(), where("name", "==", item.name))
+      const querySnapshot = await getDocs(userQuery);
+
+      if (!querySnapshot.empty) {
+        this.userNameExist = true
+        return false
       }
-      const user = userCredential.user;
-      this.name = item.name;
-      localStorage.setItem('registerName', this.name);
-      this.addInFirebase(item, user.uid);
-      this.router.navigate(['/chooseAvatar']);
+      this.userNameExist = false;
       return true
     } catch (error) {
+      console.error('Fehler beim Überprüfen des Benutzers:', error);
       return false;
     }
   }
+
+ async addNewUser(item: User, event: Event) {
+  try {
+    event.preventDefault();
+
+    console.log('Prüfe E-Mail und Namen...');
+    const emailOk = await this.checkIfUserExistsBeforeRegistration(item);
+    const nameOk = await this.checkIfUserNameExistsBeforeRegistration(item);
+
+    if (!emailOk) {
+      console.log('Email existiert bereits.');
+      return false;
+    }
+    if (!nameOk) {
+      console.log('Name existiert bereits.');
+      return false;
+    }
+
+    console.log('Lege User bei Firebase an...');
+    const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
+
+    const user = userCredential.user;
+    this.name = item.name;
+    localStorage.setItem('registerName', this.name);
+
+    console.log('Füge User in Firestore hinzu...');
+    await this.addInFirebase(item, user.uid); // await falls addInFirebase async ist
+
+    console.log('Navigiere zu chooseAvatar...');
+    this.router.navigate(['/chooseAvatar']);
+
+    return true;
+
+  } catch (error) {
+    console.error('Firebase Fehler bei Registrierung:', error);
+    return false;
+  }
+}
 
   getChannelRef() {
     return collection(this.firestore, 'Channels');

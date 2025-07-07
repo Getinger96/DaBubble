@@ -29,6 +29,7 @@ export class RegisterComponent {
   isChecked: boolean = false;
   overlayvisible: boolean = false;
   userAlreadyExist?: boolean = this.registerservice.userEmailExist
+  userNameAlreadyExist?: boolean = this.registerservice.userEmailExist
 
   constructor(private registerservice: RegisterService) {
 
@@ -53,6 +54,7 @@ export class RegisterComponent {
         event
       );
       this.userAlreadyExist = this.registerservice.userEmailExist
+      this.userNameAlreadyExist=this.registerservice.userNameExist
 
       if (success) {
         this.overlayvisible = true;
