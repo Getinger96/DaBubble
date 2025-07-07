@@ -423,6 +423,9 @@ this.allThreads = filtered
     this.mainhelperservice.showMemberList = !this.mainhelperservice.showMemberList
   }
 
+  addInInputField(channel:string) {
+    this.message.messageText += `${channel} `;
+  }
 
 }
 

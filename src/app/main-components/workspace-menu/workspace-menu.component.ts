@@ -200,11 +200,11 @@ export class WorkspaceMenuComponent {
 
  
   returnChannelName(name: string): string {
-    if (!this.mainHelperService.channelNames.includes(name)) {
-      this.mainHelperService.channelNames.push(name);
-    }
     if (name.length > 13) {
       return name.slice(0, 13) + ' ...';
+    }
+    if (!this.mainHelperService.channelNames.includes(name)) {
+      this.mainHelperService.channelNames.push(name);
     }
     return name;
   }
