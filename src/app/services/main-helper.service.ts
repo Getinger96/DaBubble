@@ -5,32 +5,32 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class MainHelperService {
-    public showChannel = new BehaviorSubject  < boolean>(false);
+    public showChannel = new BehaviorSubject <boolean>(false);
     openChannel$ = this.showChannel.asObservable();
     openChannel: boolean = true;
-    showEditMessage: boolean = false
-    showMemberList: boolean = false
-    openNewChat:boolean =false
-    openThreadSeachBar:boolean =false
+    showEditMessage: boolean = false;
+    showMemberList: boolean = false;
+    openNewChat:boolean = false;
+    openThreadSeachBar:boolean =false;
     focusDirectMessage$ = new Subject<void>();
     focusChannelMessage$ = new Subject<void>();
-    showProfilCard: boolean = true
+    showProfilCard: boolean = true;
+    channelNames: any[] = [];
+
   constructor() { }
 
 
-openChannelSection(openChannel: boolean) {
-this.setChannel(openChannel)
-  this.showChannel.next(this.openChannel);
-  console.log('this.openChannel', this.openChannel);
-  
-}
+  openChannelSection(openChannel: boolean) {
+    this.setChannel(openChannel)
+    this.showChannel.next(this.openChannel);
+    console.log('this.openChannel', this.openChannel);
+    
+  }
 
 
-setChannel(openChannel: boolean) {
-  return this.openChannel = openChannel;
-}
-
-
+  setChannel(openChannel: boolean) {
+    return this.openChannel = openChannel;
+  }
 
 
 }

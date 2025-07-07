@@ -125,10 +125,7 @@ export class ChannelChatComponent implements OnInit {
   }
 
 loadAllChannelNames() {
-  this.channelService.channels$.subscribe(channels => {
-      this.channels = channels;
-      console.log('Channels in Component:', this.channels);
-  });
+    console.log('Channels in Component:', this.mainhelperservice.channelNames);
 }
 
 

@@ -126,7 +126,11 @@
                 @if (this.showChannelList) {
                     <div class="channel-quick-menu">
                         <div class="channel-list">
-                            
+                            @for (channel of this.mainhelperservice.channelNames; track channel) {
+                                <div class="channel-item">
+                                    <span>#</span><span class="channel-name">{{ channel }}</span>
+                                </div>
+                            }
                         </div>
                     </div>
                 }
