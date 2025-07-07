@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="button-container">
-                <button *ngIf="currentChannelCreator != actualUser[0].name" (click)="deleteChannel()" class="delete-Button">Channel Verlassen</button>
+                <button type="button" *ngIf="currentChannelCreator != actualUser[0].name" (click)="leaveChannel(channelForm,currentChannelID)" class="delete-Button">Channel Verlassen</button>
                 <button *ngIf="currentChannelCreator === actualUser[0].name" (click)="deleteChannel()" class="delete-Button">Channel löschen</button>
                 <input [disabled]="" type="submit" value="Speichern">
             </div>
