@@ -49,6 +49,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   openNewChat: boolean = false
   actualUser: User[] = [];
   workspaceIsOpen: boolean = false
+  isWorkspaceOpen = false;
   selectedThreadMessage: Message | null = null;
   selectedConvThreadMessage: ConversationMessage | null = null;
   @ViewChild('threadRef') threadRef?: ElementRef;
@@ -97,9 +98,13 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
   get shouldHideRouter() {
     const workspace = document.querySelector('app-workspace-menu');
-    if (window.matchMedia('(max-width: 900px)').matches && !workspace!.classList.contains('closed')) {
+    if (window.matchMedia('(max-width: 900px)').matches && !workspace!.classList.contains('closed') && !this.mainhelperService.ToDirectChat) {
+      workspace!.classList.remove('closed');
       return true
-    } else {
+    } else if (this.mainhelperService.ToDirectChat) {
+      workspace!.classList.add('closed');
+       return false
+    } {
       return false
     }
 
@@ -227,6 +232,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
 
 
 openWorkspaceMobile() {
+    this.isWorkspaceOpen = !this.isWorkspaceOpen;
   setTimeout(() => {
     const workspace = document.querySelector('app-workspace-menu');
     const isClosed = workspace?.classList.toggle('closed');

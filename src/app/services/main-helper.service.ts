@@ -16,7 +16,7 @@ export class MainHelperService {
     focusChannelMessage$ = new Subject<void>();
     showProfilCard: boolean = true;
     channelNames: any[] = [];
-
+    ToDirectChat: boolean = false;
   constructor() { }
 
 
@@ -31,6 +31,7 @@ export class MainHelperService {
   setChannel(openChannel: boolean) {
     return this.openChannel = openChannel;
   }
+
 
 
 }
