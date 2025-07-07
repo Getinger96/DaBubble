@@ -59,6 +59,7 @@ export class ChannelChatComponent implements OnInit {
   allUsers: User[] = [];
   allMessages: Message[] = [];
   allThreads: Message[] = [];
+  channels: Channel[] = [];
   readonly dialog = inject(MatDialog);
   overlayeditChannel: boolean = false;
   editName: boolean = false
@@ -107,19 +108,29 @@ export class ChannelChatComponent implements OnInit {
   constructor(private channelService: ChannelService, private ngZone: NgZone, private channelmessageService: ChannelMessageService, private mainservice: MainComponentService,
     private route: ActivatedRoute, public mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
     private _eref: ElementRef, public responsiveService: ResponsivService) {
-     }
+
+    }
+
 
 
   ngOnInit(): void {
     this.mainservice.showmainchat=false
     this.loadRouter();
-
     this.loadActualUser();
     this.loadAllUser();
     this.mainhelperservice.focusChannelMessage$.subscribe(() => {
-    this.shouldFocusMessageBox = true;
-  });
+      this.shouldFocusMessageBox = true;
+    });
+    this.loadAllChannelNames();
   }
+
+loadAllChannelNames() {
+  this.channelService.channels$.subscribe(channels => {
+      this.channels = channels;
+      console.log('Channels in Component:', this.channels);
+  });
+}
+
 
 ngAfterViewChecked() {
   if (this.shouldFocusMessageBox && this.messageBox) {
