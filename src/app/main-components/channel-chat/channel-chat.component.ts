@@ -280,29 +280,51 @@ export class ChannelChatComponent implements OnInit {
       this.currentChannelDate = date;
     })
   }
-  loadMessages(channelId: string) {
-    console.log('📥 Nachrichten werden geladen für Channel:', channelId);
+ loadMessages(channelId: string) {
+  console.log('📥 Nachrichten werden geladen für Channel:', channelId);
 
-    if (this.allMessageSubscription) {
-      this.allMessageSubscription.unsubscribe();
-    }
-
-    this.channelmessageService.subList(channelId);
-
-    this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-      console.log('📦 Alle geladenen Nachrichten aus dem Service:', messages);
-
-      const filtered = messages.filter(message => !!message.messageText?.trim());
-      this.allMessages = filtered
-        .filter(message => !message.isThread && message.channelId === channelId)
-        .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)); // ⬅ Sortierung nach Zeit
-
-      this.allThreads = filtered
-        .filter(message => message.isThread && message.channelId === channelId)
-        .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)); // optional
-      console.log('✅ Gefilterte Nachrichten für diesen Channel:', this.allMessages);
-    });
+  if (this.allMessageSubscription) {
+    this.allMessageSubscription.unsubscribe();
   }
+
+  this.channelmessageService.subList(channelId);
+
+  this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
+    console.log('📦 Alle geladenen Nachrichten aus dem Service:', messages);
+
+    const filtered = messages.filter(message => !!message.messageText?.trim());
+
+    this.allMessages = filtered
+      .filter(message => !message.isThread && message.channelId === channelId)
+      .sort((a, b) => this.normalizeTimestamp(a.timestamp) - this.normalizeTimestamp(b.timestamp));
+
+    this.allThreads = filtered
+      .filter(message => message.isThread && message.channelId === channelId)
+      .sort((a, b) => this.normalizeTimestamp(a.timestamp) - this.normalizeTimestamp(b.timestamp));
+
+    console.log('✅ Gefilterte Nachrichten für diesen Channel:', this.allMessages);
+  });
+}
+
+private normalizeTimestamp(ts: any): number {
+  if (!ts) return 0;
+
+  if (typeof ts === 'number') return ts;
+
+  if (typeof ts === 'string') {
+    const parsed = new Date(ts).getTime();
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  if (ts instanceof Date) return ts.getTime();
+
+  // Firestore Timestamp (z. B. aus Firebase)
+  if (typeof ts === 'object' && 'seconds' in ts) {
+    return ts.seconds * 1000 + Math.floor((ts.nanoseconds || 0) / 1_000_000);
+  }
+
+  return 0;
+}
 
 
   addEmoji(event: any) {

@@ -80,12 +80,36 @@ export class ChannelMessageService {
   }
 
   sortAllMessages(messageArray: Message[]): void {
-    messageArray.sort((a, b) => {
-      const timestampA = a.timestamp || 0;
-      const timestampB = b.timestamp || 0;
-      return timestampA - timestampB;
-    });
+  messageArray.sort((a, b) => {
+    const timestampA = this.normalizeTimestamp(a.timestamp);
+    const timestampB = this.normalizeTimestamp(b.timestamp);
+    return timestampA - timestampB;
+  });
   }
+  private normalizeTimestamp(ts: any): number {
+  if (!ts) return 0;
+
+  if (typeof ts === 'number') {
+    return ts;
+  }
+
+  if (typeof ts === 'string') {
+    const parsed = new Date(ts).getTime();
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  if (ts instanceof Date) {
+    return ts.getTime();
+  }
+
+  // Firestore Timestamp object
+  if (typeof ts === 'object' && 'seconds' in ts) {
+    return ts.seconds * 1000 + Math.floor((ts.nanoseconds || 0) / 1_000_000);
+  }
+
+  // fallback
+  return 0;
+}
 
   getActualUser() {
     return this.mainservice?.actualUser[0]?.id;
