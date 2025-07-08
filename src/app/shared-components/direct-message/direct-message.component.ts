@@ -92,14 +92,12 @@ export class DirectMessageComponent {
       console.log('Raw timestamp:', timestamp);
       this.conversationmessageid = this.messageData.conversationmessageId;
       this.conversationId = this.messageData.id;
-
       this.conversationservice.getReactionsForMessage(
-        this.messageData.id,
-        this.messageData.conversationmessageId,
+        this.conversationId,                    // ✅ richtig: conversationId
+        this.conversationmessageid,            // ✅ richtig: conversationmessageId
         (reactionMap) => {
           this.emojiReactions = reactionMap;
           console.log('emojiReactions', this.emojiReactions, this.selectedMessage);
-
         }
       );
 
