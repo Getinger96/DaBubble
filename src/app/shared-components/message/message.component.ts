@@ -396,6 +396,7 @@ onCancelEdit() {
 
 
   openDialog() {
+     this.mainHelperService.ToDirectChat =true 
     if (!this.userName || !this.userEmail || !this.userStatus) {
       console.warn('Benutzerdaten unvollständig – Dialog nicht geöffnet');
       return;
@@ -415,6 +416,7 @@ onCancelEdit() {
      dialogRef.componentInstance.showProfilCard.subscribe(() => {
       dialogRef.close();
     });
+     
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef,HostListener} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Message } from '../../interfaces/message.interface';
 import { DirectMessageComponent } from '../../shared-components/direct-message/direct-message.component';
 import { MessageComponent } from '../../shared-components/message/message.component';
@@ -29,7 +29,7 @@ export class ThreadComponent {
   @Input() time!: Date | string;
   @Input() date!: Date | string;
   @Input() threadReplies: any;
-  threadCount$ = new BehaviorSubject<number>(0);  
+  threadCount$ = new BehaviorSubject<number>(0);
   @Output() openThread = new EventEmitter<void>();
   @Output() closeThread = new EventEmitter<void>();
   @Output() checkWidthTrigger = new EventEmitter<void>();
@@ -48,87 +48,87 @@ export class ThreadComponent {
   private selectedMessageSubscription!: Subscription;
   private threadRepliesSubscription!: Subscription;
   emojiReactions = new Map<string, { [emoji: string]: { count: number, users: string[] } }>();
-  members: Member[] =[]
+  members: Member[] = []
   newThreadText: string = '';
   toggleMemberInThread: boolean = false;
   toggleEmoji: boolean = false;
   threadCount: number = 0;
   private threadCountSubscription?: Subscription;
-  constructor( private elementRef: ElementRef,
+  constructor(private elementRef: ElementRef,
     public messageService: MessageService,
     private mainService: MainComponentService,
     private cdr: ChangeDetectorRef,
-    private channelmessageservice:ChannelMessageService,
+    private channelmessageservice: ChannelMessageService,
     private channelService: ChannelService,
     private conversationService: ConversationService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
     this.loadChannelId();
     this.loadMembers();
-  if ( this.mainService.showdirectmessage ) {
-    this.selectedMessageSubscription = this.conversationService.selectedThreadMessage$.subscribe((message) => {
-      this.selectedConvMessage = message;
-      if (message?.id) {
-        this.loadConvThreadAnswers();
-      }
-    });
-  } else {
-    this.selectedMessageSubscription = this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
-      this.selectedMessage = message;
-      if (message?.messageId) {
-        this.loadThreadAnswers();
-      }
-    });
-  }
+    if (this.mainService.showdirectmessage) {
+      this.selectedMessageSubscription = this.conversationService.selectedThreadMessage$.subscribe((message) => {
+        this.selectedConvMessage = message;
+        if (message?.id) {
+          this.loadConvThreadAnswers();
+        }
+      });
+    } else {
+      this.selectedMessageSubscription = this.channelmessageservice.selectedThreadMessage$.subscribe((message) => {
+        this.selectedMessage = message;
+        if (message?.messageId) {
+          this.loadThreadAnswers();
+        }
+      });
+    }
 
     this.threadRepliesSubscription =
       this.channelmessageservice.threadReplies$.subscribe((replies) => {
         this.threadAnswers = replies;
       });
 
-      this.initializeCountCheck()
+    this.initializeCountCheck()
     setTimeout(() => this.scrollToBottom(), 0);
-      this.checkWidthTrigger.emit();
+    this.checkWidthTrigger.emit();
 
   }
 
-    ngOnChanges(){
-      this.initializeCountCheck()
-      }
-
-private initializeCountCheck(): void {
-  if (this.selectedConvMessage) {
-    const count = typeof this.selectedConvMessage.threadCount === 'number'
-      ? this.selectedConvMessage.threadCount
-      : 0;
-    this.threadCount$.next(count);
+  ngOnChanges() {
+    this.initializeCountCheck()
   }
-  if (this.mainService.showdirectmessage) {
-    
-  
-  this.conversationService.updateConvMessageThreadCount(
-    this.selectedConvMessage?.conversationmessageId || '',
-    this.selectedConvMessage?.id || ''
-  );
 
-}
-}
+  private initializeCountCheck(): void {
+    if (this.selectedConvMessage) {
+      const count = typeof this.selectedConvMessage.threadCount === 'number'
+        ? this.selectedConvMessage.threadCount
+        : 0;
+      this.threadCount$.next(count);
+    }
+    if (this.mainService.showdirectmessage) {
 
 
-    @HostListener('document:click', ['$event'])
+      this.conversationService.updateConvMessageThreadCount(
+        this.selectedConvMessage?.conversationmessageId || '',
+        this.selectedConvMessage?.id || ''
+      );
+
+    }
+  }
+
+
+  @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
-       const target = event.target as HTMLElement;
+    const target = event.target as HTMLElement;
 
     this.handleEmojiWindow(target)
-           const clickedAddMember = this.addMemberAtImg?.nativeElement?.contains(target)
+    const clickedAddMember = this.addMemberAtImg?.nativeElement?.contains(target)
       || this.addMember?.nativeElement?.contains(target);
 
     if (!clickedAddMember) {
       this.toggleMemberInThread = false;
     }
-       
+
   }
 
 
@@ -137,17 +137,17 @@ private initializeCountCheck(): void {
   }
 
 
-  handleEmojiWindow(target:HTMLElement) {
-           const clickedEmojiWindow = this.emojiComponent?.nativeElement?.contains(target)
+  handleEmojiWindow(target: HTMLElement) {
+    const clickedEmojiWindow = this.emojiComponent?.nativeElement?.contains(target)
       || this.addEmojiImg?.nativeElement?.contains(target);
 
     if (!clickedEmojiWindow) {
-          this.toggleEmoji = false;
+      this.toggleEmoji = false;
+    }
+
   }
 
-}
 
- 
 
   scrollToBottom(): void {
     try {
@@ -157,12 +157,12 @@ private initializeCountCheck(): void {
 
 
   loadChannelId() {
-       this.channelService.currentChannelId$.subscribe(id => {
+    this.channelService.currentChannelId$.subscribe(id => {
       this.currentChannelID = id;
     });
   }
 
-    showEmojiBar() {
+  showEmojiBar() {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
   
@@ -172,7 +172,7 @@ loadReaction() {
     return;
   }
 
-  // Für selectedMessage laden
+  // Reactions für ausgewählte Nachricht laden
   if (this.selectedMessage?.messageId) {
     this.channelmessageservice.getReactionsForMessage(
       this.currentChannelID,
@@ -183,21 +183,21 @@ loadReaction() {
     );
   }
 
-  // Für jede Thread-Antwort laden
+  // Reactions für jede Thread-Antwort laden
   this.threadAnswers.forEach((message) => {
+    if (!message?.messageId) {
+      console.warn("Thread-Antwort ohne gültige messageId gefunden:", message);
+      return;
+    }
+
     this.channelmessageservice.getReactionsForMessage(
       this.currentChannelID!,
       message.messageId,
       (reactionMap: any) => {
         this.emojiReactions.set(message.messageId, reactionMap);
-
       }
-      
     );
-      console.log('this.threadAnswers', this.threadAnswers, this.threadAnswers[0].id);
   });
-
-  
 }
 
   openDialogAddMember() {
@@ -211,23 +211,23 @@ loadReaction() {
 
 
   openEmojiWindow() {
-        this.toggleEmoji = !this.toggleEmoji;
+    this.toggleEmoji = !this.toggleEmoji;
     if (this.toggleMemberInThread) {
       this.toggleMemberInThread = false
     }
   }
 
 
-   insertMemberIntoTextarea(member: Member) {
+  insertMemberIntoTextarea(member: Member) {
     const insertText = `@${member.name} `;
     this.newThreadText += insertText;
 
   }
 
 
-  addEmoji(event:any){
-        const emoji = event.emoji.native;
-         this.newThreadText += emoji;
+  addEmoji(event: any) {
+    const emoji = event.emoji.native;
+    this.newThreadText += emoji;
   }
 
   loadMembers() {
@@ -246,42 +246,42 @@ loadReaction() {
           this.threadAnswers = this.channelmessageservice.getThreadAnswers(
             this.selectedMessage.messageId
           );
-          this.loadReaction(); 
-                  this.threadCount$.next(this.threadAnswers.length);
-      } else {
-        this.threadAnswers = [];
-        this.threadCount$.next(0);
+          this.loadReaction();
+          this.threadCount$.next(this.threadAnswers.length);
+        } else {
+          this.threadAnswers = [];
+          this.threadCount$.next(0);
         };
 
       }
     );
   }
 
-loadConvThreadAnswers(): void {
-  console.log('Loading thread answers for message:', this.selectedConvMessage);
-  
-  if (this.allConvThreadsSubscription) {
-    this.allConvThreadsSubscription.unsubscribe();
+  loadConvThreadAnswers(): void {
+    console.log('Loading thread answers for message:', this.selectedConvMessage);
+
+    if (this.allConvThreadsSubscription) {
+      this.allConvThreadsSubscription.unsubscribe();
+    }
+
+    this.allConvThreadsSubscription =
+      this.conversationService.allMessages$.subscribe((messages) => {
+        console.log('All messages subscription fired:', messages);
+
+        if (this.selectedConvMessage && this.selectedConvMessage.conversationmessageId) {
+          const messageId = this.selectedConvMessage.conversationmessageId;
+
+          // Add a small delay to ensure allMessages is updated
+          setTimeout(() => {
+            this.threadConvAnswers = this.conversationService.getThreadAnswers(messageId);
+            console.log('Thread answers found:', this.threadAnswers);
+            this.threadCount$.next(this.threadConvAnswers.length);
+          }, 0);
+        }
+      });
   }
 
-  this.allConvThreadsSubscription =
-    this.conversationService.allMessages$.subscribe((messages) => {
-      console.log('All messages subscription fired:', messages);
-      
-      if (this.selectedConvMessage && this.selectedConvMessage.conversationmessageId) {
-        const messageId = this.selectedConvMessage.conversationmessageId;
-        
-        // Add a small delay to ensure allMessages is updated
-        setTimeout(() => {
-          this.threadConvAnswers = this.conversationService.getThreadAnswers(messageId);
-          console.log('Thread answers found:', this.threadAnswers);
-          this.threadCount$.next(this.threadConvAnswers.length);
-        }, 0);
-      }
-    });
-}
-
-   dateFormatter = new Intl.DateTimeFormat('de-DE', {
+  dateFormatter = new Intl.DateTimeFormat('de-DE', {
     weekday: 'long',
     day: '2-digit',
     month: 'long',
@@ -333,7 +333,7 @@ loadConvThreadAnswers(): void {
     }
     return this.dateFormatter.format(dateObj);
   }
-  
+
 
   closeThreads(): void {
     this.mainComponents.toggleThreads();
@@ -353,43 +353,43 @@ loadConvThreadAnswers(): void {
     this.scrollToBottom()
   }
 
-async sendConvReply(): Promise<void> {
-  if (!this.newThreadText.trim() || !this.selectedConvMessage) return;
-  await this.conversationService.addConvThreadAnswer(
-    this.newThreadText,
-    this.selectedConvMessage
-  );
-  this.newThreadText = '';
-  this.loadConvThreadAnswers();
-  this.conversationService.sortAllMessages(this.threadConvAnswers);
-  this.scrollToBottom();
-}
+  async sendConvReply(): Promise<void> {
+    if (!this.newThreadText.trim() || !this.selectedConvMessage) return;
+    await this.conversationService.addConvThreadAnswer(
+      this.newThreadText,
+      this.selectedConvMessage
+    );
+    this.newThreadText = '';
+    this.loadConvThreadAnswers();
+    this.conversationService.sortAllMessages(this.threadConvAnswers);
+    this.scrollToBottom();
+  }
 
   public isSameDate(timestamp1: any, timestamp2: any): boolean {
-  const date1 = this.convertToDate(timestamp1);
-  const date2 = this.convertToDate(timestamp2);
-  
-  return date1.toDateString() === date2.toDateString();
-}
+    const date1 = this.convertToDate(timestamp1);
+    const date2 = this.convertToDate(timestamp2);
 
-private convertToDate(timestamp: any): Date {
-  if (timestamp instanceof Date) {
-    return timestamp;
-  } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
-    return (timestamp as any).toDate();
-  } else {
-    return new Date(timestamp);
+    return date1.toDateString() === date2.toDateString();
   }
-}
+
+  private convertToDate(timestamp: any): Date {
+    if (timestamp instanceof Date) {
+      return timestamp;
+    } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
+      return (timestamp as any).toDate();
+    } else {
+      return new Date(timestamp);
+    }
+  }
 
   ngOnDestroy(): void {
     if (this.allThreadsSubscription) {
       this.allThreadsSubscription.unsubscribe();
     }
-       if (this.allConvThreadsSubscription) {
+    if (this.allConvThreadsSubscription) {
       this.allConvThreadsSubscription.unsubscribe();
     }
-        if (this.threadCountSubscription) {
+    if (this.threadCountSubscription) {
       this.threadCountSubscription.unsubscribe();
     }
 

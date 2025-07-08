@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="button-container">
-                <button *ngIf="currentChannelCreator != actualUser[0].name" (click)="deleteChannel()" class="delete-Button">Channel Verlassen</button>
+                <button type="button" *ngIf="currentChannelCreator != actualUser[0].name" (click)="leaveChannel(channelForm,currentChannelID)" class="delete-Button">Channel Verlassen</button>
                 <button *ngIf="currentChannelCreator === actualUser[0].name" (click)="deleteChannel()" class="delete-Button">Channel löschen</button>
                 <input [disabled]="" type="submit" value="Speichern">
             </div>
@@ -118,22 +118,21 @@
                 [currentChannelID]="currentChannelID"
                 (memberSelected)="insertMemberIntoTextarea($event)"></app-add-member-channel>
         </ng-container>
+        @if (this.showChannelList) {
+            <div class="channel-quick-menu">
+                <div class="channel-list">
+                    @for (channel of this.mainhelperservice.channelNames; track channel) {
+                        <div class="channel-item">
+                            <span>#</span><span class="channel-name" (click)="addInInputField(channel)">{{ channel }}</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
         <div class="main-chat-message">
             <textarea #messageBox [(ngModel)]="message.messageText" type="text" class="fontNunito" (input)="openQuickMenu()"
                 placeholder="Nachricht an #{{currentChannelName}}" wrap="soft" autofocus></textarea>
             <div class="message-icons">
-
-                @if (this.showChannelList) {
-                    <div class="channel-quick-menu">
-                        <div class="channel-list">
-                            @for (channel of this.mainhelperservice.channelNames; track channel) {
-                                <div class="channel-item">
-                                    <span>#</span><span class="channel-name">{{ channel }}</span>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
 
 
                 <div #emojiComponent class="emojiWindow" *ngIf="toggleEmoji">

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, getDocs, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp } from '@angular/fire/firestore';
+import { addDoc, collection, doc, getDocs, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp, arrayRemove } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
 import { BehaviorSubject, timestamp } from 'rxjs';
@@ -35,7 +35,7 @@ export class ChannelService {
     currentChannelId$ = this.channelIdSubject.asObservable();
     private channelDateSubject = new BehaviorSubject<string>('');
     currentChannelDate$ = this.channelDateSubject.asObservable();
-    
+
 
     constructor(private route: ActivatedRoute, private registerservice: RegisterService, private mainservice: MainComponentService, private jsonservice: JsonDataService) {
         this.unsubChannel = this.subChannelList()
@@ -199,22 +199,22 @@ export class ChannelService {
                 // Jetzt die Subcollection "messages" erstellen (mit einer ersten Nachricht)
                 return docref;
             });
-        
+
     }
 
 
-   async addCreatorInMemberList(id:string) {
-        const channelDocRef = doc(this.firestore, 'Channels', id );
+    async addCreatorInMemberList(id: string) {
+        const channelDocRef = doc(this.firestore, 'Channels', id);
         const channelDocSnap = await getDoc(channelDocRef);
 
-          if (channelDocSnap.exists()) {
+        if (channelDocSnap.exists()) {
             const data = channelDocSnap.data();
-            const actualUserJson =this.jsonservice.actulaUserList(this.actualUser[0])
+            const actualUserJson = this.jsonservice.actulaUserList(this.actualUser[0])
 
-                 await updateDoc(channelDocRef, {
-                members:[actualUserJson] 
-        });
-            }               
+            await updateDoc(channelDocRef, {
+                members: [actualUserJson]
+            });
+        }
 
     }
 
@@ -235,6 +235,15 @@ export class ChannelService {
             name: name,
             description: description
         });
+    }
+
+    async deleteMemberChannel(channelId: string, memberID: string,) {
+        const channelDocRef = doc(this.firestore, 'Channels', channelId);
+
+        await updateDoc(channelDocRef, {
+            members: arrayRemove(memberID)
+        });
+
     }
 
     async deleteChannel(channelId: string) {
@@ -259,21 +268,21 @@ export class ChannelService {
 
     async addMembersToChannel(channelId: string, members: { id: string, name: string, avatar: number }[]) {
         const channelDocRef = doc(this.firestore, 'Channels', channelId);
-          const channelDocSnap = await getDoc(channelDocRef);
-          let currentMembers: { id: string, name: string, avatar: number }[] = [];
-            if (channelDocSnap.exists()) {
+        const channelDocSnap = await getDoc(channelDocRef);
+        let currentMembers: { id: string, name: string, avatar: number }[] = [];
+        if (channelDocSnap.exists()) {
             currentMembers = channelDocSnap.data()['members'] || [];
-             }
-            const updatedMembers = [...currentMembers];
-            members.forEach(newMember => {
-        if (!updatedMembers.some(m => m.id === newMember.id)) {
-         updatedMembers.push(newMember);
-     }
-  });
+        }
+        const updatedMembers = [...currentMembers];
+        members.forEach(newMember => {
+            if (!updatedMembers.some(m => m.id === newMember.id)) {
+                updatedMembers.push(newMember);
+            }
+        });
 
-  await updateDoc(channelDocRef, {
-    members: updatedMembers
-  });
+        await updateDoc(channelDocRef, {
+            members: updatedMembers
+        });
     }
 
 

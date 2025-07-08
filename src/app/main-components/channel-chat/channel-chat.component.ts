@@ -82,7 +82,7 @@ export class ChannelChatComponent implements OnInit {
   showChannelList: boolean = false;
   isChannelInfoVisible = false;
   shouldFocusMessageBox = false;
-  
+
   message: Message = {
     id: '',
     messageId: '',
@@ -109,12 +109,12 @@ export class ChannelChatComponent implements OnInit {
     private route: ActivatedRoute, public mainhelperservice: MainHelperService, private conversationservice: ConversationService, private messageService: MessageService,
     private _eref: ElementRef, public responsiveService: ResponsivService) {
 
-    }
+  }
 
 
 
   ngOnInit(): void {
-    this.mainservice.showmainchat=false
+    this.mainservice.showmainchat = false
     this.loadRouter();
     this.loadActualUser();
     this.loadAllUser();
@@ -124,17 +124,17 @@ export class ChannelChatComponent implements OnInit {
     this.loadAllChannelNames();
   }
 
-loadAllChannelNames() {
+  loadAllChannelNames() {
     console.log('Channels in Component:', this.mainhelperservice.channelNames);
-}
-
-
-ngAfterViewChecked() {
-  if (this.shouldFocusMessageBox && this.messageBox) {
-    this.messageBox.nativeElement.focus();
-    this.shouldFocusMessageBox = false;
   }
-}
+
+
+  ngAfterViewChecked() {
+    if (this.shouldFocusMessageBox && this.messageBox) {
+      this.messageBox.nativeElement.focus();
+      this.shouldFocusMessageBox = false;
+    }
+  }
 
 
 
@@ -280,7 +280,7 @@ ngAfterViewChecked() {
       this.currentChannelDate = date;
     })
   }
-  loadMessages(channelId: string) {
+ loadMessages(channelId: string) {
   console.log('📥 Nachrichten werden geladen für Channel:', channelId);
 
   if (this.allMessageSubscription) {
@@ -293,15 +293,37 @@ ngAfterViewChecked() {
     console.log('📦 Alle geladenen Nachrichten aus dem Service:', messages);
 
     const filtered = messages.filter(message => !!message.messageText?.trim());
-    this.allMessages = filtered
-  .filter(message => !message.isThread && message.channelId === channelId)
-  .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)); // ⬅ Sortierung nach Zeit
 
-this.allThreads = filtered
-  .filter(message => message.isThread && message.channelId === channelId)
-  .sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)); // optional
+    this.allMessages = filtered
+      .filter(message => !message.isThread && message.channelId === channelId)
+      .sort((a, b) => this.normalizeTimestamp(a.timestamp) - this.normalizeTimestamp(b.timestamp));
+
+    this.allThreads = filtered
+      .filter(message => message.isThread && message.channelId === channelId)
+      .sort((a, b) => this.normalizeTimestamp(a.timestamp) - this.normalizeTimestamp(b.timestamp));
+
     console.log('✅ Gefilterte Nachrichten für diesen Channel:', this.allMessages);
   });
+}
+
+private normalizeTimestamp(ts: any): number {
+  if (!ts) return 0;
+
+  if (typeof ts === 'number') return ts;
+
+  if (typeof ts === 'string') {
+    const parsed = new Date(ts).getTime();
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  if (ts instanceof Date) return ts.getTime();
+
+  // Firestore Timestamp (z. B. aus Firebase)
+  if (typeof ts === 'object' && 'seconds' in ts) {
+    return ts.seconds * 1000 + Math.floor((ts.nanoseconds || 0) / 1_000_000);
+  }
+
+  return 0;
 }
 
 
@@ -316,8 +338,8 @@ this.allThreads = filtered
   startEditName() {
     this.editName = true
     setTimeout(() => {
-    this.nameInputField.nativeElement.focus();
-  });
+      this.nameInputField.nativeElement.focus();
+    });
   }
 
   saveName() {
@@ -327,8 +349,8 @@ this.allThreads = filtered
   startEditDescription() {
     this.editDescription = true
     setTimeout(() => {
-    this.descriptionInputField.nativeElement.focus();
-  });
+      this.descriptionInputField.nativeElement.focus();
+    });
   }
 
   saveDescription() {
@@ -405,6 +427,20 @@ this.allThreads = filtered
     this.closeOverlay()
   }
 
+  leaveChannel(ngForm: NgForm, id: string) {
+    this.members = this.members.filter(member => member.id !== this.actualUser[0].id);
+
+    // Optional: verschiebe ihn in eine andere Liste
+    const removedMember = this.members.find(m => m.id === this.actualUser[0].id);
+
+
+    // Speichere die neue Liste in Firestore
+    this.channelService.updateNewMembersInFirebase(this.members, this.currentChannelID);
+    this.closeOverlay()
+  }
+
+
+
   sendmessage() {
     if (!this.currentChannelID || !this.currentChannelName) return;
 
@@ -423,6 +459,9 @@ this.allThreads = filtered
     this.mainhelperservice.showMemberList = !this.mainhelperservice.showMemberList
   }
 
+  addInInputField(channel: string) {
+    this.message.messageText += `${channel} `;
+  }
 
 }
 

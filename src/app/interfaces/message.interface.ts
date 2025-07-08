@@ -1,4 +1,5 @@
 import { SafeScript } from "@angular/platform-browser";
+import { Timestamp } from 'firebase/firestore';
 
 export class Message {
     id: string;
@@ -10,7 +11,7 @@ export class Message {
     messageText: string;
     sendAt: string;
     sendAtTime: string;
-    timestamp?: number;
+      timestamp?: number | string | Date | Timestamp | { seconds: number; nanoseconds: number };
     reaction: number;
     isOwn: boolean;
     isAnswered: boolean;
@@ -31,7 +32,7 @@ export class Message {
         this.messageText = obj ? obj.messageText : ''
         this.sendAt = obj ? obj.sendAt : ''
         this.sendAtTime = obj ? obj.sendAtTime : ''
-        this.timestamp = obj ? obj.timestamp : Date.now();
+       this.timestamp = obj?.timestamp ?? Date.now();
         this.reaction = obj ? obj.reaction : ''
         this.isOwn = obj ? obj.isOwn : false
         this.isAnswered = obj ? obj.isAnswered : false

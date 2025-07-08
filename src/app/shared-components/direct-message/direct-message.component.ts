@@ -89,39 +89,54 @@ export class DirectMessageComponent {
   ngOnInit(): void {
     if (this.messageData) {
       const timestamp = this.messageData.timestamp;
+      console.log('Raw timestamp:', timestamp);
       this.conversationmessageid = this.messageData.conversationmessageId;
       this.conversationId = this.messageData.id;
-
       this.conversationservice.getReactionsForMessage(
-        this.messageData.id,
-        this.messageData.conversationmessageId,
+        this.conversationId,                    // ✅ richtig: conversationId
+        this.conversationmessageid,            // ✅ richtig: conversationmessageId
         (reactionMap) => {
           this.emojiReactions = reactionMap;
-          console.log('emojiReactions',this.emojiReactions, this.selectedMessage);
-
+          console.log('emojiReactions', this.emojiReactions, this.selectedMessage);
         }
       );
 
 
 
       let dateObj: Date | null = null;
+      const rawTimestamp = this.messageData?.timestamp;
 
-      if (timestamp instanceof Date) {
-        dateObj = timestamp;
-      } else if (timestamp && typeof (timestamp as any).toDate === 'function') {
-        dateObj = (timestamp as any).toDate();
-      } else if (timestamp) {
-        dateObj = new Date(timestamp);
+      if (rawTimestamp instanceof Date) {
+        dateObj = rawTimestamp;
+      } else if (typeof (rawTimestamp as any)?.toDate === 'function') {
+        dateObj = (rawTimestamp as any).toDate();
+      } else if (typeof rawTimestamp === 'number') {
+        dateObj = new Date(rawTimestamp);
+      } else if (typeof rawTimestamp === 'string') {
+        const parsed = new Date(rawTimestamp);
+        if (!isNaN(parsed.getTime())) {
+          dateObj = parsed;
+        }
+      } else if (rawTimestamp && typeof rawTimestamp === 'object' && 'seconds' in rawTimestamp) {
+        dateObj = new Date((rawTimestamp as any).seconds * 1000);
       }
 
       if (dateObj && !isNaN(dateObj.getTime())) {
-        this.date = this.dateFormatter.format(dateObj);
-        this.time = this.timeFormatter.format(dateObj);
+        try {
+          console.log('Valid dateObj:', dateObj);
+          this.date = this.dateFormatter.format(dateObj);
+          this.time = this.timeFormatter.format(dateObj);
+        } catch (e) {
+          console.warn('Date formatting failed:', e);
+          this.date = '';
+          this.time = '';
+        }
       } else {
         this.date = '';
         this.time = '';
-        console.warn('Invalid timestamp for message:', this.messageData);
+        console.warn('Invalid timestamp for message:', rawTimestamp);
       }
+      Wichtig:
 
       this.maincomponentservice.currentusermessagAvatar$.subscribe((avatar) => {
         if (
@@ -148,11 +163,16 @@ export class DirectMessageComponent {
         this.messageData
       );
       if (lastAnswer && lastAnswer.timestamp) {
-        const lastAnswerDate = new Date(lastAnswer.timestamp);
-        this.lastAnswerDate =
-          this.timeFormatter.format(lastAnswerDate) +
-          ' ' +
-          this.dateFormatter.format(lastAnswerDate);
+        const lastAnswerMillis = this.normalizeTimestamp(lastAnswer.timestamp);
+        if (lastAnswerMillis) {
+          const lastAnswerDate = new Date(lastAnswerMillis);
+          this.lastAnswerDate =
+            this.timeFormatter.format(lastAnswerDate) +
+            ' ' +
+            this.dateFormatter.format(lastAnswerDate);
+        } else {
+          this.lastAnswerDate = '';
+        }
       } else {
         this.lastAnswerDate = '';
       }
@@ -165,10 +185,29 @@ export class DirectMessageComponent {
     this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
   }
 
-   /**
-   * Angular lifecycle hook that runs when input properties change.
-   * Re-initializes reactive data if messageData is present.
-   */
+  private normalizeTimestamp(ts: any): number {
+    if (!ts) return 0;
+
+    if (typeof ts === 'number') return ts;
+
+    if (typeof ts === 'string') {
+      const parsed = new Date(ts).getTime();
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
+    if (ts instanceof Date) return ts.getTime();
+
+    if (typeof ts === 'object' && 'seconds' in ts) {
+      return ts.seconds * 1000 + Math.floor((ts.nanoseconds || 0) / 1_000_000);
+    }
+
+    return 0;
+  }
+
+  /**
+  * Angular lifecycle hook that runs when input properties change.
+  * Re-initializes reactive data if messageData is present.
+  */
   ngOnChanges(): void {
 
     if (this.messageData) {
@@ -203,10 +242,10 @@ export class DirectMessageComponent {
     this.conversationservice.updateConvMessageThreadCount(this.messageData?.conversationmessageId || '', this.messageData?.id || '')
   }
 
-   /**
-   * Loads all messages in the current conversation and assigns them to allMessages.
-   * Subscribes to allMessages$ observable from the conversation service.
-   */
+  /**
+  * Loads all messages in the current conversation and assigns them to allMessages.
+  * Subscribes to allMessages$ observable from the conversation service.
+  */
   loadAllMessageInConversation() {
     this.conversationservice.allMessages$.subscribe((messages) => {
       this.allMessages = messages;
@@ -214,10 +253,10 @@ export class DirectMessageComponent {
     console.log('this.allMessages', this.allMessages);
   }
 
-   /**
-   * Angular lifecycle hook that runs after the component's view has been fully initialized.
-   * Sets the isOwn property based on the senderId and actual user.
-   */
+  /**
+  * Angular lifecycle hook that runs after the component's view has been fully initialized.
+  * Sets the isOwn property based on the senderId and actual user.
+  */
   ngAfterViewInit(): void {
     if (this.messageData && this.maincomponentservice.actualUser[0]) {
       setTimeout(() => {
@@ -227,8 +266,8 @@ export class DirectMessageComponent {
       }, 0);
     }
     this.mainHelperService.focusDirectMessage$.subscribe(() => {
-    setTimeout(() => this.directInput?.nativeElement.focus());
-  });
+      setTimeout(() => this.directInput?.nativeElement.focus());
+    });
   }
 
   /**
@@ -345,7 +384,7 @@ export class DirectMessageComponent {
       (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
 
     console.log('this.emojiComponent?', this.emojiComponent);
-    
+
     if (!clickedInsideEmoji) {
       this.showEmojiPicker = false;
     }
@@ -392,6 +431,7 @@ export class DirectMessageComponent {
    */
   private formatTimestamp(timestamp: any): string {
     let dateObj: Date;
+
     if (timestamp instanceof Date) {
       dateObj = timestamp;
     } else if (timestamp && typeof timestamp.toDate === 'function') {
@@ -399,14 +439,24 @@ export class DirectMessageComponent {
     } else {
       dateObj = new Date(timestamp);
     }
-    return (
-      this.timeFormatter.format(dateObj) +
-      ' ' +
-      this.dateFormatter.format(dateObj)
-    );
+
+    if (!dateObj || isNaN(dateObj.getTime())) {
+      return '';
+    }
+
+    try {
+      return (
+        this.timeFormatter.format(dateObj) +
+        ' ' +
+        this.dateFormatter.format(dateObj)
+      );
+    } catch (e) {
+      console.warn('Failed to format timestamp:', timestamp, e);
+      return '';
+    }
   }
 
-  public putFocusOnInput(){
+  public putFocusOnInput() {
     this.directInput.nativeElement.focus();
   }
 

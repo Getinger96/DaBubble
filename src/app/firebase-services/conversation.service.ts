@@ -1,5 +1,5 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where, QuerySnapshot, DocumentData, deleteDoc, getDoc, docData } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where, QuerySnapshot, DocumentData, deleteDoc, getDoc, docData, setDoc } from '@angular/fire/firestore';
 import { Conversation } from '../interfaces/conversation.interface';
 import { ConversationMessage } from '../interfaces/conversation-message.interface';
 import { BehaviorSubject, from, timestamp } from 'rxjs';
@@ -51,7 +51,7 @@ export class ConversationService implements OnDestroy {
    */
   getConversationById(conversationId: string): Observable<Conversation | undefined> {
     if (!conversationId) return of(undefined);
-    const conversationDocRef = doc(this.firestore, `conversations/${conversationId}`
+    const conversationDocRef = doc(this.firestore, 'conversations',conversationId
     );
     return docData(conversationDocRef).pipe(
       map((c) => (c ? new Conversation(c as Conversation) : undefined))
@@ -206,7 +206,7 @@ export class ConversationService implements OnDestroy {
    * @returns A function to unsubscribe from the Firestore listener.
    */
   listenToMessages(conversationId: string, callback: (convMessages: ConversationMessage[]) => void): () => void {
-    const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
+   const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
     const q = query(convMessageRef, orderBy('timestamp'));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -265,22 +265,24 @@ export class ConversationService implements OnDestroy {
    * After the document is created, it updates the document with its own generated ID as `conversationmessageId`.
    */
   async sendMessage(conversationId: string, senderId: string, text: string, name: string, avatar: number) {
-    const convMessageRef = collection(this.firestore, 'conversation', conversationId, 'messages');
-    const docRef = await addDoc(convMessageRef, {
-      id: conversationId,
-      senderId,
-      text,
-      timestamp: new Date(),
-      isOwn: true,
-      isThread: false,
-      isInThread: false,
-      threadTo: '',
-      threadCount: 0,
-      name,
-      avatar,
-    });
-    const conversationmessageId = docRef.id;
-    await updateDoc(docRef, { conversationmessageId });
+  const docRef = doc(collection(this.firestore, 'conversation', conversationId, 'messages'));
+const conversationmessageId = docRef.id;
+
+await setDoc(docRef, {
+  conversationmessageId,
+  id: conversationId,
+  senderId,
+  text,
+  timestamp: new Date(),
+  isOwn: true,
+  isThread: false,
+  isInThread: false,
+  threadTo: '',
+  threadCount: 0,
+  name,
+  avatar,
+});
+   
     return conversationmessageId;
   }
 
@@ -448,11 +450,12 @@ export class ConversationService implements OnDestroy {
     };
 
     if (this.conversationId) {
-      const convMessageRef = collection(this.firestore, 'conversation', this.conversationId, 'messages');
+    const convMessageRef = collection(this.firestore, 'conversation', this.conversationId, 'messages');
       const docRef = await addDoc(convMessageRef, threadAnswer);
       threadAnswer.id = docRef.id;
-      this.updateThreadAnswers(threadToId);
-      await updateDoc(docRef, { messageId: docRef.id });
+     
+      await updateDoc(docRef, { conversationmessageId: docRef.id });
+       this.updateThreadAnswers(threadToId);
     }
   }
 
@@ -567,7 +570,7 @@ export class ConversationService implements OnDestroy {
     conversationmessageaId: string,
     count: number
   ) {
-    const messageDocRef = doc(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId);
+   const messageDocRef = doc(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId);
     const messageDocSnap = await getDoc(messageDocRef);
 
     this.emojiCountsList = {};
@@ -595,36 +598,30 @@ export class ConversationService implements OnDestroy {
    *   - `count`: The number of times the emoji was used as a reaction.
    *   - `users`: An array of user IDs who reacted with that emoji.
    */
-  getReactionsForMessage(
-    conversationId: string,
-    conversationmessageaId: string,
-    callback: (
-      reactionMap: Map<string, { count: number; users: string[] }>
-    ) => void
-  ) {
-    const reactionsRef = collection(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId, 'reactions');
-
-    return onSnapshot(reactionsRef, (snapshot) => {
-      const reactionMap = new Map<string, { count: number; users: string[] }>();
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const emoji = data['emoji'];
-        const user = data['reactedFrom'];
-
-        if (!reactionMap.has(emoji)) {
-          reactionMap.set(emoji, { count: 0, users: [] });
-        }
-
-        const current = reactionMap.get(emoji)!;
-        current.count += 1;
-        current.users.push(user);
-      });
-
-      callback(reactionMap);
-      console.log('reactionMap', reactionMap);
-    });
+ getReactionsForMessage(channelId: string, messageId: string, callback: (reactionMap: any) => void) {
+  if (!channelId || !messageId) {
+    console.warn('Reactions konnten nicht geladen werden – channelId oder messageId fehlt.');
+    callback({});
+    return;
   }
+
+
+  const reactionsRef = collection(this.firestore, 'channels', channelId, 'messages', messageId, 'reactions');
+  // Reactions aus Firestore holen
+  onSnapshot(reactionsRef, (snapshot) => {
+    const reactionMap: any = {};
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data['emoji'] && data['users']) {
+        reactionMap[data['emoji']] = {
+          count: data['users'].length,
+          users: data['users'],
+        };
+      }
+    });
+    callback(reactionMap);
+  });
+}
 
   /**
    * Adds a new thread answer message to an existing conversation thread in Firestore.
@@ -663,7 +660,7 @@ export class ConversationService implements OnDestroy {
     };
 
     try {
-      const convMessageRef = collection(this.firestore, 'conversation', this.conversationId, 'messages');
+    const convMessageRef = collection(this.firestore, 'conversation', this.conversationId, 'messages');
       const docRef = await addDoc(convMessageRef, threadAnswer);
       await updateDoc(docRef, { conversationmessageId: docRef.id });
     } catch (error) {
