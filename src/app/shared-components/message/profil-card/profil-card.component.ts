@@ -25,8 +25,8 @@ export class ProfilCardComponent implements OnInit {
   private usersSubscription!: Subscription;
   private actualUserSubscription!: Subscription;
   @ViewChild('profilcard') profilcard!: ElementRef<HTMLTextAreaElement>
-   @Output() showProfilCard = new EventEmitter<boolean>();
-
+  @Output() showProfilCard = new EventEmitter<boolean>();
+  toDirectChat: boolean =false;
   constructor(private mainservice: MainComponentService,
      private mainhelperService: MainHelperService,
     public dialogRef: MatDialogRef<ProfilCardComponent>,
@@ -106,6 +106,7 @@ export class ProfilCardComponent implements OnInit {
 
 
     closeDialog() {
+     this.mainhelperService.ToDirectChat =false 
     this.dialogRef.close();
   }
 }
