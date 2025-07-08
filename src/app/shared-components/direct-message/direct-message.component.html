@@ -47,8 +47,8 @@
     </div>
   </div>
       <div *ngIf="!isAnswered" class="message-not-answered">
-<div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
-    <ng-container *ngFor="let entry of (emojiReactions) | keyvalue">
+                <div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
+                <ng-container *ngFor="let entry of (emojiReactions) | keyvalue">
                     <span class="reaction"
                         (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
 
@@ -65,9 +65,9 @@
                     </span>
 
                 </ng-container>
-
-      <img *ngIf="!isInThread" #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
-           src="assets/img/add_reaction40.png" alt="">
+                     <img *ngIf="!isInThread" #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
+                        src="assets/img/add_reaction40.png" alt="">
+            </div>
     </div>
 </div>
         </div>

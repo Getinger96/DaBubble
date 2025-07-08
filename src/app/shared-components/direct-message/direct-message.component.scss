@@ -53,21 +53,6 @@
     padding: 2px;
 }
 
-.mobile-visible.more-button {
-    display: none !important;
-  }
-
-/* Style the more/less buttons */
-.more-button, .less-button {
-  border: 1px solid #ADB0D9;
-  cursor: pointer;
-  width: auto;
-  
-  &:hover {
-    background-color: #ADB0D9 !important;
-  }
-}
-
 
 .emojiWindow {
     border: solid 1px black;
@@ -226,9 +211,6 @@ $breakpoint-phone: 460px;
         }
     }
 
-    .desktop-visible {
-    display: none !important;
-  }
 }
 
 @media (max-width: $breakpoint-phone) {

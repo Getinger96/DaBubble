@@ -509,29 +509,12 @@ max-height: 80px !important;
     width: 50px;
 }
 
-  .more-button, .less-button {
-    border: 1px solid #ADB0D9;
-  cursor: pointer;
-  width: auto;
-  
-  &:hover {
-    background-color: #ADB0D9 !important;
-  }
-}
 
-@media (min-width: 900px) {
-  .mobile-visible.more-button {
-    display: none !important;
-  }
-}
 
 $breakpoint-tablet: 900px;
 $breakpoint-phone: 460px;
 
 @media (max-width: $breakpoint-tablet) {
-    .desktop-visible {
-    display: none !important;
-  }
 
     .like-icon, .check-icon {
         display: none;
