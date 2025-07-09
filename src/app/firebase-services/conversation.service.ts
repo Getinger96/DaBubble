@@ -598,30 +598,36 @@ await setDoc(docRef, {
    *   - `count`: The number of times the emoji was used as a reaction.
    *   - `users`: An array of user IDs who reacted with that emoji.
    */
- getReactionsForMessage(channelId: string, messageId: string, callback: (reactionMap: any) => void) {
-  if (!channelId || !messageId) {
-    console.warn('Reactions konnten nicht geladen werden – channelId oder messageId fehlt.');
-    callback({});
-    return;
-  }
+ getReactionsForMessage(
+    conversationId: string,
+    conversationmessageaId: string,
+    callback: (
+      reactionMap: Map<string, { count: number; users: string[] }>
+    ) => void
+  ) {
+    const reactionsRef = collection(this.firestore, 'conversation', conversationId, 'messages', conversationmessageaId, 'reactions');
 
+    return onSnapshot(reactionsRef, (snapshot) => {
+      const reactionMap = new Map<string, { count: number; users: string[] }>();
 
-  const reactionsRef = collection(this.firestore, 'channels', channelId, 'messages', messageId, 'reactions');
-  // Reactions aus Firestore holen
-  onSnapshot(reactionsRef, (snapshot) => {
-    const reactionMap: any = {};
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data['emoji'] && data['users']) {
-        reactionMap[data['emoji']] = {
-          count: data['users'].length,
-          users: data['users'],
-        };
-      }
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const emoji = data['emoji'];
+        const user = data['reactedFrom'];
+
+        if (!reactionMap.has(emoji)) {
+          reactionMap.set(emoji, { count: 0, users: [] });
+        }
+
+        const current = reactionMap.get(emoji)!;
+        current.count += 1;
+        current.users.push(user);
+      });
+
+      callback(reactionMap);
+      console.log('reactionMap', reactionMap);
     });
-    callback(reactionMap);
-  });
-}
+  }
 
   /**
    * Adds a new thread answer message to an existing conversation thread in Firestore.
