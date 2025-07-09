@@ -262,7 +262,7 @@ export class ChannelMessageService {
         current.users.push(user);
       });
       callback(reactionMap);
-      console.log('reactionMap', reactionMap);
+    
     });
   }
 

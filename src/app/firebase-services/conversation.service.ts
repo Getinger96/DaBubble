@@ -32,6 +32,7 @@ export class ConversationService implements OnDestroy {
   public selectedConversationMessages$ = this.selectedConversationMessagesSubject.asObservable();
   public threadAnswersSubject = new BehaviorSubject<ConversationMessage[]>([]);
   threadReplies$ = this.threadAnswersSubject.asObservable();
+  messages: any[] = [];
 
   lastAnswer: ConversationMessage | null = null;
   messageId?: string;
@@ -74,36 +75,40 @@ export class ConversationService implements OnDestroy {
    * @remarks
    * This method ensures that only one message listener is active at a time and that the conversation state is kept in sync with the selected user.
    */
-  observeSelectedUserChanges() {
-    let unsubscribeListener: (() => void) | null = null;
+ observeSelectedUserChanges() {
+  let unsubscribeListener: (() => void) | null = null;
 
-    this.mainservice.directmessaeUserIdSubject.subscribe(
-      async (partnerUserId) => {
-        const currentUserId = this.getActualUser();
+  this.mainservice.directmessaeUserIdSubject.subscribe(
+    async (partnerUserId) => {
+      const currentUserId = this.getActualUser();
 
-        if (!partnerUserId || !currentUserId) return;
-        this.closeThread();
-        this.lastAnswer = null;
+      if (!partnerUserId || !currentUserId) return;
+      this.closeThread();
+      this.lastAnswer = null;
 
-        if (unsubscribeListener) {
-          unsubscribeListener();
-        }
-
-        const conversationId = await this.getOrCreateConversation(
-          currentUserId,
-          partnerUserId
-        );
-        this.conversationId = conversationId;
-
-        unsubscribeListener = this.listenToMessages(
-          conversationId,
-          (messages) => {
-            console.log('Messages updated via listener:', messages);
-          }
-        );
+      if (unsubscribeListener) {
+        unsubscribeListener();
       }
-    );
-  }
+
+      const conversationId = await this.getOrCreateConversation(
+        currentUserId,
+        partnerUserId
+      );
+      this.conversationId = conversationId;
+
+      unsubscribeListener = this.listenToMessages(
+        conversationId,
+        this.handleNewMessages.bind(this)
+      );
+    }
+  );
+}
+
+handleNewMessages(messages: any[]) {
+  this.messages = messages;
+  // z. B. automatisch nach unten scrollen:
+  // this.scrollToBottom();
+}
 
   /**
    * Retrieves an existing conversation between the current user and a partner user,
@@ -625,7 +630,7 @@ await setDoc(docRef, {
       });
 
       callback(reactionMap);
-      console.log('reactionMap', reactionMap);
+     
     });
   }
 
