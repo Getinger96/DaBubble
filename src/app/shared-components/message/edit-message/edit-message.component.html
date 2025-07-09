@@ -12,8 +12,10 @@
 
                 <div class="emojiIcon">
                 
-                    <img #emojiImg (click)="showEmojiBar()" src="assets/img/emoji.png" alt="">
-                
+                    <img #emojiImg (click)="showEmojiBar()" src="assets/img/emoji.svg"  alt=""
+                    (mouseenter)="emojiImg.src='assets/img/emoji_purple.svg'"
+                    (mouseleave)="emojiImg.src='assets/img/emoji.svg'">
+                    
                  </div>
 
                  <div class="edit-buttons">

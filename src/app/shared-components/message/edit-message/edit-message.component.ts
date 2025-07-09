@@ -54,13 +54,27 @@ firestore: Firestore = inject(Firestore);
   }
 
   closeEditMessageText() {
+     this.mainHelperService.showEditMessage = false;
     this.cancelEdit.emit();
   }
 async editMessage(messageId: string, channelId: string) {
   if (!this.messageEditId || !this.channelID) return;
-
+   this.mainHelperService.showEditMessage = false;
   const { sendAt, sendAtTime } = this.getFormattedDateAndTime();
+  try {
+    if (this.textEdit.length === 0) {
+      await this.saveAcutalMessage(messageId, channelId, sendAt, sendAtTime);
+    } else {
+      await this.editNewMessage(messageId, channelId, sendAt, sendAtTime);
+    }
 
+  } catch (error) {
+   
+  }
+}
+
+
+async editNewMessage(messageId: string, channelId: string, sendAt: string, sendAtTime: string ) {
   try {
     const messageRefDoc = doc(this.firestore, 'Channels', channelId, 'messages', messageId);
     await updateDoc(messageRefDoc, {
@@ -69,10 +83,10 @@ async editMessage(messageId: string, channelId: string) {
       sendAtTime,
     });
 
-    this.channelMessageService.subList(channelId);
     this.cancelEdit.emit();
   } catch (error) {
   }
+
 }
 
 getFormattedDateAndTime(): { sendAt: string, sendAtTime: string } {
@@ -93,6 +107,20 @@ getFormattedDateAndTime(): { sendAt: string, sendAtTime: string } {
 
   return { sendAt, sendAtTime };
 }
+
+async saveAcutalMessage (messageId: string, channelId: string, sendAt: string, sendAtTime: string ) {
+  try {
+    const messageRefDoc = doc(this.firestore, 'Channels', channelId, 'messages', messageId);
+    await updateDoc(messageRefDoc, {
+      messageText: this.messageTextEdit,
+      sendAt,
+      sendAtTime,
+    });
+    this.cancelEdit.emit();
+  } catch (error) {
+  }
+}
+
 
 
 }

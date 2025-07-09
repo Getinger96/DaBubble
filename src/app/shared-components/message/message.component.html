@@ -18,7 +18,7 @@
             <img (click)="addEmoji('✅',channelID,messageData?.messageId)" src="assets/img/check_40.png" alt="check" class="check-icon">
             <img (click)="addEmoji('👍',channelID,messageData?.messageId)" src="assets/img/like.png" alt="like" class="like-icon">
             <img #emojiImg (click)="showEmojiBar()" class="change-color" src="assets/img/add_reaction40.png" alt="react" class="react-icon">
-            <img (click)="toggleEditPopup()" *ngIf="isOwn && !isThreadRootMessage" src="assets/img/dots.png" alt="dots">
+            <img #editImg (click)="toggleEditPopup()" *ngIf="isOwn && !isThreadRootMessage" src="assets/img/dots.png" alt="dots">
             <img class="change-color" *ngIf="!isThreadRootMessage" src="assets/img/edit.png" alt="edit"
                 (click)="onReplyClick()">
             
@@ -38,7 +38,7 @@
                 [perLine]="7"></emoji-mart>
         </div>
 
-        <div *ngIf="isOwn && showEditPopup && !isThreadRootMessage" class="edit-message"
+        <div #editmessage *ngIf="isOwn && showEditPopup && !isThreadRootMessage" class="edit-message"
             [ngStyle]="isThread ? {'left': '135px'} : {}">
             <span (click)="overwriteMessage(threadAnswersId)">Nachricht bearbeiten</span>
             <span (click)="deleteMessage(threadAnswersId,channelID)" > Nachricht löschen</span>

@@ -52,11 +52,13 @@ export class MessageComponent implements OnChanges {
   @Input() selectedUserId!: string;
   @Input() emojiReactionsThead?: { [emoji: string]: { count: number; users: string[] } };
   @Input() isThreadRootMessage: boolean = false;
-  @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiComponent') emojiComponent!: ElementRef<HTMLTextAreaElement> 
   @ViewChild('emojiImg') emojiImg!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('editmessage') editmessage!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('editImg') editImg!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiImgWriter') emojiImgWriter!: ElementRef<HTMLTextAreaElement>
   @ViewChild('emojiThreadMask') emojiThreadMask!: ElementRef<HTMLTextAreaElement>
-  @ViewChild('emojiThread') emojiThread!: ElementRef<HTMLTextAreaElement>
+  @ViewChild('emojiThread') emojiThread!: ElementRef<HTMLTextAreaElement> 
   @ViewChild('channelMessageBox') channelMessageBox! : ElementRef<HTMLTextAreaElement>
   mainComponents = MainComponentsComponent;
   private allThreadsSubscription!: Subscription;
@@ -68,6 +70,7 @@ export class MessageComponent implements OnChanges {
   showEditPopup: boolean = false;
   emojiReactions = new Map<string, { count: number, users: string[] }>();
   showEmojiPicker: boolean = false;
+  editMessageOpen: boolean = false;
   showEmojiPickerThread: boolean = false;
   hover = false;
   showDeletePopup:boolean=false;
@@ -163,7 +166,11 @@ export class MessageComponent implements OnChanges {
 
     const clickedInsideEmojiThread =
       this.emojiThreadMask?.nativeElement.contains(target) || this.emojiThread?.nativeElement.contains(target)
+  
 
+      
+    const clickedInsideToggleEditMessage =
+      this.editmessage?.nativeElement.contains(target) || this.editImg?.nativeElement.contains(target)
 
     if (!clickedInsideEmoji) {
       this.showEmojiPicker = false;
@@ -171,6 +178,10 @@ export class MessageComponent implements OnChanges {
 
     if (!clickedInsideEmojiThread) {
       this.showEmojiPickerThread = false;
+    }
+
+       if (!clickedInsideToggleEditMessage) {
+      this.showEditPopup = false;
     }
 
   }
@@ -312,7 +323,6 @@ this.showDeletePopup=!this.showDeletePopup;
 }
 
 onCancelEdit() {
-  this.mainHelperService.showEditMessage = false;
   this.editMessage = false;
   this.editMessageId = null;
 }
