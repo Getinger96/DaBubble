@@ -233,8 +233,6 @@ loadReaction() {
   loadMembers() {
     this.channelService.channelMember$.subscribe(members => {
       this.members = members;
-      console.log('this.members', this.members);
-
     });
   }
 
@@ -258,7 +256,6 @@ loadReaction() {
   }
 
   loadConvThreadAnswers(): void {
-    console.log('Loading thread answers for message:', this.selectedConvMessage);
 
     if (this.allConvThreadsSubscription) {
       this.allConvThreadsSubscription.unsubscribe();
@@ -266,7 +263,6 @@ loadReaction() {
 
     this.allConvThreadsSubscription =
       this.conversationService.allMessages$.subscribe((messages) => {
-        console.log('All messages subscription fired:', messages);
 
         if (this.selectedConvMessage && this.selectedConvMessage.conversationmessageId) {
           const messageId = this.selectedConvMessage.conversationmessageId;
@@ -274,7 +270,6 @@ loadReaction() {
           // Add a small delay to ensure allMessages is updated
           setTimeout(() => {
             this.threadConvAnswers = this.conversationService.getThreadAnswers(messageId);
-            console.log('Thread answers found:', this.threadAnswers);
             this.threadCount$.next(this.threadConvAnswers.length);
           }, 0);
         }

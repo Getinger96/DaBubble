@@ -74,12 +74,7 @@ export class ProfilCardComponent implements OnInit {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser
-
-        console.log('actualUser[0]', actualUser[0]);
-  
       }
-      
-      
     });
     
   }
@@ -98,7 +93,6 @@ export class ProfilCardComponent implements OnInit {
     this.mainservice.setDirectmessageuserStatus(status)
     this.mainservice.setDirectmessageuserId(id)
 
-    console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeDialog()
   }
 

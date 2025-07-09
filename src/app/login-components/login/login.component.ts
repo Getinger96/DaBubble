@@ -75,7 +75,6 @@ export class LoginComponent implements AfterViewInit {
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     this.overlayvisible = false;
-    console.log('loginIsValide before navigate:', this.loginservice.loginIsValide);
     this.router.navigate(['/main-components/' + this.userId + '/channel/BLDNqmQQWm4Qqv4NLNbv'], { replaceUrl: true });
   } catch (error) {
     console.error('Fehler beim Laden des Users:', error);
@@ -169,7 +168,6 @@ checkEmailAndPassword() {
 inputFieldEmailIsEmpty() {
   if (this.emailInput.nativeElement.value.length == 0) {
     this.emailFielIsEmpty = false;
-    console.log('klappt Email');
     return false;
   } else {
     this.emailFielIsEmpty = true;
@@ -181,7 +179,6 @@ inputFieldPasswordIsEmpty() {
   if (this.passwordInput.nativeElement.value.length == 0) {
     this.passwordFieldIsEmpty = false;
     this.checkpasswordInput();
-    console.log('klappt Password');
 
   } else {
     this.passwordFieldIsEmpty = true;

@@ -44,7 +44,6 @@ export class ActiveUserComponent implements OnInit {
       if (actualUser.length > 0) {
         this.actualUser = actualUser
         this.userId = actualUser[0].id
-        console.log('actualUser[0]', actualUser[0]);
         
       }
     });

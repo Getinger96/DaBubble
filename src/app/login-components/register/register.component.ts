@@ -66,6 +66,5 @@ export class RegisterComponent {
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     }
-    console.log('userAlreadyExist', this.userAlreadyExist);
   }
 }

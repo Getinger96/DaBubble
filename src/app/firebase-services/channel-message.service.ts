@@ -325,9 +325,7 @@ export class ChannelMessageService {
       await updateDoc(docSnap.ref, {
         threadCount: currentCount - 1,
       });
-    } else {
-      console.log('Kein Dokument gefunden mit messageId:', messageDataThreadTo);
-    }
+    } 
   }
 
   async saveEmojiInFirebaseMessage(emoji: any, channelID: string, messageID: string, count: number) {

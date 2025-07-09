@@ -112,14 +112,13 @@ export class MessageComponent implements OnChanges {
       this.threadAnswersId = this.messageData.messageId;
       this.channelIdThread = this.messageData.channelId;
       this.userId = this.messageData.id
-      console.log('wthis.threadAnswersId,this.channelIdThreader', this.threadAnswersId, this.channelIdThread, this.isThread, this.isInThread, this.emojiReactionsThead);
+
 
       this.channelmessageService.getReactionsForMessage(
         this.messageData.channelId,
         this.messageData.messageId,
         (reactionMap) => {
           this.emojiReactions = reactionMap;
-          console.log(this.emojiReactions);
 
         }
       );
@@ -129,9 +128,7 @@ export class MessageComponent implements OnChanges {
       } else {
         this.lastAnswerDate = '';
       }
-    } else {
-      console.log('no Message Data')
-    }
+    } 
 
 
 
@@ -161,7 +158,7 @@ export class MessageComponent implements OnChanges {
       (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
       (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
 
-    console.log('this.emojiComponent?', this.emojiComponent);
+
 
 
     const clickedInsideEmojiThread =

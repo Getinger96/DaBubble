@@ -85,30 +85,26 @@ export class RegisterService {
   try {
     event.preventDefault();
 
-    console.log('Prüfe E-Mail und Namen...');
     const emailOk = await this.checkIfUserExistsBeforeRegistration(item);
     const nameOk = await this.checkIfUserNameExistsBeforeRegistration(item);
 
     if (!emailOk) {
-      console.log('Email existiert bereits.');
       return false;
     }
     if (!nameOk) {
-      console.log('Name existiert bereits.');
       return false;
     }
 
-    console.log('Lege User bei Firebase an...');
     const userCredential = await createUserWithEmailAndPassword(this.auth, item.email, item.passwort);
 
     const user = userCredential.user;
     this.name = item.name;
     localStorage.setItem('registerName', this.name);
 
-    console.log('Füge User in Firestore hinzu...');
+
     await this.addInFirebase(item, user.uid); // await falls addInFirebase async ist
 
-    console.log('Navigiere zu chooseAvatar...');
+
     this.router.navigate(['/chooseAvatar']);
 
     return true;

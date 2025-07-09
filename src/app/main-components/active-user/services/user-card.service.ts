@@ -43,7 +43,6 @@ export class UserCardService {
   async saveName(nameInput:string, nameBefore:string): Promise<void> {
 
     if (nameBefore) {
-    console.log(nameInput, this.userId, nameBefore);
     const userDocRef = doc(this.firestore, `Users/${this.userId}`);
     await updateDoc(userDocRef, { name: nameInput });
     this.mainservice.subList();

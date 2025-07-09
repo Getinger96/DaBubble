@@ -22,7 +22,6 @@ export class ResponsivService {
     this.isResponsiv = e.matches;
     this.appRef.tick();
     if (e.matches) {
-      console.log('unter 768px');
     }
   }
 
@@ -30,7 +29,6 @@ export class ResponsivService {
     this.isMobile = e.matches;
     this.appRef.tick();
     if (e.matches) {
-      console.log('unter 480px');
     }
   }
 

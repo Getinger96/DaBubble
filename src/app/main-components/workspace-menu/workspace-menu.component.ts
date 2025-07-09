@@ -66,13 +66,10 @@ export class WorkspaceMenuComponent {
     this.usersSubscription = this.mainservice.allUsers$.subscribe(users => {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
-
-        console.log('Benutzer in der Komponente:', this.allUsers);
       }
     });
     this.channelservice.channels$.subscribe(channels => {
       this.channels = channels;
-      console.log('Channels in Component:', this.channels);
       this.updateVisibleChannels(); // wichtig
     });
 
@@ -150,7 +147,6 @@ export class WorkspaceMenuComponent {
       // ✅ docRef enthält die ID des neuen Channels
       this.createdChannelId = docRef.id;
 
-      console.log('🎉 Channel erstellt mit ID:', this.createdChannelId);
 
       // Jetzt Overlay wechseln
       this.closeOverlay(ngForm);
@@ -170,7 +166,7 @@ export class WorkspaceMenuComponent {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
+
       }
     });
   }
@@ -214,7 +210,6 @@ export class WorkspaceMenuComponent {
   }
 
 onMessageNavigatedFromMobile() {
-   console.log('WorkspaceComponent: forwarding messageNavigated');
   this.messageNavigated.emit(); // ➜ sendet das Event nach außen zur MainComponent
 }
 
@@ -270,7 +265,7 @@ updateVisibleChannels() {
   channel.members.some((m: any) => m.name === userName && m.id === userId)
     );
   }
-  console.log('this.visibleChannels', this.visibleChannels);
+
   
 }
 

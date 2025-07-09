@@ -67,18 +67,16 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
         this.loadingStatus = this.loadingService.setLoading(true);
-        console.log('Benutzer in der Komponente:', this.allUsers);
-        console.log('laden:', this.loadingStatus);
       }
     });
     //lädt der aktuell clicked Message
     this.conversationMessage.selectedThreadMessage$.subscribe((message) => {
       this.selectedConvThreadMessage = message;
-      console.log('[DirectMessage] Thread wurde gesetzt:', message);
+
     });
     this.channemessageService.selectedThreadMessage$.subscribe((message) => {
       this.selectedThreadMessage = message;
-      console.log('[Channel] Thread wurde gesetzt:', message);
+
     });
     this.initchanelSubscription();
     this.initRouterSubscription();
@@ -111,7 +109,7 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   }
 
   openThreadForConversationMessage(message: ConversationMessage): void {
-        console.log('Event empfangen:', message);
+
     this.selectedConvThreadMessage = message;
     this.mainservice.showThreadWindow = true;
     MainComponentsComponent.toggleThreads();
@@ -123,7 +121,6 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
   }
 
   openThreadForMessage(message: Message): void {
-    console.log('Event empfangen:', message);
    this.mainservice.showThreadWindow
     MainComponentsComponent.toggleThreads();
     this.selectedThreadMessage = message;
@@ -163,7 +160,6 @@ export class MainComponentsComponent implements OnInit, OnDestroy {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
       }
     });
   }

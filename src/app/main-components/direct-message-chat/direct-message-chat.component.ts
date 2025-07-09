@@ -127,7 +127,6 @@ export class DirectMessageChatComponent {
         this.directmessageid = directmessageid;
         this.mainservice.setCurrentDirectMessage(this.directmessageid);
         this.currentUserId = this.directmessageid;
-        console.log('🎯 Aktive directmessageid:', this.directmessageid);
         this.focusOnInput();
       }
     });
@@ -136,7 +135,6 @@ export class DirectMessageChatComponent {
       const userId = params.get('id');
       if (userId) {
         this.userId = userId;
-        console.log('🎯 Aktive id aus Parent-Route:', this.userId);
       }
     });
   }
@@ -154,7 +152,6 @@ export class DirectMessageChatComponent {
    */
   loadName() {
     this.mainservice.currentusermessageName$.subscribe(name => {
-      console.log('[Component] Name empfangen:', name);  // <--- LOG
       this.currentmessageUser = name
     })
   }
@@ -227,7 +224,6 @@ export class DirectMessageChatComponent {
    */
   addEmoji(event: any) {
     const emoji = event.emoji.native;
-    console.log('emoji', emoji);
     this.newConvMessage += emoji;
   }
 
@@ -323,7 +319,6 @@ export class DirectMessageChatComponent {
     }
 
     this.conversationId = await this.conversationservice.getOrCreateConversation(currentUserId, partnerUserId);
-    console.log('Lade Konversation mit ID:', this.conversationId);
 
     this.unsubscribeFromMessages = this.conversationservice.listenToMessages(this.conversationId, (liveMessages) => {
       this.allConversationMessages = liveMessages;
@@ -342,9 +337,7 @@ export class DirectMessageChatComponent {
     if (this.conversationId && this.newConvMessage.trim() !== '') {
       await this.conversationservice.sendMessage(this.conversationId, currentUserId, this.newConvMessage, currentUserName, currentUserAvatar);
       this.newConvMessage = '';
-    } else {
-      console.log('Fehlende Daten:', this.conversationId, this.newConvMessage);
-    }
+    } 
   }
 
     /**

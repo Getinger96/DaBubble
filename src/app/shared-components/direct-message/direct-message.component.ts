@@ -88,7 +88,6 @@ export class DirectMessageComponent {
   ngOnInit(): void {
     if (this.messageData) {
       const timestamp = this.messageData.timestamp;
-      console.log('Raw timestamp:', timestamp);
       this.conversationmessageid = this.messageData.conversationmessageId;
       this.conversationId = this.messageData.id;
       this.conversationservice.getReactionsForMessage(
@@ -96,7 +95,6 @@ export class DirectMessageComponent {
         this.conversationmessageid,            // ✅ richtig: conversationmessageId
         (reactionMap) => {
           this.emojiReactions = reactionMap;
-          console.log('emojiReactions', this.emojiReactions, this.selectedMessage);
         }
       );
 
@@ -122,7 +120,6 @@ export class DirectMessageComponent {
 
       if (dateObj && !isNaN(dateObj.getTime())) {
         try {
-          console.log('Valid dateObj:', dateObj);
           this.date = this.dateFormatter.format(dateObj);
           this.time = this.timeFormatter.format(dateObj);
         } catch (e) {
@@ -211,9 +208,7 @@ export class DirectMessageComponent {
 
     if (this.messageData) {
       this.initializeReactiveData();
-    } else {
-      console.log('no Message Data')
-    }
+    } 
   }
 
   /**
@@ -249,7 +244,6 @@ export class DirectMessageComponent {
     this.conversationservice.allMessages$.subscribe((messages) => {
       this.allMessages = messages;
     });
-    console.log('this.allMessages', this.allMessages);
   }
 
   /**
@@ -381,8 +375,6 @@ export class DirectMessageComponent {
       (this.emojiComponent?.nativeElement && this.emojiComponent.nativeElement.contains(target)) ||
       (this.emojiImg?.nativeElement && this.emojiImg.nativeElement.contains(target)) ||
       (this.emojiImgWriter?.nativeElement && this.emojiImgWriter.nativeElement.contains(target));
-
-    console.log('this.emojiComponent?', this.emojiComponent);
 
     if (!clickedInsideEmoji) {
       this.showEmojiPicker = false;

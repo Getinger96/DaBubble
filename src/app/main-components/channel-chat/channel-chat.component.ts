@@ -121,12 +121,9 @@ export class ChannelChatComponent implements OnInit {
     this.mainhelperservice.focusChannelMessage$.subscribe(() => {
       this.shouldFocusMessageBox = true;
     });
-    this.loadAllChannelNames();
   }
 
-  loadAllChannelNames() {
-    console.log('Channels in Component:', this.mainhelperservice.channelNames);
-  }
+ 
 
 
   ngAfterViewChecked() {
@@ -146,7 +143,6 @@ export class ChannelChatComponent implements OnInit {
     } else if (text.endsWith('#')) {
       this.showChannelList = true;
       this.toggleMemberInChat = false;
-      console.log('#');
     } else {
       this.toggleMemberInChat = false;
       this.showChannelList = false;
@@ -159,7 +155,6 @@ export class ChannelChatComponent implements OnInit {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
 
-        console.log('Benutzer in der Komponente:', this.allUsers);
       }
     });
   }
@@ -211,7 +206,6 @@ export class ChannelChatComponent implements OnInit {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
       }
     });
   }
@@ -222,7 +216,6 @@ export class ChannelChatComponent implements OnInit {
       const channelId = params.get('channelId');
       if (channelId) {
         this.channelId = channelId;
-        console.log('🎯 Aktive channelId:', channelId);
 
         this.channelService.setCurrentChannel(channelId);
 
@@ -254,7 +247,7 @@ export class ChannelChatComponent implements OnInit {
   loadName() {
     this.channelService.currentChannelName$.subscribe(name => {
       this.currentChannelName = name;
-      console.log(this.currentChannelName);
+
 
     });
   }
@@ -270,7 +263,7 @@ export class ChannelChatComponent implements OnInit {
   loadMembers() {
     this.channelService.channelMember$.subscribe(members => {
       this.members = members;
-      console.log('this.members', this.members);
+
 
     });
   }
@@ -281,7 +274,7 @@ export class ChannelChatComponent implements OnInit {
     })
   }
  loadMessages(channelId: string) {
-  console.log('📥 Nachrichten werden geladen für Channel:', channelId);
+
 
   if (this.allMessageSubscription) {
     this.allMessageSubscription.unsubscribe();
@@ -290,7 +283,7 @@ export class ChannelChatComponent implements OnInit {
   this.channelmessageService.subList(channelId);
 
   this.allMessageSubscription = this.channelmessageService.allMessages$.subscribe((messages) => {
-    console.log('📦 Alle geladenen Nachrichten aus dem Service:', messages);
+
 
     const filtered = messages.filter(message => !!message.messageText?.trim());
 
@@ -302,7 +295,7 @@ export class ChannelChatComponent implements OnInit {
       .filter(message => message.isThread && message.channelId === channelId)
       .sort((a, b) => this.normalizeTimestamp(a.timestamp) - this.normalizeTimestamp(b.timestamp));
 
-    console.log('✅ Gefilterte Nachrichten für diesen Channel:', this.allMessages);
+
   });
 }
 
@@ -329,7 +322,6 @@ private normalizeTimestamp(ts: any): number {
 
   addEmoji(event: any) {
     const emoji = event.emoji.native;
-    console.log('emoji', emoji);
     this.message.messageText += emoji;
   }
 

@@ -92,7 +92,6 @@ export class MessageService {
   getLastAnswer(message: Message) {
     const allAnswers = this.allMessages.filter((msg) => msg.threadTo === message.messageId);
     const lastAnswer = allAnswers[allAnswers.length - 1];
-    console.log(lastAnswer)
     return lastAnswer;
 
   }

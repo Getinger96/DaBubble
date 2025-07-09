@@ -38,20 +38,13 @@ export class AddUserComponent implements OnInit {
   }
 
   addNewUser(user: any) {
-    console.log('user.id',user.id);
-    console.log('this.data.allUsersChannel', this.data.allUsers);
     
     const index = this.newUserList.findIndex(u => u.id === user.id);
     if (index !== -1) {
       this.newUserList.splice(index, 1);
-      console.log();
-      
     }
-    console.log('this.data.allUsersChannel', this.data.allUsers);
     this.memberList.push(user)
     this.filterUserList = this.filterUserList.filter(u => u.id !== user.id);
-    console.log('this.data.members', this.data.members);
-    console.log('this.data.members', this.data.members);
   }
 
 
@@ -59,15 +52,11 @@ export class AddUserComponent implements OnInit {
       this.newUserList = [];
     for (let index = 0; index < this.data.allUsers.length; index++) {
       const user = this.data.allUsers[index];
-      console.log('user, ', user);
       const newUser = this.data.members.some(members => members.id === this.data.allUsers[index].id )
       if (!newUser) {
         this.newUserList.push(this.data.allUsers[index])
-        console.log('newArray, ', this.newUserList);
-        
       }
     }
-    console.log('newArray, ', this.newUserList);
   }
 
   async deleteUser(index: number, member:any) {
@@ -90,18 +79,15 @@ export class AddUserComponent implements OnInit {
 
   filterMember() {
     this.memberList = [...this.data.members];
-      console.log('this.memberList', this.memberList);
       
   }
 
   filterUsers() {
   const term = this.searchUser.toLowerCase();
-    console.log('this.searchUser.toLocaleLowerCase();',this.searchUser.toLocaleLowerCase());
 
     if (term.length >= 2 ) {
         this.filterUserList = this.newUserList.filter(user => user.name.toLowerCase().includes(term))
       this.filterUserList.sort((a, b) => a.name.localeCompare(b.name));
-        console.log('this.filterUserList', this.filterUserList);
       
     } else {
        this.filterUserList = [];

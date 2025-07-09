@@ -59,7 +59,7 @@ export class SearchBarComponent {
 
 
   async ngOnInit(): Promise<void> {
-    console.log('ngOnInit aufgerufen!');
+  
 
     this.subscription = this.conversationserice.allConversationMessagesSubject.subscribe((messages) => {
       this.allMessages = messages;
@@ -68,7 +68,7 @@ export class SearchBarComponent {
 
     this.conversationserice.allConversations$.subscribe((convs) => {
       this.conversations = convs;
-      console.log('Conversations:', this.conversations);
+
     });
 
     this.conversationserice.loadAllDirectMessagesLive();
@@ -84,14 +84,14 @@ export class SearchBarComponent {
       if (users.length > 0) {
         this.allUsers = users.filter(user => user.email !== 'guest@gmail.com');
         this.users = this.allUsers;  // <-- fülle users mit allUsers
-        console.log('Benutzer in der Komponente:', this.allUsers);
+ 
       }
     });
 
     // Channels laden
     this.channelservice.channels$.subscribe(channels => {
       this.channels = channels;
-      console.log('Channels in Component:', this.channels);
+
     });
 
 
@@ -116,20 +116,20 @@ export class SearchBarComponent {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
         this.userId = actualUser[0].id; // Hier setzen
-        console.log('aktueller User:', this.actualUser);
+
       }
     });
   }
 
   filterResults() {
-    console.log('🧪 filterResults aufgerufen mit:', this.searchTerm);
+
     const term = this.searchTerm.toLowerCase().trim();
 
     this.filteredUsers = [];
     this.filteredChannels = [];
     this.filteredMessages = [];
     this.filteredDirectMessages = [];
-console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
+
     if (!term) return;
 
     if (term.startsWith('@')) {
@@ -161,7 +161,7 @@ console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
         msg.text?.toLowerCase().includes(term)
       );
     }
-    console.log('this.filteredDirectMessages', this.filteredDirectMessages);
+
   }
 
 
@@ -232,7 +232,7 @@ console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
     }
     setTimeout(() => {
       this.messageNavigated.emit();
-      console.log('SearchBar: messageNavigated emitted');
+  
     }, 0);
 
   }
@@ -305,7 +305,7 @@ console.log('📦 Anzahl aller Direktnachrichten:', this.allMessages.length);
     }
     setTimeout(() => {
       this.messageNavigated.emit();
-      console.log('SearchBar: messageNavigated emitted');
+
     }, 0);
   }
   ngOnDestroy(): void {

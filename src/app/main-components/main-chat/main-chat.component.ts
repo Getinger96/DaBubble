@@ -62,7 +62,6 @@ export class MainChatComponent {
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
       if (actualUser.length > 0) {
         this.actualUser = actualUser;
-        console.log('aktueller User:', this.actualUser);
       }
     });
   }

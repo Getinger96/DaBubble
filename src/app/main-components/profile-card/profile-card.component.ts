@@ -28,7 +28,6 @@ export class ProfileCardComponent implements OnChanges  {
 
   ngOnChanges(changes: SimpleChanges): void {
     // Debug log to ensure changes are detected
-    console.log('Input changes detected:', changes);
 
     if (
       this.currentmessageUser &&

@@ -57,7 +57,6 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserId(id)
     this.router.navigate(['/main-components/' + this.actualUser[0].id+'/directmessage/'+ id], { replaceUrl: true })
     this.mainhelperService.openNewChat =false;
-    console.log(this.actualUser[0].id, this.mainservice.directmessaeUserIdSubject.value )
     this.closeThread.emit();
     this.mainhelperService.focusDirectMessage$.next();
    
@@ -74,7 +73,6 @@ export class DirectMessageUserComponent implements OnInit {
       if (actualUser.length > 0) {
         this.actualUser = actualUser
 
-        console.log('actualUser[0]', actualUser[0]);
         this.sortUsers()
       }
       
