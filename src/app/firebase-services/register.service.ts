@@ -105,7 +105,7 @@ export class RegisterService {
     await this.addInFirebase(item, user.uid); // await falls addInFirebase async ist
 
 
-    this.router.navigate(['/chooseAvatar']);
+  
 
     return true;
 

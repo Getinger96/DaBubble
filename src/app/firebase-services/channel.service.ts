@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, doc, getDocs, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp, arrayRemove } from '@angular/fire/firestore';
+import { addDoc, collection, doc, getDocs, Firestore, onSnapshot, updateDoc, DocumentReference, getDoc, deleteDoc, serverTimestamp, arrayRemove, query, where } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../interfaces/channel.interface';
 import { BehaviorSubject, timestamp } from 'rxjs';
@@ -186,20 +186,27 @@ export class ChannelService {
         this.unsubChannel();
     }
 
-    async addChannel(item: Channel) {
+    async addChannel(item: Channel): Promise<DocumentReference> {
         const timestamp = new Date().toISOString();
 
-        return addDoc(this.getChannelRef(), this.jsonservice.channelJson(item, this.actualUser[0].name, timestamp))
-            .then(async docref => {
-                this.id = docref.id;
+        const existingQuery = query(this.getChannelRef(), where("name", "==", item.name));
+        const existingSnapshot = await getDocs(existingQuery);
 
-                // Channel-Dokument mit ID aktualisieren
-                await updateDoc(docref, { id: docref.id });
-                await this.addCreatorInMemberList(this.id)
-                // Jetzt die Subcollection "messages" erstellen (mit einer ersten Nachricht)
-                return docref;
-            });
+        if (!existingSnapshot.empty) {
+            throw new Error(`Channel mit dem Namen "${item.name}" existiert bereits.`);
+        }
 
+        const docRef = await addDoc(
+            this.getChannelRef(),
+            this.jsonservice.channelJson(item, this.actualUser[0].name, timestamp)
+        );
+
+        this.id = docRef.id;
+
+        await updateDoc(docRef, { id: docRef.id });
+        await this.addCreatorInMemberList(this.id);
+
+        return docRef;
     }
 
 

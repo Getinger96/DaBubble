@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../shared-components/header/header.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../../interfaces/user.interface';
@@ -31,7 +31,7 @@ export class RegisterComponent {
   userAlreadyExist?: boolean = this.registerservice.userEmailExist
   userNameAlreadyExist?: boolean = this.registerservice.userEmailExist
 
-  constructor(private registerservice: RegisterService) {
+  constructor(private registerservice: RegisterService,private router: Router) {
 
   }
 
@@ -61,7 +61,8 @@ export class RegisterComponent {
 
         setTimeout(() => {
           this.overlayvisible = false;
-        }, 2000);
+            this.router.navigate(['/chooseAvatar']);
+        }, 1000);
       }
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);

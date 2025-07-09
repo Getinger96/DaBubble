@@ -53,6 +53,7 @@ export class WorkspaceMenuComponent {
    private actualUserSubscription!: Subscription;
    @Output() messageNavigated = new EventEmitter<void>();
   visibleChannels: Channel[] = [];
+  channelNameExists: boolean = false;
 
   constructor(private registerservice: RegisterService, private channelservice: ChannelService, private mainservice: MainComponentService,
     private mainHelperService: MainHelperService, private channelMessageService: ChannelMessageService, private router: Router
@@ -136,31 +137,29 @@ export class WorkspaceMenuComponent {
     event.stopPropagation();
   }
 
-  addChannel(event: Event, ngForm: NgForm) {
-    event.preventDefault();
+ addChannel(event: Event, ngForm: NgForm) {
+  event.preventDefault();
 
+  const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
 
-    const channelObj = this.channelservice.setChannelObject(this.channel, this.channel.id);
+  this.channelservice.addChannel(channelObj).then((docRef) => {
+    this.channelNameExists = false; // ✅ Kein Fehler – alles gut
 
-    this.channelservice.addChannel(channelObj).then((docRef) => {
-      this.channelservice.addsubcolecctiontoChannel(docRef.id)
-      // ✅ docRef enthält die ID des neuen Channels
-      this.createdChannelId = docRef.id;
+    this.channelservice.addsubcolecctiontoChannel(docRef.id);
+    this.createdChannelId = docRef.id;
 
+    this.closeOverlay(ngForm);
+    ngForm.reset();
+    this.overlay2Visible = true;
+  }).catch((error) => {
+    console.error("❌ Fehler beim Erstellen des Channels:", error);
 
-      // Jetzt Overlay wechseln
-      this.closeOverlay(ngForm);
-      ngForm.reset()
-      this.overlay2Visible = true;
-    }).catch((error) => {
-      console.error("❌ Fehler beim Erstellen des Channels:", error);
-    });
+    if (error.message.includes("existiert bereits")) {
+      this.channelNameExists = true; // ✅ Fehler: Channelname existiert
+    }
+  });
+}
 
-
-
-
-
-  }
 
    loadActualUser(){
     this.actualUserSubscription = this.mainservice.acutalUser$.subscribe(actualUser => {
