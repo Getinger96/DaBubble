@@ -71,7 +71,7 @@ export class MessageComponent implements OnChanges {
   showEmojiPickerThread: boolean = false;
   hover = false;
   showDeletePopup:boolean=false;
-
+  showAllEmojis: boolean = false;
   currentChannelId?: string
   userId!: string
   userStatus!: string
@@ -109,7 +109,7 @@ export class MessageComponent implements OnChanges {
       this.threadAnswersId = this.messageData.messageId;
       this.channelIdThread = this.messageData.channelId;
       this.userId = this.messageData.id
-      console.log('wthis.threadAnswersId,this.channelIdThreader', this.threadAnswersId, this.channelIdThread);
+      console.log('wthis.threadAnswersId,this.channelIdThreader', this.threadAnswersId, this.channelIdThread, this.isThread, this.isInThread, this.emojiReactionsThead);
 
       this.channelmessageService.getReactionsForMessage(
         this.messageData.channelId,

@@ -46,7 +46,7 @@
       <span *ngIf="!responsiveService.isMobile" class="message-last-answer">Letzte Antwort {{ lastAnswer$ | async }}</span>
     </div>
   </div>
-      <div *ngIf="!isAnswered" class="message-not-answered">
+      <div  class="message-not-answered">
                 <div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
                 <ng-container *ngFor="let entry of (emojiReactions) | keyvalue">
                     <span class="reaction"
