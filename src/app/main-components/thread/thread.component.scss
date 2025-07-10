@@ -172,8 +172,20 @@ app-add-member-to-thread  {
     width: 100%;
 }
 
+@media (max-width:900px) {
+
+    .thread-input-wrapper{
+        padding: 10px 16px 30px 16px !important;
+    }
+
+    .thread-feed{
+        height: calc(100% - 247px) !important;
+    }
+}
+
 @media (max-width:480px){
-        .thread-header{
+    
+    .thread-header{
 
         .thread-group{
         padding-left: 16px !important;
@@ -184,9 +196,6 @@ app-add-member-to-thread  {
         }
     }
 
-    .thread-input-wrapper{
-        padding: 10px 16px 30px 16px !important;
-    }
 
     .close{
         padding-right: 16px !important;
