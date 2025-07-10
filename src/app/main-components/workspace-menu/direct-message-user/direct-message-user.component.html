@@ -1,5 +1,5 @@
 
-<div (click)="opendirectChat(user.id, user.name, false, user.avatar, user.email, user.status)" 
+<div id="{{user.name}}" (click)="opendirectChat(user.id, user.name, false, user.avatar, user.email, user.status)" 
      *ngFor="let user of userArray" 
      class="user">
     <div class="profile">

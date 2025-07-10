@@ -77,6 +77,7 @@ export class DirectMessageChatComponent {
     });
   }
 
+
     /**
    * Angular lifecycle hook that runs on component initialization.
    * Loads user info, sets up conversation, and subscribes to partner changes.
