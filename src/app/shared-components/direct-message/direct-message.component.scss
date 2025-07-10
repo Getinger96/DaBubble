@@ -37,6 +37,11 @@
     flex-wrap: wrap;
 }
 
+.more-button, .less-button{
+    width: auto;
+    padding: 5px 3px !important;
+}
+
 .reactionsThread {
      display: flex;
     margin-top: 4px;
@@ -165,7 +170,7 @@
 
     
 
-$breakpoint-tablet: 768px;
+$breakpoint-tablet: 900px;
 $breakpoint-phone: 460px;
 
 @media (max-width: $breakpoint-tablet) {
@@ -211,6 +216,16 @@ $breakpoint-phone: 460px;
         }
     }
 
+      .desktop-visible {
+    display: none !important;
+  }
+
+}
+
+@media (min-width: $breakpoint-tablet){
+      .mobile-visible.more-button {
+    display: none !important;
+  }
 }
 
 @media (max-width: $breakpoint-phone) {

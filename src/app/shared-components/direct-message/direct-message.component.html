@@ -48,8 +48,10 @@
   </div>
       <div  class="message-not-answered">
                 <div class="reactions" [ngClass]="{'reactionsThread': isInThread}">
-                <ng-container *ngFor="let entry of (emojiReactions) | keyvalue">
-                    <span class="reaction"
+                <!-- Mobile: first 7 emojis, Desktop: first 20 emojis -->
+                <ng-container *ngFor="let entry of (emojiReactions) | keyvalue; let i = index">
+                    <span *ngIf="showAllEmojis || i < 7"
+                        class="reaction mobile-visible"
                         (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
 
                         {{ entry.key }}
@@ -64,7 +66,49 @@
                         </div>
                     </span>
 
+                            <!-- Desktop: show 8-20 emojis -->
+                        <span *ngIf="(showAllEmojis || i < 20) && i >= 7" 
+                            class="reaction desktop-visible"
+                            (click)="addEmoji(entry.key, this.conversationId,this.conversationmessageid)">
+
+                            {{ entry.key }}
+                            <ng-container *ngIf="entry.value.count > 0">
+                                {{ entry.value.count }}
+                            </ng-container>
+
+                            <!-- Tooltip mit dynamischem Text -->
+                            <div class="reaction-tooltip">
+                                {{ entry.value.users.join(', ') }}
+                                {{ entry.value.users.length === 1 ? 'hat reagiert' : 'haben reagiert' }}
+                            </div>
+                        </span>
                 </ng-container>
+                 <ng-container *ngIf="(emojiReactions) | keyvalue as emojiList">
+                    <!-- Show more button for mobile (when more than 7) -->
+                    <span *ngIf="emojiList.length > 7 && !showAllEmojis"
+                            class="reaction more-button mobile-visible"
+                            (click)="showAllEmojis = !showAllEmojis">
+                            +{{ emojiList.length - 7 }} weitere
+                    </span>
+
+                    <!-- Show more button for desktop (when more than 20) -->
+                    <span *ngIf="emojiList.length > 20 && !showAllEmojis"
+                            class="reaction more-button desktop-visible"
+                            (click)="showAllEmojis = !showAllEmojis">
+                            +{{ emojiList.length - 20 }} weitere
+                    </span>
+
+                    <!-- Show less button -->
+                    <span *ngIf="showAllEmojis && emojiList.length > 7"
+                    class="reaction less-button"
+                    (click)="showAllEmojis = !showAllEmojis">
+                    Weniger anzeigen
+                    </span>
+                </ng-container>
+
+
+
+
                      <img *ngIf="!isInThread" #emojiImgWriter (click)="showEmojiBar()" class="add-reaction"
                         src="assets/img/add_reaction40.png" alt="">
             </div>

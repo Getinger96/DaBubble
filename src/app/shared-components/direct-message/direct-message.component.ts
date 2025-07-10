@@ -48,6 +48,7 @@ export class DirectMessageComponent {
   threadCount$: Observable<number> = of(0);
   lastAnswer$: Observable<string> = of('');
   showEmojiPicker: boolean = false;
+  showAllEmojis: boolean = false;
   conversationmessageid: string = '';
   editedMessageText: string = '';
   conversationId: string = '';

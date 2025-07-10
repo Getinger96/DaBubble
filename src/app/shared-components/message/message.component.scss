@@ -567,6 +567,11 @@ $breakpoint-phone: 460px;
     }
 }
 
+.more-button, .less-button{
+    width: auto;
+    padding: 5px 3px !important;
+}
+
 .hidden{
     display: none;
 }
