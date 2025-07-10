@@ -184,4 +184,5 @@ inputFieldPasswordIsEmpty() {
     this.passwordFieldIsEmpty = true;
   }
 }
+
 }
