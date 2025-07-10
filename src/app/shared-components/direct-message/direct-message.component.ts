@@ -394,6 +394,7 @@ export class DirectMessageComponent {
     } else {
       console.error(this.messageData, 'not found')
     }
+    this.mainHelperService.focusThreadMessage$.next();
   }
 
   /**

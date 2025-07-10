@@ -15,6 +15,7 @@ import { Member } from '../../interfaces/member.interface';
 import { AddMemberToThreadComponent } from './add-member-to-thread/add-member-to-thread.component';
 import { ConversationMessage } from '../../interfaces/conversation-message.interface';
 import { ConversationService } from '../../firebase-services/conversation.service';
+import { MainHelperService } from '../../services/main-helper.service';
 
 @Component({
   selector: 'app-thread',
@@ -34,6 +35,7 @@ export class ThreadComponent {
   @Output() closeThread = new EventEmitter<void>();
   @Output() checkWidthTrigger = new EventEmitter<void>();
   mainComponents = MainComponentsComponent;
+  directMessageComponent = DirectMessageComponent;
   private allThreadsSubscription!: Subscription;
   private allConvThreadsSubscription!: Subscription;
   @ViewChild('threadFeed') private threadFeed!: ElementRef;
@@ -41,6 +43,7 @@ export class ThreadComponent {
   @ViewChild('addMember') private addMember!: ElementRef
   @ViewChild('addEmojiImg') private addEmojiImg!: ElementRef
   @ViewChild('emojiComponent') private emojiComponent!: ElementRef
+  @ViewChild('threadMessageBox') private threadMessageBox!: ElementRef<HTMLTextAreaElement>;
   currentChannelID?: string
   threadAnswers: Message[] = [];
   threadConvAnswers: ConversationMessage[] = [];
@@ -61,6 +64,7 @@ export class ThreadComponent {
     private channelmessageservice: ChannelMessageService,
     private channelService: ChannelService,
     private conversationService: ConversationService,
+    public mainHelperService: MainHelperService,
   ) { }
 
   ngOnInit(): void {
@@ -91,8 +95,13 @@ export class ThreadComponent {
     this.initializeCountCheck()
     setTimeout(() => this.scrollToBottom(), 0);
     this.checkWidthTrigger.emit();
-
   }
+
+ngAfterViewChecked() {
+  if (this.threadMessageBox) {
+    this.threadMessageBox.nativeElement.focus();
+  }
+}
 
   ngOnChanges() {
     this.initializeCountCheck()
@@ -130,12 +139,6 @@ export class ThreadComponent {
     }
 
   }
-
-
-  checkwidth() {
-
-  }
-
 
   handleEmojiWindow(target: HTMLElement) {
     const clickedEmojiWindow = this.emojiComponent?.nativeElement?.contains(target)
@@ -333,6 +336,7 @@ loadReaction() {
   closeThreads(): void {
     this.mainComponents.toggleThreads();
     this.closeThread.emit();
+    this.mainHelperService.focusThreadMessage$.next();
   }
 
   async sendReply(): Promise<void> {
