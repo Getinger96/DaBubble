@@ -516,6 +516,11 @@ $breakpoint-phone: 460px;
 
 @media (max-width: $breakpoint-tablet) {
 
+    .emojiWindow{
+        right: unset !important;
+        bottom: 40px !important;
+    }
+
     .like-icon, .check-icon {
         display: none;
     }

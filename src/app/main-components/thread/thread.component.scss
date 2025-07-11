@@ -181,6 +181,11 @@ app-add-member-to-thread  {
     .thread-feed{
         height: calc(100% - 247px) !important;
     }
+
+    .emojiWindow{
+        right: unset !important;
+        bottom: 40px !important;
+    }
 }
 
 @media (max-width:480px){
