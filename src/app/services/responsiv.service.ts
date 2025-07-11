@@ -5,7 +5,7 @@ import { Injectable, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 })
 export class ResponsivService {
 
-  private mediaQueryTablet = window.matchMedia('(max-width: 768px)');
+  private mediaQueryTablet = window.matchMedia('(max-width: 900px)');
   private mediaQueryMobile = window.matchMedia('(max-width: 480px)');
   isResponsiv: boolean = false;
   isMobile: boolean = false;

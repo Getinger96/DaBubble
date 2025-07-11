@@ -6,6 +6,9 @@
   z-index: 10;
   height: 100vh; // Change from calc(100vh - 130px) to 100vh
   box-sizing: border-box; // Add this
+  max-width: 1920px;
+  width: 100%;
+  justify-self: center;
 
   @media (max-width: 900px) {
     height: 100vh; // Change from calc(100vh - 100px) to 100vh
@@ -163,11 +166,16 @@ app-new-chat {
       width: 100%;
       max-width: 366px;
       transition: width 0.3s ease;
+      flex-shrink: 0;
 
 
           @media (max-width: 900px) {
            max-width: 100%;
 
+    }
+
+    &.shrink{
+            width: 0 !important;
     }
     }
   }
