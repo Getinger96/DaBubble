@@ -1,3 +1,6 @@
+<section>
+
+
 <div [ngClass]="{'d-flex':overlayvisible}" class="overlay_register">
 
     <div>
@@ -10,18 +13,22 @@
 
 
 <header class="headerContainer">
-
+<div>
     <div>
 
         <app-intro *ngIf="introView" class="introCard"></app-intro>
 
     </div>
 
-    <div>
+    <div class="introSectionLogo">
 
-        <app-header-logo *ngIf="logoView" class="introCard"></app-header-logo>
+        <app-header-logo [ngClass]="{'newPosition': logoView && !introView}" *ngIf="logoView" class="introCard"></app-header-logo>
 
     </div>
+</div>
+
+    
+
 
     <div class="newRegistration">
 
@@ -35,7 +42,7 @@
 
 <main>
 
-<section>
+    <section class="loginSection">
 
     <div class="loginCard">
 
@@ -145,3 +152,5 @@
     <a routerLink="/privacy" class="imprintAndPrivacy">Datenschutz</a>
 
 </div>
+
+</section>

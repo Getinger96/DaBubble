@@ -6,15 +6,31 @@ body {
     margin: 0;
 }
 
+main {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #535af1;
+    animation: change-Background ease-in-out 600ms forwards 1.2s
+}
+
 section {
     background-color: #535af1;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     display: flex;
     animation: move-section-to-corner ease-in-out 600ms forwards 1.2s;
     overflow: hidden;
     position: fixed;
     z-index: 100;
+    max-width: 1980px;
 }
 
 .intro {
@@ -111,6 +127,17 @@ section {
         z-index: 0;
         display: block;
 
+    }
+}
+
+
+@keyframes change-Background {
+     from {
+        background-color: #535af1;
+    }
+
+    to {
+        background-color: #ECEEFE;
     }
 }
 

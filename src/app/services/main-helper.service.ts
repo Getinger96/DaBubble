@@ -18,6 +18,7 @@ export class MainHelperService {
     showProfilCard: boolean = true;
     channelNames: any[] = [];
     ToDirectChat: boolean = false;
+    LoginAnimationIsDone: boolean = false;
   constructor() { }
 
 
