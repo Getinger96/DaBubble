@@ -112,18 +112,18 @@
       width: 100%;
       max-width: 366px;
       transition: width 0.3s ease;
+      display: flex;
 
 
           @media (max-width: 900px) {
            max-width: 100%;
-
+    }
+    &.closed{
+            width: 0 !important;
+            overflow: hidden;
     }
     }
 
-    app-workspace-menu.closed {
-      width: 0 !important;
-      overflow: hidden;
-    }
 
     .chat-area {
       flex: 1; // Change from flex-grow: 1 to flex: 1
@@ -156,12 +156,20 @@ app-new-chat {
       max-width: 485px;
       transition: width 0.3s ease;
     }
-  }
 
-  >app-toggle-webspace-menu {
-    position: absolute;
-    bottom: 314.5px;
-    left: -162px;
+    .workspace-menu{
+      position: relative;
+      height: 100%;
+      width: 100%;
+      max-width: 366px;
+      transition: width 0.3s ease;
+
+
+          @media (max-width: 900px) {
+           max-width: 100%;
+
+    }
+    }
   }
 
   app-thread.closed {
@@ -174,6 +182,12 @@ app-new-chat {
   }
 
 }
+
+  app-toggle-webspace-menu {
+    position: absolute;
+    bottom: 40%;
+    left: -186px;
+  }
 
 @media (max-width: 900px) {
   .main-content >.main-head-wrapper  > .main-head > app-search-bar, app-header {

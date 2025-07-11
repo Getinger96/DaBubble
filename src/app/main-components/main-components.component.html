@@ -18,11 +18,14 @@
         <app-active-user></app-active-user>
     </div>
 </div>
-    <div class="body" >
-
+    <div class="body">
+        <div id="workspaceMenu" class="workspace-menu">
         <app-workspace-menu (closeThread)="closeThreadView()" (messageNavigated)="checkWidth()" [userArray]="allUsers"
             [actualUser]="actualUser" (toggleWorkspace)="openWorkspaceMobile()"
-            (toggleOpenNewChat)="toggleOpenNewChat($event)"></app-workspace-menu>
+            (toggleOpenNewChat)="toggleOpenNewChat($event)">
+        </app-workspace-menu>
+        <app-toggle-webspace-menu></app-toggle-webspace-menu>
+        </div>
         <main id="routerOutletWrapper" *ngIf="!this.mainservice.showdirectmessage"
             [ngClass]="{ 'hidden': shouldHideRouter || this.mainhelperService.openNewChat }" class="chat-area">
 
@@ -41,5 +44,5 @@
             [selectedConvMessage]="selectedConvThreadMessage" (closeThread)="closeThreadView()"  (checkWidthTrigger)="checkWidth()" ></app-thread>
            
     </div>
-    <app-toggle-webspace-menu></app-toggle-webspace-menu>
+    
 </section>
