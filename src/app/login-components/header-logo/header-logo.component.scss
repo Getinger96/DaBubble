@@ -18,22 +18,10 @@ $font-secondary: 'Figtree', sans-serif;
         transform: translateX(-40%);
     }
 
-    @media (max-width: 600px) {
-        top: 30px;
-        left: 60%;
-        transform: translateX(-50%);
-    }
 
-    @media (max-width: 500px) {
-        top: 30px;
-        left: 60%;
-        transform: translateX(-40%);
-    }
 
     @media (max-height: 700px) {
-        top: 30px;
-        left: 70%;
-        transform: translateX(-50%);
+        top: 80px;
     }
 
     .logo {
@@ -50,7 +38,12 @@ $font-secondary: 'Figtree', sans-serif;
             animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
         }
 
-
+        
+        @media (max-width: 500px) {
+            width: 56px;
+            height: 56px;
+            animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner-mobile ease-in-out 600ms forwards 1.2s;
+        }
 
 
     }
