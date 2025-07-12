@@ -54,6 +54,10 @@
       .reaction-popup {
         left: 43px;
         right: unset;
+
+        @media (max-width:900px) {
+            left: 20px !important;
+        }
       }
     }
   }
@@ -67,7 +71,7 @@
         align-items: center;
         justify-content: center;
         gap: 5px;
-        width: auto;
+        width: max-content;
         padding-left: 20px;
         padding-right: 20px;
         border: 1px solid #ADB0D9;
@@ -81,6 +85,9 @@
         display: none; 
 
     }
+         @media (max-width:900px) {
+            left: 20px !important;
+        }
 
 
         img {
@@ -280,6 +287,9 @@
             max-width: 698px;
             margin-right: 40px;
             width: fit-content;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         .message-under {
@@ -395,6 +405,7 @@ max-height: 80px !important;
     margin-top: 4px;
     max-width: 250px;
     flex-wrap: wrap;
+    justify-content: end;
     
 }
 
