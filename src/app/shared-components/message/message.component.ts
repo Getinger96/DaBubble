@@ -177,9 +177,9 @@ export class MessageComponent implements OnChanges {
       this.showEmojiPickerThread = false;
     }
 
-       if (!clickedInsideToggleEditMessage) {
-      this.showEditPopup = false;
-    }
+      // if (!clickedInsideToggleEditMessage) {
+      //this.showEditPopup = false;
+    //}
 
   }
 
