@@ -31,6 +31,9 @@ section {
     position: fixed;
     z-index: 100;
     max-width: 1980px;
+
+
+    
 }
 
 .intro {
@@ -48,12 +51,26 @@ section {
     }
 
     @media (max-height: 700px) {
-        animation: move-to-corner-mobile ease-in-out 600ms forwards 1.0s;
+        animation: move-to-corner-mobile ease-in-out 600ms forwards 1.0s !important;
     }
+
+
+         @media (max-width: 1030px) and (max-height: 600px) {
+                 animation: move-to-corner-mobile-Nest-Hub ease-in-out 600ms forwards 1.0s !important;
+        }
 
         @media (max-height: 500px) {
         animation: move-to-corner-mobile-small ease-in-out 600ms forwards 1.0s;
     }
+     @media (max-width: 600px) and (max-height: 800px) { 
+            animation: move-to-corner-mobile-Surface ease-in-out 600ms forwards 1.0s;
+        }
+
+    @media (max-width: 400px) and (max-height: 900px) { 
+            animation: move-to-corner-mobile-Galaxy ease-in-out 600ms forwards 1.0s;
+        }
+
+
 
     .logo {
         animation: logo-animation ease-in-out 1.2s forwards, move-img-to-corner ease-in-out 600ms forwards 1.2s;
@@ -232,12 +249,54 @@ section {
     }
 
     to {
+        top: 12px;
+        left: 70%;
+        transform: translateX(-60%);
+    }
+}
+
+@keyframes move-to-corner-mobile-Nest-Hub {
+    from {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        top: 15px;
+        left: 25%;
+        transform: translateX(-60%); 
+    }
+}
+
+
+@keyframes move-to-corner-mobile-Surface {
+    from {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
         top: 0px;
         left: 70%;
         transform: translateX(-60%);
     }
 }
 
+@keyframes move-to-corner-mobile-Galaxy {
+    from {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        top: 0px;
+        left: 70%;
+        transform: translateX(-60%);
+    }
+}
 
 
 
