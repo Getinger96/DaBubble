@@ -112,11 +112,19 @@ $breakpoint-phone: 460px;
 
 @media (max-width: $breakpoint-tablet) {
 
+    .app-edit-message{
+        width: 100% !important;
+    }
+
     .edit-buttons{
         flex-direction: column-reverse;
     }
 
     .main-chat-message{
+
+        width: 90%;
+        justify-self: center;
+
         .message-icons{
             align-items: end !important;
             overflow: hidden;
