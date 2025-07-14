@@ -179,7 +179,7 @@ export class MessageComponent implements OnChanges {
 
       // if (!clickedInsideToggleEditMessage) {
       //this.showEditPopup = false;
-    //}
+      //}
 
   }
 
