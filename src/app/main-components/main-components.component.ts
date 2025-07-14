@@ -234,9 +234,7 @@ openWorkspaceMobile() {
     this.isWorkspaceOpen = !this.isWorkspaceOpen;
   setTimeout(() => {
     const workspace = document.querySelector('app-workspace-menu');
-    const workspaceMenu = document.getElementById('workspaceMenu');
     const isClosed = workspace?.classList.toggle('closed');
-    workspaceMenu?.classList.toggle('shrink');
     this.responsivService.workspace = true;
     this.toggleVisibleSections(isClosed);
   }, 0);

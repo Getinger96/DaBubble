@@ -25,9 +25,7 @@ export class MainHelperService {
   openChannelSection(openChannel: boolean) {
     this.setChannel(openChannel)
     this.showChannel.next(this.openChannel);
-
   }
-
 
   setChannel(openChannel: boolean) {
     return this.openChannel = openChannel;
