@@ -57,7 +57,7 @@ export class LoginComponent implements AfterViewInit {
       setTimeout(() => {
         this.introView = false;
         this.logoView = true;
-           
+        localStorage.setItem('introAnimationCompleted', 'true');   
    
       }, 2000);
     } else {
