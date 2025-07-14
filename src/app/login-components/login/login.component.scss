@@ -1,6 +1,27 @@
 $font-primary: 'Nunito', sans-serif;
 $font-secondary: 'Figtree', sans-serif;
 
+
+@mixin respond($max: null, $min: null, $height: null) {
+  @if $max and $height {
+    @media (max-width: $max) and (max-height: $height) {
+      @content;
+    }
+  } @else if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else if $height {
+    @media (max-height: $height) {
+      @content;
+    }
+  }
+}
+
 body {
     margin: 0;
     background-color: #ECEEFE;
@@ -9,32 +30,35 @@ body {
 }
 
 section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    max-width: 1980px;
-    text-align: center;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  max-width: 1980px;
+  text-align: center;
+  overflow: hidden;
 
-     @media (max-width: 600px) and (max-height: 800px) {
-            overflow-y: auto;
-        }
+  @include respond($max: 600px, $height: 800px) {
+    overflow-y: auto;
+  }
 
-    @media (max-width: 400px) and (max-height: 700px) {
-            overflow-y: hidden;
-        }
+  @include respond($max: 400px, $height: 700px) {
+    overflow-y: hidden;
+  }
 
-             @media (max-width: 400px) and (max-height: 800px) {
-              overflow-y: hidden;
-        }
+  @include respond($max: 400px, $height: 800px) {
+    overflow-y: hidden;
+  }
 
-            @media (max-width: 550px) and (max-height: 730px) {
-            overflow-y: hidden;
-        }
+  @include respond($max: 550px, $height: 730px) {
+    overflow-y: hidden;
+  }
 
+   @include respond($max: 320px, $height: 660px) {
+    overflow-y: auto;
+  }
 
 }
 
@@ -47,16 +71,15 @@ section {
 }
 
 .introContainer {
-
-    @media (max-width: 720px) {
-        position: absolute;
-        top: 0;
-        left: 160px;
-        right: 0;
-        bottom: 0;
-
-    }
+  @include respond($max: 720px) {
+    position: absolute;
+    top: 0;
+    left: 160px;
+    right: 0;
+    bottom: 0;
+  }
 }
+
 
 .introCard {
     margin: 0;
@@ -92,56 +115,52 @@ section {
 }
 
 .headerContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 20px 0px 20px;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 20px 0px 20px;
+  width: 100%;
 
-    @media (max-width: 720px) {
-         padding: 30px 0px 0px 50px;
-        position: relative;
-        justify-content: center;
-    }
+  @include respond($max: 720px) {
+    padding: 30px 0px 0px 50px;
+    position: relative;
+    justify-content: center;
+  }
 
-        @media (max-height: 720px) {
-          padding: 20px 0px 10px  80px!important;
+  @include respond($height: 720px) {
+    padding: 20px 0px 10px 80px !important;
+  }
 
-    }
+  @include respond($max: 600px, $height: 800px) {
+    padding: 90px 0px 10px 80px;
+  }
 
-       @media (max-width: 600px) and (max-height: 800px) {
-            padding: 90px 0px 10px 80px;
-        }
+  @include respond($max: 400px, $height: 800px) {
+    padding: 10px 0px 10px 80px;
+  }
 
-
-        
-       @media (max-width: 400px) and (max-height: 800px) {
-            padding: 10px 0px 10px 80px;
-        }
-
-             @media (max-width: 1030px) and (max-height: 600px) {
-                 padding: 20px 0px 10px 0px !important;
-        }
+  @include respond($max: 1030px, $height: 600px) {
+    padding: 20px 0px 10px 0px !important;
+  }
 
 }
 
 .newRegistration {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
 
-    span {
-        color: black;
-        font-weight: 400;
-        font-size: 18px;
-    }
+  span {
+    color: black;
+    font-weight: 400;
+    font-size: 18px;
+  }
 
-    @media (max-width: 720px) {
-        display: none;
-    }
-
+  @include respond($max: 720px) {
+    display: none;
+  }
 }
 
 .imprintAndPrivacy {
@@ -160,135 +179,205 @@ section {
 }
 
 main {
-    display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  flex-direction: column;
+
+  @include respond($max: 1200px, $height: 1500px) {
+    justify-content: start;
+  }
+
+  @include respond($max: 450px, $height: 950px) {
     justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    flex-direction: column;
+  }
 
+  @include respond($max: 400px, $height: 700px) {
+    justify-content: center;
+  }
 
-      @media (max-width: 1200px) and (max-height: 1500px) {
-           justify-content: start;
-        }
+  @include respond($max: 400px, $height: 800px) {
+    justify-content: center;
+  }
 
-         @media (max-width: 450px) and (max-height: 950px) { 
-            justify-content: center;
-        }
+  @include respond($max: 550px, $height: 730px) {
+    justify-content: center;
+  }
 
-        @media (max-width: 400px) and (max-height: 700px) {
-              justify-content: center;
-        }
-        
+  @include respond($max: 850px, $height: 1200px) {
+    justify-content: start;
+  }
 
-             @media (max-width: 400px) and (max-height: 800px) {
-              justify-content: center;
-        }
-
-            @media (max-width: 550px) and (max-height: 730px) {
-            justify-content: center;
-        }
-
+  @include respond($max: 760px) {
+    justify-content: center;
+  }
 }
 .introSectionLogo {
-    margin-left: -15px;
+  margin-left: 3px;
 
+  @include respond($max: 1230px) {
+    margin-top: 0px;
+  }
 
-      @media (max-width: 720px) {
-            margin-left: 100px;
-            justify-content: space-around;
-        }
+  @include respond($max: 720px) {
+    margin-left: 100px;
+  }
+
+  @include respond($max: 620px) {
+    margin-left: 90px;
+  }
+
+  @include respond($max: 615px) {
+    margin-left: 90px;
+  }
+
+  @include respond($max: 550px) {
+    margin-left: 79px;
+  }
+
+  @include respond($max: 500px) {
+    margin-left: 115px;
+    margin-top: 8px;
+  }
+
+  @include respond($max: 400px) {
+    margin-left: 106px;
+    margin-top: 8px;
+  }
+
+  @include respond($max: 360px) {
+    margin-left: 100px;
+    margin-top: 8px;
+  }
+
+  @include respond($max: 330px) {
+    margin-left: 90px;
+    margin-top: 8px;
+  }
+
+  @include respond($max: 550px, $height: 730px) {
+    margin-left: 109px;
+    margin-top: -19px;
+  }
+
+  @include respond($max: 400px, $height: 900px) {
+    margin-left: 112px;
+    margin-top: -22px;
+  }
+
+  @include respond($max: 400px, $height: 700px) {
+    margin-left: 100px;
+    margin-top: 0px;
+  }
+
+  @include respond($max: 370px, $height: 750px) {
+    margin-left: 90px;
+    margin-top: 0px;
+  }
 }
 
+
 .intro {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-       .logo {
-        width: 100px;
-        height: 100px;
-       }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 
+  .logo {
+    width: 100px;
+    height: 100px;
+  }
 
-           h1 {
-        font-size: 32px;
-        font-family: $font-primary;
-        font-weight: 700;
-        color: black;
-        overflow: hidden;
-        padding-bottom: 15px;
+  h1 {
+    font-size: 32px;
+    font-family: $font-primary;
+    font-weight: 700;
+    color: black;
+    overflow: hidden;
+    padding-bottom: 15px;
 
-        @media (max-width: 720px) {
-            padding-bottom: 10px;
-        }
-
-        @media (max-width: 500px) {
-            font-size: 32px;
-            transform: translateX(-20px);
-            margin-left: 20px;
-        }
+    @include respond($max: 720px) {
+      padding-bottom: 10px;
     }
+
+    @include respond($max: 500px) {
+      font-size: 32px;
+      transform: translateX(-20px);
+      margin-left: 20px;
+    }
+  }
 }
 
 
 .loginSection {
-    width: 610px;
-    height: 680px;
-    min-height: 500px;
-    display: flex;
-    justify-content: center;
-    background-color: #FFFF;
-    border-radius: 30px;
-    box-sizing: border-box;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-    margin-left: 24px;
-    margin-right: 24px;
+  width: 610px;
+  height: 680px;
+  min-height: 500px;
+  display: flex;
+  justify-content: center;
+  background-color: #FFFF;
+  border-radius: 30px;
+  box-sizing: border-box;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+  margin-left: 24px;
+  margin-right: 24px;
 
-    @media (max-width: 720px) {
-        height: 600px;
-        width: 100%;
-    }
+  @include respond($max: 720px) {
+    height: 600px;
+    width: 100%;
+  }
 
-    
-    @media (max-height: 720px) {
-        height: 420px  !important;
-        width: 100%;
-        min-height: 400px;
-        margin-left: 0px;
-        margin-right: 0px;
-   
-    }
+  @include respond($height: 720px) {
+    height: 420px !important;
+    width: 100%;
+    min-height: 400px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 
-        @media (max-height: 900px) {
-           height: 560px;
-    }
+  @include respond($height: 900px) {
+    height: 560px;
+  }
 
-      @media (max-width: 600px) and (max-height: 800px) {
-            height: 550px;
-        }
+  @include respond($max: 600px, $height: 800px) {
+    height: 550px;
+  }
 
+  @include respond($max: 400px, $height: 800px) {
+    height: 440px !important;
+    min-height: 450px !important;
+  }
 
-            @media (max-width: 400px) and (max-height: 800px) {
-              height: 510px;
-        }
+  @include respond($max: 420px, $height: 920px) {
+    height: 550px;
+  }
 
+  @include respond($max: 550px, $height: 730px) {
+    height: 520px;
+    min-height: 450px;
+  }
 
-            @media (max-width: 420px) and (max-height: 920px) {
-              height: 550px;
-        }
+  @include respond($max: 1290px, $height: 800px) {
+    height: 640px;
+    min-height: 520px;
+  }
 
+  @include respond($max: 1100px, $height: 600px) {
+    height: 640px;
+    min-height: 400px;
+  }
 
-           @media (max-width: 550px) and (max-height: 730px) {
-              height: 520px;
-              min-height: 450px;
-        }
+  @include respond($max: 370px, $height: 750px) {
+    height: 520px !important;
+    min-height: 450px !important;
+  }
 
-          @media (max-width: 1290px) and (max-height: 800px) {
-            height: 640px;
-        }
-
-
+     @include respond($max: 360px, $height: 660px) {
+     height: 470px !important;
+     min-height: 450px !important; 
+  }
 }
 
 .removeMargin {
