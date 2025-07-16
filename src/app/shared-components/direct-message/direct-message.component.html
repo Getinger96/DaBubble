@@ -36,7 +36,7 @@
 
         <img  *ngIf="!responsiveService.isMobile || !editMessage"  [src]="'assets/img/avatar_' + avatarSrc + '.png'" alt="">
         <div class="message-details" *ngIf="!editMessage">
-            <div class="message-over"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }}
+            <div class="message-over" [ngStyle]="isOwn ? {'text-align': 'end','align-self':'end'} : {'text-align': 'start','align-self':'self-start'}"><span class="message-name">{{ name }}</span><span class="message-time">{{ time }}
                     Uhr</span></div>
             <div [class.own-message]="isOwn" class="message-text"><span>{{ messageText }}</span></div>
     <div class="message-under">

@@ -71,7 +71,7 @@
         <img *ngIf="!responsiveService.isMobile || !editMessage"  class="avatar-pic" [src]="'assets/img/avatar_' + avatarSrc + '.png'"
             [ngStyle]="isThread ? {'padding': '10px 20px 0 40px'} : {}">
         <div class="message-details" *ngIf="!editMessage">
-            <div class="message-over"><span class="message-name" (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
+            <div class="message-over" [ngStyle]="isOwn ? {'text-align': 'end','align-self':'end'} : {'text-align': 'start','align-self':'self-start'}"><span class="message-name" (click)="(isThread || isInThread)? (threadAnswersUserId  ? openProfil(threadAnswersUserId): selectedUserId? openProfil(selectedUserId)
             : null): ( !isThread && messageData?.id? openProfil(messageData!.id): null )">{{ name }} </span><span
                     class="message-time">{{ time }}
                     Uhr</span></div>
