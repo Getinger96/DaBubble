@@ -649,8 +649,8 @@ $breakpoint-phone: 460px;
         gap: 0 !important;
         height: auto !important;
         flex-direction: column !important;
-        text-align: end;
-        align-self: end;
+        text-align: start;
+        align-self: self-start;
     }
 
     .message{

@@ -237,8 +237,8 @@ $breakpoint-phone: 460px;
     .message-over{
         height: auto !important;
         flex-direction: column !important;
-        text-align: end;
-        align-self: end;
+        text-align: start;
+        align-self: self-start;
     }
 
     .message{
