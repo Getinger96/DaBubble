@@ -14,7 +14,7 @@ import { Member } from '../../interfaces/member.interface';
 import { NgZone } from '@angular/core';
 import { ChannelMessageService } from '../../firebase-services/channel-message.service';
 import { Message } from '../../interfaces/message.interface';
-import { startWith, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MainComponentService } from '../../firebase-services/main-component.service';
 import { Router, NavigationStart, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -442,9 +442,6 @@ private normalizeTimestamp(ts: any): number {
     this.message.name = this.actualUser[0]?.name || '';
     this.message.avatar = this.actualUser[0]?.avatar || 1;
     this.message.isOwn = true;
-    if (this.message.messageText.startsWith('@')) {
-      this.message.messageText = `<a href="#" (click)="openUser({user.name}, $event)">${this.message.messageText}</a>`;
-    }
 
     this.channelmessageService.addMessage(this.message, this.currentChannelID, this.currentChannelName);
     this.message.messageText = '';
@@ -456,17 +453,6 @@ private normalizeTimestamp(ts: any): number {
 
   addInInputField(channel: string) {
     this.message.messageText += `${channel} `;
-  }
-
-  openUser(name: string, event: MouseEvent) {
-    event.preventDefault();
-    const button = document.getElementById(name);
-    if (button) {
-      button.click();
-    } else {
-      console.warn('Button mit ID "zielButton" nicht gefunden.');
-    }
-
   }
 
 }

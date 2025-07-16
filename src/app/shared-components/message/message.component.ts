@@ -20,10 +20,11 @@ import { FormsModule } from '@angular/forms';
 import { EditMessageComponent } from './edit-message/edit-message.component';
 import { MainHelperService } from '../../services/main-helper.service';
 import { ResponsivService } from '../../services/responsiv.service';
+
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [CommonModule, FormsModule, PickerComponent, MatCardModule, MatButtonModule, EditMessageComponent],
+  imports: [CommonModule, FormsModule, PickerComponent, MatCardModule, MatButtonModule, EditMessageComponent ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss',
 })
@@ -323,6 +324,9 @@ onCancelEdit() {
   this.editMessage = false;
   this.editMessageId = null;
 }
+
+
+
 
   addEmoji(event: any, channelID: string, messageId?: string) {
     const emoji = event.emoji?.native || event;

@@ -520,6 +520,13 @@ max-height: 80px !important;
     width: 50px;
 }
 
+.mention {
+  color: #007bff;
+  font-weight: 600;
+  background-color: transparent; /* Keine Hintergrundfarbe */
+  padding: 0;
+  display: inline; /* Standard Inline, damit keine Block-Box entsteht */
+}
 
 
 $breakpoint-tablet: 900px;

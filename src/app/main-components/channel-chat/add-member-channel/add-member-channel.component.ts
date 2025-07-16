@@ -32,10 +32,7 @@ export class AddMemberChannelComponent {
     if (!clickedInside) {
       this.appClickOutside.emit();
     }
-
-
-
-}
+  }
 
 
 }
