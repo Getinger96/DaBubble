@@ -246,11 +246,14 @@ private toggleVisibleSections(isClosed: boolean | undefined) {
   const newChat = document.getElementById('newChat');
   const directMessage = document.getElementById('directMessageChat');
   const routerWrapper = document.getElementById('routerOutletWrapper');
+  const workspaceMenu = document.getElementById('workspaceMenu');
+
   if (isClosed) {
 
     newChat?.classList.toggle('hidden', !showNewChat);
     directMessage?.classList.toggle('hidden', !showDirectMessage || showNewChat);
     routerWrapper?.classList.toggle('hidden', showDirectMessage || showNewChat);
+    workspaceMenu?.classList.add('shrink');
     if (!showNewChat && !showDirectMessage) {
       routerWrapper?.classList.remove('hidden');
     }
@@ -259,6 +262,7 @@ private toggleVisibleSections(isClosed: boolean | undefined) {
     }
   } else {
     [newChat, directMessage, routerWrapper].forEach(el => el?.classList.add('hidden'));
+    workspaceMenu?.classList.remove('shrink');
     this.closeThreadViewAfterWorkspaceIsOpen();
   }
 }

@@ -185,6 +185,10 @@ app-new-chat {
     overflow: hidden;
   }
 
+  .workspace-menu.shrink{
+    width: 0 !important;
+  }
+
   .mobile-container {
     display: none;
   }
@@ -245,6 +249,7 @@ app-new-chat {
       width: 100% !important;
     max-width: 100% !important;
 }
+
 
 @media (max-width:480px) {
   .main-head-wrapper{
