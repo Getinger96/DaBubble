@@ -14,17 +14,14 @@
 
 <header class="headerContainer">
 <div>
-    <div>
+    <div class="logoSection">
 
-        <app-intro *ngIf="introView" class="introCard"></app-intro>
-
+        <app-intro *ngIf="!introAlreadyPlayed"  class="introCard"></app-intro>
+        <app-final-logo *ngIf="introAlreadyPlayed" > </app-final-logo>
+        
     </div>
 
-    <div class="introSectionLogo">
-
-        <app-header-logo [ngClass]="{'newPosition': logoView && !introView}" *ngIf="logoView" class="introCard"></app-header-logo>
-
-    </div>
+   
 </div>
 
     

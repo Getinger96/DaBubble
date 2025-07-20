@@ -1,23 +1,36 @@
 @import './../../styles.scss';
 
+.headerSection {
+    padding: 25px 0px 0px 40px;
+    width: 100%;
+    display: flex;
+    max-width: 1980px;   
+}
+
+
 .privacy {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 48px 56px 48px 56px;
+     width: 700px;
     >.box {
         background-color: #FFFFFF;
         border-radius: 30px;
+        
         >.content {
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 32px;
             padding: 48px 56px 48px 56px;
+            position: relative;
             >main {
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
+                height: 500px;
+                overflow-y: auto;
             }
             >img {
                 cursor: pointer;
@@ -36,7 +49,7 @@
                 font-family: $font-primary;
                 color: #444DF2;
                 font-weight: 700;
-                font-size: 32px;
+                font-size: 26px;
                 line-height: 120%;
             }
             >main > div > .text, .list {
@@ -45,6 +58,7 @@
                 font-size: 20px;
                 line-height: 120%;
                 color: #000000;
+                padding-right: 20px;
             }
             >footer {
                 font-family: $font-primary;
@@ -67,16 +81,39 @@
                 font-size: 32px;
             }
             main > div > .subheadline {
-                font-size: 20px;
+                font-size: 18px;
             }
             main > div > .text, .list {
                 font-size: 14px;
+                padding-right: 10px;
             }
             footer {
                 font-size: 14px;
             }
         }
     }
+}
+
+
+@media (max-width: 768px) { 
+   header {
+        justify-content: center;
+    } 
+
+    .privacy {
+        width: 400px;    
+    }
+
+}
+
+
+@media (max-width: 400px) { 
+
+
+    .privacy {
+        width: 350px;    
+    }
+
 }
 
 @media (max-width: 400px) {
@@ -86,4 +123,23 @@
             font-size: 26px;
         }
     }
+}
+
+
+
+@media (max-width: 500px) and (max-height: 1000px)   {
+
+    .privacy {
+            padding: 0px;   
+    }
+
+.headerSection {
+padding: 40px 0px 0px 0px;
+}
+
+
+    main {
+    height: 300px !important;
+            }
+
 }

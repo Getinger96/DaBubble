@@ -97,6 +97,21 @@ section {
     width: 100%;
 }
 
+.introCardFinal {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+}
+
 .newPosition {
     position: relative !important;
     margin-left: 80px !important; 
@@ -186,9 +201,6 @@ main {
   height: 100vh;
   flex-direction: column;
 
-  @include respond($max: 1200px, $height: 1500px) {
-    justify-content: start;
-  }
 
   @include respond($max: 450px, $height: 950px) {
     justify-content: center;
@@ -208,73 +220,28 @@ main {
 
   @include respond($max: 850px, $height: 1200px) {
     justify-content: start;
+    margin-top: 50px;
+  }
+
+    @include respond($max: 450px, $height: 950px) {
+    justify-content: center !important; 
+    margin-top: 50px !important;
   }
 
   @include respond($max: 760px) {
-    justify-content: center;
-  }
-}
-.introSectionLogo {
-  margin-left: 3px;
-
-  @include respond($max: 1230px) {
-    margin-top: 0px;
+    justify-content: center !important;
+    margin-top: 50px !important;
   }
 
-  @include respond($max: 720px) {
-    margin-left: 100px;
+
+    @include respond($max: 400px, $height:700px) {
+    justify-content: flex-end;
   }
 
-  @include respond($max: 620px) {
-    margin-left: 90px;
-  }
 
-  @include respond($max: 615px) {
-    margin-left: 90px;
-  }
-
-  @include respond($max: 550px) {
-    margin-left: 79px;
-  }
-
-  @include respond($max: 500px) {
-    margin-left: 115px;
-    margin-top: 8px;
-  }
-
-  @include respond($max: 400px) {
-    margin-left: 106px;
-    margin-top: 8px;
-  }
-
-  @include respond($max: 360px) {
-    margin-left: 100px;
-    margin-top: 8px;
-  }
-
-  @include respond($max: 330px) {
-    margin-left: 90px;
-    margin-top: 8px;
-  }
-
-  @include respond($max: 550px, $height: 730px) {
-    margin-left: 109px;
-    margin-top: -19px;
-  }
-
-  @include respond($max: 400px, $height: 900px) {
-    margin-left: 112px;
-    margin-top: -22px;
-  }
-
-  @include respond($max: 400px, $height: 700px) {
-    margin-left: 100px;
-    margin-top: 0px;
-  }
-
-  @include respond($max: 370px, $height: 750px) {
-    margin-left: 90px;
-    margin-top: 0px;
+    @include respond($max: 1200px, $height:1400px) {
+    justify-content: start;
+     margin-top: 50px;
   }
 }
 
@@ -375,8 +342,14 @@ main {
   }
 
      @include respond($max: 360px, $height: 660px) {
-     height: 470px !important;
-     min-height: 450px !important; 
+      height: 440px !important;
+      min-height: 430px !important;
+  }
+
+
+       @include respond($max: 350px, $height: 800px) {
+        height: 560px !important;
+        min-height: 450px !important;
   }
 }
 
@@ -509,6 +482,10 @@ main {
         margin-right: 25px;
         margin-left: 25px;
     }
+}
+
+.logoSection {
+  position: relative;
 }
 
 .custom-input {

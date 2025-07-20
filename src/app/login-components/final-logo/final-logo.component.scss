@@ -1,0 +1,193 @@
+
+
+
+
+.finalMain {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.finalSection {
+    background-color: #ECEEFE;
+    display: block; 
+    width: 100vw;
+    max-width: 1980px;
+}
+
+
+
+
+.finalintro {
+  position: absolute;
+  top: 2px;
+  left: 170px;
+  z-index: 100;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+
+
+.finallogo {
+  width: 100px;   // Endgröße aus move-img-to-corner
+  height: 100px;
+}
+
+.finalanimation-slide-headline {
+transform: translateX(13px);
+
+ @media (max-width: 720px) {
+  transform: translateX(0);
+  transform: translate(22px, -10px);
+            }
+
+
+             @media (max-width: 500px) {
+  transform: translateX(0);
+  transform: translate(12px, -10px);
+            }
+
+  h1 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 40px;  // Endgröße aus move-headline-to-corner
+    color: black;     // Endfarbe
+    margin: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    transform: none;
+    opacity: 1;
+    transform: translateX(0);
+
+
+       @media (max-width: 720px) {
+                font-size: 40px;
+            }
+
+            @media (max-width: 500px) {
+                font-size: 32px;
+                margin-left: 0px;
+            }
+  }
+
+}
+
+/* --- Responsive Anpassungen --- */
+@media (max-width: 720px) {
+  .finalintro {
+  top: 0px;
+  left: 50px;
+   transform: translateX(-85%);
+  }
+  .finallogo {
+    width: 70px;
+    height: 70px;
+  }
+  
+}
+
+@media (max-width: 640px) {
+    .finalintro{
+        top: 0px;
+        left: 40px;
+        
+}
+
+}
+
+
+@media (max-width: 550px) {
+    .finalintro{
+    top: 0px;
+    left: 32px;
+        
+}
+
+}
+
+@media (max-width: 500px) {
+  .finallogo {
+    width: 56px;
+    height: 56px;
+  }
+  .finalanimation-slide-headline h1 {
+    font-size: 32px;
+  }
+
+
+   .finalintro{
+    top: 10px;
+    left: 32px;
+
+   }
+    
+}
+
+@media (max-width: 450px) and (max-width: 800px)  {
+    .finalintro {
+        top: 10px;
+        left: 25px; 
+   }
+    
+}
+
+@media (max-width: 350px) {
+    .finalintro {
+        top: 10px;
+        left: 20px;
+    
+   }
+    
+}
+
+
+@media (max-width: 330px) {
+    .finalintro {
+         top: 10px !important;
+        left: 17px !important;
+
+   }
+    
+}
+
+
+@media (max-width: 400px) and (max-width: 700px)  {
+    .finalintro {
+        top: -10px;
+        left: 20px;
+    
+   }
+    
+}
+
+
+@media (max-width: 400px) and (max-width: 750px)  {
+    .finalintro {
+        top: 0px;
+        left: 20px;
+    
+   }
+    
+}
+
+@media (max-width: 350px) and (max-width: 690px)  {
+    .finalintro {
+        top: -10px;
+        left: 9px;
+    
+   }
+    
+}
+
+

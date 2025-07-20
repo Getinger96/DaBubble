@@ -16,14 +16,16 @@ import { MainComponentService } from '../../firebase-services/main-component.ser
 import { LoginService } from '../../firebase-services/login.service';
 import { first, firstValueFrom, Subscription } from 'rxjs';
 import { MainHelperService } from '../../services/main-helper.service';
+import { FinalLogoComponent } from '../final-logo/final-logo.component';
+import { HeaderComponent } from "../../shared-components/header/header.component";
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatButtonModule, RouterModule, MatInputModule, MatIconModule, CommonModule, FormsModule, IntroComponent, HeaderLogoComponent],
+  imports: [MatButtonModule, RouterModule, MatInputModule, MatIconModule, CommonModule, FormsModule, IntroComponent, HeaderLogoComponent, FinalLogoComponent, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements OnInit {
 
   isActiveEmail: boolean = false;
   isActivePassword: boolean = false;
@@ -42,7 +44,7 @@ export class LoginComponent implements AfterViewInit {
   introView: boolean = true;
   logoView: boolean = false;
   actualUser: any;
-
+  introAlreadyPlayed = false;
   constructor(private registerservice: RegisterService, private authService: AuthService, private router: Router, private cdRef: ChangeDetectorRef, private ngZone: NgZone,
     private mainservice: MainComponentService, private loginservice: LoginService, private mainHelperService : MainHelperService) {
       if (this.loginservice.loginoverlay==false) {
@@ -50,23 +52,12 @@ export class LoginComponent implements AfterViewInit {
       }
   }
 
-  ngAfterViewInit(): void {
-    let animationCompleted = localStorage.getItem('introAnimationCompleted');
-
-    if (!animationCompleted) {
-      setTimeout(() => {
-        this.introView = false;
-        this.logoView = true;
-        localStorage.setItem('introAnimationCompleted', 'true');   
-   
-      }, 2000);
-    } else {
-      this.introView = false;
-      this.logoView = true;
-      this.cdRef.detectChanges()// Sag Angular: Prüf das nochmal im DOM
-    }
-      
+ ngOnInit(): void {
+    this.introAlreadyPlayed = !!localStorage.getItem('introAnimationCompleted');
   }
+  
+      
+  
 
   async showAnimationLogin() {
   try {

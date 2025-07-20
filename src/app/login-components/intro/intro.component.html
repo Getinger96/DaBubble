@@ -1,20 +1,15 @@
-<main>
+<main [ngClass]="{'finalMain': animationFinished, 'animatedMain': !animationFinished}">
+  <section [ngClass]="{'finalSection': animationFinished, 'animatedSection': !animationFinished}">
+    <div class="intro" [ngClass]="{'finalIntro': animationFinished, 'animatedIntro': !animationFinished}">
+      
+      <div class="logo-container">
+        <img class="logo" src="../../assets/img/Logo.png" alt="Logo" [ngClass]="{'finalLogo': animationFinished, 'animatedLogo': !animationFinished}">
+      </div>
 
-<section>
-
-    <div class="intro">
-
-        <div class="logo-container">
-            
-            <img class="logo" src="../../assets/img/Logo.png" alt="">
-        </div>
-        <div class="animation-slide-headline">
-
-            <h1> DABubble</h1>
-
-        </div>
+      <div class="animation-slide-headline" [ngClass]="{'finalSlider': animationFinished, 'animatedSlider': !animationFinished}">
+        <h1 [ngClass]="{'finalHeadline': animationFinished, 'animatedHeadline': !animationFinished}">DABubble</h1 >
+      </div>
 
     </div>
-
-</section>
+  </section>
 </main>
