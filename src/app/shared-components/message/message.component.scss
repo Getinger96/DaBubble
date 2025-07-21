@@ -528,9 +528,80 @@ max-height: 80px !important;
   display: inline; /* Standard Inline, damit keine Block-Box entsteht */
 }
 
-
+$breakpoint-before-tablet: 1150px;
 $breakpoint-tablet: 900px;
 $breakpoint-phone: 460px;
+
+@media (max-width: $breakpoint-before-tablet) {
+
+    .edit-message-input{
+        width: calc(100% - 200px) !important;
+
+        .controls-container{
+            align-items: end !important;
+            overflow: hidden;
+            pointer-events: none;
+           
+        }
+
+        .edit-buttons{
+             transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button{
+            pointer-events: auto;
+            font-size: 16px;
+            padding: 10px 23px;
+        }
+
+        img{
+            pointer-events: auto;
+        }
+
+         &:focus-within .edit-buttons {
+        transform: translateX(120%);
+        }
+    }
+
+    .edit-buttons{
+        flex-direction: column-reverse;
+    }
+
+    .threadEdit{
+        .edit-message-input{
+        width: calc(100% - 200px) !important;
+
+        .controls-container{
+            align-items: end !important;
+            overflow: hidden;
+            pointer-events: none;
+           
+        }
+
+        .edit-buttons{
+             transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button{
+            pointer-events: auto;
+            font-size: 16px;
+            padding: 10px 23px;
+        }
+
+        img{
+            pointer-events: auto;
+        }
+
+         &:focus-within .edit-buttons {
+        transform: translateX(120%);
+        }
+    }
+
+    }
+    
+}
 
 @media (max-width: $breakpoint-tablet) {
 
@@ -551,40 +622,6 @@ $breakpoint-phone: 460px;
         left: 85px !important;
     }
 
-    .edit-buttons{
-        flex-direction: column-reverse;
-    }
-
-    .edit-message-input{
-        width: calc(100% - 200px) !important;
-
-        .controls-container{
-            align-items: end !important;
-            overflow: hidden;
-            pointer-events: none;
-           
-        }
-
-        .edit-buttons{
-             transform: translateX(0);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        button{
-            pointer-events: auto;
-            font-size: 16px;
-            padding: 10px 23px;
-        }
-
-        img{
-            pointer-events: auto;
-        }
-
-         &:focus-within .edit-buttons {
-        transform: translateX(120%);
-        }
-    }
-
     .message-answered{
         padding-left: 10px;
     }
@@ -597,36 +634,6 @@ $breakpoint-phone: 460px;
 .threadEdit {
     .edit-buttons{
         flex-direction: column-reverse;
-    }
-
-    .edit-message-input{
-        width: calc(100% - 200px) !important;
-
-        .controls-container{
-            align-items: end !important;
-            overflow: hidden;
-            pointer-events: none;
-           
-        }
-
-        .edit-buttons{
-             transform: translateX(0);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        button{
-            pointer-events: auto;
-            font-size: 16px;
-            padding: 10px 23px;
-        }
-
-        img{
-            pointer-events: auto;
-        }
-
-         &:focus-within .edit-buttons {
-        transform: translateX(120%);
-        }
     }
 }
 

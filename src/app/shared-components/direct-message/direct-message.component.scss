@@ -169,23 +169,11 @@
     }
 
     
-
+$breakpoint-before-tablet: 1150px;
 $breakpoint-tablet: 900px;
 $breakpoint-phone: 460px;
 
-@media (max-width: $breakpoint-tablet) {
-    .like-icon, .check-icon {
-        display: none;
-    }
-
-    .edit-message{
-        left: 85px !important;
-    }
-
-    .edit-buttons{
-        flex-direction: column-reverse;
-    }
-
+@media (max-width: $breakpoint-before-tablet) {
     .edit-message-input{
         width: calc(100% - 200px) !important;
 
@@ -214,6 +202,22 @@ $breakpoint-phone: 460px;
          &:focus-within .edit-buttons {
         transform: translateX(120%);
         }
+    }
+
+        .edit-buttons{
+        flex-direction: column-reverse;
+    }
+
+
+}
+
+@media (max-width: $breakpoint-tablet) {
+    .like-icon, .check-icon {
+        display: none;
+    }
+
+    .edit-message{
+        left: 85px !important;
     }
 
       .desktop-visible {
