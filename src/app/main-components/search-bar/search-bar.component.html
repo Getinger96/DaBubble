@@ -9,7 +9,7 @@
     <h4>Benutzer</h4>
     <div (click)="opendirectmessage(user.id,user.name,false,user.avatar,user.email,user.status)"
       *ngFor="let user of filteredUsers" class="user-entry">
-      <img src="../../../assets/img/avatar_{{user.avatar}}.png" alt="" />
+      <img src="assets/img/avatar_{{user.avatar}}.png" alt="" />
       {{ user.name }} ({{ user.email }})
     </div>
   </div>
@@ -26,7 +26,7 @@
     <h4>Nachrichten in Channels</h4>
     <div *ngFor="let message of filteredMessages" class="message-entry">
       <div (click)="navigateToMessage(message)">
-        <img src="../../../assets/img/avatar_{{message.avatar}}.png" alt="" />
+        <img src="assets/img/avatar_{{message.avatar}}.png" alt="" />
         <strong>{{ message.name }}:</strong> {{ message.messageText }}
       </div>
     </div>
@@ -35,7 +35,7 @@
     <h4>Nachrichten in Direktnachrichten</h4>
     <div *ngFor="let dm of filteredDirectMessages" class="message-entry">
       <div (click)="navigateToDirectMessage(dm)">
-        <img src="../../../assets/img/avatar_{{dm.avatar}}.png" alt="" />
+        <img src="assets/img/avatar_{{dm.avatar}}.png" alt="" />
         <strong>{{ dm.name }}:</strong> {{ dm.text }}
       </div>
     </div>
