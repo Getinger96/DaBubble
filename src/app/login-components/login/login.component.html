@@ -60,10 +60,11 @@
 
                 </div>
 
+                 <div class="errorText">
                 <span *ngIf="!loginEmailIsCorrect" class="incorrect-input">*Die E-Mail Adresse ist leider
                     ungültig</span>
                 <span *ngIf="!emailFielIsEmpty" class="incorrect-input">*Geben Sie eine E-Mail ein </span>
-
+                </div>    
             </div>
 
             <div class="input-Fields">
@@ -98,6 +99,8 @@
                 <a routerLink="/resetEmail">Passwort vergessen ?</a>
             </div>
 
+
+<div class="lastNotification">            
             <div class="line">
                 <hr>
                 <span>ODER</span>
@@ -127,7 +130,7 @@
                     class="guestLoginBtn" (click)="guestLogin($event)">Gäste-Login</button>
 
             </div>
-
+</div>
         </form>
 
     </div>

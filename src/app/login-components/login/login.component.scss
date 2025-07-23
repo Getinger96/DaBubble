@@ -351,6 +351,14 @@ main {
         height: 560px !important;
         min-height: 450px !important;
   }
+
+
+  
+       @include respond($max: 350px, $height: 700px) {
+        height: 450px !important;
+        min-height: 360px !important;
+  
+  }
 }
 
 .removeMargin {
@@ -463,13 +471,11 @@ main {
     margin-top: 40px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
     box-sizing: border-box;
 
     @media (max-width: 720px) {
         margin-top: 10px;
         flex-grow: 1;
-        gap: 20px;
         width: 100%;
         align-items: center;
     }
@@ -477,8 +483,6 @@ main {
 
     @media (max-height: 700px) {
         margin-top: 0px;
-        gap: 15px;
-        gap: 15px;
         margin-right: 25px;
         margin-left: 25px;
     }
@@ -565,6 +569,13 @@ mat-form-field {
     }
 }
 
+
+.lastNotification {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 @keyframes slidein {
     from {
         transform: translateX(500px);
@@ -590,17 +601,18 @@ mat-form-field {
 .errorText {
     display: flex;
     flex-direction: column;
+    height: 50px;
 }
 
 .incorrect-input {
-    font-size: 15px;
+    font-size: 14px;
     color: red;
 }
 
 .forgottPassword {
     display: flex;
     justify-content: center;
-
+    margin-top: 15px;
     a {
         text-decoration: none;
         padding: 12px;
