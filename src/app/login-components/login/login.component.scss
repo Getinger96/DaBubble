@@ -598,10 +598,17 @@ mat-form-field {
     border: 1px solid #535af1;
 }
 
-.errorText {
+.errorTextEmail {
     display: flex;
     flex-direction: column;
-    height: 50px;
+    height: 30px;
+}
+
+
+.errorTextPassword {
+    display: flex;
+    flex-direction: column;
+    height: 40px;
 }
 
 .incorrect-input {
@@ -612,7 +619,7 @@ mat-form-field {
 .forgottPassword {
     display: flex;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 10px;
     a {
         text-decoration: none;
         padding: 12px;
@@ -697,7 +704,7 @@ hr {
     padding-right: 25px;
     padding-left: 25px;
     padding-bottom: 15px;
-    border: none;
+    border: transparent;
     background-color: #444DF2;
     color: white;
     font-size: 16px;
@@ -705,11 +712,8 @@ hr {
 }
 
 .buttonloginErrorText {
-    border-radius: 25px !important;
-    padding-top: 10px !important;
-    padding-right: 20px !important;
-    padding-left: 20px !important;
-    padding-bottom: 10px !important;
+border: solid 1px red;
+color: red;
 }
 
 .guestLoginBtn {
