@@ -1,5 +1,23 @@
 @import './../../../styles.scss';
 
+.mobile-search-menu{
+    display: flex;
+    font-size: 18px;
+    font-family: 'Nunito';
+    font-weight: 700;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -32px;
+    margin-bottom: 8px;
+    transition: all .5s ease-in-out;
+    height: 0;
+    opacity: 0;
+}
+
+.mobile-search-menu-open{
+    opacity: 1;
+    height: 60px;
+}
 
 .search-bar {
     width: 100%;
@@ -36,7 +54,7 @@
     position: absolute;
     background-color: white;
     overflow: auto;
-    width: max-content;
+    width: 100%;
     padding: 16px;
     border-radius: 30px;
     gap: 8px;
@@ -48,6 +66,10 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    div{
+        overflow: auto;
+    }
 }
 
 .user-entry {
@@ -58,6 +80,10 @@
     font-size: 24px;
     cursor: pointer;
     border-radius: 33px;
+
+    div{
+        overflow: auto;
+    }
 
     &:hover {
         background-color: #535AF1;
@@ -71,6 +97,10 @@
     cursor: pointer;
     padding: 8px;
     border-radius: 33px;
+
+    div{
+        overflow: auto;
+    }
 
 
 
@@ -99,6 +129,7 @@
         cursor: pointer;
         padding: 8px;
         border-radius: 33px;
+        overflow: auto;
 
         &:hover {
             background-color: #535AF1;
@@ -106,3 +137,30 @@
         }
     }
 }
+
+.searchbar-open-mobile{
+    width: 100% !important;
+    height: calc(100vh - 135.5px);
+    left: 0px;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0;
+
+    .search-list-container, .channel-container, .message-container, .no-match{
+        padding: 0 16px;
+
+        div{
+           font-size: 16px;
+            overflow: auto;
+            scrollbar-width: thin;
+            img{
+                width: 50px;
+            }
+        }
+    }
+
+}
+
+    .close-searchbar{
+        cursor: pointer;
+    }

@@ -308,6 +308,13 @@ export class SearchBarComponent {
 
     }, 0);
   }
+
+  closeSearchBar(){
+    if (this.mobile){
+      this.searchTerm = '';
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
