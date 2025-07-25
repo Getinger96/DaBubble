@@ -75,13 +75,15 @@ body {
 }
 
 .email-txt {
-
     font-family: 'Nunito';
     font-weight: 400;
     font-size: 20px;
     text-align: center;
     color: rgba(104, 104, 104, 1);
     width: 486px;
+    @media (max-width: 400px) {
+        padding: 24px 0 24px 0;
+    }
 }
 
 .button-container {
