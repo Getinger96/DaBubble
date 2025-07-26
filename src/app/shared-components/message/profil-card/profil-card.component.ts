@@ -61,6 +61,7 @@ export class ProfilCardComponent implements OnInit {
   
   
       if (!clickedInside) {
+        this.mainhelperService.ToDirectChat =false 
         this.showProfilCard.emit(false);
       }
   

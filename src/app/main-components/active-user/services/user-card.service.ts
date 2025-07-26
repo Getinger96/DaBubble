@@ -45,13 +45,15 @@ export class UserCardService {
     if (nameBefore) {
     const userDocRef = doc(this.firestore, `Users/${this.userId}`);
     await updateDoc(userDocRef, { name: nameInput });
-    this.mainservice.subList();
-    this.channelService.subChannelList();
-    this.channelService.updateUserNameInChannels(nameInput, nameBefore )
+   await   this.channelService.updateUserNameInChannels(nameInput, nameBefore )
 
+
+    setTimeout(() => {
+      
     if (this.userId) {
-    await this.channelMessageService.updateNameEverywhere(nameInput, this.userId, nameBefore);
+     this.channelMessageService.updateNameEverywhere(nameInput, this.userId, nameBefore);
         }
+            }, 300);
   }
 }
 
@@ -61,9 +63,10 @@ async saveNewAvatarImg(avatarNumber: number) {
   const userDocRef = doc(this.firestore, `Users/${this.userId}`);
   await updateDoc(userDocRef, { avatar: avatarNumber });
   await this.channelService.updateAvatarImgInChannels(avatarNumber, this.userId);
-  await this.channelMessageService.updateAvatarEverywhere(avatarNumber, this.userId);
-  this.mainservice.subList();
-  this.channelService.subChannelList();
+  setTimeout(() => {
+    if (this.userId) 
+      this.channelMessageService.updateAvatarEverywhere(avatarNumber, this.userId);
+  }, 300);
   this.overlayEditChangAvatar = false;
 }
 }

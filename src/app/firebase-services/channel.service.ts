@@ -45,6 +45,10 @@ export class ChannelService {
         });
     }
 
+    unSubChannelList(){
+          this.unsubChannel = this.subChannelList()
+    }
+
     subChannelList() {
         return onSnapshot(this.getChannelRef(), (channel) => {
             let channelssArray: Channel[] = [];
@@ -103,13 +107,11 @@ export class ChannelService {
                 members: channel.members,
             });
         }
-        this.subChannelList();
         this.timeoutForchannellist(channel.members)
     }
 
     timeoutForchannellist(channelmembers: Member[]) {
         setTimeout(() => {
-            this.subChannelList();
             this.channelMemberSubject.next(channelmembers);
         }, 1000);
     }
@@ -129,8 +131,6 @@ export class ChannelService {
                 members: channel.members,
             });
         }
-        await this.subChannelList();
-        this.timeoutformembersubscription(channel.members)
     }
 
     timeoutformembersubscription(channelmembers: Member[]) {

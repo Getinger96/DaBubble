@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { EditMessageComponent } from './edit-message/edit-message.component';
 import { MainHelperService } from '../../services/main-helper.service';
 import { ResponsivService } from '../../services/responsiv.service';
+import { __await } from 'tslib';
 
 @Component({
   selector: 'app-message',
@@ -328,10 +329,13 @@ onCancelEdit() {
 
 
 
-  addEmoji(event: any, channelID: string, messageId?: string) {
+  async addEmoji(event: any, channelID: string, messageId?: string) {
     const emoji = event.emoji?.native || event;
     if (!messageId) return;
+    setTimeout(() => {
+      
     this.channelmessageService.addEmojiInMessage(emoji, channelID, messageId);
+        }, 300);
   }
 
   handleEmojiClick(event: any,): void {
@@ -406,7 +410,6 @@ onCancelEdit() {
 
 
   openDialog() {
-     this.mainHelperService.ToDirectChat =true 
     if (!this.userName || !this.userEmail || !this.userStatus) {
       console.warn('Benutzerdaten unvollständig – Dialog nicht geöffnet');
       return;

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, AfterViewInit, Output, EventEmitter, ViewChild, SimpleChanges } from '@angular/core';
 import { NgIf, CommonModule } from '@angular/common';
 import { User } from '../../../interfaces/user.interface';
 import { RegisterService } from '../../../firebase-services/register.service';
@@ -21,7 +21,7 @@ import { MainComponentsComponent } from '../../main-components.component';
   templateUrl: './direct-message-user.component.html',
   styleUrl: './direct-message-user.component.scss'
 })
-export class DirectMessageUserComponent implements OnInit {
+export class DirectMessageUserComponent implements OnInit, OnChanges {
   actualUser: User[] = [];
   @Input() ownAccount!: boolean;
   @Input() userArray: User[] = [];
@@ -41,14 +41,18 @@ export class DirectMessageUserComponent implements OnInit {
 
   }
 
+ngOnChanges(changes: SimpleChanges): void {
+  this.sortUsers();
+}
+  
+
   opendirectChat(id: string,name: string, close: boolean, avatar: number, email: string, status: string) {
 
        if (!this.actualUser || this.actualUser.length === 0) {
       console.warn('actualUser not loaded yet');
       return;
     }
-   this.mainservice.showmainchat=false
-    this.mainservice.showdirectmessage = true
+
     this.mainhelperService.openChannelSection(close)
     this.mainservice.setDirectmessageuserName(name)
     this.mainservice.setDirectmessageuserEmail(email)
@@ -57,6 +61,8 @@ export class DirectMessageUserComponent implements OnInit {
     this.mainservice.setDirectmessageuserId(id)
     this.router.navigate(['/main-components/' + this.actualUser[0].id+'/directmessage/'+ id], { replaceUrl: true })
     this.mainhelperService.openNewChat =false;
+    this.mainservice.showmainchat=false
+    this.mainservice.showdirectmessage = true
     this.closeThread.emit();
     this.mainhelperService.focusDirectMessage$.next();
    

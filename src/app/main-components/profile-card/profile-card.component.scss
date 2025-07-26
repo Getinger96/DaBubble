@@ -61,6 +61,7 @@ padding: 50px;
     justify-content: center;
 
        >img {
+        border-radius: 100%;
          @media (max-width:1000px) {
         width: 170px;
     

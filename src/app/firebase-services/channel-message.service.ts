@@ -404,7 +404,6 @@ export class ChannelMessageService {
     for (const channelDoc of channelsSnapshot.docs) {
       const channelId = channelDoc.id;
       await this.updateMessageAvatar(channelId, avatarImgNumber, userId);
-      this.subList(channelId);
       this.loadAllMessagesFromAllChannels();
     }
   }
