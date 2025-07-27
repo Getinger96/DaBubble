@@ -27,13 +27,13 @@
 
         <form (ngSubmit)="resetPassword(newPasswort,confirmedPasswort)" #contactForm="ngForm">
 
-            <div class="input-containers" (focusin)="divfocusPasswortNew('passwordNew',true)"
-                [ngClass]="{'borderPurple': borderVisiblepasswortNew, 'empty-input-Name':!newPasswort && passwortNew.touched||newPasswort.length<6&& passwortNew.touched}"
+            <div class="input-containers borderPurple" (focusin)="divfocusPasswortNew('passwordNew',true)"
+                [ngClass]="{'empty-input-Name':!newPasswort && passwortNew.touched||newPasswort.length<6&& passwortNew.touched}"
                 (focusout)="divfocusPasswort('passwordNew',false)">
 
-                <div>
+                <div class="InputFields">
 
-                    <input #passwortNew="ngModel" [(ngModel)]="newPasswort" name="passwortNew"
+                    <input class="passwordIntput" #passwortNew="ngModel" [(ngModel)]="newPasswort" name="passwortNew"
                         placeholder=" Neues Passwort" type="password" required>
 
                 </div>
@@ -47,13 +47,13 @@
 
             </div>
 
-            <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
-                [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name': passwort.touched && newPasswort != confirmedPasswort}"
+            <div class="input-containers borderPurple" (focusin)="divfocusPasswort('password',true)"
+                [ngClass]="{'empty-input-Name': passwort.touched && newPasswort != confirmedPasswort}"
                 (focusout)="divfocusPasswort('password',false)">
 
-                <div>
+                <div  class="InputFields">
 
-                    <input #passwort="ngModel" [(ngModel)]="confirmedPasswort" name="passwort"
+                    <input class="passwordIntput" #passwort="ngModel" [(ngModel)]="confirmedPasswort" name="passwort"
                         placeholder=" Neues Kennwort bestätigen" type="password" required>
 
                 </div>

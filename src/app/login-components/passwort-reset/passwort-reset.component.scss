@@ -17,7 +17,7 @@ body {
     }
 
     @media (max-width: 450px) {
-        padding: 95px 20px 5px 0px;
+    padding: 45px 0px 20px 0px;
     }
 }
 
@@ -137,6 +137,11 @@ h1 {
     justify-content: center;
 }
 
+.passwordIntput {
+    border: none;
+    width: 100%;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -199,6 +204,10 @@ form {
     }
 }
 
+.InputFields{
+    padding: 10px;
+}
+
 .validation-container {
     @media (max-width: 450px) {
         height: 40px;
@@ -207,6 +216,12 @@ form {
 
 .borderPurple {
     border: 1px solid #535af1 !important;
+    width: 50%;
+    border-radius: 30px;
+
+      @media (max-width: 400px) {
+        width: 100%;
+    }
 }
 
 .empty-input-Name {
@@ -291,7 +306,7 @@ form {
 
     form {
         >div {
-            width: 400px;
+            width: 240px;
         }
     }
 
@@ -315,7 +330,7 @@ form {
 
                 >a {
                     position: absolute;
-                    margin-right: 280px;
+                    margin-right: 250px;
 
 
                 }
@@ -324,12 +339,12 @@ form {
     }
 
     h1 {
-        font-size: 38px;
+        font-size: 30px;
     }
 
     form {
         >div {
-            width: 300px;
+            width: 240px;
 
             >div {
                 padding-right: 24px;
@@ -358,7 +373,7 @@ form {
 
                 >a {
                     position: absolute;
-                    margin-right: 270px;
+                    margin-right: 250px;
 
 
                 }
