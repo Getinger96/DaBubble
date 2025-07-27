@@ -10,7 +10,7 @@
 
 <header class="headerContainer">
 
-    <app-header class="hi"></app-header>
+    <app-header ></app-header>
 
 </header>
 
@@ -18,7 +18,7 @@
 
     <div class="register-card">
 
-        <div>
+        <div class="headlineCard">
 
             <a routerLink=""><img src="assets/img/13. Go back.png" alt=""></a>
             <h1>Konto erstellen</h1>
@@ -43,10 +43,13 @@
                 </div>
             </div>
 
+            <div class="validation-name">
             <span *ngIf="name.touched && !user.name" class="validation-text">Bitte gib deinen Namen oder  Nachnamen
                 ein</span>
                  <span *ngIf="userNameAlreadyExist" class="validation-text"> Dieser Name ist vergeben. Gib bitte einen anderen an.
             </span>
+            </div>
+
 
             <div class="input-containers" (focusin)="divfocusmail('email',true)"
                 [ngClass]="{'borderPurple':borderVisibleMail, 'empty-input-Name':!user.email && email.touched}"
@@ -62,18 +65,21 @@
 
             </div>
 
+            <div class="validation-Email">
             <span *ngIf="email.touched && email.errors?.['pattern']" class="validation-text">Bitte gib eine gültige
                 E-Mail-Adresse ein (z. B. max&#64;mustermann.de).</span>
             <span *ngIf="email.touched && !user.email" class="validation-text">Bitte gib deine Email
                 ein</span>
             <span *ngIf="userAlreadyExist" class="validation-text"> Diese E-Mail ist vergeben. Gib bitte eine andere an.
             </span>
+            </div>
+
 
             <div class="input-containers" (focusin)="divfocusPasswort('password',true)"
                 [ngClass]="{'borderPurple':borderVisiblepasswort, 'empty-input-Name':!user.passwort && passwort.touched}"
                 (focusout)="divfocusPasswort('password',false)">
 
-                <div>
+                <div >
 
                     <mat-icon [ngStyle]="{'color': borderVisiblepasswort ? 'black': 'gray'}">lock</mat-icon>
                     <input #passwort="ngModel" [(ngModel)]="user.passwort" name="passwort" placeholder="Passwort"
@@ -83,8 +89,10 @@
 
             </div>
 
+            <div class="validation-passwort">
             <span *ngIf="passwort.touched && !user.passwort || user.passwort.length<6&& passwort.touched"
                 class="validation-text">Passwort muss mindestens 6 zeichen lang sein</span>
+            </div>
 
             <div class="checkbox-container">
 

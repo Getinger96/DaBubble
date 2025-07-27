@@ -67,6 +67,7 @@ body {
     @media (max-height: 700px) {
       height: 540px;
       width: 100%;
+      padding: 20px 20px 10px 20px;
     }
 
     .recommendWordAdress {
@@ -116,9 +117,24 @@ h1 {
   justify-content: center;
 }
 
+
+
+.validation-name {
+  height: 25px;
+}
+
+.validation-Email {
+    height: 25px;
+}
+
+.validation-passwort {
+    height: 40px;
+}
+
+
+
 .validation-text {
   visibility: visible;
-  /* Wenn die Nachricht angezeigt wird, bleibt sie sichtbar */
   font-size: 14px;
   width: 90%;
   color: red;
@@ -127,10 +143,11 @@ h1 {
     width: 100%;
   }
 
-  @media (max-width: 450px) {
-    font-size: 12px;
-  }
 }
+
+
+
+
 
 form {
   display: flex;
@@ -237,6 +254,12 @@ form {
   display: flex;
   width: 100%;
   margin-top: 30px;
+
+
+  @media(max-width: 400px) {
+
+   margin-top: 10px;
+}
 }
 
 .invalid-placeholder::placeholder {
@@ -287,6 +310,9 @@ form {
   }
 
   .register-container {
+    margin-right: 15px;
+    margin-left: 15px;
+
     >.register-card {
       >span {
         font-size: 18px;
@@ -316,6 +342,7 @@ form {
   }
 
   .register-container {
+    margin-top: 0px;
     >.register-card {
       >span {
         font-size: 18px;
@@ -324,7 +351,7 @@ form {
 
       >div {
         >a {
-          margin-right: 300px;
+          margin-right: 250px;
         }
 
       }

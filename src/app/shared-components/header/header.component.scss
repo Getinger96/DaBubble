@@ -45,14 +45,28 @@ header {
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
     .logoSection {
         .logo {
             width: 70px;
             height: 70px;
         }
         h2 {
-            font-size: 24px;
+            font-size: 40px;
         }
     }
+}
+
+
+@media (max-width: 500px) {
+.logoSection {
+        .logo {
+            width: 56px;
+            height: 56px;
+        }
+           h2 {
+            font-size: 32px;
+        }
+    }
+
 }
