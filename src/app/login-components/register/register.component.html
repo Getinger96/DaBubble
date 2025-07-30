@@ -15,14 +15,12 @@
 </header>
 
 <div class="register-container">
-
     <div class="register-card">
-
+        <div class="back-container">
+            <a class="arrow-back" routerLink=""><img src="assets/img/13. Go back.png" alt=""></a>
+        </div>
         <div class="headlineCard">
-
-            <a routerLink=""><img src="assets/img/13. Go back.png" alt=""></a>
             <h1>Konto erstellen</h1>
-
         </div>
 
         <span class="recommendWordAdress">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
@@ -101,14 +99,13 @@
 
             </div>
 
+        </form>
+
             <div class="button-container">
 
                 <input [disabled]="!isChecked || !contactForm.valid" type="submit" value="Weiter">
 
             </div>
-
-        </form>
-
     </div>
 
 </div>
