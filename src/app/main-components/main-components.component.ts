@@ -313,6 +313,7 @@ checkwidthForThreads() {
   const threadsHtml = document.getElementById('threads');
   const routerWrapper = document.getElementById('routerOutletWrapper');
   const workspace = document.querySelector('app-workspace-menu');
+  const workspaceMenu = document.getElementById('workspaceMenu');
   const isMobile = window.matchMedia('(max-width: 900px)').matches;
   if (isMobile) {
     const threadsVisible = threadsHtml && !threadsHtml.classList.contains('hidden');
@@ -321,6 +322,7 @@ checkwidthForThreads() {
 
     if (threadsVisible && (directMessageHidden || routerHidden)) {
       workspace?.classList.add('closed');
+      workspaceMenu?.classList.add('shrink');
     }
   }
 }

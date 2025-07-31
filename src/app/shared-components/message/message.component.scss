@@ -610,8 +610,11 @@ $breakpoint-phone: 460px;
     }
 
     .emojiWindow{
-        right: unset !important;
         bottom: 40px !important;
+    }
+
+    .emojiWindowLeftSide {
+            left: 50px;
     }
 
     .like-icon, .check-icon {
