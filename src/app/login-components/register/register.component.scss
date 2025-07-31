@@ -20,7 +20,7 @@ body {
     padding: 95px 20px 50px 0px;
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 420px) {
     padding-top: 50px;
     padding-bottom: 50px; 
   }
@@ -100,6 +100,7 @@ body {
 
       >a {
         position: absolute;
+        top: 75px;
         margin-right: 500px;
 
         >img {
@@ -194,9 +195,9 @@ form {
       height: 40px;
       padding: 0px 0px 0px 20px;
 
-          @media (max-width: 400px) {
-        padding: 0px 0px 0px 0px;
-        gap: 5px;
+          @media (max-width: 420px) {
+          padding: 0px 0px 0px 0px;
+          gap: 5px;
     }
 
       >input {
@@ -267,7 +268,7 @@ form {
   margin-top: 30px;
 
 
-  @media(max-width: 400px) {
+  @media(max-width: 420px) {
 
    margin-top: 10px;
 }
@@ -329,13 +330,6 @@ form {
         font-size: 18px;
         width: 372px;
       }
-
-      >div {
-
-        >a {
-          margin-right: 380px;
-        }
-      }
     }
   }
 
@@ -346,7 +340,7 @@ form {
   }
 }
 
-@media(max-width: 400px) {
+@media(max-width: 420px) {
 
   h1 {
     font-size: 30px;
@@ -358,13 +352,6 @@ form {
       >span {
         font-size: 18px;
         width: 305px;
-      }
-
-      >div {
-        >a {
-          margin-right: 250px;
-        }
-
       }
     }
   }
@@ -380,4 +367,35 @@ form {
 
 .back-container {
   width: 100%;
+}
+
+.arrow-back {
+  @media (max-width: 600px) {
+    margin-right: 400px !important;
+  }
+
+  @media (max-width: 530px) {
+    top: 35px !important;
+  }
+
+  @media (max-width: 450px) {
+    margin-right: 350px !important;
+  }
+
+  @media (max-width: 420px) {
+    margin-right: 320px !important;
+  }
+
+  @media (max-width: 400px) {
+    margin-right: 300px !important;
+  }
+
+  @media (max-width: 360px) {
+    margin-right: 275px !important;
+  }
+
+  @media (max-width: 330px) {
+    margin-right: 250px !important;
+  }
+
 }
