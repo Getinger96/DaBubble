@@ -128,9 +128,21 @@ emoji-mart .emoji-mart-preview-data {
   width: 20px;
   margin-left: 5px;
 
+  @media (max-width: 400px) {
+    height: 17px;
+    width: 17px;
+  }
+
   &:hover {
     fill: #ae65c5; 
     font-weight: bolder;
+  }
+}
+
+
+::ng-deep .emoji-mart.emoji-mart-dark {
+  @media (max-width: 400px) {
+    width: 245px !important;
   }
 }
 

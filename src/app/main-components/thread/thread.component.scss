@@ -1,3 +1,11 @@
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
 .thread-wrapper{
     width: 100%;
     height: 100%;
@@ -173,6 +181,15 @@ app-add-member-to-thread  {
     width: 100%;
 }
 
+
+@media (max-width:1400px) {
+.emojiWindow {
+ right: 70%;   
+}
+}
+
+
+
 @media (max-width:900px) {
 
     .thread-input-wrapper{
@@ -181,11 +198,16 @@ app-add-member-to-thread  {
 
     .thread-feed{
         height: calc(100% - 247px) !important;
+          overflow-y: auto;
+    display: block !important;
+  flex-direction: column;
+  padding-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
     }
 
     .emojiWindow{
         right: unset !important;
-        bottom: 40px !important;
+        bottom: 125px  !important;
     }
 }
 

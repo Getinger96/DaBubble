@@ -99,7 +99,7 @@ export class ThreadComponent {
 
 ngAfterViewChecked() {
   if (this.threadMessageBox) {
-    this.threadMessageBox.nativeElement.focus();
+  
   }
 }
 
